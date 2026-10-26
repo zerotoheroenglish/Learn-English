@@ -2410,7 +2410,7 @@
 <header class="hero">
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v76</span>
+      <span class="hero-badge">EN ⇄ VI · v77</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice" id="voice-btn" aria-label="Chọn giọng đọc">🔊 <span class="hv-label">Giọng đọc</span></button>
@@ -39870,7 +39870,7 @@ function vcStartCards() {
                idx: 0, flipped: false, newly: 0, again: new Set() };
   vcRenderCard();
   const it = vc.cards.deck[0];
-  if (it && vcFront === 'en') speak(it.w, 0.8);
+  if (it) speak(it.w, 0.8);
 }
 
 function vcRenderCard() {
@@ -39896,37 +39896,22 @@ function vcRenderCard() {
   const it = C.deck[C.idx];
   const top = lsEl('div', 'vc-card-top');
   top.appendChild(lsEl('span', 'ls-count', `Thẻ ${C.idx + 1} / ${C.deck.length}`));
-  const sw = lsEl('button', 'ls-slow vc-switch', vcFront === 'en' ? '⇄ Hỏi bằng tiếng Việt' : '⇄ Hỏi bằng tiếng Anh');
-  sw.addEventListener('click', () => { vcFront = vcFront === 'en' ? 'vi' : 'en'; C.flipped = false; vcRenderCard(); });
-  top.appendChild(sw);
   body.appendChild(top);
 
-  const card = lsEl('button', 'vc-flash' + (C.flipped ? ' flipped' : ''));
+  // thẻ luôn hiện đủ: từ, phiên âm, loại từ, nghĩa và câu ví dụ — chạm vào thẻ để nghe lại từ
+  const card = lsEl('button', 'vc-flash flipped');
+  card.setAttribute('aria-label', 'Nghe lại từ ' + it.w);
   if (vcIs(it)) card.appendChild(lsEl('span', 'vc-f-badge', '✓ đã thuộc'));
-  if (vcFront === 'en') {
-    card.appendChild(lsEl('div', 'vc-f-big', it.w));
-    card.appendChild(lsEl('div', 'vc-f-ipa', it.ipa));
-    card.appendChild(lsEl('div', 'vc-pos', VC_POS[it.pos] || it.pos));
-  } else {
-    card.appendChild(lsEl('div', 'vc-f-big vc-f-vi', it.vi));
-    card.appendChild(lsEl('div', 'vc-pos', VC_POS[it.pos] || it.pos));
-  }
-  if (C.flipped) {
-    card.appendChild(lsEl('div', 'vc-f-sep'));
-    if (vcFront === 'en') card.appendChild(lsEl('div', 'vc-f-mean', it.vi));
-    else { card.appendChild(lsEl('div', 'vc-f-mean vc-f-en', it.w)); card.appendChild(lsEl('div', 'vc-f-ipa', it.ipa)); }
-    const ex = lsEl('div', 'vc-f-ex'); ex.innerHTML = vcExHtml(it); card.appendChild(ex);
-  } else {
-    card.appendChild(lsEl('div', 'vc-f-hint', 'Chạm vào thẻ để xem ' + (vcFront === 'en' ? 'nghĩa' : 'từ tiếng Anh')));
-  }
-  card.addEventListener('click', () => {
-    C.flipped = !C.flipped;
-    vcRenderCard();
-    if (C.flipped && vcFront === 'vi') speak(it.w, 0.8);
-  });
+  card.appendChild(lsEl('div', 'vc-f-big', it.w));
+  card.appendChild(lsEl('div', 'vc-f-ipa', it.ipa));
+  card.appendChild(lsEl('div', 'vc-pos', VC_POS[it.pos] || it.pos));
+  card.appendChild(lsEl('div', 'vc-f-sep'));
+  card.appendChild(lsEl('div', 'vc-f-mean', it.vi));
+  const ex = lsEl('div', 'vc-f-ex'); ex.innerHTML = vcExHtml(it); card.appendChild(ex);
+  card.addEventListener('click', () => speak(it.w, 0.8));
   body.appendChild(card);
 
-  if (vcFront === 'en' || C.flipped) {
+  {
     const audio = lsEl('div', 'vc-audio');
     const a1 = lsEl('button', 'ls-slow', '▶ Nghe từ');
     a1.addEventListener('click', () => speak(it.w, 0.8));
@@ -39955,7 +39940,7 @@ function vcNextCard() {
   vcRenderCard();
   vcUpdateProg();
   const it = C.deck[C.idx];
-  if (it && vcFront === 'en') speak(it.w, 0.8);
+  if (it) speak(it.w, 0.8);
 }
 
 /* ---------- quiz ---------- */
