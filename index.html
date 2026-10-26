@@ -1654,6 +1654,25 @@
   /* ---------- Write mode ---------- */
   .vc-modes{ grid-template-columns:repeat(4, minmax(0, 1fr)); }
   .vc-modes .ls-mode{ font-size:12.5px; padding:10px 2px; }
+  .vc-modes{ grid-template-columns:repeat(5, minmax(0, 1fr)); }
+  @media (max-width:520px){ .vc-modes{ grid-template-columns:repeat(4, minmax(0, 1fr)); } .vc-modes .vsp-mode{ grid-column:1 / -1; } }
+  .vsp-bar{ margin-top:12px; }
+  .vsp-card{ gap:6px; }
+  .vsp-sent{ font-family:var(--font-display); font-size:20px; font-weight:600; line-height:1.45; color:var(--ink); }
+  .vsp-sent b{ color:var(--rust); }
+  .vsp-sent-vi{ font-size:13.5px; line-height:1.45; color:var(--moss); }
+  .vsp-sub{ font-size:14px; line-height:1.45; color:var(--ink-soft); }
+  .vsp-prev{ font:600 11.5px/1.3 var(--font-mono); padding:4px 10px; border-radius:999px; background:var(--paper); color:var(--moss); }
+  .vsp-prev.mid{ color:#C98A0B; } .vsp-prev.bad{ color:var(--mark); }
+  .vsp-btns{ margin-top:12px; }
+  .vsp-btns button{ padding:13px 8px; font-size:14px; }
+  .vsp-btns button:disabled{ opacity:.5; }
+  .vsp-tries{ font:500 11.5px/1.4 var(--font-mono); color:var(--ink-soft); margin-top:6px; }
+  .vsp-nav{ display:flex; gap:8px; margin-top:12px; }
+  .vsp-nav button{ flex:1; padding:12px 8px; }
+  .vsp-badge{ font:600 10.5px/1 var(--font-mono); padding:3px 7px; border-radius:999px; background:var(--paper); color:var(--moss); border:1px solid var(--paper-line); white-space:nowrap; }
+  .vsp-badge.mid{ color:#C98A0B; } .vsp-badge.bad, .vsp-badge.skip{ color:var(--mark); }
+  .vsp-avg.ok{ color:var(--moss); } .vsp-avg.mid{ color:#C98A0B; } .vsp-avg.bad{ color:var(--mark); }
   .wr-card{ display:flex; flex-direction:column; align-items:center; gap:8px; padding:20px 16px; text-align:center; margin-top:4px; }
   .wr-mean{ font-size:24px; }
   .wr-audio{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
@@ -2210,6 +2229,15 @@
   .lk-sec{ font:700 12px/1.3 var(--font-body); text-transform:uppercase; letter-spacing:.5px; color:var(--ink-soft); }
   .lk-sec2{ margin:16px 0 0; padding-top:12px; border-top:1px dashed var(--paper-line); }
   .lk-drop{ opacity:.45; text-decoration:line-through; text-decoration-thickness:2px; }
+  .lk-grid{ margin-top:12px; }
+  .lk-topic .lk-topic-ex{ font:500 12.5px/1.4 var(--font-mono) !important; }
+  .lk-topic .lk-topic-ex .lk-mark{ margin:0; }
+  .lk-back{ margin-top:12px; }
+  .lk-rhead{ margin-top:10px; }
+  .lk-rule-open{ padding:14px; }
+  .lk-rule-open .lk-how{ margin-top:0; }
+  .lk-rule-open .lk-legend{ margin-top:10px; }
+  .lk-list{ padding:4px 14px 10px; }
   .ipa-entry-top{ display:flex; align-items:center; gap:12px; width:100%; }
   .ipa-entry-sym{ flex:0 0 auto; display:flex; align-items:center; justify-content:center; width:54px; height:54px; border-radius:14px;
     background:var(--rust-light); color:var(--rust); font:700 20px/1 var(--font-mono); }
@@ -2382,7 +2410,7 @@
 <header class="hero">
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v74</span>
+      <span class="hero-badge">EN ⇄ VI · v76</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice" id="voice-btn" aria-label="Chọn giọng đọc">🔊 <span class="hv-label">Giọng đọc</span></button>
@@ -15140,25 +15168,28 @@ function linkRow(w, mark, ipa, vi, note, sounds, isSent) {
   return row;
 }
 
-function linkLearn(body) {
-  body.appendChild(prEl('div', 'pr-set-tip pr-set-tip2',
-    'Người bản xứ không đọc từng từ rời rạc mà nối chúng thành một dòng âm — vì vậy nhiều câu nghe như "một từ dài" dù bạn biết hết từ. Nắm 6 quy tắc dưới đây, bạn sẽ nghe ra và nói tự nhiên hơn.'));
+function linkLearn(body, ruleId) {
+  body.innerHTML = '';
+  const r = ruleId && LINK_RULES.find(x => x.id === ruleId);
+  if (r) return linkRulePage(body, r);
 
-  // tóm tắt nhanh: chạm để mở đúng quy tắc
-  const sum = prEl('div', 'tense-card lk-overview');
-  sum.appendChild(prEl('div', 'lk-ov-h', 'Tóm tắt 6 quy tắc'));
-  const cards = [];
-  LINK_RULES.forEach((r, ri) => {
-    const it = prEl('button', 'lk-ov-it');
-    it.appendChild(prEl('span', 'lk-ov-ic', r.icon));
-    const tx = prEl('span', 'lk-ov-tx');
-    tx.appendChild(prEl('span', 'lk-ov-t', (ri + 1) + '. ' + r.title));
-    tx.appendChild(linkMarkEl(r.short)).className = 'lk-ov-ex';
-    it.appendChild(tx);
-    it.addEventListener('click', () => { const c = cards[ri]; if (!c) return; c.open = true; try { c.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) {} });
-    sum.appendChild(it);
+  body.appendChild(prEl('div', 'pr-set-tip pr-set-tip2',
+    'Người bản xứ không đọc từng từ rời rạc mà nối chúng thành một dòng âm — vì vậy nhiều câu nghe như "một từ dài" dù bạn biết hết từ. Chọn một quy tắc bên dưới để học.'));
+
+  // lưới quy tắc, giống lưới chủ đề bên tab Từ vựng
+  const grid = prEl('div', 'vc-grid lk-grid');
+  LINK_RULES.forEach((x, i) => {
+    const n = x.ex.length, got = x.ex.filter(e => prDone.has('link|' + e[0])).length;
+    const b = prEl('button', 'vc-topic lk-topic' + (got === n ? ' done' : ''));
+    b.appendChild(prEl('span', 'vc-ticon', x.icon));
+    b.appendChild(prEl('span', 'vc-tvi', (i + 1) + '. ' + x.title));
+    b.appendChild(linkMarkEl(x.short)).className = 'vc-ten lk-topic-ex';
+    b.appendChild(prEl('span', 'vc-tmeta', got ? `${got}/${n} cụm đã luyện` : `${n} cụm · ${(x.sent || []).length} câu`));
+    const bar = prEl('span', 'vc-bar'); const fill = prEl('span'); fill.style.width = (got / n * 100) + '%'; bar.appendChild(fill); b.appendChild(bar);
+    b.addEventListener('click', () => { prSeqStop(); linkLearn(body, x.id); linkScroll(); });
+    grid.appendChild(b);
   });
-  body.appendChild(sum);
+  body.appendChild(grid);
 
   // cách luyện + chú thích ký hiệu
   const how = prEl('div', 'tense-card lk-steps');
@@ -15166,64 +15197,87 @@ function linkLearn(body) {
   [['🐢', 'Nghe tách từng từ để biết câu gồm những từ nào.'],
    ['‿', 'Nhìn dòng "Nghe như" — đọc chậm phần dính liền như một từ.'],
    ['▶', 'Nghe nối tự nhiên rồi nói theo đúng tốc độ, lặp lại 3 lần. Chạm vào chữ để nghe so sánh liền hai kiểu.']].forEach(([k, t], i) => {
-    const r = prEl('div', 'lk-step');
-    r.appendChild(prEl('span', 'lk-step-n', String(i + 1)));
-    r.appendChild(prEl('span', 'lk-step-k', k));
-    r.appendChild(prEl('span', null, t));
-    how.appendChild(r);
+    const row = prEl('div', 'lk-step');
+    row.appendChild(prEl('span', 'lk-step-n', String(i + 1)));
+    row.appendChild(prEl('span', 'lk-step-k', k));
+    row.appendChild(prEl('span', null, t));
+    how.appendChild(row);
   });
+  how.appendChild(linkLegend());
+  body.appendChild(how);
+
+  const nb = prEl('button', 'btn-primary vc-next-unit', '🎯 Luyện đoán chỗ nối →');
+  nb.addEventListener('click', () => prOpenLink(true));
+  body.appendChild(nb);
+}
+function linkLegend() {
   const legend = prEl('div', 'lk-legend');
   [['‿', 'lk-mark', 'đọc liền'], ['w', 'lk-ins', 'âm chèn thêm'], ['t', 'lk-drop', 'âm bị nuốt (không đọc)']].forEach(([s, c, t]) => {
     const it = prEl('span', 'lk-legend-it'); it.appendChild(prEl('span', c, s)); it.appendChild(document.createTextNode(' ' + t)); legend.appendChild(it);
   });
-  how.appendChild(legend);
-  body.appendChild(how);
+  return legend;
+}
+const linkScroll = () => { try { const t = document.querySelector('.lk-tabs'); if (t) t.scrollIntoView({ block: 'start' }); } catch (e) {} };
 
-  LINK_RULES.forEach((r, ri) => {
-    const card = prEl('details', 'tense-card lk-rule');
-    card.id = 'lk-rule-' + r.id;
-    if (ri === 0) card.open = true;
-    const sm = prEl('summary', 'lk-sum');
-    sm.appendChild(prEl('span', 'lk-sum-ic', r.icon));
-    const st = prEl('span', 'lk-sum-tx');
-    st.appendChild(prEl('span', 'lk-sum-t', (ri + 1) + '. ' + r.title));
-    st.appendChild(prEl('span', 'lk-sum-s', r.sub));
-    sm.appendChild(st);
-    const got = r.ex.filter(x => prDone.has('link|' + x[0])).length;
-    sm.appendChild(prEl('span', 'lk-sum-n', got + '/' + r.ex.length));
-    card.appendChild(sm);
+/* trang riêng của một quy tắc, giống trang một chủ đề bên tab Từ vựng */
+function linkRulePage(body, r) {
+  const ri = LINK_RULES.indexOf(r);
+  const back = prEl('button', 'gr-back lk-back', '← Tất cả quy tắc');
+  back.addEventListener('click', () => { prSeqStop(); linkLearn(body); linkScroll(); });
+  body.appendChild(back);
 
-    card.appendChild(prEl('p', 'lk-how', r.how));
-    const info = prEl('div', 'lk-info');
-    [['📌 Khi nào', r.when], ['⚠️ Lỗi hay gặp', r.mistake], ['💡 Mẹo', r.tip]].forEach(([k, t]) => {
-      const b = prEl('div', 'lk-info-r');
-      b.appendChild(prEl('span', 'lk-info-k', k));
-      b.appendChild(prEl('span', 'lk-info-v', t));
-      info.appendChild(b);
-    });
-    card.appendChild(info);
+  const n = r.ex.length;
+  const head = prEl('div', 'vc-head lk-rhead');
+  head.appendChild(prEl('div', 'vc-head-icon', r.icon));
+  const hm = prEl('div', 'vc-head-meta');
+  hm.appendChild(prEl('div', 'vc-head-vi', (ri + 1) + '. ' + r.title));
+  hm.appendChild(prEl('div', 'vc-head-en', `${r.sub} · ${n} cụm · ${(r.sent || []).length} câu`));
+  const pr = prEl('div', 'vc-head-prog'); hm.appendChild(pr);
+  head.appendChild(hm); body.appendChild(head);
+  const prog = () => {
+    const got = r.ex.filter(e => prDone.has('link|' + e[0])).length;
+    pr.innerHTML = '';
+    pr.appendChild(prEl('span', null, `Đã luyện ${got}/${n}`));
+    const bar = prEl('span', 'vc-bar'); const fill = prEl('span'); fill.style.width = (got / n * 100) + '%'; bar.appendChild(fill); bar.style.flex = '1'; pr.appendChild(bar);
+    prSetProg(LINK_SET);
+  };
+  prog();
 
-    const acts = prEl('div', 'pr-acts lk-acts');
-    acts.appendChild(prEl('span', 'lk-sec', 'Cụm từ mẫu · ' + r.ex.length));
-    const all = prEl('button', 'ls-slow', '▶ Nghe lần lượt');
-    acts.appendChild(all);
-    card.appendChild(acts);
-    const rows = [], texts = [];
-    r.ex.forEach(x => {
-      const row = linkRow(x[0], x[1], x[2], x[3], x[4], x[5]);
-      card.appendChild(row); rows.push(row); texts.push(x[0]);
-    });
-    all.addEventListener('click', () => prSeqPlay(rows, texts, all));
-
-    if (r.sent && r.sent.length) {
-      card.appendChild(prEl('div', 'lk-sec lk-sec2', 'Trong câu'));
-      r.sent.forEach(s => card.appendChild(linkRow(s[0], s[1], '', s[2], '', '', true)));
-    }
-    cards.push(card);
-    body.appendChild(card);
+  const exp = prEl('div', 'tense-card lk-rule lk-rule-open');
+  exp.appendChild(prEl('p', 'lk-how', r.how));
+  const info = prEl('div', 'lk-info');
+  [['📌 Khi nào', r.when], ['⚠️ Lỗi hay gặp', r.mistake], ['💡 Mẹo', r.tip]].forEach(([k, t]) => {
+    const b = prEl('div', 'lk-info-r');
+    b.appendChild(prEl('span', 'lk-info-k', k));
+    b.appendChild(prEl('span', 'lk-info-v', t));
+    info.appendChild(b);
   });
-  const nb = prEl('button', 'btn-primary vc-next-unit', '🎯 Luyện đoán chỗ nối →');
-  nb.addEventListener('click', () => prOpenLink(true));
+  exp.appendChild(info);
+  exp.appendChild(linkLegend());
+  body.appendChild(exp);
+
+  const list = prEl('div', 'tense-card vc-card lk-list');
+  const acts = prEl('div', 'pr-acts lk-acts');
+  acts.appendChild(prEl('span', 'lk-sec', 'Cụm từ mẫu · ' + n));
+  const all = prEl('button', 'ls-slow', '▶ Nghe lần lượt');
+  acts.appendChild(all);
+  list.appendChild(acts);
+  const rows = [], texts = [];
+  r.ex.forEach(x => {
+    const row = linkRow(x[0], x[1], x[2], x[3], x[4], x[5]);
+    const ck = row.querySelector('.vc-check'); if (ck) ck.addEventListener('click', () => setTimeout(prog, 0));
+    list.appendChild(row); rows.push(row); texts.push(x[0]);
+  });
+  all.addEventListener('click', () => prSeqPlay(rows, texts, all));
+  if (r.sent && r.sent.length) {
+    list.appendChild(prEl('div', 'lk-sec lk-sec2', 'Trong câu'));
+    r.sent.forEach(s => list.appendChild(linkRow(s[0], s[1], '', s[2], '', '', true)));
+  }
+  body.appendChild(list);
+
+  const nx = LINK_RULES[ri + 1];
+  const nb = prEl('button', 'btn-primary vc-next-unit', nx ? `Quy tắc tiếp: ${nx.icon} ${nx.title} →` : '🎯 Luyện đoán chỗ nối →');
+  nb.addEventListener('click', () => { prSeqStop(); if (nx) { linkLearn(body, nx.id); linkScroll(); } else prOpenLink(true); });
   body.appendChild(nb);
 }
 
@@ -39211,6 +39265,249 @@ function vcSet(it, on) {
   if (on) vcLearned.add(vcK(it)); else vcLearned.delete(vcK(it));
   try { localStorage.setItem(VC_KEY, JSON.stringify([...vcLearned])); } catch (e) {}
 }
+/* ---------- speaking score: say each word (or its example) and get a score ---------- */
+const VSP_KEY = 'hoc-tieng-anh-vocab-speak';
+let vspBest = {};
+try { const o = JSON.parse(localStorage.getItem(VSP_KEY) || '{}'); if (o && typeof o === 'object') vspBest = o; } catch (e) {}
+let vspWhat = 'w';
+try { if (localStorage.getItem(VSP_KEY + '-what') === 'ex') vspWhat = 'ex'; } catch (e) {}
+const vspK = (it, what) => vcK(it) + (what === 'ex' ? '|ex' : '');
+const vspGet = (it, what) => { const v = vspBest[vspK(it, what || 'w')]; return typeof v === 'number' ? v : null; };
+function vspSave(it, what, pct) {
+  const k = vspK(it, what);
+  if (typeof vspBest[k] === 'number' && vspBest[k] >= pct) return;
+  vspBest[k] = pct;
+  try { localStorage.setItem(VSP_KEY, JSON.stringify(vspBest)); } catch (e) {}
+}
+const vspCls = p => p >= 90 ? 'ok' : p >= 60 ? 'mid' : 'bad';
+const vspText = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\.\.\.|…/g, ' ').replace(/&/g, ' and ');
+const vspTarget = (it, what) => what === 'ex' ? it.ex : it.w.replace(/\s*\.\.\.\??$/, m => m.includes('?') ? '?' : '');
+
+/* chấm một câu trả lời: từ đơn chấm thêm theo mức giống nhau của chữ cái (ship ↔ sheep vẫn được một phần điểm) */
+function vspScore(target, heard) {
+  const base = prScore(vspText(target), vspText(heard));
+  if (base.score >= 1 || base.a.length > 3) return base;
+  const a = base.a.join(''), b = lsNorm(vspText(heard)).join('');
+  if (!a || !b) return base;
+  const n = a.length, m = b.length;
+  const dp = Array.from({ length: n + 1 }, () => new Array(m + 1).fill(0));
+  for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--)
+    dp[i][j] = a[i] === b[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
+  const sim = dp[0][0] / Math.max(n, m);
+  const s = Math.min(0.89, sim * 0.95);
+  return s > base.score ? { score: s, hit: base.hit, a: base.a } : base;
+}
+
+function vspListen(target, onDone) {
+  if (prRecog) { try { prRecog.abort(); } catch (e) {} prRecog = null; }
+  try { speechSynthesis.cancel(); } catch (e) {}
+  const r = new PR_SR();
+  r.lang = (typeof pronVoice !== 'undefined' && pronVoice && /^en/i.test(pronVoice.lang)) ? pronVoice.lang.replace('_', '-') : 'en-US';
+  r.interimResults = false; r.continuous = false; r.maxAlternatives = 5;
+  let got = false;
+  prRecog = r;
+  r.onresult = ev => {
+    got = true;
+    const res = ev.results[0];
+    let best = null;
+    for (let i = 0; i < res.length; i++) {
+      const sc = vspScore(target, res[i].transcript);
+      if (!best || sc.score > best.score) best = { ...sc, heard: res[i].transcript };
+    }
+    onDone(best, null);
+  };
+  r.onerror = ev => {
+    got = true;
+    onDone(null, ev.error === 'not-allowed' || ev.error === 'service-not-allowed'
+      ? 'Bạn cần cho phép micro và nhận dạng giọng nói cho trình duyệt (iPhone: Cài đặt → Safari → Micrô).'
+      : ev.error === 'no-speech' ? 'Không nghe thấy gì. Hãy nói to và gần micro hơn nhé.'
+      : ev.error === 'network' ? 'Nhận dạng giọng nói cần có mạng. Kiểm tra kết nối rồi thử lại.'
+      : ev.error === 'aborted' ? '' : 'Không nhận dạng được (' + ev.error + '). Hãy thử lại.');
+  };
+  r.onend = () => { prRecog = null; if (!got) onDone(null, 'Không nghe rõ. Bấm nói lại và đọc to hơn nhé.'); };
+  try { r.start(); } catch (e) { prRecog = null; onDone(null, 'Không mở được micro. Hãy thử lại.'); }
+}
+
+function vcStartSpeak(only) {
+  if (prRecog) { try { prRecog.abort(); } catch (e) {} prRecog = null; }
+  let items = only || vc.unit.items;
+  if (!only && items.length > 40) items = lsShuffle(items).slice(0, 20);
+  // từ chưa đạt lên trước, từ đã đạt ≥ 90% xuống cuối
+  const weak = items.filter(it => (vspGet(it, vspWhat) ?? -1) < 90), good = items.filter(it => (vspGet(it, vspWhat) ?? -1) >= 90);
+  vc.sp = { what: vspWhat, qs: [...weak, ...good].map(it => ({ it, best: null, last: null, tries: 0, err: '', prev: vspGet(it, vspWhat) })), idx: 0, busy: false };
+  vcRenderSpeak();
+}
+
+function vcRenderSpeak() {
+  const body = document.getElementById('vc-body');
+  if (!body) return;
+  body.innerHTML = '';
+  const S = vc.sp;
+  if (S.idx >= S.qs.length) return vcSpeakSummary();
+  const q = S.qs[S.idx], it = q.it, target = vspTarget(it, S.what);
+
+  // chọn đọc từ hay đọc câu
+  const bar = lsEl('div', 'vc-list-bar vsp-bar');
+  const chips = lsEl('div', 'colloc-chips');
+  [['w', '🔤 Đọc từ'], ['ex', '💬 Đọc câu ví dụ']].forEach(([w, label]) => {
+    const c = lsEl('button', 'colloc-chip' + (S.what === w ? ' active' : ''), label);
+    c.addEventListener('click', () => {
+      if (S.what === w) return;
+      vspWhat = w; try { localStorage.setItem(VSP_KEY + '-what', w); } catch (e) {}
+      vcStartSpeak();
+    });
+    chips.appendChild(c);
+  });
+  bar.appendChild(chips);
+  body.appendChild(bar);
+
+  const top = lsEl('div', 'vc-card-top');
+  top.appendChild(lsEl('span', 'ls-count', `${S.what === 'ex' ? 'Câu' : 'Từ'} ${S.idx + 1} / ${S.qs.length}`));
+  const dots = lsEl('div', 'ls-dots');
+  S.qs.forEach((x, i) => dots.appendChild(lsEl('span', 'ls-dot' + (x.best ? ' ' + ({ ok: 'ok', mid: 'hint', bad: 'skip' })[vspCls(x.best.pct)] : '') + (i === S.idx ? ' now' : ''))));
+  top.appendChild(dots);
+  body.appendChild(top);
+
+  const card = lsEl('div', 'tense-card wr-card vsp-card');
+  card.appendChild(lsEl('div', 'vc-q-label', S.what === 'ex' ? 'Đọc to câu này' : 'Đọc to từ này'));
+  if (S.what === 'ex') {
+    const ex = lsEl('div', 'vsp-sent'); ex.innerHTML = vcExMain(it); card.appendChild(ex);
+    if (it.exvi) card.appendChild(lsEl('div', 'vsp-sent-vi', it.exvi));
+    card.appendChild(lsEl('div', 'vsp-sub', `${it.w} · ${it.vi}`));
+  } else {
+    card.appendChild(lsEl('div', 'vc-f-big', it.w));
+    card.appendChild(lsEl('div', 'vc-f-ipa', it.ipa));
+    const pos = VC_POS[it.pos] || it.pos;
+    card.appendChild(lsEl('div', 'vsp-sub', (pos ? pos + ' · ' : '') + it.vi));
+  }
+  const prev = q.prev;
+  if (prev != null) card.appendChild(lsEl('div', 'vsp-prev ' + vspCls(prev), `Kỷ lục trước: ${prev}%`));
+  const audio = lsEl('div', 'wr-audio');
+  const a1 = lsEl('button', 'ls-slow', '🔊 Nghe mẫu'); a1.addEventListener('click', () => speak(target, S.what === 'ex' ? 0.85 : 0.8));
+  const a2 = lsEl('button', 'ls-slow', '🐢 Chậm'); a2.addEventListener('click', () => speak(target, 0.5));
+  audio.appendChild(a1); audio.appendChild(a2);
+  card.appendChild(audio);
+  body.appendChild(card);
+
+  const out = lsEl('div', 'pr-speak-out vsp-out');
+  const recOut = lsEl('div', 'pr-rec-out');
+
+  if (!PR_SR) {
+    out.className = 'pr-speak-out warn';
+    out.textContent = 'Trình duyệt này chưa hỗ trợ nhận dạng giọng nói nên chưa chấm điểm được. Trên iPhone hãy mở app bằng Safari; trên máy tính dùng Chrome hoặc Edge. Bạn vẫn có thể ghi âm để tự so với giọng mẫu.';
+  } else if (q.err) {
+    out.className = 'pr-speak-out warn'; out.textContent = q.err;
+  } else if (q.last) {
+    prShowScore(out, q.last);
+    if (q.tries > 1) out.appendChild(lsEl('div', 'vsp-tries', `Lần ${q.tries} · điểm cao nhất lượt này: ${q.best.pct}%`));
+  }
+  out.classList.add('vsp-out');
+
+  const btns = lsEl('div', 'pr-speak-btns vsp-btns');
+  const mic = lsEl('button', 'btn-primary pr-mic', S.busy ? '👂 Đang nghe… hãy đọc to' : q.tries ? '🎙️ Nói lại' : '🎙️ Bấm rồi đọc to');
+  if (S.busy) mic.classList.add('listening');
+  mic.disabled = !PR_SR;
+  mic.addEventListener('click', () => {
+    if (S.busy) { try { prRecog && prRecog.stop(); } catch (e) {} return; }
+    S.busy = true; q.err = '';
+    vcRenderSpeak();
+    vspListen(target, (best, err) => {
+      if (vc.sp !== S || S.qs[S.idx] !== q) return;
+      S.busy = false;
+      if (best) {
+        best.pct = Math.round(best.score * 100);
+        q.tries++; q.last = best;
+        if (!q.best || best.pct > q.best.pct) q.best = best;
+        vspSave(it, S.what, best.pct);
+      } else if (err) q.err = err;
+      vcRenderSpeak();
+    });
+  });
+  const rec = lsEl('button', 'btn-ghost pr-rec', '⏺ Ghi âm & nghe lại');
+  rec.addEventListener('click', () => prToggleRecord(target, rec, recOut));
+  btns.appendChild(mic); btns.appendChild(rec);
+  body.appendChild(btns);
+  body.appendChild(out);
+  body.appendChild(recOut);
+
+  const nav = lsEl('div', 'vsp-nav');
+  if (S.idx > 0) {
+    const pv = lsEl('button', 'btn-ghost', '← Trước');
+    pv.addEventListener('click', () => { vspStop(); S.idx--; vcRenderSpeak(); });
+    nav.appendChild(pv);
+  }
+  const nx = lsEl('button', q.best ? 'btn-primary' : 'btn-ghost', S.idx + 1 < S.qs.length ? (q.best ? (S.what === 'ex' ? 'Câu tiếp →' : 'Từ tiếp →') : 'Bỏ qua →') : 'Xem kết quả');
+  nx.addEventListener('click', () => { vspStop(); S.idx++; vcRenderSpeak(); });
+  nav.appendChild(nx);
+  body.appendChild(nav);
+}
+function vspStop() {
+  const S = vc.sp;
+  if (S) S.busy = false;
+  if (prRecog) { try { prRecog.abort(); } catch (e) {} prRecog = null; }
+}
+
+function vspRow(it, what, pct) {
+  const row = vcRow(it, !!(vc.unit && (vc.unit.mix || vc.unit.review)));
+  row.querySelectorAll('.vsp-badge').forEach(b => b.remove());
+  const line = row.querySelector('.vc-line');
+  if (line) line.appendChild(lsEl('span', 'vsp-badge ' + (pct == null ? 'skip' : vspCls(pct)), pct == null ? 'chưa nói' : pct + '%'));
+  return row;
+}
+
+function vcSpeakSummary() {
+  const body = document.getElementById('vc-body'), S = vc.sp;
+  const done = S.qs.filter(q => q.best), skip = S.qs.filter(q => !q.best);
+  const box = lsEl('div', 'tense-card vc-done');
+  if (!done.length) {
+    box.appendChild(lsEl('div', 'vc-done-big', '🎙️'));
+    box.appendChild(lsEl('div', 'ls-verdict', 'Bạn chưa nói từ nào trong lượt này.'));
+    box.appendChild(lsEl('div', 'vc-done-sub', 'Bấm 🎙️ rồi đọc to từng từ để app chấm điểm phát âm.'));
+    const again = lsEl('button', 'btn-primary', 'Bắt đầu lại'); again.addEventListener('click', () => vcStartSpeak());
+    box.appendChild(again);
+    body.appendChild(box);
+    return;
+  }
+  const avg = Math.round(done.reduce((k, q) => k + q.best.pct, 0) / done.length);
+  const big = lsEl('div', 'vc-done-big vsp-avg ' + vspCls(avg), avg + '%');
+  box.appendChild(big);
+  box.appendChild(lsEl('div', 'vc-done-sub', `Điểm phát âm trung bình · ${done.length} ${S.what === 'ex' ? 'câu' : 'từ'} đã chấm`));
+  box.appendChild(lsEl('div', 'ls-verdict', avg >= 90 ? 'Tuyệt vời! Máy nghe bạn rất rõ 🎉' : avg >= 70 ? 'Khá tốt! Luyện thêm vài từ chưa đạt là ổn.' : 'Cứ luyện tiếp nhé: nghe mẫu, đọc chậm và rõ âm cuối.'));
+  const ok = done.filter(q => q.best.pct >= 90), mid = done.filter(q => q.best.pct >= 60 && q.best.pct < 90), bad = done.filter(q => q.best.pct < 60);
+  const stats = lsEl('div', 'ls-stats');
+  [['ok', ok.length, 'đạt ≥ 90%'], ['hint', mid.length, '60 – 89%'], ['skip', bad.length, 'dưới 60%']].forEach(([c, n, l]) => {
+    const st = lsEl('div', 'ls-stat ' + c); st.appendChild(lsEl('span', 'n', String(n))); st.appendChild(lsEl('span', 'l', l)); stats.appendChild(st);
+  });
+  box.appendChild(stats);
+  if (skip.length) box.appendChild(lsEl('div', 'vc-done-sub', `Bỏ qua ${skip.length} ${S.what === 'ex' ? 'câu' : 'từ'} chưa nói`));
+  const low = [...bad, ...mid].sort((x, y) => x.best.pct - y.best.pct);
+  const weak = [...low, ...skip];
+  if (low.length) {
+    box.appendChild(lsEl('div', 'vc-done-sub', S.what === 'ex' ? 'Những câu cần luyện thêm:' : 'Những từ cần luyện thêm:'));
+    const card = lsEl('div', 'vc-card vc-wrong');
+    low.forEach(q => card.appendChild(vspRow(q.it, S.what, q.best.pct)));
+    box.appendChild(card);
+  }
+  if (S.what === 'w') {
+    const newOk = ok.map(q => q.it).filter(it => !vcIs(it));
+    if (newOk.length) {
+      const mk = lsEl('button', 'btn-ghost wr-mark', `✓ Đánh dấu đã thuộc ${newOk.length} từ đạt ≥ 90%`);
+      mk.addEventListener('click', () => { newOk.forEach(it => vcSet(it, true)); vcUpdateProg(); mk.disabled = true; mk.textContent = '✓ Đã đánh dấu'; });
+      box.appendChild(mk);
+    }
+  }
+  const btns = lsEl('div', 'ls-sum-btns');
+  const again = lsEl('button', 'btn-ghost', 'Chấm lại tất cả'); again.addEventListener('click', () => vcStartSpeak());
+  btns.appendChild(again);
+  if (weak.length) {
+    const rv = lsEl('button', 'btn-primary', `Luyện lại ${weak.length} ${S.what === 'ex' ? 'câu' : 'từ'}`);
+    rv.addEventListener('click', () => vcStartSpeak(weak.map(q => q.it)));
+    btns.appendChild(rv);
+  }
+  box.appendChild(btns);
+  vcNextUnitBtn(box);
+  body.appendChild(box);
+}
 const vcTopic = id => VOCAB_TOPICS.find(t => t.id === id);
 const vcFold = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd');
 const vcRoot = document.getElementById('vc-root');
@@ -39265,6 +39562,8 @@ function vcRow(it, showTopic) {
   line.appendChild(lsEl('span', 'vc-word', it.w));
   line.appendChild(lsEl('span', 'vc-pos', VC_POS[it.pos] || it.pos));
   line.appendChild(lsEl('span', 'vc-lv vc-lv' + it.lv, vcLvCode(it.lv)));
+  const sp = vspGet(it, 'w');
+  if (sp != null) { const bd = lsEl('span', 'vsp-badge ' + vspCls(sp), '🎙️ ' + sp + '%'); bd.title = 'Điểm phát âm cao nhất'; line.appendChild(bd); }
   main.appendChild(line);
   if (showTopic) {
     const t = vcTopic(it.tid);
@@ -39504,10 +39803,10 @@ function vcRenderUnit() {
     : `Bài ${u.index + 1}/${u.topic.groups.length} · ${u.en}`;
   vcRoot.appendChild(vcHead(u.mix ? u.icon : u.topic.icon, u.vi, sub));
   const modes = lsEl('div', 'ls-modes vc-modes');
-  [['list', 'Danh sách'], ['cards', 'Thẻ nhớ'], ['quiz', 'Kiểm tra'], ['write', 'Viết từ']].forEach(([m, label]) => {
-    const b = lsEl('button', 'ls-mode' + (vc.mode === m ? ' active' : ''), label);
+  [['list', 'Danh sách'], ['cards', 'Thẻ nhớ'], ['quiz', 'Kiểm tra'], ['write', 'Viết từ'], ['speak', '🎙️ Chấm điểm']].forEach(([m, label]) => {
+    const b = lsEl('button', 'ls-mode' + (vc.mode === m ? ' active' : '') + (m === 'speak' ? ' vsp-mode' : ''), label);
     b.dataset.vcMode = m;
-    b.addEventListener('click', () => { vc.mode = m; vcRenderUnit(); });
+    b.addEventListener('click', () => { vspStop(); vc.mode = m; vcRenderUnit(); });
     modes.appendChild(b);
   });
   vcRoot.appendChild(modes);
@@ -39517,6 +39816,7 @@ function vcRenderUnit() {
   if (vc.mode === 'list') vcRenderList();
   else if (vc.mode === 'cards') vcStartCards();
   else if (vc.mode === 'write') wrStart(vcWriteCtx());
+  else if (vc.mode === 'speak') vcStartSpeak();
   else vcStartQuiz();
 }
 
