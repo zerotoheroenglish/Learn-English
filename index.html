@@ -1055,6 +1055,54 @@
     background:var(--card); border:1px solid var(--paper-line); border-radius:16px; box-shadow:var(--shadow);
   }
   .tense-card{ padding:16px; margin-top:12px; }
+  .fold-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+  .fold-head h3{ flex:1; min-width:0; cursor:pointer; margin-bottom:0 !important; }
+  .fold-btn{ flex:0 0 auto; border:1.5px solid var(--paper-line); background:var(--card); color:var(--ink-soft); border-radius:999px;
+    padding:5px 12px; font:600 12.5px/1.2 var(--font-body); cursor:pointer; white-space:nowrap; margin-top:1px; }
+  .fold-btn:hover{ border-color:var(--rust); color:var(--rust); }
+  .fold-body{ margin-top:10px; }
+  /* ---------- Kiểm tra tổng hợp ---------- */
+  .ext-entry{ margin-top:12px; }
+  .ext-entry-sym{ font-size:24px !important; }
+  .ext-start{ padding:16px; }
+  .ext-p{ font-size:14px; line-height:1.6; color:var(--ink); margin:0 0 8px; }
+  .ext-rules{ margin:0 0 6px 18px; padding:0; font-size:13.5px; line-height:1.6; color:var(--ink-soft); }
+  .ext-h{ font:700 12px/1.3 var(--font-body); text-transform:uppercase; letter-spacing:.5px; color:var(--ink-soft); margin:14px 0 6px; }
+  .ext-lens{ padding:0; }
+  .ext-go{ display:block; width:100%; margin-top:18px; }
+  .ext-hist-row{ display:flex; flex-wrap:wrap; gap:6px; }
+  .ext-hist-it{ display:flex; flex-direction:column; align-items:center; min-width:64px; padding:6px 8px; border-radius:10px; border:1px solid var(--paper-line); background:var(--paper); font-size:11.5px; color:var(--ink-soft); }
+  .ext-hist-it b{ font-size:15px; }
+  .ext-hist-it.good b, .ext-big.good{ color:var(--moss); }
+  .ext-hist-it.mid b, .ext-big.mid{ color:var(--mark, #c58b00); }
+  .ext-hist-it.low b, .ext-big.low{ color:var(--rust); }
+  .ext-bar{ display:flex; align-items:center; gap:8px; margin-top:12px; flex-wrap:wrap; }
+  .ext-bar-it{ font:600 13px/1 var(--font-mono); padding:7px 10px; border-radius:999px; background:var(--card); border:1px solid var(--paper-line); color:var(--ink); }
+  .ext-bar-ok{ color:var(--moss); margin-left:auto; }
+  .ext-prog{ height:6px; border-radius:99px; background:var(--paper-line); overflow:hidden; margin-top:10px; }
+  .ext-prog span{ display:block; height:100%; width:0; background:var(--rust); border-radius:99px; transition:width .3s; }
+  .ext-card{ margin-top:12px; }
+  .ext-from{ display:none; margin-top:10px; font-size:12.5px; color:var(--ink-soft); }
+  .ext-from.show{ display:block; }
+  .ext-next{ display:block; width:100%; margin-top:12px; }
+  .ext-res{ padding:20px 16px; text-align:center; }
+  .ext-res-lv{ font:600 13px/1.3 var(--font-body); color:var(--ink-soft); text-transform:uppercase; letter-spacing:.5px; }
+  .ext-big{ font:800 56px/1.1 var(--font-display, var(--font-body)); margin:6px 0 4px; }
+  .ext-res-sub{ font:600 14px/1.5 var(--font-body); color:var(--ink); }
+  .ext-res-msg{ font-size:14px; line-height:1.55; color:var(--ink-soft); margin:8px auto 0; max-width:440px; }
+  .ext-res-best{ display:inline-block; margin-top:10px; padding:5px 12px; border-radius:999px; background:var(--rust-light); color:var(--rust); font-weight:700; font-size:13px; }
+  .ext-res-acts{ display:flex; justify-content:center; flex-wrap:wrap; gap:8px; margin-top:16px; }
+  .ext-wrong{ padding:16px; }
+  .ext-wl{ margin-top:10px; padding-top:10px; border-top:1px dashed var(--paper-line); }
+  .ext-wl:first-child{ border-top:none; padding-top:0; }
+  .ext-wl-h{ display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:14px; color:var(--ink); }
+  .ext-wl-go{ padding:6px 12px; font-size:12.5px; white-space:nowrap; }
+  .ext-wr{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; padding:8px 0; }
+  .ext-wr-t{ min-width:0; }
+  .ext-wr-vi{ font-size:13.5px; color:var(--ink-soft); }
+  .ext-wr-you{ font-size:13px; color:var(--rust); }
+  .ext-wr-en{ font:600 15px/1.45 var(--font-body); color:var(--moss); }
+  .tense-card.folded .fold-body{ display:none; }
   .tense-card h3{ font-family:var(--font-display); font-size:18px; font-weight:700; letter-spacing:-0.01em; line-height:1.3; margin-bottom:8px; }
   .tense-card .formula{
     background:var(--rust-light); color:var(--rust);
@@ -2080,6 +2128,88 @@
   #pron-setview #pron-result:not(:empty){ margin-top:10px; }
   /* ---- IPA chart ---- */
   .ipa-entry{ width:100%; margin-bottom:4px; }
+  /* ---------- Nối âm ---------- */
+  .lk-entry-sym, .lk-head-icon{ font:700 17px/1 var(--font-mono) !important; letter-spacing:-0.5px; }
+  .lk-tabs{ padding-top:12px; }
+  .lk-legend{ display:flex; flex-wrap:wrap; gap:6px 16px; margin:10px 2px 2px; font-size:12.5px; color:var(--ink-soft); }
+  .lk-legend-it{ display:inline-flex; align-items:center; gap:4px; }
+  .lk-rule{ margin-top:12px; padding:12px 14px; }
+  .lk-sum{ display:flex; align-items:center; gap:10px; cursor:pointer; list-style:none; }
+  .lk-sum::-webkit-details-marker{ display:none; }
+  .lk-sum::after{ content:'▾'; margin-left:auto; color:var(--ink-soft); transition:transform .2s; }
+  .lk-rule[open] .lk-sum::after{ transform:rotate(180deg); }
+  .lk-sum-ic{ flex:0 0 auto; width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; background:var(--rust-light); font-size:18px; }
+  .lk-sum-tx{ display:flex; flex-direction:column; gap:1px; min-width:0; }
+  .lk-sum-t{ font:700 15px/1.35 var(--font-body); color:var(--ink); }
+  .lk-sum-s{ font-size:12.5px; color:var(--ink-soft); }
+  .lk-how{ margin:12px 0 6px; font-size:14px; line-height:1.6; color:var(--ink); }
+  .lk-tip{ margin:0 0 4px; font-size:13px; line-height:1.55; color:var(--ink-soft); }
+  .lk-rule .pr-acts{ margin:8px 0 4px; }
+  .lk-show{ font-size:17px; }
+  .lk-mark{ color:var(--rust); font-weight:800; margin:0 1px; }
+  .lk-ins{ color:var(--moss); font-weight:800; font-size:.78em; vertical-align:super; margin:0 1px; }
+  .lk-drop{ opacity:.38; text-decoration:line-through; }
+  .lk-note{ color:var(--rust); font-weight:600; }
+  .lk-quiz{ margin-top:12px; padding:16px 14px; }
+  .lk-q-n{ font-size:12.5px; color:var(--ink-soft); margin-bottom:10px; }
+  .lk-q{ font:600 19px/2.3 var(--font-body); color:var(--ink); word-break:break-word; }
+  .lk-w{ white-space:nowrap; }
+  .lk-gap{ display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; margin:0; padding:0;
+    border-radius:50%; border:1.5px dashed var(--paper-line); background:transparent; color:var(--rust);
+    font:800 17px/1 var(--font-body); vertical-align:middle; cursor:pointer; }
+  .lk-gap.on{ border-style:solid; border-color:var(--rust); background:var(--rust-light); }
+  .lk-gap.ok{ border-style:solid; border-color:var(--moss); color:var(--moss); background:transparent; }
+  .lk-gap.miss{ border:2px solid var(--rust); color:var(--rust); background:var(--rust-light); }
+  .lk-gap.bad{ border-style:solid; border-color:var(--ink-soft); color:var(--ink-soft); }
+  .lk-gap.none{ opacity:.35; }
+  .lk-q-acts{ display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+  .lk-q-acts button{ white-space:nowrap; }
+  .lk-q-acts .btn-primary{ margin-left:auto; padding-left:18px; padding-right:18px; }
+  .lk-res{ margin-top:12px; }
+  .lk-res-h{ font-weight:700; font-size:14px; margin-bottom:6px; }
+  .lk-res-h.ok{ color:var(--moss); }
+  .lk-res-h.bad{ color:var(--rust); }
+  .lk-res-r{ font-size:13.5px; line-height:1.6; color:var(--ink); }
+  .lk-res-r b{ color:var(--rust); }
+  .lk-done-big{ font:800 44px/1.1 var(--font-body); color:var(--rust); text-align:center; margin-top:6px; }
+  .lk-done-t{ text-align:center; font-weight:600; margin:8px 0 4px; }
+  .lk-done-s{ text-align:center; font-size:13px; color:var(--ink-soft); margin-bottom:14px; }
+  .lk-quiz > .btn-primary{ display:block; margin:0 auto; }
+  .lk-row{ align-items:center; }
+  .lk-btns{ flex-direction:row; gap:6px; }
+  .lk-btns .play-mini, .lk-btns .vc-check{ width:38px; height:38px; }
+  .lk-row .vc-main{ min-width:0; }
+  .lk-row .lk-show{ font-size:17px; line-height:1.4; }
+  .lk-sent .lk-show{ font-size:15.5px; font-weight:600; }
+  .lk-sounds{ display:flex; align-items:baseline; flex-wrap:wrap; gap:6px; margin:2px 0 1px; }
+  .lk-sounds-k{ font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.4px; color:var(--ink-soft); background:var(--paper); border:1px solid var(--paper-line); border-radius:6px; padding:1px 6px; }
+  .lk-sounds-v{ font:700 15px/1.4 var(--font-body); color:var(--rust); }
+  .lk-overview, .lk-steps{ margin-top:12px; padding:14px; }
+  .lk-ov-h{ font:700 14px/1.4 var(--font-body); color:var(--ink); margin-bottom:8px; }
+  .lk-overview{ display:grid; grid-template-columns:1fr; gap:6px; }
+  .lk-overview .lk-ov-h{ margin-bottom:2px; }
+  .lk-ov-it{ display:flex; align-items:center; gap:10px; width:100%; text-align:left; padding:8px 10px; border-radius:12px;
+    border:1px solid var(--paper-line); background:var(--paper); color:var(--ink); cursor:pointer; }
+  .lk-ov-it:hover{ border-color:var(--rust); }
+  .lk-ov-ic{ flex:0 0 auto; width:30px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; background:var(--rust-light); font-size:15px; }
+  .lk-ov-tx{ display:flex; flex-direction:column; min-width:0; }
+  .lk-ov-t{ font:600 13.5px/1.35 var(--font-body); }
+  .lk-ov-ex{ font:500 13px/1.4 var(--font-mono); color:var(--ink-soft); }
+  @media (min-width:640px){ .lk-overview{ grid-template-columns:1fr 1fr; } .lk-overview .lk-ov-h{ grid-column:1 / -1; } }
+  .lk-step{ display:flex; align-items:flex-start; gap:8px; font-size:13.5px; line-height:1.5; color:var(--ink); margin-top:6px; }
+  .lk-step-n{ flex:0 0 auto; width:20px; height:20px; border-radius:50%; background:var(--rust); color:var(--on-accent, #fff); font:700 11.5px/20px var(--font-body); text-align:center; }
+  .lk-step-k{ flex:0 0 22px; text-align:center; font-weight:800; color:var(--rust); }
+  .lk-steps .lk-legend{ margin-top:12px; padding-top:10px; border-top:1px dashed var(--paper-line); }
+  .lk-sum-n{ margin-left:auto; font:600 12px/1 var(--font-mono); color:var(--ink-soft); }
+  .lk-sum::after{ margin-left:10px; }
+  .lk-info{ display:flex; flex-direction:column; gap:6px; margin:4px 0 6px; }
+  .lk-info-r{ display:flex; flex-direction:column; gap:2px; padding:8px 10px; border-radius:10px; background:var(--paper); border:1px solid var(--paper-line); }
+  .lk-info-k{ font:700 12px/1.3 var(--font-body); color:var(--rust); }
+  .lk-info-v{ font-size:13.5px; line-height:1.55; color:var(--ink); }
+  .lk-acts{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin:12px 0 2px; }
+  .lk-sec{ font:700 12px/1.3 var(--font-body); text-transform:uppercase; letter-spacing:.5px; color:var(--ink-soft); }
+  .lk-sec2{ margin:16px 0 0; padding-top:12px; border-top:1px dashed var(--paper-line); }
+  .lk-drop{ opacity:.45; text-decoration:line-through; text-decoration-thickness:2px; }
   .ipa-entry-top{ display:flex; align-items:center; gap:12px; width:100%; }
   .ipa-entry-sym{ flex:0 0 auto; display:flex; align-items:center; justify-content:center; width:54px; height:54px; border-radius:14px;
     background:var(--rust-light); color:var(--rust); font:700 20px/1 var(--font-mono); }
@@ -2252,7 +2382,7 @@
 <header class="hero">
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v68</span>
+      <span class="hero-badge">EN ⇄ VI · v74</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice" id="voice-btn" aria-label="Chọn giọng đọc">🔊 <span class="hv-label">Giọng đọc</span></button>
@@ -13627,6 +13757,36 @@ function prSeqPlay(rows, texts, btn) {
   next();
 }
 
+/* Nút thu gọn cho từng ô nội dung ngữ pháp: "Close ▴" khi đang mở, "Open ▾" khi đã đóng (nhớ trạng thái) */
+const FOLD_KEY = 'hoc-tieng-anh-folded';
+let foldSet = new Set();
+try { const a = JSON.parse(localStorage.getItem(FOLD_KEY) || '[]'); if (Array.isArray(a)) foldSet = new Set(a); } catch (e) {}
+function cardFold(card, key) {
+  const h = card.querySelector(':scope > h3');
+  if (!h) return card;
+  const head = document.createElement('div'); head.className = 'fold-head';
+  const body = document.createElement('div'); body.className = 'fold-body';
+  [...card.childNodes].forEach(n => { if (n !== h) body.appendChild(n); });
+  const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'fold-btn';
+  const set = closed => {
+    card.classList.toggle('folded', closed);
+    btn.textContent = closed ? 'Open ▾' : 'Close ▴';
+    btn.setAttribute('aria-expanded', closed ? 'false' : 'true');
+    btn.setAttribute('aria-label', (closed ? 'Mở ' : 'Thu gọn ') + h.textContent);
+  };
+  const toggle = () => {
+    const closed = !card.classList.contains('folded');
+    set(closed);
+    if (closed) foldSet.add(key); else foldSet.delete(key);
+    try { localStorage.setItem(FOLD_KEY, JSON.stringify([...foldSet])); } catch (e) {}
+  };
+  btn.addEventListener('click', e => { e.stopPropagation(); toggle(); });
+  h.addEventListener('click', toggle);
+  head.appendChild(h); head.appendChild(btn);
+  card.appendChild(head); card.appendChild(body);
+  set(foldSet.has(key));
+  return card;
+}
 /* ---------- IPA chart: the 44 sounds of British English ---------- */
 // [symbol, group, short Vietnamese name, how to make it, tip for Vietnamese learners, examples [word with [highlight], ipa, meaning], extra]
 // extra: vowels 'dài' / 'ngắn' / 'đôi'; consonants [voicing 'vô thanh' | 'hữu thanh', partner symbol]
@@ -14702,10 +14862,451 @@ function ipaShow(sym, silent) {
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && !sh.hidden) close(); });
 })();
 
+/* ---------- Nối âm (connected speech) ----------
+   Ký hiệu trong cột "cách nối":  ‿ = đọc liền   {w} = âm chèn thêm   [t] = âm bị nuốt (không đọc)
+   Mỗi ví dụ: [cụm từ, cách nối, phiên âm khi đọc liền, nghĩa, ghi chú, nghe như] — tự soạn
+   sent: câu ví dụ [câu, cách nối, nghĩa] */
+const LINK_RULES = [
+  { id: 'cv', icon: '🔗', title: 'Phụ âm + nguyên âm',
+    sub: 'Phụ âm cuối "nhảy" sang từ sau', short: 'turn‿off → tur‿noff',
+    how: 'Khi từ trước kết thúc bằng phụ âm và từ sau bắt đầu bằng nguyên âm, phụ âm cuối được đọc như thể nó là phụ âm đầu của từ sau. Hai từ nghe như một từ dài.',
+    when: 'Từ trước tận cùng bằng âm phụ âm (n, t, k, m, s, v…) — từ sau mở đầu bằng âm nguyên âm (a, e, i, o, u…).',
+    mistake: 'Người Việt hay ngắt từng từ ("tơn. óp") hoặc nuốt mất phụ âm cuối ("tơ óp"). Phải giữ phụ âm cuối nhưng chuyển nó sang từ sau.',
+    tip: 'Đọc chậm theo dòng "Nghe như": tur – noff, rồi nhanh dần đến khi thành một từ.',
+    ex: [
+      ['turn off', 'turn‿off', '/tɜː ˈnɒf/', 'tắt (máy, đèn)', '', 'tur‿noff'],
+      ['pick it up', 'pick‿it‿up', '/pɪ kɪ ˈtʌp/', 'nhặt nó lên', '', 'pi‿ki‿tup'],
+      ['an apple', 'an‿apple', '/ə ˈnæpl/', 'một quả táo', '', 'a‿napple'],
+      ['look at', 'look‿at', '/lʊ ˈkæt/', 'nhìn vào', '', 'loo‿kat'],
+      ['get up', 'get‿up', '/ɡe ˈtʌp/', 'thức dậy', '', 'ge‿tup'],
+      ['come in', 'come‿in', '/kʌ ˈmɪn/', 'mời vào', '', 'cu‿min'],
+      ['half an hour', 'half‿an‿hour', '/hɑː fə ˈnaʊə/', 'nửa tiếng', '', 'haa‿fa‿nour'],
+      ['Is it open?', 'Is‿it‿open?', '/ɪ zɪ ˈtəʊpən/', 'Nó có mở cửa không?', '', 'i‿zi‿topen?'],
+      ['check it out', 'check‿it‿out', '/tʃe kɪ ˈtaʊt/', 'xem thử đi', '', 'che‿ki‿tout'],
+      ['first of all', 'first‿of‿all', '/fɜːs tə ˈvɔːl/', 'trước hết', '', 'firs‿to‿vall']
+    ],
+    sent: [
+      ['Can I have an egg?', 'Can‿I have‿an‿egg?', 'Cho tôi một quả trứng được không?'],
+      ['Put it on the table.', 'Put‿it‿on the table.', 'Đặt nó lên bàn đi.'],
+      ['Let\'s look at it again.', 'Let\'s look‿at‿it‿again.', 'Mình xem lại nó lần nữa nhé.']
+    ] },
+  { id: 'vv', icon: '〰️', title: 'Nguyên âm + nguyên âm',
+    sub: 'Chèn nhẹ /w/, /j/ hoặc /r/', short: 'go‿out → go‿wout',
+    how: 'Hai nguyên âm đứng sát nhau rất khó đọc liền, nên người bản xứ chèn một âm rất nhẹ ở giữa để nối hai từ cho trơn.',
+    when: 'Sau /uː, əʊ, aʊ/ (môi tròn) → chèn /w/. Sau /iː, ɪ, eɪ, aɪ, ɔɪ/ (môi dẹt) → chèn /j/. Giọng Anh-Anh: chữ r cuối từ (far, where, more) được đọc lại thành /r/ khi từ sau bắt đầu bằng nguyên âm.',
+    mistake: 'Dừng hẳn giữa hai từ ("gâu. ao") hoặc chèn âm quá mạnh thành một âm tiết riêng.',
+    tip: 'Mẹo: môi đang tròn thì cứ giữ tròn sang từ sau — /w/ tự xuất hiện. Môi đang dẹt thì giữ dẹt — /j/ tự xuất hiện.',
+    ex: [
+      ['go out', 'go‿{w}‿out', '/ɡəʊ ˈwaʊt/', 'đi ra ngoài', 'sau /əʊ/ chèn /w/', 'go‿wout'],
+      ['do it', 'do‿{w}‿it', '/duː wɪt/', 'làm đi', 'sau /uː/ chèn /w/', 'doo‿wit'],
+      ['how are you', 'how‿{w}‿are you', '/haʊ wə ˈjuː/', 'bạn khoẻ không', 'sau /aʊ/ chèn /w/', 'how‿wa you'],
+      ['two eggs', 'two‿{w}‿eggs', '/tuː ˈweɡz/', 'hai quả trứng', 'sau /uː/ chèn /w/', 'two‿weggs'],
+      ['I am', 'I‿{j}‿am', '/aɪ jæm/', 'tôi là', 'sau /aɪ/ chèn /j/', 'I‿yam'],
+      ['see it', 'see‿{j}‿it', '/siː jɪt/', 'thấy nó', 'sau /iː/ chèn /j/', 'see‿yit'],
+      ['say it', 'say‿{j}‿it', '/seɪ jɪt/', 'nói đi', 'sau /eɪ/ chèn /j/', 'say‿yit'],
+      ['she is', 'she‿{j}‿is', '/ʃiː jɪz/', 'cô ấy là', 'sau /iː/ chèn /j/', 'she‿yiz'],
+      ['far away', 'far‿{r}‿away', '/fɑː rəˈweɪ/', 'xa xôi', 'giọng Anh: r cuối được đọc lại', 'faa‿raway'],
+      ['where is', 'where‿{r}‿is', '/weə rɪz/', 'ở đâu', 'giọng Anh: r cuối được đọc lại', 'wair‿riz'],
+      ['more and more', 'more‿{r}‿and more', '/mɔː rən ˈmɔː/', 'ngày càng nhiều', 'giọng Anh: r cuối được đọc lại', 'maw‿ran maw']
+    ],
+    sent: [
+      ['I always go out on Fridays.', 'I‿{j}‿always go‿{w}‿out‿on Fridays.', 'Thứ Sáu nào tôi cũng đi chơi.'],
+      ['Where are you now?', 'Where‿{r}‿are you now?', 'Giờ bạn đang ở đâu?'],
+      ['Try it again.', 'Try‿{j}‿it‿again.', 'Thử lại lần nữa đi.']
+    ] },
+  { id: 'drop', icon: '✂️', title: 'Nuốt âm /t/, /d/',
+    sub: '/t/ /d/ kẹt giữa hai phụ âm bị bỏ', short: 'last night → las night',
+    how: 'Khi /t/ hoặc /d/ đứng giữa hai phụ âm (cuối từ trước và đầu từ sau), người bản xứ thường không bật âm đó ra. Chữ vẫn viết, nhưng tai chỉ nghe hai phụ âm còn lại.',
+    when: 'Phụ âm + t/d ở cuối từ (st, nt, ft, ld, nd…) — từ sau bắt đầu bằng phụ âm.',
+    mistake: 'Khi nghe, người học cố tìm âm /t/ nên tưởng mình nghe nhầm từ. Khi nói, cố bật mạnh /t/ làm câu bị cứng.',
+    tip: 'Nếu từ sau bắt đầu bằng nguyên âm thì /t/ /d/ KHÔNG bị nuốt mà nối sang (first‿of‿all) — xem quy tắc 1.',
+    ex: [
+      ['next day', 'nex[t] day', '/neks ˈdeɪ/', 'ngày hôm sau', '', 'nex day'],
+      ['last night', 'las[t] night', '/lɑːs ˈnaɪt/', 'tối qua', '', 'laas night'],
+      ['must be', 'mus[t] be', '/ˈmʌs bi/', 'chắc hẳn là', '', 'mus be'],
+      ['first time', 'firs[t] time', '/fɜːs ˈtaɪm/', 'lần đầu tiên', '', 'firs time'],
+      ['old man', 'ol[d] man', '/əʊl ˈmæn/', 'ông lão', '', 'ole man'],
+      ['I don\'t know', 'I don[\'t] know', '/aɪ dəʊn ˈnəʊ/', 'tôi không biết', '', 'I don know'],
+      ['fish and chips', 'fish an[d] chips', '/fɪʃ ən ˈtʃɪps/', 'cá và khoai tây chiên', '"and" chỉ còn /ən/', 'fish ’n’ chips'],
+      ['just now', 'jus[t] now', '/dʒʌs ˈnaʊ/', 'vừa nãy', '', 'jus now']
+    ],
+    sent: [
+      ['I met him last night.', 'I met him las[t] night.', 'Tôi đã gặp anh ấy tối qua.'],
+      ['We left the next day.', 'We lef[t] the nex[t] day.', 'Chúng tôi rời đi vào hôm sau.'],
+      ['I don\'t know the answer.', 'I don[\'t] know the answer.', 'Tôi không biết câu trả lời.']
+    ] },
+  { id: 'change', icon: '🔀', title: 'Biến âm',
+    sub: 'Hai âm gặp nhau đổi thành âm khác', short: 'did you → di‿ju',
+    how: 'Một số cặp âm gặp nhau ở ranh giới hai từ sẽ hoà thành một âm mới. Hay gặp nhất là khi từ sau bắt đầu bằng âm /j/ (you, your, year).',
+    when: 't + j → /tʃ/ · d + j → /dʒ/ · s + j → /ʃ/ · z + j → /ʒ/ · ngoài ra /n/ đứng trước /p, b, m/ thường thành /m/.',
+    mistake: 'Nghe "did you" thành một từ lạ "đi-giu" rồi không hiểu. Thật ra đó vẫn là did + you.',
+    tip: 'Khi nói nhanh, cứ để hai âm hoà vào nhau tự nhiên — không cần cố tách "did. you".',
+    ex: [
+      ['don\'t you', 'don\'t‿you', '/ˈdəʊn tʃu/', 'bạn không… à', 't + j → /tʃ/', 'don‿chu'],
+      ['meet you', 'meet‿you', '/ˈmiː tʃu/', 'gặp bạn', 't + j → /tʃ/', 'mee‿chu'],
+      ['last year', 'last‿year', '/lɑːs ˈtʃɪə/', 'năm ngoái', 't + j → /tʃ/', 'laas‿cheer'],
+      ['did you', 'did‿you', '/ˈdɪ dʒu/', 'bạn đã… à', 'd + j → /dʒ/', 'di‿ju'],
+      ['would you', 'would‿you', '/ˈwʊ dʒu/', 'bạn có… không', 'd + j → /dʒ/', 'woo‿ju'],
+      ['miss you', 'miss‿you', '/ˈmɪ ʃu/', 'nhớ bạn', 's + j → /ʃ/', 'mi‿shu'],
+      ['this year', 'this‿year', '/ðɪ ˈʃɪə/', 'năm nay', 's + j → /ʃ/', 'thi‿sheer'],
+      ['as you know', 'as‿you know', '/ə ʒu ˈnəʊ/', 'như bạn biết', 'z + j → /ʒ/', 'a‿zhu know'],
+      ['ten pounds', 'te[n]{m} pounds', '/tem ˈpaʊndz/', 'mười bảng Anh', '/n/ trước /p, b, m/ → /m/', 'tem pounds']
+    ],
+    sent: [
+      ['Nice to meet you.', 'Nice to meet‿you.', 'Rất vui được gặp bạn.'],
+      ['Did you get my message?', 'Did‿you get my message?', 'Bạn nhận được tin nhắn của tôi chưa?'],
+      ['Would you like some tea?', 'Would‿you like some tea?', 'Bạn có muốn uống chút trà không?']
+    ] },
+  { id: 'same', icon: '🟰', title: 'Hai phụ âm giống nhau',
+    sub: 'Chỉ đọc một lần, giữ hơi lâu hơn', short: 'bad dog → ba‿dog',
+    how: 'Khi từ trước kết thúc và từ sau bắt đầu bằng cùng một phụ âm, chỉ đọc âm đó một lần nhưng giữ lâu hơn một chút, không bật ra hai lần.',
+    when: 'Hai phụ âm giống hệt nhau gặp nhau: d‿d, k‿c, m‿m, s‿s, t‿t…',
+    mistake: 'Đọc thành hai lần rõ ràng "bát. đóc" — nghe như hai từ rời, rất cứng.',
+    tip: 'Ngậm âm lại một nhịp (như đang chuẩn bị nói) rồi mới bật ra cho từ sau.',
+    ex: [
+      ['bad dog', 'ba[d]‿dog', '/ˌbæˈdɒɡ/', 'con chó hư', 'một /d/ giữ lâu', 'ba‿dog'],
+      ['black cat', 'bla[ck]‿cat', '/ˌblæˈkæt/', 'con mèo đen', 'một /k/ giữ lâu', 'bla‿cat'],
+      ['some money', 'so[me]‿money', '/sʌˈmʌni/', 'một ít tiền', 'một /m/ giữ lâu', 'su‿money'],
+      ['big girl', 'bi[g]‿girl', '/ˌbɪˈɡɜːl/', 'cô bé lớn', 'một /ɡ/ giữ lâu', 'bi‿girl'],
+      ['bus stop', 'bu[s]‿stop', '/ˈbʌstɒp/', 'trạm xe buýt', 'một /s/ giữ lâu', 'bu‿stop'],
+      ['good day', 'goo[d]‿day', '/ˌɡʊˈdeɪ/', 'ngày tốt lành', 'một /d/ giữ lâu', 'goo‿day'],
+      ['hot tea', 'ho[t]‿tea', '/ˌhɒˈtiː/', 'trà nóng', 'một /t/ giữ lâu', 'ho‿tea'],
+      ['with them', 'wi[th]‿them', '/wɪˈðem/', 'với họ', 'một /ð/ giữ lâu', 'wi‿them']
+    ],
+    sent: [
+      ['Stop playing now.', 'Sto[p]‿playing now.', 'Thôi đừng chơi nữa.'],
+      ['We had dinner at nine.', 'We ha[d]‿dinner‿at nine.', 'Chúng tôi ăn tối lúc chín giờ.'],
+      ['Wait at the bus stop.', 'Wait‿at the bu[s]‿stop.', 'Hãy chờ ở trạm xe buýt.']
+    ] },
+  { id: 'weak', icon: '🔉', title: 'Dạng yếu của từ nhỏ',
+    sub: 'to, of, and, can… đọc thật nhẹ', short: 'a cup of tea → a cu‿pə tea',
+    how: 'Các từ chức năng (giới từ, mạo từ, trợ động từ, liên từ) không mang nghĩa chính nên được đọc rất nhanh và nhẹ, nguyên âm thường biến thành /ə/. Chúng dính vào từ đứng cạnh và là nơi nối âm xảy ra nhiều nhất.',
+    when: 'to → /tə/ · of → /əv/ · and → /ən/ · can → /kən/ · for → /fə/ · at → /ət/ · was → /wəz/ · them → /ðəm/ · do → /də/ · you → /jə/',
+    mistake: 'Đọc to, rõ từng từ nhỏ ("ai. kan. suym") làm câu nghe như robot và người nghe khó bắt được từ chính.',
+    tip: 'Nhấn vào từ mang nghĩa (danh từ, động từ chính, tính từ), còn từ nhỏ lướt qua thật nhanh.',
+    ex: [
+      ['I want to go', 'I want to go', '/aɪ ˈwɒnt tə ˈɡəʊ/', 'tôi muốn đi', 'to → /tə/', 'I want tə go'],
+      ['a cup of tea', 'a cup‿of tea', '/ə ˈkʌ pəv ˈtiː/', 'một tách trà', 'of → /əv/', 'a cu‿pə tea'],
+      ['I can swim', 'I can swim', '/aɪ kən ˈswɪm/', 'tôi biết bơi', 'can → /kən/', 'I kən swim'],
+      ['you and me', 'you an[d] me', '/ˈjuː ən ˈmiː/', 'bạn và tôi', 'and → /ən/', 'you ’n’ me'],
+      ['It\'s for you', 'It\'s for you', '/ɪts fə ˈjuː/', 'cái này cho bạn', 'for → /fə/', 'its fə you'],
+      ['Look at me', 'Look‿at me', '/ˈlʊ kət ˈmiː/', 'nhìn tôi này', 'at → /ət/', 'loo‿kət me'],
+      ['He was late', 'He was late', '/hi wəz ˈleɪt/', 'anh ấy đã đến muộn', 'was → /wəz/', 'he wəz late'],
+      ['Tell them', 'Tell them', '/ˈtel ðəm/', 'nói với họ', 'them → /ðəm/', 'tell thəm'],
+      ['What do you think?', 'What do you think?', '/ˈwɒt də jə ˈθɪŋk/', 'bạn nghĩ sao?', 'do → /də/, you → /jə/', 'wot də yə think?']
+    ],
+    sent: [
+      ['I\'d like a cup of coffee.', 'I\'d like‿a cup‿of coffee.', 'Tôi muốn một tách cà phê.'],
+      ['Give it to them.', 'Give‿it to them.', 'Đưa nó cho họ.'],
+      ['She can come at six.', 'She can come‿at six.', 'Cô ấy có thể đến lúc sáu giờ.']
+    ] }
+];
+
+/* Câu luyện đoán chỗ nối: [câu, {vị trí khe: loại}] — khe i nằm giữa từ i và từ i+1 */
+const LINK_QUIZ = [
+  ['Turn off the light.', { 0: 'cv' }],
+  ['Pick it up, please.', { 0: 'cv', 1: 'cv' }],
+  ['I am at home.', { 0: 'j', 1: 'cv' }],
+  ['Go out and have fun.', { 0: 'w', 1: 'cv' }],
+  ['Did you see it?', { 0: 'dʒ', 2: 'j' }],
+  ['Come in and sit down.', { 0: 'cv', 1: 'cv' }],
+  ['Nice to meet you.', { 2: 'tʃ' }],
+  ['Where is my black cat?', { 0: 'r', 3: 'same' }],
+  ['I miss you so much.', { 1: 'ʃ' }],
+  ['Look at all of us.', { 0: 'cv', 1: 'cv', 2: 'cv', 3: 'cv' }],
+  ['She is very busy.', { 0: 'j' }],
+  ['We stayed in a hotel.', { 1: 'cv', 2: 'cv' }],
+  ['Don\'t you like it?', { 0: 'tʃ', 2: 'cv' }],
+  ['Some money is gone.', { 0: 'same', 1: 'j' }],
+  ['Two eggs and a coffee.', { 0: 'w', 1: 'cv', 2: 'cv' }],
+  ['It was far away.', { 2: 'r' }],
+  ['Can I have an egg?', { 0: 'cv', 2: 'cv', 3: 'cv' }],
+  ['Do it again.', { 0: 'w', 1: 'cv' }],
+  ['The bus stop is near.', { 1: 'same', 2: 'cv' }],
+  ['Would you like a cup of tea?', { 0: 'dʒ', 2: 'cv', 4: 'cv' }]
+];
+const LINK_TYPE = {
+  cv: 'phụ âm cuối nối sang nguyên âm', w: 'chèn /w/ giữa hai nguyên âm', j: 'chèn /j/ giữa hai nguyên âm',
+  r: 'đọc lại /r/ cuối (giọng Anh)', same: 'hai phụ âm giống nhau, đọc một lần',
+  'tʃ': 't + y → /tʃ/', 'dʒ': 'd + y → /dʒ/', 'ʃ': 's + y → /ʃ/'
+};
+const LINK_SET = { id: 'link', words: LINK_RULES.reduce((a, r) => a.concat(r.ex.map(x => [x[0]])), []) };
+const LINK_BEST_KEY = 'hoc-tieng-anh-link-best';
+const linkBest = () => { try { return parseInt(localStorage.getItem(LINK_BEST_KEY), 10) || 0; } catch (e) { return 0; } };
+
+/* vẽ "turn‿off", "go‿{w}‿out", "las[t] night" thành chữ có tô màu */
+function linkMarkEl(src) {
+  const el = prEl('div', 'vc-word lk-show');
+  const re = /(‿)|\{([^}]*)\}|\[([^\]]*)\]/g;
+  let i = 0, m;
+  while ((m = re.exec(src))) {
+    if (m.index > i) el.appendChild(document.createTextNode(src.slice(i, m.index)));
+    if (m[1]) el.appendChild(prEl('span', 'lk-mark', '‿'));
+    else if (m[2] != null) el.appendChild(prEl('span', 'lk-ins', m[2]));
+    else el.appendChild(prEl('span', 'lk-drop', m[3]));
+    i = re.lastIndex;
+  }
+  if (i < src.length) el.appendChild(document.createTextNode(src.slice(i)));
+  return el;
+}
+const linkSlow = t => prSay(t.replace(/[?.!,]/g, '').split(/\s+/).join(', '), 0.6);   // tách từng từ
+const linkFast = t => prSay(t, 0.95);                                                  // nối tự nhiên
+
+function prLinkCard() {
+  const n = LINK_SET.words.length, got = prSetGot(LINK_SET), best = linkBest();
+  const b = prEl('button', 'vc-topic ipa-entry lk-entry' + (got === n ? ' done' : ''));
+  b.id = 'link-entry';
+  const top = prEl('span', 'ipa-entry-top');
+  top.appendChild(prEl('span', 'ipa-entry-sym lk-entry-sym', 'a‿b'));
+  const tx = prEl('span', 'ipa-entry-tx');
+  tx.appendChild(prEl('span', 'vc-tvi', 'Nối âm khi nói'));
+  tx.appendChild(prEl('span', 'vc-ten', `${LINK_RULES.length} quy tắc · ${n} cụm mẫu · ${LINK_QUIZ.length} câu luyện`));
+  top.appendChild(tx);
+  b.appendChild(top);
+  b.appendChild(prEl('span', 'vc-tmeta', (got ? `${got}/${n} cụm đã luyện` : 'Vì sao người bản xứ nói nghe "dính chữ"') + (best ? ` · đoán đúng ${best}/${LINK_QUIZ.length} câu` : '')));
+  const bar = prEl('span', 'vc-bar'); const fill = prEl('span'); fill.style.width = (got / n * 100) + '%'; bar.appendChild(fill); b.appendChild(bar);
+  b.addEventListener('click', () => { prOpenLink(); try { document.getElementById('page-pron').scrollIntoView({ block: 'start' }); } catch (e) {} });
+  return b;
+}
+
+function prOpenLink(startQuiz) {
+  prSeqStop();
+  prOpenSet = LINK_SET;
+  pronHome.hidden = true; pronSets.hidden = true; if (pronMore) pronMore.hidden = true;
+  const v = pronSetView;
+  if (pronResult.parentNode === v) pronSets.parentNode.insertBefore(pronResult, pronSets);
+  pronResult.innerHTML = '';
+  v.innerHTML = ''; v.hidden = false;
+  const back = prEl('button', 'gr-back', '← Tất cả bài luyện');
+  back.addEventListener('click', () => { prShowHome(); try { document.getElementById('page-pron').scrollIntoView({ block: 'start' }); } catch (e) {} });
+  v.appendChild(back);
+  const head = prEl('div', 'vc-head');
+  head.appendChild(prEl('div', 'vc-head-icon ipa-head-icon lk-head-icon', 'a‿b'));
+  const hm = prEl('div', 'vc-head-meta');
+  hm.appendChild(prEl('div', 'vc-head-vi', 'Nối âm khi nói'));
+  hm.appendChild(prEl('div', 'vc-head-en', 'Connected speech · giọng Anh-Anh'));
+  const pr = prEl('div', 'vc-head-prog'); pr.id = 'pr-set-prog'; hm.appendChild(pr);
+  head.appendChild(hm); v.appendChild(head);
+  prSetProg(LINK_SET);
+
+  // tab con: học quy tắc / luyện đoán
+  const tabs = prEl('div', 'colloc-chips lk-tabs');
+  const tLearn = prEl('button', 'colloc-chip', '📘 Quy tắc · ' + LINK_RULES.length);
+  const tQuiz = prEl('button', 'colloc-chip', '🎯 Luyện đoán chỗ nối · ' + LINK_QUIZ.length);
+  tabs.appendChild(tLearn); tabs.appendChild(tQuiz);
+  v.appendChild(tabs);
+  const body = prEl('div', 'lk-body');
+  v.appendChild(body);
+  const show = q => {
+    tLearn.classList.toggle('active', !q); tQuiz.classList.toggle('active', !!q);
+    prSeqStop(); body.innerHTML = '';
+    if (q) linkQuiz(body); else linkLearn(body);
+  };
+  tLearn.addEventListener('click', () => show(false));
+  tQuiz.addEventListener('click', () => show(true));
+  show(!!startQuiz);
+}
+
+/* nghe tách từng từ rồi nghe nối, để so sánh */
+function linkCompare(t) {
+  const u = linkSlow(t);
+  let done = false;
+  const go = () => { if (done) return; done = true; setTimeout(() => linkFast(t), 450); };
+  try { if (u && u.addEventListener) { u.addEventListener('end', go); u.addEventListener('error', go); } } catch (e) {}
+  setTimeout(go, Math.max(1800, t.split(/\s+/).length * 900));
+}
+function linkRow(w, mark, ipa, vi, note, sounds, isSent) {
+  const row = prEl('div', 'vc-row pr-row lk-row' + (isSent ? ' lk-sent' : '') + (!isSent && prDone.has('link|' + w) ? ' learned' : ''));
+  const main = prEl('div', 'vc-main pr-tap');
+  main.setAttribute('role', 'button'); main.tabIndex = 0;
+  main.title = 'Chạm để nghe so sánh: tách từ → nối';
+  main.appendChild(linkMarkEl(mark));
+  if (sounds) {
+    const sl = prEl('div', 'lk-sounds');
+    sl.appendChild(prEl('span', 'lk-sounds-k', 'Nghe như'));
+    sl.appendChild(linkMarkEl(sounds)).className = 'lk-sounds-v';
+    main.appendChild(sl);
+  }
+  if (ipa) main.appendChild(prEl('div', 'vc-ipa pr-ipa', ipa));
+  const mean = prEl('div', 'vc-mean', vi);
+  if (note) { mean.appendChild(document.createTextNode(' · ')); mean.appendChild(prEl('span', 'lk-note', note)); }
+  main.appendChild(mean);
+  main.addEventListener('click', () => { prSeqStop(); linkCompare(w); });
+  const btns = prEl('div', 'vc-btns lk-btns');
+  btns.appendChild(prBtn('🐢', 'Nghe tách từng từ: ' + w, () => linkSlow(w), true));
+  btns.appendChild(prBtn('▶', 'Nghe nối tự nhiên: ' + w, () => linkFast(w)));
+  if (!isSent) btns.appendChild(prCheck(LINK_SET, w, row));
+  row.appendChild(main); row.appendChild(btns);
+  return row;
+}
+
+function linkLearn(body) {
+  body.appendChild(prEl('div', 'pr-set-tip pr-set-tip2',
+    'Người bản xứ không đọc từng từ rời rạc mà nối chúng thành một dòng âm — vì vậy nhiều câu nghe như "một từ dài" dù bạn biết hết từ. Nắm 6 quy tắc dưới đây, bạn sẽ nghe ra và nói tự nhiên hơn.'));
+
+  // tóm tắt nhanh: chạm để mở đúng quy tắc
+  const sum = prEl('div', 'tense-card lk-overview');
+  sum.appendChild(prEl('div', 'lk-ov-h', 'Tóm tắt 6 quy tắc'));
+  const cards = [];
+  LINK_RULES.forEach((r, ri) => {
+    const it = prEl('button', 'lk-ov-it');
+    it.appendChild(prEl('span', 'lk-ov-ic', r.icon));
+    const tx = prEl('span', 'lk-ov-tx');
+    tx.appendChild(prEl('span', 'lk-ov-t', (ri + 1) + '. ' + r.title));
+    tx.appendChild(linkMarkEl(r.short)).className = 'lk-ov-ex';
+    it.appendChild(tx);
+    it.addEventListener('click', () => { const c = cards[ri]; if (!c) return; c.open = true; try { c.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) {} });
+    sum.appendChild(it);
+  });
+  body.appendChild(sum);
+
+  // cách luyện + chú thích ký hiệu
+  const how = prEl('div', 'tense-card lk-steps');
+  how.appendChild(prEl('div', 'lk-ov-h', 'Cách luyện mỗi cụm (3 bước)'));
+  [['🐢', 'Nghe tách từng từ để biết câu gồm những từ nào.'],
+   ['‿', 'Nhìn dòng "Nghe như" — đọc chậm phần dính liền như một từ.'],
+   ['▶', 'Nghe nối tự nhiên rồi nói theo đúng tốc độ, lặp lại 3 lần. Chạm vào chữ để nghe so sánh liền hai kiểu.']].forEach(([k, t], i) => {
+    const r = prEl('div', 'lk-step');
+    r.appendChild(prEl('span', 'lk-step-n', String(i + 1)));
+    r.appendChild(prEl('span', 'lk-step-k', k));
+    r.appendChild(prEl('span', null, t));
+    how.appendChild(r);
+  });
+  const legend = prEl('div', 'lk-legend');
+  [['‿', 'lk-mark', 'đọc liền'], ['w', 'lk-ins', 'âm chèn thêm'], ['t', 'lk-drop', 'âm bị nuốt (không đọc)']].forEach(([s, c, t]) => {
+    const it = prEl('span', 'lk-legend-it'); it.appendChild(prEl('span', c, s)); it.appendChild(document.createTextNode(' ' + t)); legend.appendChild(it);
+  });
+  how.appendChild(legend);
+  body.appendChild(how);
+
+  LINK_RULES.forEach((r, ri) => {
+    const card = prEl('details', 'tense-card lk-rule');
+    card.id = 'lk-rule-' + r.id;
+    if (ri === 0) card.open = true;
+    const sm = prEl('summary', 'lk-sum');
+    sm.appendChild(prEl('span', 'lk-sum-ic', r.icon));
+    const st = prEl('span', 'lk-sum-tx');
+    st.appendChild(prEl('span', 'lk-sum-t', (ri + 1) + '. ' + r.title));
+    st.appendChild(prEl('span', 'lk-sum-s', r.sub));
+    sm.appendChild(st);
+    const got = r.ex.filter(x => prDone.has('link|' + x[0])).length;
+    sm.appendChild(prEl('span', 'lk-sum-n', got + '/' + r.ex.length));
+    card.appendChild(sm);
+
+    card.appendChild(prEl('p', 'lk-how', r.how));
+    const info = prEl('div', 'lk-info');
+    [['📌 Khi nào', r.when], ['⚠️ Lỗi hay gặp', r.mistake], ['💡 Mẹo', r.tip]].forEach(([k, t]) => {
+      const b = prEl('div', 'lk-info-r');
+      b.appendChild(prEl('span', 'lk-info-k', k));
+      b.appendChild(prEl('span', 'lk-info-v', t));
+      info.appendChild(b);
+    });
+    card.appendChild(info);
+
+    const acts = prEl('div', 'pr-acts lk-acts');
+    acts.appendChild(prEl('span', 'lk-sec', 'Cụm từ mẫu · ' + r.ex.length));
+    const all = prEl('button', 'ls-slow', '▶ Nghe lần lượt');
+    acts.appendChild(all);
+    card.appendChild(acts);
+    const rows = [], texts = [];
+    r.ex.forEach(x => {
+      const row = linkRow(x[0], x[1], x[2], x[3], x[4], x[5]);
+      card.appendChild(row); rows.push(row); texts.push(x[0]);
+    });
+    all.addEventListener('click', () => prSeqPlay(rows, texts, all));
+
+    if (r.sent && r.sent.length) {
+      card.appendChild(prEl('div', 'lk-sec lk-sec2', 'Trong câu'));
+      r.sent.forEach(s => card.appendChild(linkRow(s[0], s[1], '', s[2], '', '', true)));
+    }
+    cards.push(card);
+    body.appendChild(card);
+  });
+  const nb = prEl('button', 'btn-primary vc-next-unit', '🎯 Luyện đoán chỗ nối →');
+  nb.addEventListener('click', () => prOpenLink(true));
+  body.appendChild(nb);
+}
+
+function linkQuiz(body) {
+  const order = LINK_QUIZ.map((_, i) => i);
+  for (let i = order.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [order[i], order[j]] = [order[j], order[i]]; }
+  let pos = 0, score = 0;
+  body.appendChild(prEl('div', 'pr-set-tip pr-set-tip2',
+    'Nghe câu, rồi chạm vào các chấm ◦ giữa hai từ ở chỗ bạn nghĩ có nối âm. Bấm "Kiểm tra" để xem đáp án và lý do.'));
+  const card = prEl('div', 'tense-card lk-quiz');
+  body.appendChild(card);
+  const draw = () => {
+    card.innerHTML = '';
+    if (pos >= order.length) {
+      const best = Math.max(linkBest(), score);
+      try { localStorage.setItem(LINK_BEST_KEY, String(best)); } catch (e) {}
+      card.appendChild(prEl('div', 'lk-done-big', `${score}/${order.length}`));
+      card.appendChild(prEl('div', 'lk-done-t', score === order.length ? 'Tuyệt vời! Bạn nghe ra hết các chỗ nối.' : score >= order.length * 0.7 ? 'Rất tốt! Xem lại những câu còn sai nhé.' : 'Cứ luyện thêm: mở lại phần Quy tắc rồi thử lại.'));
+      card.appendChild(prEl('div', 'lk-done-s', `Kỷ lục của bạn: ${best}/${order.length} câu`));
+      const again = prEl('button', 'btn-primary', '↻ Làm lại');
+      again.addEventListener('click', () => { body.innerHTML = ''; linkQuiz(body); });
+      card.appendChild(again);
+      return;
+    }
+    const [sent, ans] = LINK_QUIZ[order[pos]];
+    const words = sent.split(' ');
+    card.appendChild(prEl('div', 'lk-q-n', `Câu ${pos + 1} / ${order.length} · đúng ${score}`));
+    const line = prEl('div', 'lk-q');
+    const gaps = [];
+    words.forEach((w, i) => {
+      line.appendChild(prEl('span', 'lk-w', w));
+      if (i < words.length - 1) {
+        const g = prEl('button', 'lk-gap', '');
+        g.setAttribute('aria-label', 'Nối "' + w + '" với "' + words[i + 1] + '"');
+        g.addEventListener('click', () => { if (card.dataset.checked) return; g.classList.toggle('on'); g.textContent = g.classList.contains('on') ? '‿' : ''; });
+        line.appendChild(document.createTextNode(' ')); line.appendChild(g); line.appendChild(document.createTextNode(' ')); gaps.push(g);
+      }
+    });
+    card.appendChild(line);
+    const acts = prEl('div', 'lk-q-acts');
+    const bSlow = prEl('button', 'ls-slow', '🐢 Từng từ');
+    const bFast = prEl('button', 'ls-slow', '▶ Nghe câu');
+    const bCheck = prEl('button', 'btn-primary', 'Kiểm tra');
+    bSlow.addEventListener('click', () => linkSlow(sent));
+    bFast.addEventListener('click', () => linkFast(sent));
+    acts.appendChild(bFast); acts.appendChild(bSlow); acts.appendChild(bCheck);
+    card.appendChild(acts);
+    const res = prEl('div', 'lk-res');
+    card.appendChild(res);
+    delete card.dataset.checked;
+    bCheck.addEventListener('click', () => {
+      if (card.dataset.checked) { pos++; draw(); return; }
+      card.dataset.checked = '1';
+      let ok = true;
+      gaps.forEach((g, i) => {
+        const want = ans[i] != null, got = g.classList.contains('on');
+        g.textContent = want ? '‿' : (got ? '×' : '');
+        g.classList.add(want && got ? 'ok' : want ? 'miss' : got ? 'bad' : 'none');
+        if (want !== got) ok = false;
+      });
+      if (ok) score++;
+      res.appendChild(prEl('div', 'lk-res-h ' + (ok ? 'ok' : 'bad'), ok ? '✓ Chính xác!' : '✗ Chưa đúng — chỗ viền đỏ là chỗ bạn bỏ sót, dấu × là chỗ không nối.'));
+      Object.keys(ans).sort((a, b) => a - b).forEach(k => {
+        const i = +k;
+        const r = prEl('div', 'lk-res-r');
+        r.appendChild(prEl('b', null, words[i].replace(/[?.!,]/g, '') + '‿' + words[i + 1].replace(/[?.!,]/g, '')));
+        r.appendChild(document.createTextNode(' — ' + LINK_TYPE[ans[k]]));
+        res.appendChild(r);
+      });
+      bCheck.textContent = pos + 1 < order.length ? 'Câu tiếp →' : 'Xem kết quả';
+      linkFast(sent);
+    });
+    linkFast(sent);
+  };
+  draw();
+}
+
 function renderPronSets() {
   pronSets.innerHTML = '';
   pronSets.appendChild(prEl('div', 'tense-group-title', 'Bảng phiên âm IPA'));
   pronSets.appendChild(prIpaCard());
+  pronSets.appendChild(prEl('div', 'tense-group-title ipa-sets-title', 'Nối âm trong câu'));
+  pronSets.appendChild(prLinkCard());
   pronSets.appendChild(prEl('div', 'tense-group-title ipa-sets-title', 'Luyện các âm khó với người Việt'));
   const grid = prEl('div', 'vc-grid');
   PRON_SETS.forEach(set => {
@@ -14914,7 +15515,7 @@ function tnQuestionCard(id) {
     card.appendChild(tnEl('div', 'tn-sub', 'How- · how, how many, how much, how long, how often, how far'));
     card.appendChild(tnFxBox([['How-', 'Câu hỏi How-', how]]));
   }
-  return card;
+  return cardFold(card, 'q|' + id);
 }
 
 /* jump to the matching lesson in the Exercises tab */
@@ -14955,7 +15556,7 @@ function renderTenseTopic(id) {
   const fx = tnEl('div', 'tense-card');
   fx.appendChild(tnEl('h3', null, 'Công thức'));
   fx.appendChild(tnFxBox([['+', 'Khẳng định', t.formula.pos], ['−', 'Phủ định', t.formula.neg], ['?', 'Câu hỏi', t.formula.q]]));
-  tensesList.appendChild(fx);
+  tensesList.appendChild(cardFold(fx, 'tn|' + t.id + '|fx'));
 
   const q = tnQuestionCard(t.id);
   if (q) tensesList.appendChild(q);
@@ -14971,7 +15572,7 @@ function renderTenseTopic(id) {
     t.signals.forEach(x => sg.appendChild(tnEl('span', 'tn-sig', x)));
     use.appendChild(sg);
   }
-  tensesList.appendChild(use);
+  tensesList.appendChild(cardFold(use, 'tn|' + t.id + '|use'));
 
   const ex = tnEl('div', 'tense-card');
   ex.appendChild(tnEl('h3', null, 'Ví dụ'));
@@ -14984,7 +15585,7 @@ function renderTenseTopic(id) {
     row.appendChild(tnPlay(e.en, 'Nghe câu ví dụ'));
     ex.appendChild(row);
   });
-  tensesList.appendChild(ex);
+  tensesList.appendChild(cardFold(ex, 'tn|' + t.id + '|ex'));
 
   if (t.mistake) {
     const mc = tnEl('div', 'tense-card gr-tips');
@@ -14994,7 +15595,7 @@ function renderTenseTopic(id) {
     const r = tnEl('div', 'tn-mis-row'); r.appendChild(tnEl('span', 'tn-v', '✓')); r.appendChild(tnEl('b', null, t.mistake.right)); r.appendChild(tnPlay(t.mistake.right, 'Nghe câu đúng')); m.appendChild(r);
     m.appendChild(tnEl('div', 'tn-mis-note', t.mistake.note));
     mc.appendChild(m);
-    tensesList.appendChild(mc);
+    tensesList.appendChild(cardFold(mc, 'tn|' + t.id + '|mis'));
   }
 
   const pr = tnPracticeBtn(t.id);
@@ -15456,7 +16057,7 @@ function renderGrammarTopic(id) {
   head.appendChild(grEl('p', 'gr-intro', t.intro));
   grRoot.appendChild(head);
 
-  t.sections.forEach(sec => {
+  t.sections.forEach((sec, si) => {
     const card = grEl('div', 'tense-card');
     card.appendChild(grEl('h3', null, sec.name));
     if (sec.formula || sec.fx) card.appendChild(grFormula(sec));
@@ -15482,7 +16083,7 @@ function renderGrammarTopic(id) {
       row.appendChild(txt); row.appendChild(play);
       card.appendChild(row);
     });
-    grRoot.appendChild(card);
+    grRoot.appendChild(cardFold(card, 'gr|' + t.id + '|' + si));
   });
 
   const gq = tnQuestionCard(t.id);
@@ -15494,7 +16095,7 @@ function renderGrammarTopic(id) {
     const ul = grEl('ul');
     t.tips.forEach(tip => ul.appendChild(grEl('li', null, tip)));
     tips.appendChild(ul);
-    grRoot.appendChild(tips);
+    grRoot.appendChild(cardFold(tips, 'gr|' + t.id + '|tips'));
   }
 
   const gpr = tnPracticeBtn(t.id);
@@ -43974,6 +44575,7 @@ const EX_B2C1 = {
     intro.appendChild(pg);
     intro.appendChild(E('p', 'tn-tip', '💡 Mỗi bài 17 câu dịch Việt → Anh: 12 câu kể, 3 câu hỏi Wh- và 2 câu hỏi How-. Câu nào cũng chỉ dùng đúng cấu trúc của bài đó bên tab Ngữ pháp.'));
     root.appendChild(intro);
+    root.appendChild(testEntry(exLevel));
 
     const grid = E('div', 'gr-grid');
     list.forEach((l, i) => {
@@ -44076,7 +44678,7 @@ const EX_B2C1 = {
       exTop();
     });
     rc.appendChild(go);
-    root.appendChild(rc);
+    root.appendChild(typeof cardFold === 'function' ? cardFold(rc, 'ex|' + l.id) : rc);
 
     /* input mode */
     const tools = E('div', 'ex-tools');
@@ -44240,6 +44842,289 @@ const EX_B2C1 = {
     return card;
   }
 
+  /* ============================ kiểm tra tổng hợp theo cấp độ ============================ */
+  const TEST_KEY = 'hoc-tieng-anh-ex-test';
+  let testStore = {};
+  try { const o = JSON.parse(localStorage.getItem(TEST_KEY) || '{}'); if (o && typeof o === 'object') testStore = o; } catch (e) {}
+  const testSave = () => { try { localStorage.setItem(TEST_KEY, JSON.stringify(testStore)); } catch (e) {} };
+  const testRec = n => testStore[n] || (testStore[n] = { best: 0, bestOf: 0, runs: [] });
+  const fmtTime = s => Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0');
+  let testTimer = null;
+  const testStop = () => { if (testTimer) { clearInterval(testTimer); testTimer = null; } };
+
+  function testEntry(n) {
+    const L = EX_LEVELS[n - 1], r = testRec(n), lessons = exOf(n).length;
+    const b = E('button', 'vc-topic ipa-entry ext-entry');
+    const top = E('span', 'ipa-entry-top');
+    top.appendChild(E('span', 'ipa-entry-sym ext-entry-sym', '🏁'));
+    const tx = E('span', 'ipa-entry-tx');
+    tx.appendChild(E('span', 'vc-tvi', `Kiểm tra tổng hợp ${L.code}`));
+    tx.appendChild(E('span', 'vc-ten', `Câu trộn ngẫu nhiên từ ${lessons} bài · chấm điểm và lưu kỷ lục`));
+    top.appendChild(tx); b.appendChild(top);
+    const last = r.runs[r.runs.length - 1];
+    b.appendChild(E('span', 'vc-tmeta', r.runs.length
+      ? `Kỷ lục ${r.best}% (${Math.round(r.best * r.bestOf / 100)}/${r.bestOf} câu) · lần gần nhất ${last.pct}% · đã làm ${r.runs.length} lần`
+      : 'Chưa làm lần nào — thử sức xem bạn nắm cấp này tới đâu'));
+    const bar = E('span', 'vc-bar'); const f = E('span'); f.style.width = r.best + '%'; bar.appendChild(f); b.appendChild(bar);
+    b.addEventListener('click', () => { exTest(n); exTop(); });
+    return b;
+  }
+
+  /* chọn câu rải đều các bài: lần lượt lấy 1 câu ngẫu nhiên từ mỗi bài (thứ tự bài cũng trộn) */
+  function testPick(n, count) {
+    const pools = exOf(n).map(l => ({ l, idx: exShuffle(l.items.map((_, i) => i), Math.floor(Math.random() * 1e6) + 1) }));
+    const order = exShuffle(pools, Math.floor(Math.random() * 1e6) + 1);
+    const out = [];
+    for (let round = 0; out.length < count && round < 40; round++)
+      for (const p of order) { if (out.length >= count) break; const i = p.idx[round]; if (i != null) out.push({ l: p.l, i, it: p.l.items[i] }); }
+    return exShuffle(out, Math.floor(Math.random() * 1e6) + 1);
+  }
+
+  function exTest(n) {
+    testStop();
+    exLevel = n; try { localStorage.setItem(LV_KEY, String(n)); } catch (e) {}
+    const L = EX_LEVELS[n - 1], r = testRec(n), lessons = exOf(n);
+    root.innerHTML = '';
+    const back = E('button', 'gr-back', `← Bài tập ${L.code}`);
+    back.addEventListener('click', () => { testStop(); exHome(); exTop(); });
+    root.appendChild(back);
+    const head = E('div', 'gr-head');
+    head.appendChild(E('div', 'gr-en', `${L.code} · ${L.vi} · Kiểm tra tổng hợp`));
+    head.appendChild(E('h2', 'gr-title', `Kiểm tra tổng hợp ${L.code}`));
+    root.appendChild(head);
+
+    const card = E('div', 'tense-card ext-start');
+    card.appendChild(E('p', 'ext-p', `Câu hỏi được trộn ngẫu nhiên từ cả ${lessons.length} bài của cấp ${L.code}, mỗi bài ít nhất một câu nếu đủ số câu. Bạn không biết trước câu thuộc bài nào — đúng như đi thi.`));
+    const ul = E('ul', 'ext-rules');
+    ['Mỗi lần một câu: đọc tiếng Việt, viết (hoặc xếp) câu tiếng Anh rồi bấm Kiểm tra.',
+     'Có đồng hồ đếm giờ để bạn biết mình làm nhanh tới đâu (không giới hạn thời gian).',
+     'Cuối bài: điểm, thời gian, và danh sách câu sai kèm nút mở lại đúng bài cần ôn.']
+      .forEach(t => ul.appendChild(E('li', null, t)));
+    card.appendChild(ul);
+
+    card.appendChild(E('div', 'ext-h', 'Số câu'));
+    const lens = E('div', 'colloc-chips ext-lens');
+    const total = lessons.reduce((a, l) => a + l.items.length, 0);
+    let len = Math.min(r.len || 20, total);
+    [10, 20, 30, 50].filter(x => x <= total).forEach(x => {
+      const c = E('button', 'colloc-chip' + (x === len ? ' active' : ''), x + ' câu');
+      c.addEventListener('click', () => { len = x; lens.querySelectorAll('.colloc-chip').forEach(y => y.classList.toggle('active', y === c)); });
+      lens.appendChild(c);
+    });
+    card.appendChild(lens);
+
+    card.appendChild(E('div', 'ext-h', 'Cách làm'));
+    const modes = E('div', 'colloc-chips ext-lens');
+    [[false, '⌨️ Tự viết'], [true, '🧩 Xếp từ']].forEach(([v, lbl]) => {
+      const c = E('button', 'colloc-chip' + (exBank === v ? ' active' : ''), lbl);
+      c.addEventListener('click', () => { exBank = v; try { localStorage.setItem(BANK_KEY, v ? '1' : '0'); } catch (e) {} modes.querySelectorAll('.colloc-chip').forEach(y => y.classList.toggle('active', y === c)); });
+      modes.appendChild(c);
+    });
+    card.appendChild(modes);
+
+    if (r.runs.length) {
+      const hist = E('div', 'ext-hist');
+      hist.appendChild(E('div', 'ext-h', `Kỷ lục: ${r.best}% · ${r.runs.length} lần đã làm`));
+      const row = E('div', 'ext-hist-row');
+      r.runs.slice(-8).forEach(x => {
+        const it = E('span', 'ext-hist-it' + (x.pct >= 80 ? ' good' : x.pct >= 50 ? ' mid' : ' low'));
+        it.appendChild(E('b', null, x.pct + '%'));
+        it.appendChild(E('span', null, `${x.ok}/${x.n} · ${fmtTime(x.sec)}`));
+        row.appendChild(it);
+      });
+      hist.appendChild(row);
+      card.appendChild(hist);
+    }
+    const go = E('button', 'btn-primary ext-go', '▶ Bắt đầu');
+    go.addEventListener('click', () => { r.len = len; testSave(); testRun(n, testPick(n, len)); exTop(); });
+    card.appendChild(go);
+    root.appendChild(card);
+  }
+
+  function testRun(n, qs) {
+    testStop();
+    const L = EX_LEVELS[n - 1];
+    const ans = new Array(qs.length).fill(null);   // {ok, typed}
+    let pos = 0, sec = 0;
+    root.innerHTML = '';
+    const back = E('button', 'gr-back', `← Thoát bài kiểm tra`);
+    back.addEventListener('click', () => {
+      if (ans.some(a => a) && !confirmQuit()) return;
+      testStop(); exTest(n); exTop();
+    });
+    root.appendChild(back);
+    // xác nhận thoát bằng chính nút (không dùng hộp thoại của trình duyệt)
+    let quitArmed = false;
+    function confirmQuit() {
+      if (quitArmed) return true;
+      quitArmed = true; back.textContent = '⚠️ Bấm lần nữa để thoát (mất kết quả)';
+      setTimeout(() => { quitArmed = false; back.textContent = '← Thoát bài kiểm tra'; }, 3000);
+      return false;
+    }
+
+    const bar = E('div', 'ext-bar');
+    const bPos = E('span', 'ext-bar-it');
+    const bTime = E('span', 'ext-bar-it');
+    const bOk = E('span', 'ext-bar-it ext-bar-ok');
+    bar.appendChild(bPos); bar.appendChild(bTime); bar.appendChild(bOk);
+    const prog = E('div', 'ext-prog'); const progF = E('span'); prog.appendChild(progF);
+    root.appendChild(bar); root.appendChild(prog);
+    const holder = E('div', 'ext-holder');
+    root.appendChild(holder);
+    const sync = () => {
+      bPos.textContent = `Câu ${Math.min(pos + 1, qs.length)}/${qs.length}`;
+      bTime.textContent = '⏱ ' + fmtTime(sec);
+      bOk.textContent = '✓ ' + ans.filter(a => a && a.ok).length;
+      progF.style.width = (ans.filter(Boolean).length / qs.length * 100) + '%';
+    };
+    testTimer = setInterval(() => { if (!document.body.contains(bTime)) { testStop(); return; } sec++; bTime.textContent = '⏱ ' + fmtTime(sec); }, 1000);
+
+    const show = () => {
+      holder.innerHTML = '';
+      if (pos >= qs.length) { testStop(); testResult(n, qs, ans, sec); return; }
+      sync();
+      const q = qs[pos], it = q.it;
+      const card = E('div', 'tense-card ex-card ext-card');
+      const qh = E('div', 'ex-q');
+      qh.appendChild(E('span', 'ex-n', String(pos + 1)));
+      qh.appendChild(E('div', 'ex-q-text ex-q-vi', it[1]));
+      card.appendChild(qh);
+      const inputWrap = E('div', 'ex-in');
+      const res = E('div', 'ex-res'); res.hidden = true;
+      let getTyped = () => '';
+      if (exBank) {
+        const tokens = it[0].split(/\s+/).filter(Boolean);
+        let picked = [];
+        const line = E('div', 'ex-line'), chips = E('div', 'ex-chips'), bank = E('div', 'ex-bank');
+        const seed = Math.floor(Math.random() * 1e5) + 3;
+        const render = () => {
+          line.innerHTML = ''; chips.innerHTML = '';
+          if (!picked.length) line.appendChild(E('span', 'ex-line-ph', 'Chạm từ bên dưới để xếp câu…'));
+          picked.forEach((t, idx) => { const c = E('button', 'ex-chip ex-chip-on', t.w); c.addEventListener('click', () => { if (ans[pos]) return; picked.splice(idx, 1); render(); }); line.appendChild(c); });
+          exShuffle(tokens.map((w, idx) => ({ w, idx })), seed).forEach(t => {
+            if (picked.some(p => p.idx === t.idx)) return;
+            const c = E('button', 'ex-chip', t.w); c.addEventListener('click', () => { if (ans[pos]) return; picked.push(t); render(); }); chips.appendChild(c);
+          });
+        };
+        render();
+        bank.appendChild(line); bank.appendChild(chips); inputWrap.appendChild(bank);
+        getTyped = () => picked.map(p => p.w).join(' ');
+      } else {
+        const inp = E('textarea', 'ex-input');
+        inp.rows = 2; inp.placeholder = 'Viết câu tiếng Anh…'; inp.setAttribute('aria-label', 'Câu tiếng Anh của bạn');
+        inputWrap.appendChild(inp);
+        getTyped = () => inp.value;
+        inp.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); ck.click(); } });
+        setTimeout(() => { try { inp.focus({ preventScroll: true }); } catch (e) {} }, 50);
+      }
+      const acts = E('div', 'ex-acts');
+      const ck = E('button', 'btn-primary', 'Kiểm tra');
+      const skip = E('button', 'btn-ghost', 'Bỏ qua');
+      acts.appendChild(ck); acts.appendChild(skip);
+      inputWrap.appendChild(acts);
+      card.appendChild(inputWrap); card.appendChild(res);
+      card.appendChild(E('div', 'ext-from', 'Thuộc bài: ' + q.l.title));
+      holder.appendChild(card);
+
+      const next = E('button', 'btn-primary ext-next', pos + 1 < qs.length ? 'Câu tiếp →' : 'Xem kết quả');
+      next.addEventListener('click', () => { pos++; show(); exTop(); });
+      const grade = (ok, typed) => {
+        ans[pos] = { ok, typed };
+        if (ok) { exDone.add(key(q.l, q.i)); save(); }
+        card.classList.add('ext-done'); card.classList.toggle('ok', ok); card.classList.toggle('bad', !ok);
+        acts.hidden = true;
+        card.querySelector('.ext-from').classList.add('show');
+        res.hidden = false; res.innerHTML = '';
+        if (ok) res.appendChild(E('div', 'ex-ok', '✓ Chính xác!'));
+        else res.appendChild(E('div', 'ex-wrong', typed.trim() ? '✗ Chưa đúng. So lại với đáp án:' : '— Bỏ qua. Đáp án:'));
+        const row = E('div', 'ex-ans-row'), d = E('div', 'ex-ans-en');
+        if (ok || !typed.trim()) d.textContent = it[0];
+        else exDiff(it[0], typed).forEach(([w, same]) => { d.appendChild(E('span', same ? 'ex-w' : 'ex-w ex-w-miss', w)); d.appendChild(document.createTextNode(' ')); });
+        row.appendChild(d); row.appendChild(exPlay(it[0])); res.appendChild(row);
+        if (it[2] && it[2].length) res.appendChild(E('div', 'ex-alt', 'Cách khác cũng đúng: ' + it[2].join(' · ')));
+        if (!ok && typed.trim()) {
+          const ov = E('button', 'btn-ghost ex-ov', 'Mình viết cũng đúng → tính là đúng');
+          ov.addEventListener('click', () => {
+            ans[pos].ok = true; exDone.add(key(q.l, q.i)); save();
+            card.classList.add('ok'); card.classList.remove('bad');
+            ov.remove(); res.firstChild.className = 'ex-ok'; res.firstChild.textContent = '✓ Đã tính là đúng';
+            sync();
+          });
+          res.appendChild(ov);
+        }
+        res.appendChild(next);
+        sync();
+        setTimeout(() => { try { next.focus({ preventScroll: true }); } catch (e) {} }, 30);
+      };
+      ck.addEventListener('click', () => { const t = getTyped(); if (!t.trim()) return; grade(exOk(t, it), t); });
+      skip.addEventListener('click', () => grade(false, ''));
+    };
+    show();
+  }
+
+  function testResult(n, qs, ans, sec) {
+    const L = EX_LEVELS[n - 1], r = testRec(n);
+    const ok = ans.filter(a => a && a.ok).length, pct = Math.round(ok / qs.length * 100);
+    const isBest = pct > r.best || (pct === r.best && !r.runs.length);
+    if (pct >= r.best) { r.best = pct; r.bestOf = qs.length; }
+    r.runs.push({ pct, ok, n: qs.length, sec, at: Date.now() });
+    if (r.runs.length > 30) r.runs = r.runs.slice(-30);
+    testSave();
+
+    root.innerHTML = '';
+    const back = E('button', 'gr-back', `← Bài tập ${L.code}`);
+    back.addEventListener('click', () => { exHome(); exTop(); });
+    root.appendChild(back);
+    const card = E('div', 'tense-card ext-res');
+    card.appendChild(E('div', 'ext-res-lv', `Kiểm tra tổng hợp ${L.code}`));
+    card.appendChild(E('div', 'ext-big' + (pct >= 80 ? ' good' : pct >= 50 ? ' mid' : ' low'), pct + '%'));
+    card.appendChild(E('div', 'ext-res-sub', `${ok}/${qs.length} câu đúng · ${fmtTime(sec)} · trung bình ${Math.round(sec / qs.length)} giây/câu`));
+    card.appendChild(E('div', 'ext-res-msg',
+      pct === 100 ? `Tuyệt đối! Bạn đã nắm chắc cấp ${L.code}.` :
+      pct >= 80 ? `Rất tốt! Ôn lại vài câu sai bên dưới là chắc cấp ${L.code}.` :
+      pct >= 50 ? 'Khá ổn. Mở lại các bài có câu sai để ôn rồi làm lại nhé.' :
+      'Cấp này còn mới với bạn — học lại các bài bên dưới rồi thử lần nữa.'));
+    if (isBest && r.runs.length > 1) card.appendChild(E('div', 'ext-res-best', '🏆 Kỷ lục mới!'));
+    const acts = E('div', 'ext-res-acts');
+    const again = E('button', 'btn-primary', '↻ Làm bài mới');
+    again.addEventListener('click', () => { testRun(n, testPick(n, qs.length)); exTop(); });
+    const set = E('button', 'btn-ghost', 'Đổi số câu');
+    set.addEventListener('click', () => { exTest(n); exTop(); });
+    acts.appendChild(again); acts.appendChild(set);
+    card.appendChild(acts);
+    root.appendChild(card);
+
+    // câu sai, gom theo bài
+    const wrong = qs.map((q, i) => ({ q, a: ans[i] })).filter(x => !x.a || !x.a.ok);
+    if (wrong.length) {
+      const wc = E('div', 'tense-card ext-wrong');
+      wc.appendChild(E('h3', null, `Câu cần ôn · ${wrong.length}`));
+      const byLesson = new Map();
+      wrong.forEach(x => { if (!byLesson.has(x.q.l.id)) byLesson.set(x.q.l.id, []); byLesson.get(x.q.l.id).push(x); });
+      byLesson.forEach(list => {
+        const l = list[0].q.l;
+        const g = E('div', 'ext-wl');
+        const gh = E('div', 'ext-wl-h');
+        gh.appendChild(E('b', null, l.title));
+        const ob = E('button', 'btn-ghost ext-wl-go', 'Ôn bài này →');
+        ob.addEventListener('click', () => { exLesson(l.id); exTop(); });
+        gh.appendChild(ob);
+        g.appendChild(gh);
+        list.forEach(x => {
+          const row = E('div', 'ext-wr');
+          const t = E('div', 'ext-wr-t');
+          t.appendChild(E('div', 'ext-wr-vi', x.q.it[1]));
+          if (x.a && x.a.typed && x.a.typed.trim()) t.appendChild(E('div', 'ext-wr-you', 'Bạn viết: ' + x.a.typed));
+          t.appendChild(E('div', 'ext-wr-en', x.q.it[0]));
+          row.appendChild(t); row.appendChild(exPlay(x.q.it[0]));
+          g.appendChild(row);
+        });
+        wc.appendChild(g);
+      });
+      root.appendChild(typeof cardFold === 'function' ? cardFold(wc, 'ext-wrong') : wc);
+    }
+  }
+
   /* add the sentence count to the hero stats */
   try {
     const hs = document.getElementById('hero-stats');
@@ -44255,6 +45140,7 @@ const EX_B2C1 = {
   exHome();
   window.exGoHome = exHome;
   window.exOpenLesson = exLesson;
+  window.exOpenTest = exTest;
   window.exNorm = exNorm;
 })();
 </script>
