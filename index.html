@@ -2436,7 +2436,7 @@
 <header class="hero">
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v84</span>
+      <span class="hero-badge">EN ⇄ VI · v87</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice" id="voice-btn" aria-label="Chọn giọng đọc">🔊 <span class="hv-label">Giọng đọc</span></button>
@@ -4124,10 +4124,10 @@ const GRAMMAR_TOPICS = [
   "id": "wh-questions",
   "title": "Câu hỏi Wh-",
   "en": "Wh- questions",
-  "intro": "Cách đặt câu hỏi lấy thông tin: what, where, when, why, who, whose, which, how.",
+  "intro": "Cách đặt câu hỏi lấy thông tin: what, where, when, why, who, whose, which, how. Bài gồm 12 cấu trúc theo từng thì và từng loại câu hỏi.",
   "sections": [
    {
-    "name": "Trật tự câu hỏi",
+    "name": "Tổng quan: trật tự câu hỏi",
     "formula": "Từ hỏi + do/does/did + chủ ngữ + V? · Từ hỏi + am/is/are/was/were + chủ ngữ? · Từ hỏi + will/can/should + chủ ngữ + V?",
     "usage": "Trợ động từ luôn đứng trước chủ ngữ; động từ chính giữ nguyên thể.",
     "table": {
@@ -4191,7 +4191,140 @@ const GRAMMAR_TOPICS = [
     ]
    },
    {
-    "name": "Khi từ hỏi làm chủ ngữ",
+    "name": "1. Hiện tại đơn với động từ thường",
+    "formula": "Wh- + do/does + S + V (nguyên thể)?",
+    "usage": "Dùng do với I/you/we/they, does với he/she/it. Sau does, động từ không thêm -s.",
+    "examples": [
+     {
+      "en": "What do you usually eat for breakfast?",
+      "vi": "Bạn thường ăn sáng món gì?"
+     },
+     {
+      "en": "Where does your sister work?",
+      "vi": "Chị bạn làm việc ở đâu?"
+     },
+     {
+      "en": "What time does the bank open?",
+      "vi": "Ngân hàng mở cửa lúc mấy giờ?"
+     }
+    ]
+   },
+   {
+    "name": "2. Quá khứ đơn với động từ thường",
+    "formula": "Wh- + did + S + V (nguyên thể)?",
+    "usage": "Did dùng cho mọi chủ ngữ. Động từ chính trở về nguyên thể, không dùng dạng quá khứ.",
+    "examples": [
+     {
+      "en": "When did you move to Hanoi?",
+      "vi": "Bạn chuyển ra Hà Nội khi nào?"
+     },
+     {
+      "en": "What did she buy at the market?",
+      "vi": "Cô ấy đã mua gì ở chợ?"
+     },
+     {
+      "en": "Why did they leave so early?",
+      "vi": "Sao họ về sớm thế?"
+     }
+    ]
+   },
+   {
+    "name": "3. Với động từ be",
+    "formula": "Wh- + am/is/are/was/were + S …?",
+    "usage": "Không dùng do/does/did với be. Chỉ cần đưa be lên trước chủ ngữ.",
+    "examples": [
+     {
+      "en": "Where are my keys?",
+      "vi": "Chìa khoá của tôi đâu rồi?"
+     },
+     {
+      "en": "Who is your English teacher?",
+      "vi": "Giáo viên tiếng Anh của bạn là ai?"
+     },
+     {
+      "en": "Where were you last night?",
+      "vi": "Tối qua bạn ở đâu?"
+     }
+    ]
+   },
+   {
+    "name": "4. Hiện tại tiếp diễn",
+    "formula": "Wh- + am/is/are + S + V-ing?",
+    "usage": "Hỏi về việc đang diễn ra lúc nói hoặc kế hoạch sắp tới.",
+    "examples": [
+     {
+      "en": "What are you doing now?",
+      "vi": "Bạn đang làm gì vậy?"
+     },
+     {
+      "en": "Why is the baby crying?",
+      "vi": "Sao em bé khóc thế?"
+     },
+     {
+      "en": "Where are you going this weekend?",
+      "vi": "Cuối tuần này bạn đi đâu?"
+     }
+    ]
+   },
+   {
+    "name": "5. Quá khứ tiếp diễn",
+    "formula": "Wh- + was/were + S + V-ing?",
+    "usage": "Hỏi về việc đang diễn ra tại một thời điểm trong quá khứ.",
+    "examples": [
+     {
+      "en": "What were you doing at 8 p.m. yesterday?",
+      "vi": "Lúc 8 giờ tối qua bạn đang làm gì?"
+     },
+     {
+      "en": "Who was she talking to?",
+      "vi": "Lúc đó cô ấy đang nói chuyện với ai?"
+     },
+     {
+      "en": "Why were they laughing?",
+      "vi": "Lúc đó sao họ cười vậy?"
+     }
+    ]
+   },
+   {
+    "name": "6. Tương lai với will",
+    "formula": "Wh- + will + S + V (nguyên thể)?",
+    "usage": "Will dùng cho mọi chủ ngữ, động từ giữ nguyên thể.",
+    "examples": [
+     {
+      "en": "When will you finish the report?",
+      "vi": "Khi nào bạn làm xong báo cáo?"
+     },
+     {
+      "en": "What will you do after graduation?",
+      "vi": "Tốt nghiệp xong bạn sẽ làm gì?"
+     },
+     {
+      "en": "Where will we meet tomorrow?",
+      "vi": "Mai chúng ta gặp nhau ở đâu?"
+     }
+    ]
+   },
+   {
+    "name": "7. Với can / should / must",
+    "formula": "Wh- + can/should/must + S + V (nguyên thể)?",
+    "usage": "Đưa động từ khuyết thiếu lên trước chủ ngữ, không thêm do/does. Động từ sau giữ nguyên thể, không có to.",
+    "examples": [
+     {
+      "en": "Where can I buy a SIM card?",
+      "vi": "Tôi có thể mua thẻ SIM ở đâu?"
+     },
+     {
+      "en": "What should I wear to the interview?",
+      "vi": "Tôi nên mặc gì đi phỏng vấn?"
+     },
+     {
+      "en": "Why must we wear a helmet?",
+      "vi": "Sao chúng ta phải đội mũ bảo hiểm?"
+     }
+    ]
+   },
+   {
+    "name": "8. Khi Wh- là chủ ngữ",
     "formula": "Who / What + động từ (chia như câu kể)?",
     "usage": "Nếu hỏi về chính chủ ngữ thì không dùng do/does/did.",
     "examples": [
@@ -4206,7 +4339,88 @@ const GRAMMAR_TOPICS = [
     ]
    },
    {
-    "name": "Giới từ đứng cuối câu",
+    "name": "9. Câu hỏi về số lượng",
+    "formula": "How many + danh từ số nhiều + trợ động từ + S + V? · How much + danh từ không đếm được …? · How much + is/are …? (hỏi giá)",
+    "usage": "How many với danh từ đếm được (books, people). How much với danh từ không đếm được (water, money, time) và khi hỏi giá.",
+    "table": {
+     "head": [
+      "Cấu trúc",
+      "Dùng với",
+      "Ví dụ"
+     ],
+     "rows": [
+      [
+       "How many + N số nhiều",
+       "danh từ đếm được",
+       "How many brothers do you have?"
+      ],
+      [
+       "How much + N không đếm được",
+       "danh từ không đếm được",
+       "How much sugar do you need?"
+      ],
+      [
+       "How much + is/are …?",
+       "hỏi giá tiền",
+       "How much are these shoes?"
+      ]
+     ]
+    },
+    "examples": [
+     {
+      "en": "How many students are there in your class?",
+      "vi": "Lớp bạn có bao nhiêu học sinh?"
+     },
+     {
+      "en": "How much water do you drink a day?",
+      "vi": "Mỗi ngày bạn uống bao nhiêu nước?"
+     },
+     {
+      "en": "How much is this shirt?",
+      "vi": "Cái áo này giá bao nhiêu?"
+     }
+    ]
+   },
+   {
+    "name": "10. Câu hỏi về tần suất",
+    "formula": "How often + do/does/did + S + V?",
+    "usage": "Hỏi một việc xảy ra thường xuyên đến mức nào. Trả lời bằng always, usually, sometimes, never, once a week, every day…",
+    "examples": [
+     {
+      "en": "How often do you go to the gym?",
+      "vi": "Bạn đi tập gym bao lâu một lần?"
+     },
+     {
+      "en": "How often does she visit her parents?",
+      "vi": "Cô ấy về thăm bố mẹ bao lâu một lần?"
+     },
+     {
+      "en": "How often do the buses run?",
+      "vi": "Xe buýt bao lâu có một chuyến?"
+     }
+    ]
+   },
+   {
+    "name": "11. Câu hỏi về thời lượng",
+    "formula": "How long + does/did + it take (+ sb) + to V? · How long + have/has + S + V3/V-ed? · How long + will/is …?",
+    "usage": "Hỏi một việc kéo dài bao lâu. Trả lời bằng for two hours, about ten minutes, since 2020…",
+    "examples": [
+     {
+      "en": "How long does it take to get to the airport?",
+      "vi": "Ra sân bay mất bao lâu?"
+     },
+     {
+      "en": "How long have you lived here?",
+      "vi": "Bạn sống ở đây bao lâu rồi?"
+     },
+     {
+      "en": "How long will the meeting last?",
+      "vi": "Cuộc họp sẽ kéo dài bao lâu?"
+     }
+    ]
+   },
+   {
+    "name": "12. Câu hỏi có giới từ (giới từ đứng cuối câu)",
     "formula": "Từ hỏi + trợ động từ + chủ ngữ + động từ + giới từ?",
     "examples": [
      {
@@ -4223,6 +4437,8 @@ const GRAMMAR_TOPICS = [
   "tips": [
    "Không chia động từ hai lần: \"Where does she lives?\" ✗ → \"Where does she live?\" ✓",
    "How + tính từ để hỏi mức độ: how old, how far, how long.",
+   "How many + danh từ đếm được số nhiều; how much + danh từ không đếm được hoặc để hỏi giá.",
+   "Với be và can/should/must/will: không thêm do/does/did. \"Where do you can buy…?\" ✗ → \"Where can you buy…?\" ✓",
    "Câu hỏi có hoặc không (Do you…?) thì không có từ hỏi đứng đầu."
   ]
  },
@@ -42759,14 +42975,14 @@ const EX_DATA = {
     ['She has a few friends in Da Nang.', 'Cô ấy có vài người bạn ở Đà Nẵng.'],
     ['We have little time before the test.', 'Chúng tôi có rất ít thời gian trước bài kiểm tra.'],
     ['How much rice do you eat every day?', 'Mỗi ngày bạn ăn bao nhiêu cơm?'],
-    ['He bought two bottles of milk.', 'Anh ấy đã mua hai chai sữa.']
+    ['He drinks two bottles of milk a day.', 'Mỗi ngày anh ấy uống hai chai sữa.']
   ],
   'pronouns': [
     ['She helps me every day.', 'Cô ấy giúp tôi mỗi ngày.'],
     ['This book is mine, not yours.', 'Quyển sách này là của tôi, không phải của bạn.'],
-    ['We invited them to our house.', 'Chúng tôi đã mời họ đến nhà chúng tôi.'],
-    ['He told us his name.', 'Anh ấy đã cho chúng tôi biết tên của anh ấy.'],
-    ['I made this cake myself.', 'Tôi tự làm cái bánh này.'],
+    ['We often invite them to our house.', 'Chúng tôi hay mời họ đến nhà mình.'],
+    ['He tells us funny stories every day.', 'Ngày nào anh ấy cũng kể chuyện vui cho chúng tôi nghe.'],
+    ['I usually cook dinner myself.', 'Tôi thường tự nấu bữa tối.'],
     ['Their car is faster than ours.', 'Xe của họ nhanh hơn xe của chúng tôi.']
   ],
   'prepositions': [
@@ -43238,7 +43454,7 @@ const EX_MORE = {
     ['This is my first time in Hanoi.', 'Đây là lần đầu tiên tôi đến Hà Nội.']
   ],
   'articles': [
-    ['I saw a dog in the park.', 'Tôi đã thấy một con chó trong công viên.'],
+    ['There is a dog in the park.', 'Có một con chó trong công viên.'],
     ['She works as a nurse in a hospital.', 'Cô ấy làm y tá ở một bệnh viện.'],
     ['Can you open the window, please?', 'Bạn mở giúp tôi cửa sổ được không?'],
     ['We go to school by bus.', 'Chúng tôi đi học bằng xe buýt.'],
@@ -43248,15 +43464,15 @@ const EX_MORE = {
   'nouns': [
     ['There is a little milk in the glass.', 'Trong ly có một ít sữa.'],
     ['Do you have any questions?', 'Bạn có câu hỏi nào không?'],
-    ['I bought three kilos of rice.', 'Tôi đã mua ba ký gạo.'],
-    ['She gave me some good advice.', 'Cô ấy đã cho tôi vài lời khuyên hay.'],
+    ['I need three kilos of rice.', 'Tôi cần ba ký gạo.'],
+    ['She always gives me good advice.', 'Cô ấy luôn cho tôi những lời khuyên hay.'],
     ['We have few chairs for the party.', 'Chúng tôi có rất ít ghế cho buổi tiệc.'],
     ['How many eggs do we need?', 'Chúng ta cần bao nhiêu quả trứng?']
   ],
   'pronouns': [
     ['I often help her with her homework.', 'Tôi hay giúp cô ấy làm bài tập.'],
     ['These books are ours, not theirs.', 'Những quyển sách này là của chúng tôi, không phải của họ.'],
-    ['He cut himself while cooking.', 'Anh ấy bị đứt tay khi đang nấu ăn.'],
+    ['She looks at herself in the mirror.', 'Cô ấy nhìn mình trong gương.'],
     ['Can you show me your photos?', 'Bạn cho tôi xem ảnh của bạn được không?'],
     ['They live near us.', 'Họ sống gần chúng tôi.'],
     ['My phone is old, but hers is new.', 'Điện thoại của tôi cũ, còn của cô ấy thì mới.']
@@ -43788,9 +44004,9 @@ const EX_WH = {
     ['How many friends does she have in Da Nang?', 'Cô ấy có bao nhiêu người bạn ở Đà Nẵng?']
   ],
   'pronouns': [
-    ['Who called you this morning?', 'Sáng nay ai gọi cho bạn?'],
+    ['Who sits next to you in class?', 'Ai ngồi cạnh bạn trong lớp?'],
     ['Whose phone is this?', 'Điện thoại này của ai?'],
-    ['Who did you invite to your house?', 'Bạn đã mời ai đến nhà bạn?']
+    ['Which of these bags is yours?', 'Cái túi nào trong mấy cái này là của bạn?']
   ],
   'prepositions': [
     ['Where do you work?', 'Bạn làm việc ở đâu?'],
@@ -43843,7 +44059,7 @@ const EX_WH = {
     ["Who will help us if he doesn't come?", 'Ai sẽ giúp chúng ta nếu anh ấy không đến?']
   ],
   'too': [
-    ['Why is this coffee too hot to drink?', 'Sao cà phê này nóng quá không uống được?'],
+    ['Why are you too tired to go out?', 'Sao bạn mệt đến mức không ra ngoài được?'],
     ['Who is too young to drive a car?', 'Ai còn quá nhỏ để lái xe hơi?'],
     ['What is too heavy for you to carry?', 'Cái gì quá nặng để bạn mang?']
   ],
@@ -43913,12 +44129,12 @@ const EX_WH = {
     ["She told you why she left, didn't she?", 'Cô ấy đã nói với bạn vì sao cô ấy đi, phải không?']
   ],
   'sothat': [
-    ['Why was the film so boring that you fell asleep?', 'Sao bộ phim chán đến nỗi bạn ngủ gục vậy?'],
+    ['What was so funny that everyone laughed?', 'Có chuyện gì buồn cười đến mức ai cũng cười vậy?'],
     ['Who ran so fast that nobody could catch him?', 'Ai chạy nhanh đến nỗi không ai bắt kịp?'],
     ['What was so heavy that you had to stop?', 'Cái gì nặng đến nỗi bạn phải dừng lại?']
   ],
   'suchthat': [
-    ['Why was it such a good film that you watched it twice?', 'Sao đó lại là bộ phim hay đến nỗi bạn xem hai lần?'],
+    ['Who is such a good cook that everyone wants to eat at her house?', 'Ai nấu ăn giỏi đến mức ai cũng muốn đến nhà cô ấy ăn?'],
     ['Who is such a kind person that everyone likes her?', 'Ai là người tốt đến nỗi ai cũng quý?'],
     ['What made it such a long day that you went to bed early?', 'Điều gì làm hôm đó dài đến nỗi bạn đi ngủ sớm?']
   ],
@@ -43938,9 +44154,9 @@ const EX_WH = {
     ["Why aren't you used to this weather yet?", 'Sao bạn vẫn chưa quen với thời tiết này?']
   ],
   'hadbetter': [
-    ['What had I better do now?', 'Giờ tốt nhất là tôi nên làm gì?'],
-    ['Where had we better park the car?', 'Chúng ta nên đậu xe ở đâu?'],
-    ['When had they better book the tickets?', 'Họ nên đặt vé khi nào?']
+    ['What do you think I had better do?', 'Bạn nghĩ tôi nên làm gì thì hơn?'],
+    ['Where do you think we had better park?', 'Bạn nghĩ chúng ta nên đỗ xe ở đâu thì hơn?'],
+    ['When do you think they had better book the tickets?', 'Bạn nghĩ khi nào họ nên đặt vé thì hơn?']
   ],
   'spend': [
     ['How much time do you spend learning English every day?', 'Mỗi ngày bạn dành bao nhiêu thời gian để học tiếng Anh?'],
@@ -43970,7 +44186,7 @@ const EX_WH = {
   'relative-2': [
     ['What do you think of Hoi An, which is famous for its old town?', 'Bạn nghĩ gì về Hội An, nơi nổi tiếng với phố cổ?'],
     ['When did you last see Mr Nam, who taught us English?', 'Lần cuối bạn gặp thầy Nam, người dạy chúng ta tiếng Anh, là khi nào?'],
-    ['Why did she leave early, which surprised everyone?', 'Sao cô ấy về sớm, điều đó làm mọi người ngạc nhiên?']
+    ['Why did Mr Nam, who teaches us English, leave the school?', 'Sao thầy Nam, người dạy tiếng Anh cho chúng tôi, lại nghỉ dạy ở trường?']
   ],
   'gerund-2': [
     ['Why did he stop smoking?', 'Sao anh ấy bỏ thuốc lá?'],
@@ -43993,7 +44209,7 @@ const EX_WH = {
     ['Where would you rather live, in the city or in the countryside?', 'Bạn thà sống ở đâu, thành phố hay nông thôn?']
   ],
   'itstime': [
-    ['Why is it time to leave now?', 'Sao bây giờ đã đến lúc phải đi?'],
+    ['Why do you think it’s time we changed the plan?', 'Sao bạn nghĩ đã đến lúc chúng ta đổi kế hoạch?'],
     ['When is it time for the children to go to bed?', 'Khi nào là đến giờ bọn trẻ đi ngủ?'],
     ["What do you think it's time to change?", 'Bạn nghĩ đã đến lúc thay đổi điều gì?']
   ],
@@ -44053,7 +44269,6 @@ const EX_WH = {
     ['How much cheaper is it the earlier you book?', 'Đặt càng sớm thì rẻ hơn bao nhiêu?']
   ]
 };
-Object.keys(EX_WH).forEach(k => { if (EX_DATA[k]) EX_DATA[k] = EX_DATA[k].concat(EX_WH[k]); });
 
 /* ---------- Câu hỏi How-: công thức riêng cho từng bài ---------- */
 const EX_HOW_FX = {
@@ -44136,7 +44351,7 @@ const EX_HOW = {
   ],
   'past-be': [
     ['How was your trip to Da Lat?', 'Chuyến đi Đà Lạt của bạn thế nào?'],
-    ['How old were you when you moved here?', 'Bạn bao nhiêu tuổi khi chuyển đến đây?']
+    ['How old were you in this photo?', 'Trong bức ảnh này bạn bao nhiêu tuổi?']
   ],
   'thereis': [
     ['How many chairs are there in this room?', 'Trong phòng này có bao nhiêu cái ghế?'],
@@ -44256,11 +44471,11 @@ const EX_HOW = {
   ],
   'sothat': [
     ['How many people were so tired that they left early?', 'Có bao nhiêu người mệt đến nỗi phải về sớm?'],
-    ['How did he run so fast that nobody could catch him?', 'Làm sao anh ấy chạy nhanh đến nỗi không ai bắt kịp?']
+    ['How tired were you? So tired that you fell asleep?', 'Bạn mệt cỡ nào? Mệt đến mức ngủ gật luôn à?']
   ],
   'suchthat': [
-    ['How many of them are such kind people that everyone likes them?', 'Trong số họ có bao nhiêu người tốt đến nỗi ai cũng quý?'],
-    ['How was it such a good film that you watched it twice?', 'Sao nó lại là bộ phim hay đến nỗi bạn xem tới hai lần?']
+    ['How long was the queue? Was it such a long queue that you left?', 'Hàng dài cỡ nào? Dài đến mức bạn bỏ về luôn à?'],
+    ['How good was the film? Was it such a good film that you cried?', 'Phim hay cỡ nào? Hay đến mức bạn khóc luôn à?']
   ],
   'makelet': [
     ['How often does your mother make you clean your room?', 'Mẹ bắt bạn dọn phòng bao lâu một lần?'],
@@ -44272,11 +44487,11 @@ const EX_HOW = {
   ],
   'usedto': [
     ['How often did you use to play football?', 'Trước đây bạn thường chơi bóng đá bao lâu một lần?'],
-    ['How long have you been used to getting up early?', 'Bạn đã quen dậy sớm được bao lâu rồi?']
+    ['How long did it take you to get used to the weather here?', 'Bạn mất bao lâu để quen với thời tiết ở đây?']
   ],
   'hadbetter': [
-    ['How many tickets had we better book?', 'Chúng ta nên đặt bao nhiêu vé?'],
-    ['How do you think we had better tell him?', 'Bạn nghĩ chúng ta nên nói với anh ấy thế nào?']
+    ['How many tickets do you think we had better book?', 'Bạn nghĩ chúng ta nên đặt bao nhiêu vé thì hơn?'],
+    ['How early do you think we had better arrive?', 'Bạn nghĩ chúng ta nên đến sớm cỡ nào thì hơn?']
   ],
   'spend': [
     ['How much money do you spend on books every month?', 'Mỗi tháng bạn tiêu bao nhiêu tiền cho sách?'],
@@ -44328,7 +44543,7 @@ const EX_HOW = {
   ],
   'paired': [
     ['How many of you speak both English and Chinese?', 'Trong các bạn có bao nhiêu người nói được cả tiếng Anh và tiếng Trung?'],
-    ['How can it be not only cheap but also good?', 'Sao nó có thể vừa rẻ vừa tốt được?']
+    ['How can a hotel be both cheap and clean?', 'Sao một khách sạn lại vừa rẻ vừa sạch được?']
   ],
   'prevent': [
     ['How can we prevent children from playing near the road?', 'Làm sao chúng ta ngăn bọn trẻ chơi gần đường được?'],
@@ -44347,7 +44562,7 @@ const EX_HOW = {
     ['How many people had left before the show started?', 'Có bao nhiêu người đã rời đi trước khi buổi diễn bắt đầu?']
   ],
   'wish': [
-    ['How do you wish your life were different?', 'Bạn ước cuộc sống của mình khác đi như thế nào?'],
+    ['How do you wish you had spent your twenties?', 'Bạn ước gì mình đã sống những năm tuổi hai mươi thế nào?'],
     ['How often do you wish you had more free time?', 'Bạn ước mình có nhiều thời gian rảnh hơn bao lâu một lần?']
   ],
   'inversion': [
@@ -44367,7 +44582,6 @@ const EX_HOW = {
     ['How much faster do you learn the more you practise?', 'Bạn càng luyện tập nhiều thì học nhanh hơn bao nhiêu?', ['How much faster do you learn the more you practice?']]
   ]
 };
-Object.keys(EX_HOW).forEach(k => { if (EX_DATA[k]) EX_DATA[k] = EX_DATA[k].concat(EX_HOW[k]); });
 /* ---------- Bài tập dịch cho các bài A2 mới ---------- */
 const EX_A2 = {
  'possessive-s': {
@@ -44447,7 +44661,7 @@ const EX_A2 = {
    ['Who likes swimming in your family?', 'Trong nhà bạn ai thích bơi?']
   ],
   how: [
-   ['How much do you like learning English?', 'Bạn thích học tiếng Anh đến mức nào?'],
+   ['How do you like spending your evenings?', 'Bạn thích dành buổi tối thế nào?'],
    ['How many people like working from home?', 'Có bao nhiêu người thích làm việc ở nhà?']
   ]
  },
@@ -44482,23 +44696,23 @@ const EX_A2 = {
   whfx: 'What / Which / Where + do/does + chủ ngữ + V? (hỏi thông tin không phải số lượng)',
   howfx: 'How many + danh từ số nhiều …? · How much + danh từ không đếm được …? · How much + is/are …? (giá) · How old / tall / far / long …?',
   s: [
-   ['There are twenty students in my class.', 'Lớp tôi có hai mươi học sinh.'],
-   ['I drink two litres of water a day.', 'Tôi uống hai lít nước một ngày.'],
-   ['This shirt costs three hundred thousand dong.', 'Cái áo này giá ba trăm nghìn đồng.'],
-   ['My daughter is seven years old.', 'Con gái tôi bảy tuổi.'],
-   ['The station is about two kilometres from here.', 'Nhà ga cách đây khoảng hai cây số.'],
-   ['I need a little sugar for the cake.', 'Tôi cần một chút đường cho cái bánh.'],
-   ['We don’t have many eggs left.', 'Chúng tôi không còn nhiều trứng.'],
-   ['She has a lot of work today.', 'Hôm nay cô ấy có nhiều việc.'],
-   ['The film lasts two hours.', 'Bộ phim dài hai tiếng.'],
-   ['My brother is one metre seventy tall.', 'Anh tôi cao một mét bảy.'],
-   ['There isn’t much time before the train leaves.', 'Không còn nhiều thời gian trước khi tàu chạy.'],
-   ['We need five chairs for the party.', 'Chúng tôi cần năm cái ghế cho buổi tiệc.']
+   ['How many people work in your office?', 'Văn phòng bạn có bao nhiêu người làm?'],
+   ['How much water do you drink a day?', 'Mỗi ngày bạn uống bao nhiêu nước?'],
+   ['How much does this shirt cost?', 'Cái áo này giá bao nhiêu?'],
+   ['How old is your grandmother?', 'Bà của bạn bao nhiêu tuổi?'],
+   ['How far is the station from here?', 'Nhà ga cách đây bao xa?'],
+   ['How much sugar do you need for the cake?', 'Bạn cần bao nhiêu đường để làm bánh?'],
+   ['How many eggs do we have left?', 'Mình còn bao nhiêu quả trứng?'],
+   ['How much work do you have today?', 'Hôm nay bạn có bao nhiêu việc?'],
+   ['How long is the film?', 'Bộ phim dài bao lâu?'],
+   ['How tall are you?', 'Bạn cao bao nhiêu?'],
+   ['How big is your new flat?', 'Căn hộ mới của bạn rộng bao nhiêu?'],
+   ['How many chairs do we need for the party?', 'Mình cần bao nhiêu cái ghế cho bữa tiệc?']
   ],
   wh: [
-   ['What time does the shop close?', 'Cửa hàng đóng cửa lúc mấy giờ?'],
-   ['Where can I buy a cheap phone?', 'Tôi mua điện thoại rẻ ở đâu được?'],
-   ['Why is this one more expensive?', 'Sao cái này lại đắt hơn?']
+   ['How much are these bananas?', 'Mấy quả chuối này bao nhiêu tiền?'],
+   ['How expensive is the hotel?', 'Khách sạn đắt cỡ nào?'],
+   ['How deep is the swimming pool?', 'Hồ bơi sâu bao nhiêu?']
   ],
   how: [
    ['How much is this phone?', 'Cái điện thoại này bao nhiêu tiền?'],
@@ -44533,30 +44747,30 @@ const EX_A2 = {
   ]
  },
  'wh-questions': {
-  whfx: 'Wh- + do/does/did + chủ ngữ + V? · Wh- + am/is/are + chủ ngữ? · Who / What + V? (khi từ hỏi làm chủ ngữ)',
-  howfx: 'How + do/does/did + chủ ngữ + V? · How + am/is/are + chủ ngữ? · How + tính từ + …?',
+  whfx: 'Wh- + do/does/did + S + V? · Wh- + am/is/are/was/were + S? · Wh- + am/is/are/was/were + S + V-ing? · Wh- + will/can/should/must + S + V? · Who / What + V? (Wh- làm chủ ngữ) · Wh- … + giới từ?',
+  howfx: 'How many / How much + …? · How often + do/does + S + V? · How long + does it take / have + S + V3?',
   s: [
    ['What does your father do?', 'Ba bạn làm nghề gì?'],
    ['Where did you buy that jacket?', 'Bạn mua cái áo khoác đó ở đâu?'],
-   ['When does the next train leave?', 'Chuyến tàu tới khởi hành khi nào?'],
+   ['Where were you last night?', 'Tối qua bạn ở đâu?'],
    ['Why is the shop closed today?', 'Sao hôm nay cửa hàng đóng cửa?'],
-   ['Who is that woman in the photo?', 'Người phụ nữ trong ảnh là ai?'],
-   ['Whose car is parked outside?', 'Xe của ai đậu ở ngoài vậy?'],
+   ['What were you doing at eight last night?', 'Lúc tám giờ tối qua bạn đang làm gì?'],
+   ['When will you finish the report?', 'Khi nào bạn sẽ làm xong báo cáo?'],
    ['Which bus goes to the airport?', 'Xe buýt nào đi sân bay?'],
    ['What are you doing this evening?', 'Tối nay bạn làm gì?'],
-   ['Who wants another coffee?', 'Ai muốn thêm một ly cà phê nữa?'],
+   ['What should I bring to the party?', 'Tôi nên mang gì đến bữa tiệc?'],
    ['What happened to your phone?', 'Điện thoại của bạn bị sao vậy?'],
    ['Who did you go there with?', 'Bạn đã đi tới đó với ai?'],
    ['What are you looking for?', 'Bạn đang tìm cái gì?']
   ],
   wh: [
-   ['When will you come back?', 'Khi nào bạn quay lại?'],
-   ['Why did she leave early?', 'Sao cô ấy về sớm?'],
-   ['Which film do you want to see?', 'Bạn muốn xem bộ phim nào?']
+   ['Why must we wear a uniform?', 'Sao chúng ta phải mặc đồng phục?'],
+   ['How many people came to the meeting?', 'Có bao nhiêu người đến dự cuộc họp?'],
+   ['How much money do you need?', 'Bạn cần bao nhiêu tiền?']
   ],
   how: [
-   ['How do you spell your name?', 'Tên bạn đánh vần thế nào?'],
-   ['How did you find this place?', 'Bạn tìm ra chỗ này bằng cách nào?']
+   ['How often do you visit your grandparents?', 'Bạn về thăm ông bà bao lâu một lần?'],
+   ['How long does it take to get to your office?', 'Đến chỗ bạn làm mất bao lâu?']
   ]
  },
  'adj-modifier': {
@@ -44567,7 +44781,7 @@ const EX_A2 = {
    ['I’m a bit tired today.', 'Hôm nay tôi hơi mệt.'],
    ['This restaurant is quite expensive.', 'Nhà hàng này khá đắt.'],
    ['The weather is extremely hot in May.', 'Thời tiết tháng Năm cực kỳ nóng.'],
-   ['These shoes are too small for me.', 'Đôi giày này quá nhỏ với tôi.'],
+   ['These shoes are a bit small for me.', 'Đôi giày này hơi chật với tôi.'],
    ['It’s a very nice day.', 'Hôm nay là một ngày rất đẹp.'],
    ['My new job is quite interesting.', 'Công việc mới của tôi khá thú vị.'],
    ['The coffee here is really strong.', 'Cà phê ở đây thật sự rất đậm.'],
@@ -44913,7 +45127,7 @@ const EX_A2 = {
 };
 Object.keys(EX_A2).forEach(k => {
   const v = EX_A2[k];
-  EX_DATA[k] = v.s.concat(v.wh, v.how);
+  EX_DATA[k] = v.s.slice();
   EX_WH[k] = v.wh; EX_HOW[k] = v.how;
   EX_WH_FX[k] = v.whfx; EX_HOW_FX[k] = v.howfx;
 });
@@ -44954,14 +45168,14 @@ const EX_A1B1 = {
    ['I need three boxes for these books.', 'Tôi cần ba cái thùng cho mấy cuốn sách này.'],
    ['My feet are cold.', 'Chân tôi lạnh.'],
    ['Those men work at the factory.', 'Mấy người đàn ông đó làm ở nhà máy.'],
-   ['She bought two knives and four dishes.', 'Cô ấy mua hai con dao và bốn cái đĩa.'],
+   ['We need two knives and four dishes.', 'Chúng ta cần hai con dao và bốn cái đĩa.'],
    ['The babies are sleeping.', 'Mấy em bé đang ngủ.'],
-   ['We saw many fish in the river.', 'Chúng tôi thấy nhiều cá dưới sông.'],
+   ['There are many fish in the river.', 'Dưới sông có nhiều cá.'],
    ['There are five people in the lift.', 'Có năm người trong thang máy.'],
    ['Brush your teeth before bed.', 'Đánh răng trước khi đi ngủ.'],
    ['The leaves fall in autumn.', 'Lá rụng vào mùa thu.'],
    ['My watches are both broken.', 'Hai cái đồng hồ của tôi đều hỏng.'],
-   ['Women and children got on the boat first.', 'Phụ nữ và trẻ em lên thuyền trước.']
+   ['The women and children are on the boat.', 'Phụ nữ và trẻ em đang ở trên thuyền.']
   ],
   wh: [
    ['What are those boxes for?', 'Mấy cái thùng kia để làm gì?'],
@@ -44978,25 +45192,25 @@ const EX_A1B1 = {
   howfx: 'How + do/does/did + chủ ngữ + V, A or B? · How many + danh từ + …?',
   s: [
    ['I like tea but I don’t like coffee.', 'Tôi thích trà nhưng không thích cà phê.'],
-   ['She is tired because she worked all day.', 'Cô ấy mệt vì làm việc cả ngày.'],
-   ['It was raining, so we stayed at home.', 'Trời mưa nên chúng tôi ở nhà.'],
+   ['She is tired because she works all day.', 'Cô ấy mệt vì phải làm việc cả ngày.'],
+   ['It is raining, so we are staying at home.', 'Trời đang mưa nên chúng tôi ở nhà.'],
    ['Do you want rice or noodles?', 'Bạn muốn ăn cơm hay mì?'],
    ['He speaks English and Chinese.', 'Anh ấy nói tiếng Anh và tiếng Trung.'],
    ['The room is small but very clean.', 'Căn phòng nhỏ nhưng rất sạch.'],
-   ['I was late because the bus broke down.', 'Tôi trễ vì xe buýt bị hỏng.'],
+   ['I am often late because the bus is slow.', 'Tôi hay trễ vì xe buýt chạy chậm.'],
    ['We can walk or take a taxi.', 'Mình đi bộ hoặc bắt taxi cũng được.'],
-   ['She was hungry, so she made a sandwich.', 'Cô ấy đói nên làm một cái bánh mì kẹp.'],
-   ['I called him but he didn’t answer.', 'Tôi gọi anh ấy nhưng anh ấy không bắt máy.'],
-   ['He stayed home because of the rain.', 'Anh ấy ở nhà vì trời mưa.'],
+   ['She is hungry, so she is making a sandwich.', 'Cô ấy đói nên đang làm bánh mì kẹp.'],
+   ['I often call him, but he never answers.', 'Tôi hay gọi cho anh ấy nhưng anh ấy chẳng bao giờ bắt máy.'],
+   ['He is at home because he is ill.', 'Anh ấy ở nhà vì bị ốm.'],
    ['My brother studies and works at the same time.', 'Anh tôi vừa học vừa làm.']
   ],
   wh: [
-   ['Why did you stay at home?', 'Sao bạn lại ở nhà?'],
+   ['Why are you at home today?', 'Sao hôm nay bạn ở nhà?'],
    ['What do you want, tea or juice?', 'Bạn muốn gì, trà hay nước ép?'],
-   ['Who did you call yesterday?', 'Hôm qua bạn gọi cho ai?']
+   ['Who do you want to invite, Lan or Mai?', 'Bạn muốn mời ai, Lan hay Mai?']
   ],
   how: [
-   ['How did you get home, by bus or by taxi?', 'Bạn về nhà bằng gì, xe buýt hay taxi?'],
+   ['How do you go to work, by bus or by motorbike?', 'Bạn đi làm bằng gì, xe buýt hay xe máy?'],
    ['How many languages does he speak?', 'Anh ấy nói được mấy thứ tiếng?']
   ]
  },
@@ -45039,7 +45253,7 @@ const EX_A1B1 = {
    ['Could you spell your surname, please?', 'Bạn đánh vần họ của bạn giúp tôi được không?'],
    ['I’m single.', 'Tôi còn độc thân.'],
    ['I’m married and I have two children.', 'Tôi có gia đình và hai con.'],
-   ['Sorry, I didn’t catch your name.', 'Xin lỗi, tôi chưa nghe rõ tên bạn.'],
+   ['Sorry, what’s your name again?', 'Xin lỗi, bạn tên gì nhỉ?'],
    ['My email is lan at gmail dot com.', 'Email của tôi là lan@gmail.com.'],
    ['I was born in nineteen ninety-four in Hue.', 'Tôi sinh năm 1994 ở Huế.'],
    ['Please write your address here.', 'Vui lòng viết địa chỉ của bạn vào đây.']
@@ -45288,7 +45502,7 @@ const EX_A1B1 = {
    ['There is nowhere to park around here.', 'Quanh đây chẳng có chỗ nào đậu xe.']
   ],
   wh: [
-   ['Who told you about this?', 'Ai nói với bạn chuyện này?'],
+   ['Who wants something to drink?', 'Ai muốn uống gì không?'],
    ['What else do you need?', 'Bạn còn cần gì nữa không?'],
    ['Where can we find somewhere cheap to eat?', 'Mình tìm chỗ nào ăn rẻ được nhỉ?']
   ],
@@ -45481,9 +45695,9 @@ const EX_B2C1 = {
    ['Write down the address in case you forget it.', 'Ghi địa chỉ lại phòng khi bạn quên.']
   ],
   wh: [
-   ['What will you do unless they call back?', 'Bạn sẽ làm gì nếu họ không gọi lại?'],
-   ['Who will take over unless she returns?', 'Ai sẽ tiếp quản nếu cô ấy không quay lại?'],
-   ['Which route will you take in case the road is closed?', 'Bạn sẽ đi đường nào phòng khi đường kia bị chặn?']
+   ['Why do you always carry an umbrella? — In case it rains.', 'Sao bạn lúc nào cũng mang ô? — Phòng khi trời mưa.'],
+   ['Who can join the trip, provided they pay by Friday?', 'Ai được tham gia chuyến đi, miễn là đóng tiền trước thứ Sáu?'],
+   ['Which road should we take in case the bridge is closed?', 'Mình nên đi đường nào phòng khi cầu bị cấm?']
   ],
   how: [
    ['How long can I stay provided that I pay in advance?', 'Tôi ở được bao lâu nếu trả tiền trước?'],
@@ -45567,8 +45781,8 @@ const EX_B2C1 = {
    ['Which document is it essential that we bring?', 'Giấy tờ nào là bắt buộc phải mang theo?']
   ],
   how: [
-   ['How soon is it necessary that we reply?', 'Chúng ta cần trả lời sớm đến mức nào?'],
-   ['How many copies is it required that we submit?', 'Chúng ta buộc phải nộp bao nhiêu bản?']
+   ['How important is it that everyone be on time?', 'Việc mọi người phải đúng giờ quan trọng đến mức nào?'],
+   ['How strongly did they insist that he apologise?', 'Họ khăng khăng đòi anh ta xin lỗi đến mức nào?']
   ]
  },
  'discourse': {
@@ -45648,7 +45862,7 @@ const EX_B2C1 = {
    ['Which is the project on which you worked longest?', 'Dự án nào là dự án bạn làm lâu nhất?']
   ],
   how: [
-   ['How many of them live abroad?', 'Bao nhiêu người trong số họ sống ở nước ngoài?'],
+   ['How many brothers does he have, all of whom live abroad?', 'Anh ấy có bao nhiêu anh em trai, tất cả đều sống ở nước ngoài?'],
    ['How long was the meeting at which the decision was made?', 'Cuộc họp đưa ra quyết định đó kéo dài bao lâu?']
   ]
  },
@@ -45683,10 +45897,14 @@ const EX_B2C1 = {
 
 [EX_A1B1, EX_B2C1].forEach(SRC => Object.keys(SRC).forEach(k => {
   const v = SRC[k];
-  EX_DATA[k] = v.s.concat(v.wh, v.how);
+  EX_DATA[k] = v.s.slice();
   EX_WH[k] = v.wh; EX_HOW[k] = v.how;
   EX_WH_FX[k] = v.whfx; EX_HOW_FX[k] = v.howfx;
 }));
+
+/* ---------- Câu bổ sung: mỗi bài đủ 20 câu, cùng ngữ pháp của bài ---------- */
+const EX_ADD = {"present-simple":[["My mother gets up at five every day.","Mẹ tôi dậy lúc năm giờ mỗi ngày."],["They don't live near the city centre.","Họ không sống gần trung tâm thành phố."],["Does he speak English at work?","Anh ấy có nói tiếng Anh ở chỗ làm không?"],["Water boils at one hundred degrees.","Nước sôi ở một trăm độ."],["I am a teacher, and my wife is a nurse.","Tôi là giáo viên, còn vợ tôi là y tá."],["The children aren't at home on weekdays.","Bọn trẻ không ở nhà vào các ngày trong tuần."],["She studies English every evening.","Cô ấy học tiếng Anh mỗi tối."],["Is your office on the third floor?","Văn phòng của bạn ở tầng ba phải không?"]],"present-continuous":[["She is talking on the phone right now.","Cô ấy đang nói chuyện điện thoại ngay lúc này."],["Are the children doing their homework?","Bọn trẻ đang làm bài tập phải không?"],["I am wearing my new shoes today.","Hôm nay tôi đang mang đôi giày mới."],["We aren't watching TV; we are playing cards.","Chúng tôi không xem TV; chúng tôi đang chơi bài."],["Is he driving to work this week?","Tuần này anh ấy đang lái xe đi làm phải không?"],["My father is fixing the car in the garage.","Bố tôi đang sửa xe trong ga-ra."],["Listen! Someone is knocking at the door.","Nghe này! Có ai đó đang gõ cửa."],["They are building a new school near my house.","Họ đang xây một trường học mới gần nhà tôi."]],"past-be":[["The shop was closed on Monday.","Cửa hàng đóng cửa vào thứ Hai."],["Where were you last night?","Tối qua bạn ở đâu?"],["I was very hungry after the long walk.","Tôi rất đói sau chuyến đi bộ dài."],["The tickets weren't expensive.","Vé không đắt."],["Was your grandfather a farmer?","Ông của bạn từng là nông dân phải không?"],["We were in Da Lat last summer.","Mùa hè năm ngoái chúng tôi ở Đà Lạt."],["The exam was easy, but it was very long.","Bài thi dễ nhưng rất dài."],["Why were they late this morning?","Sao sáng nay họ đến muộn?"]],"past-simple":[["We went to the beach last summer.","Mùa hè năm ngoái chúng tôi đi biển."],["He didn't call me yesterday.","Hôm qua anh ấy không gọi cho tôi."],["Did she pass the exam?","Cô ấy có đậu kỳ thi không?"],["I cleaned my room on Sunday morning.","Tôi dọn phòng vào sáng Chủ nhật."],["They sold their old car last month.","Họ đã bán chiếc xe cũ tháng trước."],["Where did you buy that bag?","Bạn đã mua cái túi đó ở đâu?"],["My parents got married in 1995.","Bố mẹ tôi cưới nhau năm 1995."],["I lost my keys and looked for them for an hour.","Tôi làm mất chìa khóa và tìm chúng suốt một tiếng."]],"past-continuous":[["I was walking home when I saw an accident.","Tôi đang đi bộ về nhà thì thấy một vụ tai nạn."],["Was she sleeping when you got home?","Cô ấy có đang ngủ khi bạn về nhà không?"],["We weren't working at that time.","Lúc đó chúng tôi không làm việc."],["The sun was shining and the birds were singing.","Mặt trời đang chiếu sáng và chim đang hót."],["He cut his finger while he was cooking.","Anh ấy bị đứt tay trong lúc đang nấu ăn."],["Were you driving fast when the police stopped you?","Bạn có đang lái nhanh khi cảnh sát chặn lại không?"],["At midnight, my neighbours were still singing karaoke.","Lúc nửa đêm, hàng xóm của tôi vẫn đang hát karaoke."],["My phone rang while I was taking a shower.","Điện thoại của tôi reo khi tôi đang tắm."]],"going-to":[["He is going to paint his room this weekend.","Cuối tuần này anh ấy sẽ sơn phòng."],["What are you going to do after work?","Sau giờ làm bạn định làm gì?"],["I'm not going to drink coffee tonight.","Tối nay tôi sẽ không uống cà phê."],["Be careful! You are going to fall.","Cẩn thận! Bạn sắp ngã kìa."],["Is she going to have a baby?","Cô ấy sắp có em bé phải không?"],["We are going to have a party on Saturday.","Chúng tôi định tổ chức tiệc vào thứ Bảy."],["My brother is going to get married next spring.","Anh trai tôi sẽ cưới vào mùa xuân tới."],["Where are you going to stay in Hanoi?","Bạn định ở đâu tại Hà Nội?"]],"future-simple":[["I'm tired. I think I will go to bed early.","Tôi mệt. Chắc tôi sẽ đi ngủ sớm."],["The shop will open at nine tomorrow.","Ngày mai cửa hàng sẽ mở lúc chín giờ."],["Will you be at home this evening?","Tối nay bạn có ở nhà không?"],["He won't tell anyone your secret.","Anh ấy sẽ không kể bí mật của bạn với ai."],["Maybe I will buy a new phone next year.","Có lẽ năm sau tôi sẽ mua điện thoại mới."],["The phone is ringing. I will answer it.","Điện thoại đang reo. Tôi sẽ nghe máy."],["I promise I won't be late again.","Tôi hứa sẽ không đến muộn nữa."],["Will they finish the work on time?","Họ có làm xong việc đúng hạn không?"]],"present-perfect":[["I have already had lunch.","Tôi ăn trưa rồi."],["Has she called you today?","Hôm nay cô ấy có gọi cho bạn không?"],["They haven't decided yet.","Họ vẫn chưa quyết định."],["We have lived in this flat for three years.","Chúng tôi đã sống ở căn hộ này được ba năm."],["Have you ever travelled by plane?","Bạn đã bao giờ đi máy bay chưa?"],["My sister has just bought a new car.","Chị tôi vừa mua một chiếc xe mới."],["He has never cooked dinner for us.","Anh ấy chưa bao giờ nấu bữa tối cho chúng tôi."],["I haven't seen my cousin since last Tet.","Tôi chưa gặp em họ kể từ Tết năm ngoái."]],"present-perfect-continuous":[["He has been playing games since lunch.","Cậu ấy chơi game từ trưa đến giờ."],["Have you been crying? Your eyes are red.","Bạn vừa khóc à? Mắt bạn đỏ kìa."],["We haven't been sleeping well lately.","Dạo này chúng tôi ngủ không ngon."],["She has been learning Japanese for six months.","Cô ấy đã học tiếng Nhật được sáu tháng."],["How long have they been working on this project?","Họ làm dự án này bao lâu rồi?"],["I have been looking for my glasses all morning.","Tôi tìm kính suốt cả buổi sáng."],["It hasn't been raining much this month.","Tháng này trời không mưa nhiều."],["The kids are dirty because they have been playing outside.","Bọn trẻ bẩn vì chúng đã chơi ngoài trời."]],"past-perfect":[["I had never eaten pho before I came to Vietnam.","Trước khi đến Việt Nam, tôi chưa bao giờ ăn phở."],["Had you met him before the party?","Bạn đã gặp anh ấy trước bữa tiệc chưa?"],["The film had already started when we got there.","Phim đã bắt đầu khi chúng tôi đến."],["She was sad because she had lost her cat.","Cô ấy buồn vì đã làm mất con mèo."],["We hadn't booked a table, so we waited outside.","Chúng tôi chưa đặt bàn nên phải chờ bên ngoài."],["He said he had finished the report.","Anh ấy nói rằng anh ấy đã làm xong báo cáo."],["By the time the doctor came, the pain had gone.","Khi bác sĩ đến thì cơn đau đã hết."],["After they had eaten dinner, they went for a walk.","Sau khi ăn tối xong, họ đi dạo."]],"future-continuous":[["I will be working from home tomorrow.","Ngày mai tôi sẽ đang làm việc ở nhà."],["Will you be going to the shop later?","Lát nữa bạn có đi cửa hàng không?"],["She won't be coming to the meeting this afternoon.","Chiều nay cô ấy sẽ không đến dự cuộc họp."],["At ten o'clock, the children will be sleeping.","Lúc mười giờ, bọn trẻ sẽ đang ngủ."],["This time next week, we will be lying on the beach.","Giờ này tuần sau, chúng tôi sẽ đang nằm trên bãi biển."],["Don't come at noon. I will be cooking lunch.","Đừng đến lúc trưa. Tôi sẽ đang nấu bữa trưa."],["What will he be doing at this time tomorrow?","Giờ này ngày mai anh ấy sẽ đang làm gì?"],["They will be travelling around Europe all summer.","Họ sẽ đang đi du lịch khắp châu Âu cả mùa hè."]],"stative":[["I need a new laptop.","Tôi cần một chiếc máy tính xách tay mới."],["She doesn't believe his story.","Cô ấy không tin câu chuyện của anh ta."],["This bag belongs to my sister.","Cái túi này là của chị tôi."],["What are you thinking about?","Bạn đang nghĩ gì vậy?"],["Do you remember her name?","Bạn có nhớ tên cô ấy không?"],["He has two children.","Anh ấy có hai đứa con."],["We are having a great time here.","Chúng tôi đang có khoảng thời gian rất vui ở đây."],["The chef is tasting the soup now.","Đầu bếp đang nếm thử món súp."]],"past-perfect-continuous":[["She had been working there for five years before she got a promotion.","Cô ấy đã làm ở đó năm năm trước khi được thăng chức."],["How long had you been waiting when the doctor called you?","Bạn đã chờ bao lâu thì bác sĩ gọi tên?"],["He hadn't been sleeping well, so he looked tired.","Anh ấy đã ngủ không ngon nên trông mệt mỏi."],["The road was wet because it had been raining all night.","Đường ướt vì trời đã mưa suốt đêm."],["They had been arguing for an hour before they made up.","Họ đã cãi nhau suốt một giờ trước khi làm lành."],["I was out of breath because I had been running.","Tôi hụt hơi vì tôi đã chạy."],["Had she been studying English before she moved to London?","Cô ấy đã học tiếng Anh trước khi chuyển đến London phải không?"],["We had been planning the trip for months before we finally went.","Chúng tôi đã lên kế hoạch cho chuyến đi hàng tháng trời trước khi thực sự đi."]],"future-perfect":[["By the time you wake up, I will have left.","Lúc bạn thức dậy thì tôi đã đi rồi."],["Will they have finished the road by next summer?","Họ sẽ làm xong con đường trước mùa hè tới chứ?"],["She won't have arrived by noon.","Cô ấy sẽ chưa đến trước buổi trưa."],["By Friday, we will have sold all the tickets.","Đến thứ Sáu, chúng tôi sẽ bán hết vé."],["I will have cooked dinner before you get home.","Tôi sẽ nấu xong bữa tối trước khi bạn về nhà."],["By the end of the course, you will have learnt a thousand words.","Đến cuối khóa, bạn sẽ học được một nghìn từ."],["He won't have finished the book by tomorrow.","Anh ấy sẽ chưa đọc xong cuốn sách trước ngày mai."],["By 2035, the city will have grown a lot.","Đến năm 2035, thành phố sẽ phát triển rất nhiều."]],"future-in-past":[["She told me she was going to quit her job.","Cô ấy nói với tôi rằng cô ấy định nghỉ việc."],["I knew you would like this restaurant.","Tôi biết bạn sẽ thích nhà hàng này."],["He said he wouldn't be late.","Anh ấy nói anh ấy sẽ không đến muộn."],["We were going to watch a film, but we fell asleep.","Chúng tôi định xem phim nhưng lại ngủ quên."],["Were you going to tell me about it?","Bạn có định kể cho tôi nghe chuyện đó không?"],["I hoped the weather would be better.","Tôi đã hy vọng thời tiết sẽ đẹp hơn."],["They weren't going to come, but they changed their minds.","Họ đã không định đến, nhưng rồi đổi ý."],["She promised she would write to me every week.","Cô ấy hứa sẽ viết thư cho tôi mỗi tuần."]],"future-perfect-continuous":[["By next Christmas, we will have been living here for four years.","Đến Giáng sinh năm sau, chúng tôi sẽ sống ở đây được bốn năm."],["By noon, I will have been sitting in this meeting for three hours.","Đến trưa, tôi sẽ ngồi trong cuộc họp này được ba tiếng."],["How long will you have been working here by the end of the year?","Đến cuối năm, bạn sẽ làm việc ở đây được bao lâu?"],["By September, she will have been teaching at this school for ten years.","Đến tháng Chín, cô ấy sẽ dạy ở trường này được mười năm."],["By the time he retires, he will have been driving taxis for thirty years.","Đến khi nghỉ hưu, ông ấy sẽ lái taxi được ba mươi năm."],["By eight o'clock, the children will have been playing for two hours.","Đến tám giờ, bọn trẻ sẽ chơi được hai tiếng."],["She won't have been waiting long when you arrive.","Khi bạn đến, cô ấy sẽ chưa phải chờ lâu."],["By next month, they will have been dating for a year.","Đến tháng sau, họ sẽ hẹn hò được một năm."]],"polite-tenses":[["I was wondering if you could send me the file.","Không biết anh/chị có thể gửi cho tôi tập tin được không."],["We were hoping to start the project next week.","Chúng tôi mong có thể bắt đầu dự án vào tuần sau."],["Did you want a receipt?","Anh/chị có cần hóa đơn không ạ?"],["I was wondering whether you were free on Friday.","Không biết thứ Sáu anh/chị có rảnh không."],["I was hoping to ask you a small favour.","Tôi muốn nhờ anh/chị một việc nhỏ."],["Were you looking for something special?","Anh/chị đang tìm món gì đặc biệt ạ?"],["I wasn't planning to stay long, so I'll go now.","Tôi cũng không định ở lâu, nên giờ tôi về đây."],["We had hoped to see you at the party.","Chúng tôi đã mong được gặp anh/chị ở bữa tiệc."]],"inversion-perfect":[["Never have I seen such a beautiful sunset.","Chưa bao giờ tôi thấy cảnh hoàng hôn đẹp như vậy."],["Rarely have we had such a good team.","Hiếm khi chúng tôi có một đội tốt như vậy."],["Hardly had the class started when the lights went out.","Lớp học vừa mới bắt đầu thì mất điện."],["No sooner had I paid than I saw a cheaper one.","Tôi vừa trả tiền xong thì thấy một cái rẻ hơn."],["Scarcely had we arrived when the party ended.","Chúng tôi vừa đến thì bữa tiệc kết thúc."],["Never had she felt so happy before.","Trước đó cô ấy chưa bao giờ thấy hạnh phúc như vậy."],["No sooner had he got home than his boss called.","Anh ấy vừa về đến nhà thì sếp gọi."],["Hardly had the plane landed when people started to stand up.","Máy bay vừa hạ cánh thì mọi người bắt đầu đứng dậy."]],"be-present":[["I am from Da Nang.","Tôi đến từ Đà Nẵng."],["Is she your teacher? Yes, she is.","Cô ấy là giáo viên của bạn à? Đúng vậy."],["I am thirty years old.","Tôi ba mươi tuổi."],["We aren't late; we are early.","Chúng tôi không muộn; chúng tôi đến sớm."],["The coffee is too hot.","Cà phê nóng quá."],["Are your brothers at work today?","Hôm nay các anh của bạn có đi làm không?"],["Are they your children? No, they aren't.","Họ là con của bạn à? Không phải."],["My office is on the second floor.","Văn phòng của tôi ở tầng hai."]],"howto-greet":[["Good afternoon, Mrs Hoa.","Chào buổi chiều, cô Hoa."],["How's it going?","Dạo này thế nào?"],["Not bad, thanks.","Cũng ổn, cảm ơn."],["Let me introduce my friend, Minh.","Để tôi giới thiệu bạn tôi, Minh."],["Pleased to meet you too.","Tôi cũng rất vui được gặp bạn."],["Good night, sleep well.","Chúc ngủ ngon."],["See you next week.","Hẹn gặp lại tuần sau."],["Have a good weekend!","Chúc cuối tuần vui vẻ!"]],"howto-personal":[["What's your surname?","Họ của bạn là gì?"],["How old are you?","Bạn bao nhiêu tuổi?"],["Where are you from?","Bạn đến từ đâu?"],["I'm from Quang Ngai.","Tôi đến từ Quảng Ngãi."],["What do you do?","Bạn làm nghề gì?"],["I'm a student at a university in Hanoi.","Tôi là sinh viên một trường đại học ở Hà Nội."],["What's your address?","Địa chỉ của bạn là gì?"],["My address is 25 Tran Phu Street.","Địa chỉ của tôi là số 25 đường Trần Phú."]],"pronouns":[["He calls her every evening.","Anh ấy gọi cho cô ấy mỗi tối."],["Is this pen yours?","Cây bút này là của bạn phải không?"],["We cook dinner ourselves.","Chúng tôi tự nấu bữa tối."],["Please give it to him.","Làm ơn đưa nó cho anh ấy."],["Their house is big, but ours is small.","Nhà họ to, nhưng nhà chúng tôi nhỏ."],["She doesn't know them.","Cô ấy không biết họ."],["The cat is washing itself.","Con mèo đang tự liếm lông."],["My bag is blue and his is black.","Túi của tôi màu xanh còn của anh ấy màu đen."]],"plural":[["I eat two potatoes for lunch.","Tôi ăn hai củ khoai tây vào bữa trưa."],["The buses are full in the morning.","Xe buýt đông kín vào buổi sáng."],["My children love stories.","Các con tôi thích nghe truyện."],["There are three mice in the kitchen.","Có ba con chuột trong bếp."],["We need some glasses for the drinks.","Chúng tôi cần vài cái ly để uống nước."],["Those countries are very beautiful.","Những đất nước đó rất đẹp."],["The sheep are eating grass.","Những con cừu đang ăn cỏ."],["She washes the dishes after dinner.","Cô ấy rửa bát đĩa sau bữa tối."]],"nouns":[["Can I have some bread, please?","Cho tôi xin một ít bánh mì."],["There aren't any apples in the bag.","Không có quả táo nào trong túi."],["How much money do you have?","Bạn có bao nhiêu tiền?"],["I have a few questions for you.","Tôi có vài câu hỏi cho bạn."],["We need a little salt for the soup.","Chúng ta cần một chút muối cho món súp."],["She buys two loaves of bread every morning.","Cô ấy mua hai ổ bánh mì mỗi sáng."],["There is some information on the website.","Có một số thông tin trên trang web."],["He has little money at the end of the month.","Cuối tháng anh ấy còn rất ít tiền."]],"articles":[["I eat an apple every morning.","Mỗi sáng tôi ăn một quả táo."],["The moon is very bright tonight.","Tối nay mặt trăng rất sáng."],["She is a doctor at the hospital near my house.","Cô ấy là bác sĩ ở bệnh viện gần nhà tôi."],["I like music and films.","Tôi thích âm nhạc và phim ảnh."],["There is a cat in the kitchen. The cat is black.","Có một con mèo trong bếp. Con mèo màu đen."],["He goes to work by train.","Anh ấy đi làm bằng tàu hỏa."],["It takes an hour to get there.","Mất một tiếng để đến đó."],["Please close the door.","Làm ơn đóng cửa lại."]],"demonstratives":[["Are these your keys?","Đây có phải chìa khóa của bạn không?"],["That is a good idea.","Đó là một ý hay."],["This coffee is very strong.","Cà phê này rất đậm."],["Those are my friends from school.","Đó là những người bạn cùng trường của tôi."],["Is that your car over there?","Chiếc xe ở đằng kia có phải của bạn không?"],["These apples are very sweet.","Những quả táo này rất ngọt."],["I'm very busy this week.","Tuần này tôi rất bận."],["Yes, it is. This is my bag.","Đúng vậy. Đây là túi của tôi."]],"thereis":[["There is a bank on the corner.","Có một ngân hàng ở góc đường."],["There are some eggs in the fridge.","Có vài quả trứng trong tủ lạnh."],["Is there a toilet on this floor?","Có nhà vệ sinh ở tầng này không?"],["There isn't a lift in this building.","Tòa nhà này không có thang máy."],["How many rooms are there in your house?","Nhà bạn có bao nhiêu phòng?"],["There are a lot of motorbikes on the street.","Có rất nhiều xe máy trên đường."],["Are there any good restaurants near here?","Gần đây có nhà hàng nào ngon không?"],["There was a big storm last night.","Tối qua có một cơn bão lớn."]],"prepositions":[["My birthday is in May.","Sinh nhật tôi vào tháng Năm."],["We have a party on Saturday evening.","Chúng tôi có tiệc vào tối thứ Bảy."],["She is at the office now.","Bây giờ cô ấy đang ở văn phòng."],["The keys are in my bag.","Chìa khóa ở trong túi của tôi."],["I often go to the cinema with my friends.","Tôi thường đi xem phim với bạn bè."],["He works from Monday to Friday.","Anh ấy làm việc từ thứ Hai đến thứ Sáu."],["This coffee is for my boss.","Ly cà phê này là cho sếp tôi."],["I wait for the bus at the bus stop.","Tôi chờ xe buýt ở trạm xe buýt."]],"howto-time":[["What time is it?","Mấy giờ rồi?"],["It's ten o'clock.","Bây giờ là mười giờ."],["It's twenty past four.","Bây giờ là bốn giờ hai mươi."],["What day is it today?","Hôm nay là thứ mấy?"],["It's Friday.","Hôm nay là thứ Sáu."],["I take a shower at half past six.","Tôi tắm lúc sáu giờ rưỡi."],["The film starts at a quarter past eight.","Phim bắt đầu lúc tám giờ mười lăm."],["On Sundays, I get up late.","Vào Chủ nhật, tôi dậy muộn."]],"howto-family":[["Do you have any brothers or sisters?","Bạn có anh chị em không?"],["I'm an only child.","Tôi là con một."],["How old is your daughter?","Con gái bạn bao nhiêu tuổi?"],["My grandfather is very tall and thin.","Ông tôi rất cao và gầy."],["My aunt has two sons.","Dì tôi có hai con trai."],["What does your husband do?","Chồng bạn làm nghề gì?"],["My sister looks like my mother.","Em gái tôi trông giống mẹ tôi."],["My best friend lives next door.","Bạn thân của tôi sống ngay nhà bên cạnh."]],"conjunctions":[["She likes cats, but her husband likes dogs.","Cô ấy thích mèo, nhưng chồng cô ấy thích chó."],["I'm tired, so I'm going to bed.","Tôi mệt nên tôi đi ngủ đây."],["Is your phone black or white?","Điện thoại của bạn màu đen hay trắng?"],["We stay at home because it is cold.","Chúng tôi ở nhà vì trời lạnh."],["My father cooks and my mother cleans.","Bố tôi nấu ăn còn mẹ tôi dọn dẹp."],["The shirt is nice, but it is expensive.","Cái áo đẹp, nhưng đắt."],["He is happy because he has a new job.","Anh ấy vui vì có công việc mới."],["You can call me or send me a message.","Bạn có thể gọi hoặc nhắn tin cho tôi."]],"modal-can":[["Can you speak Chinese?","Bạn có nói được tiếng Trung không?"],["My grandmother can't use a smartphone.","Bà tôi không biết dùng điện thoại thông minh."],["Could I use your pen, please?","Cho tôi mượn bút của bạn được không?"],["He could swim when he was four.","Anh ấy biết bơi khi mới bốn tuổi."],["You can park your car here.","Bạn có thể đỗ xe ở đây."],["I couldn't sleep last night.","Tối qua tôi không ngủ được."],["Can we pay by card?","Chúng tôi trả bằng thẻ được không?"],["Could you repeat that, please?","Bạn có thể nhắc lại được không?"]],"howto-suggest":[["Let's have a coffee.","Mình đi uống cà phê đi."],["Shall we start now?","Chúng ta bắt đầu bây giờ nhé?"],["Why don't we go by train?","Sao chúng ta không đi bằng tàu hỏa?"],["How about watching a film tonight?","Tối nay xem phim thì sao?"],["What about eating out on Friday?","Thứ Sáu đi ăn ngoài thì thế nào?"],["Let's not wait for him.","Mình đừng chờ anh ấy nữa."],["That's a good idea!","Ý hay đấy!"],["Sorry, I can't. Maybe next week?","Xin lỗi, mình không đi được. Tuần sau nhé?"]],"possessive-s":[["My mother's cooking is the best.","Mẹ tôi nấu ăn ngon nhất."],["This is Lan's umbrella.","Đây là cái ô của Lan."],["The students' books are on the desk.","Sách của các học sinh ở trên bàn."],["My grandfather's house is in the countryside.","Nhà của ông tôi ở quê."],["Where is the men's toilet?","Nhà vệ sinh nam ở đâu?"],["I don't like the colour of the walls.","Tôi không thích màu của những bức tường."],["Is this your son's bike?","Đây có phải xe đạp của con trai bạn không?"],["The end of the film is very sad.","Đoạn kết của bộ phim rất buồn."]],"frequency":[["I usually drink tea in the afternoon.","Tôi thường uống trà vào buổi chiều."],["She is never late for work.","Cô ấy không bao giờ đi làm muộn."],["Do you often go swimming?","Bạn có hay đi bơi không?"],["We hardly ever eat fast food.","Chúng tôi hầu như không bao giờ ăn đồ ăn nhanh."],["He sometimes works on Saturdays.","Anh ấy thỉnh thoảng làm việc vào thứ Bảy."],["I clean the house once a week.","Tôi dọn nhà mỗi tuần một lần."],["My children are always hungry after school.","Con tôi lúc nào cũng đói sau giờ học."],["How often do you visit your grandparents?","Bạn có hay về thăm ông bà không?"]],"howto-restaurant":[["Do you have a table for four?","Còn bàn cho bốn người không?"],["Are you ready to order?","Anh/chị gọi món chưa ạ?"],["What do you recommend?","Anh/chị gợi ý món nào?"],["I'd like a bowl of beef noodle soup.","Cho tôi một tô phở bò."],["Can I have it without onions?","Cho tôi món đó không hành được không?"],["Anything to drink?","Anh/chị uống gì không ạ?"],["An iced coffee, please.","Cho tôi một ly cà phê đá."],["Could we have the bill, please?","Cho chúng tôi tính tiền nhé."]],"like-ing":[["Do you like swimming?","Bạn có thích bơi không?"],["She doesn't like driving at night.","Cô ấy không thích lái xe ban đêm."],["My father loves working in the garden.","Bố tôi rất thích làm vườn."],["I enjoy talking with my friends.","Tôi thích trò chuyện với bạn bè."],["They hate waiting in long lines.","Họ ghét phải xếp hàng dài."],["Does your son like drawing?","Con trai bạn có thích vẽ không?"],["We don't mind sharing a room.","Chúng tôi không ngại ở chung phòng."],["He likes playing chess with his grandfather.","Cậu ấy thích chơi cờ với ông."]],"havegot":[["I've got a new bike.","Tôi có một chiếc xe đạp mới."],["Have you got any brothers?","Bạn có anh em trai không?"],["She hasn't got much time today.","Hôm nay cô ấy không có nhiều thời gian."],["We've got a meeting at ten.","Chúng tôi có cuộc họp lúc mười giờ."],["Has your house got a garden?","Nhà bạn có vườn không?"],["He's got blue eyes and short hair.","Anh ấy có mắt xanh và tóc ngắn."],["They haven't got any children.","Họ không có con."],["I've got a bad cold.","Tôi bị cảm nặng."]],"howto-invite":[["Would you like to have dinner with us?","Bạn có muốn ăn tối với chúng tôi không?"],["Do you want to watch the match with me?","Bạn có muốn xem trận đấu với tôi không?"],["Are you free this evening?","Tối nay bạn có rảnh không?"],["Would you like some tea?","Bạn có muốn uống chút trà không?"],["Shall I open the window?","Tôi mở cửa sổ nhé?"],["Can I help you with the dishes?","Tôi giúp bạn rửa bát nhé?"],["Sure, I'd love to.","Chắc chắn rồi, tôi rất muốn."],["Thanks, but I've got other plans.","Cảm ơn, nhưng tôi có kế hoạch khác rồi."]],"howmuch-howadj":[["How many children have you got?","Bạn có mấy đứa con?"],["How much milk is there in the fridge?","Trong tủ lạnh còn bao nhiêu sữa?"],["How much are these shoes?","Đôi giày này bao nhiêu tiền?"],["How many languages do you speak?","Bạn nói được mấy thứ tiếng?"],["How expensive is the hotel?","Khách sạn đắt cỡ nào?"],["How deep is the river?","Con sông sâu bao nhiêu?"],["How much time do we have?","Chúng ta còn bao nhiêu thời gian?"],["How heavy is your suitcase?","Va li của bạn nặng bao nhiêu?"]],"howto-shop":[["Excuse me, do you sell phone chargers?","Xin lỗi, ở đây có bán sạc điện thoại không?"],["How much is this jacket?","Cái áo khoác này bao nhiêu tiền?"],["Do you have it in blue?","Cái này có màu xanh không?"],["It doesn't fit me.","Nó không vừa với tôi."],["Have you got a smaller size?","Có cỡ nhỏ hơn không?"],["Can I pay in cash?","Tôi trả tiền mặt được không?"],["Could I exchange this for a bigger one?","Tôi đổi cái này lấy cái lớn hơn được không?"],["Can you give me a discount?","Bạn bớt giá cho tôi được không?"]],"imperative":[["Close the door, please.","Làm ơn đóng cửa lại."],["Don't be late tomorrow.","Ngày mai đừng đến muộn nhé."],["Wash your hands before dinner.","Rửa tay trước khi ăn tối."],["Let's take a photo together.","Chúng ta chụp chung một tấm ảnh nhé."],["Don't park your car here.","Đừng đỗ xe ở đây."],["You should see a doctor.","Bạn nên đi khám bác sĩ."],["Should I bring an umbrella?","Tôi có nên mang ô không?"],["You shouldn't drink so much coffee.","Bạn không nên uống nhiều cà phê như vậy."]],"regular-ed":[["We walked to the park after dinner.","Chúng tôi đi bộ đến công viên sau bữa tối."],["She opened the window because it was hot.","Cô ấy mở cửa sổ vì trời nóng."],["I washed my car on Sunday.","Tôi rửa xe vào Chủ nhật."],["The film ended at eleven.","Bộ phim kết thúc lúc mười một giờ."],["He dropped his phone on the floor.","Anh ấy làm rơi điện thoại xuống sàn."],["Did you enjoy the party?","Bạn có thích bữa tiệc không?"],["They waited for the bus for half an hour.","Họ chờ xe buýt nửa tiếng."],["My sister cried when she watched the film.","Em gái tôi khóc khi xem bộ phim."]],"wh-questions":[["Where do you live?","Bạn sống ở đâu?"],["What time did you get up this morning?","Sáng nay bạn dậy lúc mấy giờ?"],["Why was she angry?","Sao cô ấy lại giận?"],["Where were you going when I saw you?","Bạn đang đi đâu khi tôi thấy bạn vậy?"],["Who can help me with this box?","Ai có thể giúp tôi với cái hộp này?"],["How often do you go to the gym?","Bạn đi tập gym bao lâu một lần?"],["How many people came to the meeting?","Có bao nhiêu người đến dự cuộc họp?"],["Who are you waiting for?","Bạn đang chờ ai vậy?"]],"howto-apologise":[["I'm so sorry about the mistake.","Tôi rất xin lỗi về lỗi đó."],["Sorry, I didn't mean to do that.","Xin lỗi, tôi không cố ý làm vậy."],["Sorry, I can't come because I am ill.","Xin lỗi, tôi không đến được vì tôi bị ốm."],["I'm afraid I can't help you today because I'm very busy.","Tôi e là hôm nay tôi không giúp bạn được vì tôi rất bận."],["Sorry, my phone was off.","Xin lỗi, điện thoại của tôi bị tắt."],["I'm sorry for the noise last night.","Tôi xin lỗi vì tiếng ồn tối qua."],["No problem at all.","Không sao đâu."],["It's all right. It wasn't your fault.","Không sao. Đó không phải lỗi của bạn."]],"adj-modifier":[["The test was quite easy.","Bài kiểm tra khá dễ."],["My grandmother is very old but really healthy.","Bà tôi rất già nhưng thật sự khỏe mạnh."],["This is a really beautiful beach.","Đây là một bãi biển thật sự đẹp."],["The room is a bit dark.","Căn phòng hơi tối."],["He is an extremely good driver.","Anh ấy là một tài xế cực kỳ giỏi."],["The water is very cold this morning.","Sáng nay nước rất lạnh."],["Her family is quite big.","Gia đình cô ấy khá đông."],["The new bridge is really long.","Cây cầu mới thật sự rất dài."]],"compare":[["My brother is older than me.","Anh tôi lớn tuổi hơn tôi."],["This book is more interesting than that one.","Cuốn sách này hay hơn cuốn kia."],["Hanoi is colder than Ho Chi Minh City in winter.","Vào mùa đông, Hà Nội lạnh hơn Thành phố Hồ Chí Minh."],["She is the most beautiful girl in the village.","Cô ấy là cô gái đẹp nhất làng."],["My car is not as fast as yours.","Xe của tôi không nhanh bằng xe của bạn."],["This is the worst day of my life.","Đây là ngày tệ nhất đời tôi."],["Is the train faster than the bus?","Tàu hỏa có nhanh hơn xe buýt không?"],["Her new flat is bigger than her old one.","Căn hộ mới của cô ấy rộng hơn căn cũ."]],"howto-directions":[["Excuse me, how do I get to the station?","Xin lỗi, làm sao để đến nhà ga?"],["Where is the nearest bus stop?","Trạm xe buýt gần nhất ở đâu?"],["Turn left at the end of the street.","Rẽ trái ở cuối đường."],["Take the first turning on the left.","Rẽ vào ngã rẽ đầu tiên bên trái."],["Go straight on until you see the church.","Đi thẳng cho đến khi bạn thấy nhà thờ."],["It is on your right, next to the bakery.","Nó ở bên phải bạn, cạnh tiệm bánh."],["Is it far from here?","Chỗ đó có xa đây không?"],["It is about ten minutes by bus.","Đi xe buýt mất khoảng mười phút."]],"prep-movement":[["The children ran out of the classroom.","Bọn trẻ chạy ra khỏi lớp học."],["Get on the bus at this stop.","Lên xe buýt ở trạm này."],["He walked down the hill slowly.","Anh ấy đi bộ xuống đồi một cách chậm rãi."],["The dog jumped into the water.","Con chó nhảy xuống nước."],["We drove through the city centre.","Chúng tôi lái xe xuyên qua trung tâm thành phố."],["She swam across the river.","Cô ấy bơi qua sông."],["Walk along the beach and you will see the hotel.","Đi dọc bãi biển và bạn sẽ thấy khách sạn."],["A boy ran towards me and said hello.","Một cậu bé chạy về phía tôi và chào."]],"simple-vs-continuous":[["She drinks coffee every morning, but today she is drinking tea.","Sáng nào cô ấy cũng uống cà phê, nhưng hôm nay cô ấy đang uống trà."],["What do you do? — I'm a nurse.","Bạn làm nghề gì? — Tôi là y tá."],["What are you doing? — I'm cooking.","Bạn đang làm gì vậy? — Tôi đang nấu ăn."],["He doesn't usually work late, but he is working late this week.","Anh ấy thường không làm muộn, nhưng tuần này anh ấy đang làm muộn."],["I want a glass of water.","Tôi muốn một ly nước."],["Listen! Someone is singing next door.","Nghe kìa! Ai đó đang hát ở nhà bên."],["My father reads the newspaper every morning.","Bố tôi đọc báo mỗi sáng."],["We are not going out tonight because it is raining.","Tối nay chúng tôi không đi chơi vì trời đang mưa."]],"howto-phone":[["Hello, this is Minh from ABC Company.","Xin chào, tôi là Minh từ công ty ABC."],["I'm calling about my order.","Tôi gọi về đơn hàng của tôi."],["Could you tell me what time you open?","Bạn có thể cho tôi biết mấy giờ mở cửa không?"],["Could you tell me where the office is?","Bạn có thể cho tôi biết văn phòng ở đâu không?"],["Sorry, I can't hear you very well.","Xin lỗi, tôi nghe không rõ lắm."],["Can I leave a message?","Tôi để lại lời nhắn được không?"],["Could you ask him to call me back?","Bạn có thể nhờ anh ấy gọi lại cho tôi không?"],["Thank you. Goodbye.","Cảm ơn bạn. Tạm biệt."]],"verb-to-v":[["She wants to become a doctor.","Cô ấy muốn trở thành bác sĩ."],["I need to buy some food.","Tôi cần mua ít đồ ăn."],["He forgot to turn off the lights.","Anh ấy quên tắt đèn."],["We hope to see you again soon.","Chúng tôi hy vọng sớm gặp lại bạn."],["They are learning to cook Vietnamese food.","Họ đang học nấu món Việt."],["I would like to speak to the manager.","Tôi muốn nói chuyện với quản lý."],["My mother asked me to buy some eggs.","Mẹ nhờ tôi mua vài quả trứng."],["The teacher told us to be quiet.","Cô giáo bảo chúng tôi giữ trật tự."]],"howto-hotel":[["I booked a double room for two nights.","Tôi đã đặt một phòng đôi cho hai đêm."],["What time is breakfast?","Bữa sáng lúc mấy giờ?"],["Could you wake me up at six, please?","Bạn có thể gọi tôi dậy lúc sáu giờ được không?"],["Could I have the Wi-Fi password, please?","Cho tôi xin mật khẩu Wi-Fi được không?"],["The TV in my room doesn't work.","Cái TV trong phòng tôi không hoạt động."],["Could you clean my room, please?","Bạn có thể dọn phòng cho tôi được không?"],["What time do I have to check out?","Tôi phải trả phòng lúc mấy giờ?"],["Could I have the bill, please?","Cho tôi xin hóa đơn được không?"]],"adverb-manner":[["He drives very carefully.","Anh ấy lái xe rất cẩn thận."],["The children played happily in the garden.","Bọn trẻ chơi vui vẻ trong vườn."],["Please speak clearly.","Làm ơn nói rõ ràng."],["She closed the door angrily.","Cô ấy đóng cửa một cách giận dữ."],["I can't run fast.","Tôi không chạy nhanh được."],["He answered the question correctly.","Anh ấy trả lời câu hỏi chính xác."],["The baby is sleeping peacefully.","Em bé đang ngủ yên bình."],["She did the test badly.","Cô ấy làm bài kiểm tra tệ."]],"modal-more":[["I may be late tonight.","Tối nay tôi có thể về muộn."],["You must stop at a red light.","Bạn phải dừng lại khi đèn đỏ."],["He has to get up early for work.","Anh ấy phải dậy sớm để đi làm."],["Do we have to wear a uniform?","Chúng tôi có phải mặc đồng phục không?"],["You ought to call your mother.","Bạn nên gọi cho mẹ."],["She might not come to the party.","Cô ấy có thể sẽ không đến bữa tiệc."],["You don't have to bring anything.","Bạn không cần mang gì cả."],["Should I call him now?","Tôi có nên gọi anh ấy bây giờ không?"]],"cond-1":[["If you mix red and white, you get pink.","Nếu bạn trộn màu đỏ với trắng, bạn sẽ có màu hồng."],["If I see him, I will give him your message.","Nếu tôi gặp anh ấy, tôi sẽ chuyển lời nhắn của bạn."],["If it is sunny tomorrow, we will go to the beach.","Nếu mai trời nắng, chúng ta sẽ đi biển."],["You will feel better if you sleep early.","Bạn sẽ thấy khỏe hơn nếu ngủ sớm."],["What will you do if you miss the train?","Bạn sẽ làm gì nếu lỡ chuyến tàu?"],["If she doesn't hurry, she will be late.","Nếu cô ấy không nhanh lên, cô ấy sẽ bị muộn."],["Unless you take a map, you will get lost.","Nếu bạn không mang bản đồ, bạn sẽ bị lạc."],["If you don't water plants, they die.","Nếu bạn không tưới cây, cây sẽ chết."]],"too":[["The tea is too sweet for me to drink.","Trà ngọt quá, tôi không uống được."],["She is too short to reach the top shelf.","Cô ấy thấp quá không với tới kệ trên cùng."],["It is too cold to swim today.","Hôm nay lạnh quá không bơi được."],["He walks too slowly to catch the bus.","Anh ấy đi chậm quá nên không kịp xe buýt."],["My son is too young to go to school.","Con trai tôi còn quá nhỏ để đi học."],["This flat is too expensive for us to rent.","Căn hộ này quá đắt để chúng tôi thuê."],["I was too busy to call you yesterday.","Hôm qua tôi bận quá không gọi cho bạn được."],["The music is too loud for me to sleep.","Nhạc to quá tôi không ngủ được."]],"enough":[["He is tall enough to play basketball.","Anh ấy đủ cao để chơi bóng rổ."],["The water isn't clean enough to drink.","Nước không đủ sạch để uống."],["Do we have enough eggs to make a cake?","Chúng ta có đủ trứng để làm bánh không?"],["She didn't run fast enough to win.","Cô ấy chạy không đủ nhanh để thắng."],["The car is big enough for five people.","Chiếc xe đủ rộng cho năm người."],["I didn't sleep enough last night.","Tối qua tôi ngủ không đủ."],["Are you old enough to drive?","Bạn đủ tuổi lái xe chưa?"],["We don't have enough time to visit the museum.","Chúng ta không đủ thời gian để thăm bảo tàng."]],"ittakes":[["It takes me five minutes to make coffee.","Tôi mất năm phút để pha cà phê."],["It took us three hours to drive to Vung Tau.","Chúng tôi mất ba tiếng để lái xe đến Vũng Tàu."],["How long did it take you to do your homework?","Bạn mất bao lâu để làm bài tập?"],["It will take a long time to build the new airport.","Sẽ mất nhiều thời gian để xây sân bay mới."],["It takes her an hour to get ready in the morning.","Cô ấy mất một tiếng để chuẩn bị vào buổi sáng."],["It didn't take me long to find the hotel.","Tôi không mất nhiều thời gian để tìm khách sạn."],["It took my father a week to paint the house.","Bố tôi mất một tuần để sơn nhà."],["How long will it take to fix the car?","Sửa xe sẽ mất bao lâu?"]],"itsadj":[["It is fun to play with children.","Chơi với trẻ con thật vui."],["It is expensive to eat out every day.","Ăn ngoài mỗi ngày thì tốn kém."],["It was hard for him to find a job.","Anh ấy thật khó khăn để tìm được việc."],["It is not safe to swim here.","Bơi ở đây không an toàn."],["Is it easy to learn Vietnamese?","Học tiếng Việt có dễ không?"],["It is important for children to sleep well.","Ngủ ngon rất quan trọng đối với trẻ em."],["I find it difficult to remember new words.","Tôi thấy khó nhớ từ mới."],["She finds it easy to talk to strangers.","Cô ấy thấy dễ nói chuyện với người lạ."]],"pp-vs-past":[["I have seen this film twice.","Tôi đã xem bộ phim này hai lần."],["I saw it last week with my wife.","Tôi xem nó tuần trước với vợ tôi."],["Have you finished your lunch yet?","Bạn ăn trưa xong chưa?"],["She hasn't been to Hue since 2019.","Cô ấy chưa đến Huế kể từ năm 2019."],["When did you start this job?","Bạn bắt đầu công việc này khi nào?"],["I have known him for twenty years.","Tôi đã quen anh ấy được hai mươi năm."],["We met at university in 2005.","Chúng tôi gặp nhau ở đại học năm 2005."],["He has just left. He left five minutes ago.","Anh ấy vừa đi. Anh ấy đi cách đây năm phút."]],"future-forms":[["I'm having dinner with my parents tonight.","Tối nay tôi ăn tối với bố mẹ."],["The plane lands at ten thirty.","Máy bay hạ cánh lúc mười giờ ba mươi."],["I'm not going to drive; I will take a taxi.","Tôi sẽ không lái xe; tôi sẽ đi taxi."],["Maybe I will visit you next summer.","Có lẽ mùa hè tới tôi sẽ đến thăm bạn."],["She's going to study medicine at university.","Cô ấy định học y ở đại học."],["What time does the class start tomorrow?","Ngày mai lớp học bắt đầu lúc mấy giờ?"],["We're playing football after work on Friday.","Thứ Sáu sau giờ làm chúng tôi sẽ đá bóng."],["Be careful! You're going to drop the plates.","Cẩn thận! Bạn sắp làm rơi đĩa kìa."]],"time-clauses":[["I will tell him when I see him.","Tôi sẽ nói với anh ấy khi gặp anh ấy."],["Please call me as soon as you arrive at the airport.","Hãy gọi cho tôi ngay khi bạn đến sân bay."],["We will wait until the shop opens.","Chúng tôi sẽ đợi đến khi cửa hàng mở cửa."],["Before you go to bed, brush your teeth.","Trước khi đi ngủ, hãy đánh răng."],["After I finish work, I will go to the gym.","Sau khi làm xong, tôi sẽ đi tập gym."],["She won't leave until her husband comes home.","Cô ấy sẽ không đi cho đến khi chồng về."],["As soon as I have read the email, I will reply.","Ngay khi đọc xong email, tôi sẽ trả lời."],["When you have finished, you can go home.","Khi làm xong, bạn có thể về nhà."]],"modal-deduction":[["You must be hungry after work.","Chắc hẳn bạn đói sau giờ làm."],["That can't be true.","Điều đó không thể là thật."],["She might be sleeping now.","Có thể bây giờ cô ấy đang ngủ."],["He must be very rich; he has three cars.","Chắc hẳn anh ấy rất giàu; anh ấy có ba chiếc xe."],["The phone is ringing. It might be my mother.","Điện thoại đang reo. Có thể là mẹ tôi."],["They can't be married; they only met last month.","Họ không thể đã cưới nhau; họ mới gặp nhau tháng trước."],["He must be working late tonight.","Chắc hẳn tối nay anh ấy đang làm muộn."],["You can't be serious!","Bạn không thể nói nghiêm túc được!"]],"obligation":[["You must wear a seat belt in the car.","Bạn phải thắt dây an toàn trong xe."],["We don't have to work tomorrow.","Ngày mai chúng tôi không phải làm việc."],["You mustn't touch the paintings.","Bạn không được chạm vào các bức tranh."],["Did you have to wait long at the bank?","Bạn có phải chờ lâu ở ngân hàng không?"],["She had to stay at home because she was ill.","Cô ấy phải ở nhà vì bị ốm."],["You will have to show your passport.","Bạn sẽ phải xuất trình hộ chiếu."],["Does he have to work on Sundays?","Anh ấy có phải làm việc vào Chủ nhật không?"],["We didn't have to pay for the drinks.","Chúng tôi không phải trả tiền đồ uống."]],"passive":[["The room is cleaned every day.","Căn phòng được dọn mỗi ngày."],["This song was written by a young singer.","Bài hát này được một ca sĩ trẻ sáng tác."],["The new bridge will be opened next month.","Cây cầu mới sẽ được khánh thành vào tháng tới."],["My bike was stolen last night.","Xe đạp của tôi bị lấy cắp tối qua."],["The meeting has been cancelled.","Cuộc họp đã bị hủy."],["Are these cakes made by hand?","Những chiếc bánh này được làm thủ công phải không?"],["The road is being repaired this week.","Con đường đang được sửa trong tuần này."],["Phones must be turned off during the exam.","Điện thoại phải được tắt trong giờ thi."]],"cond-2":[["If I were taller, I would play basketball.","Nếu tôi cao hơn, tôi sẽ chơi bóng rổ."],["If she had more free time, she would learn to cook.","Nếu cô ấy có nhiều thời gian rảnh hơn, cô ấy sẽ học nấu ăn."],["I wouldn't do that if I were you.","Nếu tôi là bạn, tôi sẽ không làm vậy."],["If it weren't so expensive, I would buy it.","Nếu nó không đắt như vậy, tôi sẽ mua."],["Where would you live if you could live anywhere?","Bạn sẽ sống ở đâu nếu có thể sống bất cứ nơi nào?"],["If they didn't work so much, they would be less tired.","Nếu họ không làm việc nhiều như vậy, họ sẽ bớt mệt."],["He would help you if he were here.","Anh ấy sẽ giúp bạn nếu anh ấy ở đây."],["If I had a dog, I would walk it every day.","Nếu tôi có một con chó, tôi sẽ dắt nó đi dạo mỗi ngày."]],"gerund-1":[["He stopped smoking last year.","Anh ấy bỏ hút thuốc năm ngoái."],["I want to visit Japan one day.","Tôi muốn đến thăm Nhật Bản một ngày nào đó."],["She is afraid of flying.","Cô ấy sợ đi máy bay."],["We plan to go camping next weekend.","Chúng tôi định đi cắm trại cuối tuần tới."],["He suggested going to the beach.","Anh ấy gợi ý đi biển."],["I'm looking forward to seeing you.","Tôi mong được gặp bạn."],["They agreed to help us.","Họ đồng ý giúp chúng tôi."],["She left without saying goodbye.","Cô ấy rời đi mà không nói lời tạm biệt."]],"relative-1":[["The girl who sits next to me is very funny.","Cô gái ngồi cạnh tôi rất vui tính."],["I lost the pen that you gave me.","Tôi làm mất cây bút mà bạn đưa tôi."],["Do you know a shop which sells cheap phones?","Bạn có biết cửa hàng nào bán điện thoại rẻ không?"],["The man whose dog bit me said sorry.","Người đàn ông có con chó cắn tôi đã xin lỗi."],["People who work at night need more sleep.","Những người làm việc ban đêm cần ngủ nhiều hơn."],["This is the photo that I took in Sa Pa.","Đây là tấm ảnh tôi chụp ở Sa Pa."],["The teacher who taught me English lives in Hue.","Thầy giáo dạy tôi tiếng Anh sống ở Huế."],["I need a bag which is big enough for my laptop.","Tôi cần một cái túi đủ lớn để đựng máy tính xách tay."]],"reported":[["He said he lived in Da Nang.","Anh ấy nói anh ấy sống ở Đà Nẵng."],["She told me she was learning Japanese.","Cô ấy nói với tôi rằng cô ấy đang học tiếng Nhật."],["They said they couldn't come.","Họ nói họ không thể đến."],["He asked me if I was hungry.","Anh ấy hỏi tôi có đói không."],["She asked me why I was late.","Cô ấy hỏi tôi tại sao đến muộn."],["My boss told me to send the email.","Sếp bảo tôi gửi email."],["The doctor told him not to eat fried food.","Bác sĩ bảo ông ấy đừng ăn đồ chiên."],["He said he had seen the film before.","Anh ấy nói anh ấy đã xem bộ phim đó rồi."]],"tag":[["It isn't very far, is it?","Chỗ đó không xa lắm, phải không?"],["You have finished your work, haven't you?","Bạn đã làm xong việc rồi, phải không?"],["He can't speak French, can he?","Anh ấy không nói được tiếng Pháp, phải không?"],["They were at home last night, weren't they?","Tối qua họ ở nhà, phải không?"],["She lives near here, doesn't she?","Cô ấy sống gần đây, phải không?"],["I'm late, aren't I?","Tôi đến muộn, phải không?"],["You won't tell anyone, will you?","Bạn sẽ không kể với ai chứ?"],["The film was good, wasn't it?","Bộ phim hay nhỉ?"]],"quantifiers":[["How many people came to the party?","Có bao nhiêu người đến bữa tiệc?"],["There were plenty of seats on the bus.","Trên xe buýt có rất nhiều chỗ ngồi."],["I have a few minutes before the meeting.","Tôi có vài phút trước cuộc họp."],["Could I have a little sugar in my coffee?","Cho tôi một chút đường vào cà phê được không?"],["There is too much noise in this room.","Phòng này ồn quá."],["We don't have many vegetables left.","Chúng ta không còn nhiều rau."],["Little rain falls here in the dry season.","Vào mùa khô, ở đây rất ít mưa."],["All of my friends live in the city.","Tất cả bạn bè tôi đều sống ở thành phố."]],"indefinite":[["Somebody is knocking at the door.","Có ai đó đang gõ cửa."],["I don't know anybody here.","Tôi không quen ai ở đây."],["Is there anything I can do for you?","Có việc gì tôi có thể làm cho bạn không?"],["Everybody likes her.","Mọi người đều thích cô ấy."],["I can't find my glasses anywhere.","Tôi không tìm thấy kính ở đâu cả."],["There is nothing in the fridge.","Trong tủ lạnh không có gì cả."],["Did anyone call me?","Có ai gọi cho tôi không?"],["I want to live somewhere warm.","Tôi muốn sống ở một nơi nào đó ấm áp."]],"so-neither":[["I like Vietnamese food. — So do I.","Tôi thích món Việt. — Tôi cũng vậy."],["I can't swim. — Neither can I.","Tôi không biết bơi. — Tôi cũng không."],["She is a teacher. — So is her husband.","Cô ấy là giáo viên. — Chồng cô ấy cũng vậy."],["I haven't seen that film. — Neither have I.","Tôi chưa xem bộ phim đó. — Tôi cũng chưa."],["We went to the beach last weekend. — So did we.","Cuối tuần trước chúng tôi đi biển. — Chúng tôi cũng vậy."],["He isn't married. — Neither is his brother.","Anh ấy chưa kết hôn. — Anh trai anh ấy cũng chưa."],["I will be there at six. — So will I.","Tôi sẽ có mặt lúc sáu giờ. — Tôi cũng vậy."],["I don't like coffee. — Oh, I do.","Tôi không thích cà phê. — Ồ, tôi thì có."]],"phrasal":[["Please turn on the lights.","Làm ơn bật đèn lên."],["She grew up in a small village.","Cô ấy lớn lên ở một ngôi làng nhỏ."],["Can you look after my cat this weekend?","Cuối tuần này bạn trông con mèo giúp tôi được không?"],["I usually wake up at six.","Tôi thường thức dậy lúc sáu giờ."],["Don't give up! You can do it.","Đừng bỏ cuộc! Bạn làm được mà."],["Please fill in this form.","Vui lòng điền vào mẫu đơn này."],["The TV is too loud. Please turn it down.","TV to quá. Làm ơn vặn nhỏ lại."],["We set off early in the morning.","Chúng tôi khởi hành từ sáng sớm."]],"sothat":[["The room was so dark that I couldn't see anything.","Căn phòng tối đến mức tôi không thấy gì."],["She was so happy that she cried.","Cô ấy vui đến mức bật khóc."],["The test was so easy that everyone finished early.","Bài kiểm tra dễ đến mức ai cũng làm xong sớm."],["He drove so fast that he got a ticket.","Anh ấy lái nhanh đến mức bị phạt."],["The shoes were so expensive that I didn't buy them.","Đôi giày đắt đến mức tôi không mua."],["I was so hungry that I ate two bowls of rice.","Tôi đói đến mức ăn hai bát cơm."],["She sings so well that she won the contest.","Cô ấy hát hay đến mức đã thắng cuộc thi."],["The street is so noisy that I can't sleep.","Con phố ồn đến mức tôi không ngủ được."]],"suchthat":[["It was such a beautiful view that we took many photos.","Cảnh đẹp đến mức chúng tôi chụp rất nhiều ảnh."],["He is such a funny man that everyone laughs at his jokes.","Anh ấy vui tính đến mức ai cũng cười vì những câu đùa của anh ấy."],["It was such bad weather that the flight was cancelled.","Thời tiết tệ đến mức chuyến bay bị hủy."],["She is such a good cook that we always eat at her house.","Cô ấy nấu ăn giỏi đến mức chúng tôi luôn ăn ở nhà cô ấy."],["They are such lovely children that everyone loves them.","Bọn trẻ dễ thương đến mức ai cũng yêu quý."],["It was such an interesting book that I couldn't stop reading.","Cuốn sách hay đến mức tôi không thể ngừng đọc."],["It was such a cold night that we stayed by the fire.","Đêm lạnh đến mức chúng tôi ngồi cạnh đống lửa."],["He made such a big mistake that he lost his job.","Anh ấy mắc lỗi lớn đến mức bị mất việc."]],"makelet":[["My boss made me work late.","Sếp bắt tôi làm muộn."],["Let me pay for dinner tonight.","Để tôi trả tiền bữa tối nay."],["Could you help me find my keys?","Bạn giúp tôi tìm chìa khóa được không?"],["The cold weather made him feel ill.","Thời tiết lạnh làm anh ấy thấy ốm."],["My parents let me use their car.","Bố mẹ cho tôi dùng xe của họ."],["She helped her mother to cook dinner.","Cô ấy giúp mẹ nấu bữa tối."],["Don't make me wait too long.","Đừng bắt tôi chờ quá lâu."],["Let the children play outside for an hour.","Hãy để bọn trẻ chơi ngoài trời một tiếng."]],"asktell":[["My mother told me to wear a coat.","Mẹ bảo tôi mặc áo khoác."],["He asked his friend to lend him some money.","Anh ấy nhờ bạn cho mượn ít tiền."],["The police told the driver to stop.","Cảnh sát bảo tài xế dừng lại."],["She reminded me to buy some milk.","Cô ấy nhắc tôi mua sữa."],["The doctor advised me not to drink alcohol.","Bác sĩ khuyên tôi không uống rượu."],["I told my son not to play with fire.","Tôi bảo con trai đừng nghịch lửa."],["She wants me to go with her.","Cô ấy muốn tôi đi cùng cô ấy."],["They asked me to take a photo of them.","Họ nhờ tôi chụp ảnh cho họ."]],"usedto":[["My father used to work in a factory.","Bố tôi từng làm việc trong một nhà máy."],["There used to be a cinema here.","Ở đây từng có một rạp chiếu phim."],["I didn't use to eat vegetables.","Tôi từng không ăn rau."],["She is used to living alone.","Cô ấy đã quen sống một mình."],["I can't get used to the cold weather.","Tôi không thể quen với thời tiết lạnh."],["Did your grandmother use to sing to you?","Bà của bạn có từng hát cho bạn nghe không?"],["We are used to eating dinner late.","Chúng tôi quen ăn tối muộn."],["He used to have long hair.","Anh ấy từng để tóc dài."]],"hadbetter":[["You had better wear a coat; it's cold outside.","Bạn nên mặc áo khoác; ngoài trời lạnh đấy."],["We had better hurry, or we will miss the train.","Chúng ta nên nhanh lên, kẻo lỡ tàu."],["He had better not drive after drinking.","Anh ấy tốt nhất không nên lái xe sau khi uống rượu."],["I had better go to bed now.","Tôi nên đi ngủ bây giờ thì hơn."],["You had better not forget your passport.","Bạn tốt nhất đừng quên hộ chiếu."],["She had better tell her parents the truth.","Cô ấy nên nói thật với bố mẹ."],["We had better check the weather before we go.","Chúng ta nên xem thời tiết trước khi đi."],["You had better not be late for the interview.","Bạn tốt nhất đừng đến muộn buổi phỏng vấn."]],"spend":[["She spends an hour every morning doing exercise.","Mỗi sáng cô ấy dành một tiếng để tập thể dục."],["I spent all my money on clothes.","Tôi đã tiêu hết tiền vào quần áo."],["Don't waste your time worrying about it.","Đừng phí thời gian lo lắng về chuyện đó."],["They spent the afternoon swimming in the sea.","Họ dành cả buổi chiều bơi ở biển."],["How much time do you spend reading each day?","Mỗi ngày bạn dành bao nhiêu thời gian để đọc sách?"],["He wastes a lot of money on games.","Anh ấy lãng phí nhiều tiền vào game."],["My mother spends hours cooking for Tet.","Mẹ tôi dành hàng giờ nấu nướng cho Tết."],["We wasted the whole day looking for a hotel.","Chúng tôi phí cả ngày để tìm khách sạn."]],"howto-opinion":[["I think this phone is too expensive.","Tôi nghĩ chiếc điện thoại này đắt quá."],["In my view, we need more time.","Theo tôi, chúng ta cần thêm thời gian."],["What do you think about the new plan?","Bạn nghĩ sao về kế hoạch mới?"],["I agree with you up to a point.","Tôi đồng ý với bạn ở một mức độ nào đó."],["I don't think that's a good idea.","Tôi không nghĩ đó là ý hay."],["How do you feel about working at weekends?","Bạn cảm thấy thế nào về việc làm cuối tuần?"],["Exactly! That's what I think too.","Chính xác! Tôi cũng nghĩ vậy."],["I'm sorry, but I see it differently.","Xin lỗi, nhưng tôi nhìn nhận khác."]],"cond-3":[["If I had seen you, I would have said hello.","Nếu tôi thấy bạn, tôi đã chào rồi."],["If he had been careful, he wouldn't have had the accident.","Nếu anh ấy cẩn thận thì đã không gặp tai nạn."],["We wouldn't have got lost if we had taken a map.","Chúng tôi đã không bị lạc nếu mang theo bản đồ."],["If you had asked me, I would have helped you.","Nếu bạn nhờ, tôi đã giúp bạn rồi."],["If she hadn't missed the bus, she wouldn't have been late.","Nếu cô ấy không lỡ xe buýt thì đã không đến muộn."],["What would you have done if you had lost your passport?","Bạn sẽ làm gì nếu khi đó bị mất hộ chiếu?"],["If I had set an alarm, I wouldn't have overslept.","Nếu tôi đặt báo thức thì đã không ngủ quên."],["They would have won if they had played better.","Họ đã thắng nếu chơi tốt hơn."]],"relative-2":[["My mother, who is a nurse, works at night.","Mẹ tôi, người là y tá, làm ca đêm."],["Hanoi, which is the capital of Vietnam, has many lakes.","Hà Nội, thủ đô của Việt Nam, có nhiều hồ."],["My neighbour, whose son is a doctor, is very friendly.","Hàng xóm của tôi, người có con trai là bác sĩ, rất thân thiện."],["The Mekong, which flows through six countries, is very long.","Sông Mê Kông, chảy qua sáu quốc gia, rất dài."],["Mr Hai, who owns the café, is my uncle.","Ông Hai, chủ quán cà phê, là chú tôi."],["He forgot my birthday, which made me sad.","Anh ấy quên sinh nhật tôi, điều đó khiến tôi buồn."],["My car, which is ten years old, still runs well.","Chiếc xe của tôi, đã mười năm tuổi, vẫn chạy tốt."],["Lan, whose English is excellent, works as a guide.","Lan, người nói tiếng Anh rất giỏi, làm hướng dẫn viên."]],"gerund-2":[["I remember visiting this place as a child.","Tôi nhớ đã đến nơi này hồi nhỏ."],["Please remember to bring your passport.","Nhớ mang theo hộ chiếu nhé."],["I'll never forget seeing the sea for the first time.","Tôi sẽ không bao giờ quên lần đầu nhìn thấy biển."],["She forgot to buy bread on the way home.","Cô ấy quên mua bánh mì trên đường về."],["Try turning the computer off and on again.","Thử tắt máy tính rồi bật lại xem."],["I tried to call you, but your phone was off.","Tôi đã cố gọi cho bạn nhưng điện thoại bạn tắt máy."],["He stopped working at sixty.","Ông ấy nghỉ làm việc năm sáu mươi tuổi."],["On the way home, we stopped to have a coffee.","Trên đường về, chúng tôi dừng lại uống cà phê."]],"modal-perfect":[["He must have forgotten my number.","Chắc hẳn anh ấy đã quên số của tôi."],["She might have gone to the market.","Có thể cô ấy đã đi chợ."],["They can't have left yet; their car is still here.","Họ không thể đã đi rồi; xe họ vẫn còn đây."],["You should have told me earlier.","Lẽ ra bạn nên nói với tôi sớm hơn."],["I shouldn't have spent so much money.","Lẽ ra tôi không nên tiêu nhiều tiền như vậy."],["The lights are off; they must have gone to bed.","Đèn tắt rồi; chắc họ đã đi ngủ."],["He could have been hurt.","Anh ấy đã có thể bị thương."],["She can't have said that; she's always so polite.","Cô ấy không thể đã nói vậy; cô ấy luôn lịch sự."]],"passive-report":[["It is said that this temple is a thousand years old.","Người ta nói ngôi chùa này đã có một nghìn năm tuổi."],["She is said to be the best doctor in the city.","Người ta nói cô ấy là bác sĩ giỏi nhất thành phố."],["It is thought that the price of rice will go up.","Người ta cho rằng giá gạo sẽ tăng."],["The thief is believed to have left the city.","Người ta tin rằng tên trộm đã rời khỏi thành phố."],["It is expected that the new road will open in May.","Người ta dự kiến con đường mới sẽ thông xe vào tháng Năm."],["He is known to be very generous.","Ông ấy được biết đến là người rất hào phóng."],["It was reported that the storm had damaged many houses.","Có tin rằng cơn bão đã làm hư hại nhiều ngôi nhà."],["The restaurant is said to serve the best pho in town.","Người ta nói nhà hàng này có món phở ngon nhất thành phố."]],"participle":[["Hearing the news, she started to cry.","Nghe tin, cô ấy bắt đầu khóc."],["The girl sitting by the window is my cousin.","Cô gái ngồi cạnh cửa sổ là em họ tôi."],["Made in Japan, this car is very reliable.","Được sản xuất tại Nhật, chiếc xe này rất bền."],["Having lost his keys, he couldn't get into the house.","Vì làm mất chìa khóa, anh ấy không vào nhà được."],["The photos taken at the wedding are beautiful.","Những tấm ảnh chụp ở đám cưới rất đẹp."],["Not having enough money, they decided to stay at home.","Vì không có đủ tiền, họ quyết định ở nhà."],["Students wanting to join the club should sign here.","Học sinh muốn tham gia câu lạc bộ nên ký tên ở đây."],["Tired after the long trip, we went straight to bed.","Mệt sau chuyến đi dài, chúng tôi đi ngủ ngay."]],"unless-provided":[["I won't go unless you come with me.","Tôi sẽ không đi trừ khi bạn đi cùng tôi."],["You can use my laptop as long as you are careful.","Bạn có thể dùng máy tính của tôi miễn là bạn cẩn thận."],["Bring some water in case you get thirsty.","Mang theo nước phòng khi bạn khát."],["We will finish on time provided that nobody is ill.","Chúng ta sẽ xong đúng hạn với điều kiện không ai bị ốm."],["Unless you book now, there won't be any seats.","Nếu bạn không đặt ngay, sẽ không còn chỗ."],["Take my number in case you need help.","Cầm lấy số của tôi phòng khi bạn cần giúp đỡ."],["As long as you are happy, I am happy.","Miễn là bạn vui thì tôi cũng vui."],["He can come provided he brings his own food.","Anh ấy có thể đến với điều kiện tự mang đồ ăn."]],"prep-collocation":[["She is tired of waiting.","Cô ấy chán phải chờ đợi rồi."],["I'm not very good at remembering names.","Tôi không giỏi nhớ tên người lắm."],["He thanked me for helping him.","Anh ấy cảm ơn tôi vì đã giúp anh ấy."],["We are looking forward to meeting you.","Chúng tôi mong được gặp bạn."],["My son is crazy about football.","Con trai tôi mê bóng đá."],["They insisted on paying for dinner.","Họ nhất quyết trả tiền bữa tối."],["She is famous for her beautiful voice.","Cô ấy nổi tiếng với giọng hát hay."],["He is used to working with children.","Anh ấy quen làm việc với trẻ em."]],"havedone":[["I'm going to have my car washed tomorrow.","Ngày mai tôi sẽ đem xe đi rửa."],["She had her nails done for the wedding.","Cô ấy đi làm móng cho đám cưới."],["We got our roof repaired after the storm.","Chúng tôi cho sửa mái nhà sau cơn bão."],["Where did you get your phone fixed?","Bạn sửa điện thoại ở đâu vậy?"],["He had his wallet stolen at the market.","Anh ấy bị trộm ví ở chợ."],["I need to get my passport renewed.","Tôi cần đi gia hạn hộ chiếu."],["I had the mechanic check the brakes.","Tôi nhờ thợ máy kiểm tra phanh."],["She got her brother to carry the boxes.","Cô ấy nhờ em trai khiêng mấy cái hộp."]],"suggest":[["I suggest taking a break.","Tôi đề nghị nghỉ giải lao một chút."],["She suggested that we should go by train.","Cô ấy đề nghị chúng tôi nên đi tàu hỏa."],["He suggests starting the meeting at nine.","Anh ấy đề nghị bắt đầu cuộc họp lúc chín giờ."],["The doctor suggested that I drink more water.","Bác sĩ khuyên tôi uống nhiều nước hơn."],["What do you suggest doing this weekend?","Bạn gợi ý làm gì vào cuối tuần này?"],["My manager suggested that we hire more staff.","Quản lý của tôi đề nghị chúng tôi tuyển thêm nhân viên."],["I suggest that you call her first.","Tôi đề nghị bạn gọi cho cô ấy trước."],["Can you suggest a good book for beginners?","Bạn có thể gợi ý một cuốn sách hay cho người mới học không?"]],"prefer":[["I prefer summer to winter.","Tôi thích mùa hè hơn mùa đông."],["She prefers reading books to watching TV.","Cô ấy thích đọc sách hơn xem TV."],["I'd rather walk than take the bus.","Tôi thà đi bộ còn hơn đi xe buýt."],["Which do you prefer, tea or coffee?","Bạn thích cái nào hơn, trà hay cà phê?"],["He would rather not talk about it.","Anh ấy không muốn nói về chuyện đó."],["We prefer cooking at home to eating out.","Chúng tôi thích nấu ăn ở nhà hơn ăn ngoài."],["I'd rather have fish than chicken tonight.","Tối nay tôi thích ăn cá hơn ăn gà."],["My children prefer cats to dogs.","Bọn trẻ nhà tôi thích mèo hơn chó."]],"itstime":[["It's time to get up.","Đến giờ dậy rồi."],["It's time for lunch.","Đến giờ ăn trưa rồi."],["It's time you cleaned your room.","Đã đến lúc con dọn phòng rồi đấy."],["It's high time the government did something.","Đã đến lúc chính phủ phải làm gì đó."],["It's time for us to say goodbye.","Đã đến lúc chúng ta nói lời tạm biệt."],["It's time we bought a new car.","Đã đến lúc chúng ta mua xe mới rồi."],["It's high time you stopped smoking.","Đã đến lúc bạn phải bỏ thuốc rồi."],["It's time to go to school.","Đến giờ đi học rồi."]],"although":[["Although the test was hard, she passed.","Mặc dù bài thi khó, cô ấy vẫn đậu."],["Despite the cold, the children played outside.","Mặc dù trời lạnh, bọn trẻ vẫn chơi ngoài trời."],["Even though he is rich, he never buys expensive things.","Mặc dù giàu có, anh ấy không bao giờ mua đồ đắt tiền."],["In spite of being ill, she went to the meeting.","Mặc dù bị ốm, cô ấy vẫn đi họp."],["Though it was late, the shop was still open.","Dù đã muộn, cửa hàng vẫn mở."],["Despite having little money, they are happy.","Mặc dù có ít tiền, họ vẫn hạnh phúc."],["Although I set an alarm, I woke up late.","Mặc dù đã đặt báo thức, tôi vẫn dậy muộn."],["In spite of the bad weather, the flight left on time.","Mặc dù thời tiết xấu, chuyến bay vẫn cất cánh đúng giờ."]],"paired":[["Both Lan and her husband are doctors.","Cả Lan và chồng cô ấy đều là bác sĩ."],["He is not only smart but also hard-working.","Anh ấy không chỉ thông minh mà còn chăm chỉ."],["Neither my sister nor I can cook well.","Cả chị tôi lẫn tôi đều không nấu ăn giỏi."],["You can either stay here or come with us.","Bạn có thể ở lại đây hoặc đi cùng chúng tôi."],["The room was both small and dark.","Căn phòng vừa nhỏ vừa tối."],["She not only cooked dinner but also washed the dishes.","Cô ấy không chỉ nấu bữa tối mà còn rửa bát."],["Neither the TV nor the radio works.","Cả TV lẫn radio đều không hoạt động."],["We can either take a taxi or walk.","Chúng ta có thể đi taxi hoặc đi bộ."]],"prevent":[["The storm prevented the boats from leaving.","Cơn bão khiến tàu thuyền không thể rời bến."],["My mother stopped me from eating too many sweets.","Mẹ ngăn tôi ăn quá nhiều kẹo."],["The cold kept us from going swimming.","Cái lạnh khiến chúng tôi không đi bơi được."],["This medicine prevents you from getting sick.","Loại thuốc này giúp bạn không bị ốm."],["The fence stops the cows from going onto the road.","Hàng rào ngăn bò đi ra đường."],["Nothing could stop him from becoming a singer.","Không gì có thể ngăn anh ấy trở thành ca sĩ."],["A headache prevented her from finishing the test.","Cơn đau đầu khiến cô ấy không làm xong bài kiểm tra."],["Please keep the children from touching the oven.","Làm ơn đừng để bọn trẻ chạm vào lò nướng."]],"howto-email":[["Dear Ms Lan, thank you for your quick reply.","Kính gửi chị Lan, cảm ơn chị đã trả lời nhanh."],["I am writing to confirm our meeting on Monday.","Tôi viết thư này để xác nhận cuộc họp của chúng ta vào thứ Hai."],["I would like to apply for the position of sales assistant.","Tôi muốn ứng tuyển vào vị trí trợ lý bán hàng."],["Please let me know if you have any questions.","Vui lòng cho tôi biết nếu anh/chị có câu hỏi nào."],["I am sorry for any trouble this may cause.","Tôi xin lỗi vì mọi phiền phức có thể gây ra."],["Best wishes, Hiep.","Thân chào, Hiệp."],["Hi Mai, how are things with you?","Chào Mai, dạo này bạn thế nào?"],["Talk soon!","Nói chuyện sau nhé!"]],"wish":[["I wish I were taller.","Ước gì tôi cao hơn."],["She wishes she had a bigger house.","Cô ấy ước có một ngôi nhà lớn hơn."],["I wish I had gone to the party.","Ước gì tôi đã đi dự tiệc."],["If only I could fly.","Giá mà tôi có thể bay."],["I wish you would stop talking.","Tôi mong bạn thôi nói đi."],["He wishes he hadn't sold his car.","Anh ấy ước gì đã không bán chiếc xe."],["If only it weren't so hot today.","Giá mà hôm nay trời không nóng như vậy."],["I wish I didn't have to work tomorrow.","Ước gì ngày mai tôi không phải đi làm."]],"inversion":[["Never have I eaten such delicious food.","Chưa bao giờ tôi được ăn món ngon như vậy."],["Rarely do we see such talent.","Hiếm khi chúng ta thấy tài năng như vậy."],["Not until midnight did he come home.","Mãi đến nửa đêm anh ấy mới về nhà."],["Only when I lost my job did I understand the value of money.","Chỉ khi mất việc tôi mới hiểu giá trị của đồng tiền."],["Little did she know what was waiting for her.","Cô ấy đâu biết điều gì đang chờ mình."],["Should you have any questions, please contact us.","Nếu anh/chị có câu hỏi nào, vui lòng liên hệ chúng tôi."],["Were I in your position, I would accept the offer.","Nếu tôi ở vị trí của bạn, tôi sẽ nhận lời."],["Not only is she beautiful, but she is also very clever.","Cô ấy không những xinh đẹp mà còn rất thông minh."]],"mixedcond":[["If I had gone to bed earlier, I wouldn't feel so tired now.","Nếu tối qua tôi đi ngủ sớm hơn, giờ tôi đã không mệt như vậy."],["If she weren't afraid of flying, she would have visited us.","Nếu cô ấy không sợ đi máy bay, cô ấy đã đến thăm chúng tôi rồi."],["If we had bought that land, we would be rich now.","Nếu chúng tôi mua mảnh đất đó, giờ chúng tôi đã giàu."],["If he were more organised, he wouldn't have missed the deadline.","Nếu anh ấy ngăn nắp hơn, anh ấy đã không trễ hạn."],["If I hadn't met my wife, I would still live in Hanoi.","Nếu không gặp vợ tôi, tôi vẫn đang sống ở Hà Nội."],["If you had listened to me, you wouldn't be in trouble now.","Nếu bạn nghe tôi, giờ bạn đã không gặp rắc rối."],["If I didn't love her, I wouldn't have married her.","Nếu tôi không yêu cô ấy, tôi đã không cưới cô ấy."],["If they had fixed the roof, the house wouldn't be wet now.","Nếu họ sửa mái nhà, giờ ngôi nhà đã không bị ướt."]],"cleft":[["It was Nam who broke the window.","Chính Nam là người làm vỡ cửa sổ."],["It is the price that worries me.","Chính giá cả là điều khiến tôi lo."],["What I like about her is her honesty.","Điều tôi thích ở cô ấy là sự trung thực."],["What he said made me angry.","Những gì anh ấy nói làm tôi tức giận."],["All you need to do is sign here.","Tất cả những gì bạn cần làm là ký vào đây."],["It was in Hue that I met my wife.","Chính ở Huế tôi đã gặp vợ mình."],["The reason why he was late is that his car broke down.","Lý do anh ấy đến muộn là xe anh ấy bị hỏng."],["What we need is more time.","Điều chúng ta cần là thêm thời gian."]],"themore":[["The more you eat, the fatter you get.","Càng ăn nhiều, bạn càng béo."],["The faster you drive, the more dangerous it is.","Lái xe càng nhanh càng nguy hiểm."],["The more money he earns, the more he spends.","Anh ấy càng kiếm được nhiều tiền thì càng tiêu nhiều."],["The less you sleep, the more tired you feel.","Càng ngủ ít, bạn càng thấy mệt."],["The bigger the city, the worse the traffic.","Thành phố càng lớn, giao thông càng tệ."],["The more I know him, the more I like him.","Càng quen anh ấy, tôi càng quý anh ấy."],["The higher we climbed, the colder it got.","Chúng tôi càng leo cao, trời càng lạnh."],["The more, the merrier.","Càng đông càng vui."]],"subjunctive":[["The teacher insisted that every student be on time.","Giáo viên yêu cầu mọi học sinh phải đúng giờ."],["It is necessary that he see a doctor.","Cần thiết là anh ấy phải đi khám bác sĩ."],["I recommend that she take the morning train.","Tôi khuyên cô ấy nên đi chuyến tàu buổi sáng."],["The boss demanded that the report be finished today.","Sếp yêu cầu báo cáo phải hoàn thành trong hôm nay."],["It is essential that you not miss the first class.","Điều cần thiết là bạn không được bỏ lỡ buổi học đầu tiên."],["They suggested that the party be held outdoors.","Họ đề nghị tổ chức bữa tiệc ngoài trời."],["It is important that everyone know the rules.","Điều quan trọng là mọi người đều biết các quy định."],["My doctor advised me to rest for a week.","Bác sĩ khuyên tôi nghỉ ngơi một tuần."]],"relative-advanced":[["This is the company for which I have worked for ten years.","Đây là công ty mà tôi đã làm việc mười năm."],["The man to whom you spoke is my boss.","Người đàn ông mà bạn đã nói chuyện là sếp tôi."],["She has two sons, both of whom are engineers.","Bà ấy có hai con trai, cả hai đều là kỹ sư."],["I read five reports, none of which were useful.","Tôi đọc năm bản báo cáo, không bản nào hữu ích."],["He passed the exam, which made his parents very proud.","Anh ấy đậu kỳ thi, điều đó khiến bố mẹ anh ấy rất tự hào."],["The town in which I grew up has changed a lot.","Thị trấn nơi tôi lớn lên đã thay đổi nhiều."],["We met many people, some of whom became our friends.","Chúng tôi gặp nhiều người, một số đã trở thành bạn bè."],["The chair on which she was sitting was broken.","Cái ghế cô ấy đang ngồi bị gãy."]],"whatever":[["Whatever you do, don't tell her.","Dù bạn làm gì, đừng nói với cô ấy."],["However busy you are, you should rest.","Dù bận đến đâu, bạn cũng nên nghỉ ngơi."],["No matter where you live, you can learn online.","Dù sống ở đâu, bạn cũng có thể học trực tuyến."],["Whoever wins, it will be a good game.","Dù ai thắng, đó cũng sẽ là một trận đấu hay."],["Come whenever you like.","Bạn đến bất cứ lúc nào bạn thích."],["No matter how hard it is, don't give up.","Dù khó đến đâu, đừng bỏ cuộc."],["You can sit wherever you want.","Bạn có thể ngồi bất cứ chỗ nào bạn muốn."],["However much he eats, he never gets fat.","Dù ăn bao nhiêu, anh ấy cũng không bao giờ béo."]],"emphasis":[["I did tell you about the meeting.","Tôi đã nói với bạn về cuộc họp rồi mà."],["She does work very hard.","Cô ấy thực sự làm việc rất chăm chỉ."],["Do be careful on the road.","Nhớ cẩn thận trên đường nhé."],["He really does love his job.","Anh ấy thực sự yêu công việc của mình."],["So beautiful was the view that we stayed for hours.","Cảnh đẹp đến mức chúng tôi ở lại hàng giờ."],["What's more, the hotel is right next to the beach.","Hơn nữa, khách sạn nằm ngay cạnh bãi biển."],["I have no idea at all.","Tôi hoàn toàn không biết."],["This is the very book I was looking for.","Đây chính là cuốn sách tôi đang tìm."]],"discourse":[["The hotel was expensive. However, the rooms were small.","Khách sạn đắt. Tuy nhiên, phòng lại nhỏ."],["He was ill; therefore, he stayed at home.","Anh ấy bị ốm; vì vậy, anh ấy ở nhà."],["The job is well paid. Moreover, it is close to my home.","Công việc được trả lương cao. Hơn nữa, nó gần nhà tôi."],["I like the city, whereas my wife prefers the countryside.","Tôi thích thành phố, trong khi vợ tôi thích nông thôn hơn."],["It was raining. Nevertheless, we went for a walk.","Trời mưa. Dù vậy, chúng tôi vẫn đi dạo."],["Many fruits, for example mangoes, grow well here.","Nhiều loại trái cây, ví dụ như xoài, phát triển tốt ở đây."],["Furthermore, the course is free for students.","Ngoài ra, khóa học miễn phí cho sinh viên."],["In conclusion, we need to save more energy.","Tóm lại, chúng ta cần tiết kiệm năng lượng hơn."]]};
+Object.keys(EX_ADD).forEach(k => { if (EX_DATA[k]) EX_DATA[k] = EX_DATA[k].concat(EX_ADD[k]); });
 
 
 /* ============================================================
@@ -45737,6 +45955,13 @@ const EX_B2C1 = {
   try { exBank = localStorage.getItem(BANK_KEY) === '1'; } catch (e) {}
   try { const a = JSON.parse(localStorage.getItem(DONE_KEY) || '[]'); if (Array.isArray(a)) exDone = new Set(a); } catch (e) {}
   const save = () => { try { localStorage.setItem(DONE_KEY, JSON.stringify([...exDone])); } catch (e) {} };
+  /* v87: câu 13–17 cũ (Wh-/How-) đã được thay bằng câu mới, nên bỏ dấu "đã làm" của các vị trí đó một lần */
+  try {
+    if (!localStorage.getItem('hoc-tieng-anh-ex-v2')) {
+      exDone = new Set([...exDone].filter(k => { const m = /\|ve\|(\d+)$/.exec(k); return !m || +m[1] < 12; }));
+      save(); localStorage.setItem('hoc-tieng-anh-ex-v2', '1');
+    }
+  } catch (e) {}
   const key = (l, i) => l.id + '|ve|' + i;
   const exOf = n => EX_LESSONS.filter(l => l.lv === n);
   const lsTotal = l => l.items.length;
@@ -45903,20 +46128,6 @@ const EX_B2C1 = {
       rc.appendChild(E('div', 'ex-sec-name', sec.name));
       if (typeof grFormula === 'function') rc.appendChild(grFormula(sec));
     });
-    [['Wh-', 'Câu hỏi Wh- (what, where, when, why, who, whom, whose, which)', EX_WH_FX[l.id]],
-     ['How-', 'Câu hỏi How- (how, how many, how much, how long, how often, how far, how old…)', EX_HOW_FX[l.id]]
-    ].forEach(([badge, head, fx]) => {
-      if (!fx) return;
-      rc.appendChild(E('div', 'ex-sec-name', head));
-      const wb = E('div', 'tn-formula');
-      fx.split(/\s+·\s+/).filter(Boolean).forEach((part, i) => {
-        const r = E('div', 'tn-frow' + (i ? ' tn-frow-sub' : ''));
-        r.appendChild(E('span', 'tn-sym' + (i ? ' tn-sym-ghost' : ' tn-sym-w'), i ? '·' : badge));
-        r.appendChild(E('span', 'tn-ftxt', part));
-        wb.appendChild(r);
-      });
-      rc.appendChild(wb);
-    });
     if (l.note && typeof l.note === 'string') rc.appendChild(E('p', 'ex-note', '⚠️ ' + l.note));
     else if (l.note) {
       const n = E('div', 'ex-note');
@@ -45961,13 +46172,7 @@ const EX_B2C1 = {
       : 'Đọc câu tiếng Việt rồi viết câu tiếng Anh, bấm Kiểm tra. App so với đáp án, không phân biệt chữ hoa, dấu câu hay viết tắt.'));
 
     const wrap = E('div', 'ex-list');
-    const nHow = (EX_HOW[l.id] || []).length, nWh = (EX_WH[l.id] || []).length;
-    const howFrom = l.items.length - nHow, whFrom = howFrom - nWh;
-    l.items.forEach((it, i) => {
-      if (nWh && i === whFrom) wrap.appendChild(E('div', 'ex-divider', 'Câu hỏi Wh-'));
-      if (nHow && i === howFrom) wrap.appendChild(E('div', 'ex-divider', 'Câu hỏi How-'));
-      wrap.appendChild(cardVE(l, it, i));
-    });
+    l.items.forEach((it, i) => wrap.appendChild(cardVE(l, it, i)));
     root.appendChild(wrap);
 
     const foot = E('div', 'tense-card ex-foot');
