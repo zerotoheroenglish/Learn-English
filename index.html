@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Học Tiếng Anh</title>
 <meta name="theme-color" content="#14213D">
+<script>try{var hw=localStorage.getItem("hoc-tieng-anh-season");if(hw!=="off"){document.documentElement.setAttribute("data-season","halloween");document.querySelector('meta[name="theme-color"]').setAttribute("content","#1B1029");}}catch(e){document.documentElement.setAttribute("data-season","halloween");}</script>
 <meta name="description" content="Dịch song ngữ Anh ⇄ Việt, phát âm, các thì, động từ bất quy tắc, bài tập dịch và shadowing.">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -35,7 +36,7 @@
     --hero:#14213D; --hero-ink:#FFFFFF; --hero-soft:#B9C3E0;
     --hl:#FFE066;             /* highlighter */
     --shadow:0 1px 2px rgba(17,26,51,0.05), 0 8px 20px -10px rgba(17,26,51,0.14);
-    --c-check:#2F5BEA; --c-check-l:#E5ECFF;
+    --c-check:#2F5BEA; --c-check-l:#E5ECFF; --c-para:#1971C2; --c-para-l:#E0EFFF;
     --c-pron:#E4572E; --c-pron-l:#FFE8E0;
     --c-tenses:#0F9D8A; --c-tenses-l:#D8F4EF;
     --c-grammar:#7048E8; --c-grammar-l:#ECE6FF;
@@ -57,7 +58,7 @@
       --hero:#1A2547; --hero-ink:#FFFFFF; --hero-soft:#AEB9DA;
       --hl:rgba(255,214,10,0.30);
       --shadow:0 1px 2px rgba(0,0,0,0.45);
-      --c-check:#7C9BFF; --c-check-l:#1B2650;
+      --c-check:#7C9BFF; --c-check-l:#1B2650; --c-para:#74C0FC; --c-para-l:#0F2A40;
       --c-pron:#FF8A66; --c-pron-l:#3A1E15;
       --c-tenses:#3CCFB8; --c-tenses-l:#0F302C;
       --c-grammar:#A98CFF; --c-grammar-l:#271F4D;
@@ -77,7 +78,7 @@
     --hero:#1A2547; --hero-ink:#FFFFFF; --hero-soft:#AEB9DA;
     --hl:rgba(255,214,10,0.30);
     --shadow:0 1px 2px rgba(0,0,0,0.45);
-    --c-check:#7C9BFF; --c-check-l:#1B2650;
+    --c-check:#7C9BFF; --c-check-l:#1B2650; --c-para:#74C0FC; --c-para-l:#0F2A40;
     --c-pron:#FF8A66; --c-pron-l:#3A1E15;
     --c-tenses:#3CCFB8; --c-tenses-l:#0F302C;
     --c-grammar:#A98CFF; --c-grammar-l:#271F4D;
@@ -2653,6 +2654,211 @@
   .irr-wr-f .wr-input{ margin-top:2px; font-size:18px; padding:11px 8px; }
   .irr-wr-f.ok .wr-input{ border-color:var(--moss); color:var(--moss); }
   .irr-wr-f.bad .wr-input{ border-color:var(--mark); color:var(--mark); }
+
+  /* ===================== 🎃 HALLOWEEN theme (v95) — chỉ đổi giao diện, không đổi tính năng ===================== */
+  :root[data-season="halloween"]{
+    --paper:#FBF3E8; --paper-line:#EFDCC6; --ink:#24162F; --ink-soft:#6E5A78; --hint:#B2A0B8; --strike:#B2A0B8;
+    --rust:#E8590C; --rust-light:#FFE6D3; --moss:#2B8A3E; --moss-light:#DFF5E1; --mark:#C92A2A;
+    --card:#FFFDF8; --on-accent:#FFFFFF;
+    --hero:#1B1029; --hero-ink:#FFF4E6; --hero-soft:#D2BDE6;
+    --hl:#FFB347;
+    --shadow:0 1px 2px rgba(36,22,47,0.06), 0 10px 22px -12px rgba(120,50,10,0.25);
+    --c-check:#E8590C; --c-check-l:#FFE6D3; --c-para:#9C36B5; --c-para-l:#F6E3FB;
+    --c-pron:#C2410C; --c-pron-l:#FFE3D1;
+    --c-tenses:#2B8A3E; --c-tenses-l:#DFF5E1;
+    --c-grammar:#7B2CBF; --c-grammar-l:#EFE1FB;
+    --c-irregular:#B45309; --c-irregular-l:#FFEBC7;
+    --c-exercise:#A61E4D; --c-exercise-l:#FFE0EA;
+    --c-listen:#5C940D; --c-listen-l:#ECF6D8;
+    --c-shadow:#6741D9; --c-shadow-l:#EAE3FF;
+    --c-vocab:#D9480F; --c-vocab-l:#FFE8D9;
+  }
+  @media (prefers-color-scheme: dark){
+    :root[data-season="halloween"]:not([data-theme="light"]){
+      --paper:#0E0A14; --paper-line:#2B2037; --ink:#F4EAF9; --ink-soft:#B6A4C6; --hint:#6E5C7E; --strike:#6E5C7E;
+      --rust:#FF8A3D; --rust-light:#3A1D0C; --moss:#8CE99A; --moss-light:#14301C; --mark:#FF6B6B;
+      --card:#1A1325; --on-accent:#1A0E05;
+      --hero:#130B1E; --hero-ink:#FFF4E6; --hero-soft:#C9B3DD;
+      --hl:rgba(255,138,61,0.32);
+      --shadow:0 1px 2px rgba(0,0,0,0.5);
+      --c-check:#FF922B; --c-check-l:#3A1D0C; --c-para:#E599F7; --c-para-l:#341640;
+      --c-pron:#FFA94D; --c-pron-l:#3A220C;
+      --c-tenses:#8CE99A; --c-tenses-l:#14301C;
+      --c-grammar:#C084FC; --c-grammar-l:#2C1745;
+      --c-irregular:#FFD43B; --c-irregular-l:#3A2E08;
+      --c-exercise:#F783AC; --c-exercise-l:#3D1424;
+      --c-listen:#A9E34B; --c-listen-l:#22300F;
+      --c-shadow:#B197FC; --c-shadow-l:#251B48;
+      --c-vocab:#FFA8A8; --c-vocab-l:#3D1818;
+    }
+  }
+  :root[data-season="halloween"][data-theme="dark"]{
+    --paper:#0E0A14; --paper-line:#2B2037; --ink:#F4EAF9; --ink-soft:#B6A4C6; --hint:#6E5C7E; --strike:#6E5C7E;
+    --rust:#FF8A3D; --rust-light:#3A1D0C; --moss:#8CE99A; --moss-light:#14301C; --mark:#FF6B6B;
+    --card:#1A1325; --on-accent:#1A0E05;
+    --hero:#130B1E; --hero-ink:#FFF4E6; --hero-soft:#C9B3DD;
+    --hl:rgba(255,138,61,0.32);
+    --shadow:0 1px 2px rgba(0,0,0,0.5);
+    --c-check:#FF922B; --c-check-l:#3A1D0C; --c-para:#E599F7; --c-para-l:#341640;
+    --c-pron:#FFA94D; --c-pron-l:#3A220C;
+    --c-tenses:#8CE99A; --c-tenses-l:#14301C;
+    --c-grammar:#C084FC; --c-grammar-l:#2C1745;
+    --c-irregular:#FFD43B; --c-irregular-l:#3A2E08;
+    --c-exercise:#F783AC; --c-exercise-l:#3D1424;
+    --c-listen:#A9E34B; --c-listen-l:#22300F;
+    --c-shadow:#B197FC; --c-shadow-l:#251B48;
+    --c-vocab:#FFA8A8; --c-vocab-l:#3D1818;
+  }
+  /* bầu trời đêm, trăng tròn và dơi trên phần đầu trang */
+  :root[data-season="halloween"] header.hero{
+    background:
+      radial-gradient(circle at 86% 26%, #FFF3C4 0 26px, rgba(255,214,120,0.55) 27px, rgba(255,170,60,0.18) 46px, transparent 80px),
+      radial-gradient(1.2px 1.2px at 12% 22%, #fff 60%, transparent), radial-gradient(1px 1px at 30% 68%, #fff 60%, transparent),
+      radial-gradient(1.4px 1.4px at 55% 18%, #fff 60%, transparent), radial-gradient(1px 1px at 70% 72%, #fff 60%, transparent),
+      radial-gradient(1.2px 1.2px at 42% 40%, rgba(255,255,255,.8) 60%, transparent), radial-gradient(1px 1px at 94% 64%, #fff 60%, transparent),
+      linear-gradient(160deg, #2A1342 0%, #1B1029 55%, #3B1A0B 130%);
+  }
+  :root[data-season="halloween"] header.hero::after{
+    content:""; left:0; right:0; bottom:0; top:0; width:auto; height:auto; font-size:0; transform:none; filter:none; opacity:1; animation:none; z-index:0;
+    background:
+      url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5MCA1MCI+PGcgZmlsbD0iIzBDMDYxNCI+PHBhdGggZD0iTTAgMTQgcTggLTEwIDE4IC01IHEtMiA1IDIgNyBxNSAtNyAxMCAtNyBxNSAwIDEwIDcgcTQgLTIgMiAtNyBxMTAgLTUgMTggNSBxLTEwIC0yIC0xNSA1IHEtNSAtNCAtOCAyIHEtMiAtNSAtNyAtNSBxLTUgMCAtNyA1IHEtMyAtNiAtOCAtMiBxLTUgLTcgLTE1IC01WiIvPjxwYXRoIGQ9Ik01MiA0MCBxNSAtNiAxMSAtMyBxLTEgMyAxIDQgcTMgLTQgNiAtNCBxMyAwIDYgNCBxMyAtMSAxIC00IHE2IC0zIDExIDMgcS02IC0xIC05IDMgcS0zIC0yIC01IDEgcS0xIC0zIC00IC0zIHEtMyAwIC00IDMgcS0yIC0zIC01IC0xIHEtMyAtNCAtOSAtM1oiLz48L2c+PC9zdmc+") no-repeat right calc(max(20px, (100% - 640px) / 2) + 96px) top 74px / 62px auto,
+      url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNzAgMTIwIj48ZGVmcz48cmFkaWFsR3JhZGllbnQgaWQ9InciIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjYwJSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjRkZFN0EwIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjRkY4QzFBIi8+PC9yYWRpYWxHcmFkaWVudD48L2RlZnM+PGcgZmlsbD0iIzBDMDYxNCI+PHBhdGggZD0iTTcwIDEyMCBWNjIgTDEwNiAzNCBMMTQyIDYyIFYxMjBaIi8+PHBhdGggZD0iTTEzMCAxMjAgVjQ2IEwxNDQgMjQgTDE1OCA0NiBWMTIwWiIvPjxwYXRoIGQ9Ik01NCA2NiBMMTA2IDI2IEwxNTAgNjIgTDE0NCA2NiBMMTA2IDM2IEw2MCA3MFoiLz48cGF0aCBkPSJNMTM4IDI2IEwxNDQgNiBMMTUwIDI2WiIvPjxwYXRoIGQ9Ik0wIDEyMCB2LTQgaDQgdi0xNiBsMiAtNCBsMiA0IHYxNiBoOSB2LTE2IGwyIC00IGwyIDQgdjE2IGg5IHYtMTYgbDIgLTQgbDIgNCB2MTYgaDkgdi0xNiBsMiAtNCBsMiA0IHYxNiBoOSB2LTE2IGwyIC00IGwyIDQgdjE2IGg5IHYtMTYgbDIgLTQgbDIgNCB2MTYgaDYgdjRaIi8+PC9nPjxnIGZpbGw9InVybCgjdykiPjxyZWN0IHg9Ijg0IiB5PSI3MiIgd2lkdGg9IjExIiBoZWlnaHQ9IjE0IiByeD0iMiIvPjxyZWN0IHg9IjExNCIgeT0iNzIiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxNCIgcng9IjIiLz48cmVjdCB4PSIxMzkiIHk9IjU0IiB3aWR0aD0iOSIgaGVpZ2h0PSIxMiIgcng9IjIiLz48cGF0aCBkPSJNOTkgOTYgaDEyIHYyNCBoLTEyWiIvPjwvZz48L3N2Zz4=") no-repeat right max(12px, calc((100% - 640px) / 2 - 150px)) bottom 6px / auto 104px,
+      url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4MCA0MCI+PGRlZnM+PHJhZGlhbEdyYWRpZW50IGlkPSJwIiBjeD0iNDUlIiBjeT0iMzUlIiByPSI3MCUiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI0ZGQTU1MiIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI0MyNDEwQyIvPjwvcmFkaWFsR3JhZGllbnQ+PC9kZWZzPjxlbGxpcHNlIGN4PSIyMiIgY3k9IjI2IiByeD0iMjAiIHJ5PSIxNCIgZmlsbD0idXJsKCNwKSIvPjxwYXRoIGQ9Ik0yMSAxMiBxMSAtNyA2IC05IGwyIDMgcS00IDIgLTUgNloiIGZpbGw9IiM0QTVFMUEiLz48cGF0aCBkPSJNMTEgMjMgbDYgLTUgbDIgN1ogTTMzIDIzIGwtNiAtNSBsLTIgN1ogTTEwIDMwIHExMiA4IDI0IDAgbC00IDEgbC0yIC0zIGwtMyAzIGwtMyAtMyBsLTMgMyBsLTMgLTMgbC0yIDNaIiBmaWxsPSIjRkZFMDhBIi8+PGVsbGlwc2UgY3g9IjYwIiBjeT0iMzEiIHJ4PSIxMyIgcnk9IjkiIGZpbGw9InVybCgjcCkiLz48cGF0aCBkPSJNNTkgMjIgcTEgLTUgNCAtNiBsMSAyIHEtMyAxIC0zIDRaIiBmaWxsPSIjNEE1RTFBIi8+PHBhdGggZD0iTTUzIDI5IGw0IC0zIGwxIDRaIE02NyAyOSBsLTQgLTMgbC0xIDRaIE01MyAzNCBxNyA0IDE0IDBaIiBmaWxsPSIjRkZFMDhBIi8+PC9zdmc+") no-repeat right max(170px, calc((100% - 640px) / 2 + 10px)) bottom 6px / auto 34px,
+      url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMTAgMTMwIj48ZyBmaWxsPSIjMEMwNjE0Ij48cGF0aCBkPSJNNDggMTMwIEw1NCA2MCBRNDggNDAgMjIgMjYgTDI2IDIxIFE0OCAzMiA1NiA0NiBRNjAgMjQgODIgMTAgTDg2IDE1IFE2NiAzMCA2NCA1MiBRODAgNDQgMTAyIDQ2IEwxMDIgNTIgUTc4IDUyIDY0IDY0IEw2MCAxMzBaIi8+PHBhdGggZD0iTTI2IDI0IFExMCAxMiAwIDE0IEwxIDkgUTE2IDggMjggMjBaIE04MiAxMiBROTIgMCAxMDYgLTIgTDEwNyAzIFE5NCA2IDg2IDE1WiBNMTAwIDQ4IFExMDggNDAgMTEwIDQwIEwxMTAgNDUgUTEwNCA0NiAxMDIgNTJaIE00MCAzNCBRMzQgMjIgMzYgMTIgTDQwIDEzIFEzOSAyMyA0NCAzMVoiLz48L2c+PC9zdmc+") no-repeat left max(-10px, calc((100% - 640px) / 2 - 170px)) bottom 4px / auto 120px,
+      url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAwIDcwIiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImgiIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMyRTE4NDYiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMxNzBCMjQiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cGF0aCBkPSJNMCAzMCBRMTQwIDAgMzAwIDIyIFQ2MjAgMTYgVDkyMCAyNiBUMTIwMCA4IFY3MCBIMFoiIGZpbGw9InVybCgjaCkiLz48cGF0aCBkPSJNMCA1MiBRMjAwIDI4IDQyMCA0OCBUODIwIDQ0IFQxMjAwIDM2IFY3MCBIMFoiIGZpbGw9IiMwQzA2MTQiLz48L3N2Zz4=") no-repeat center bottom / 100% 64px;
+  }
+  @media (max-width:700px){
+    :root[data-season="halloween"] header.hero::after{
+      background:
+        url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5MCA1MCI+PGcgZmlsbD0iIzBDMDYxNCI+PHBhdGggZD0iTTAgMTQgcTggLTEwIDE4IC01IHEtMiA1IDIgNyBxNSAtNyAxMCAtNyBxNSAwIDEwIDcgcTQgLTIgMiAtNyBxMTAgLTUgMTggNSBxLTEwIC0yIC0xNSA1IHEtNSAtNCAtOCAyIHEtMiAtNSAtNyAtNSBxLTUgMCAtNyA1IHEtMyAtNiAtOCAtMiBxLTUgLTcgLTE1IC01WiIvPjxwYXRoIGQ9Ik01MiA0MCBxNSAtNiAxMSAtMyBxLTEgMyAxIDQgcTMgLTQgNiAtNCBxMyAwIDYgNCBxMyAtMSAxIC00IHE2IC0zIDExIDMgcS02IC0xIC05IDMgcS0zIC0yIC01IDEgcS0xIC0zIC00IC0zIHEtMyAwIC00IDMgcS0yIC0zIC01IC0xIHEtMyAtNCAtOSAtM1oiLz48L2c+PC9zdmc+") no-repeat right 74px top 70px / 46px auto,
+        url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNzAgMTIwIj48ZGVmcz48cmFkaWFsR3JhZGllbnQgaWQ9InciIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjYwJSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjRkZFN0EwIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjRkY4QzFBIi8+PC9yYWRpYWxHcmFkaWVudD48L2RlZnM+PGcgZmlsbD0iIzBDMDYxNCI+PHBhdGggZD0iTTcwIDEyMCBWNjIgTDEwNiAzNCBMMTQyIDYyIFYxMjBaIi8+PHBhdGggZD0iTTEzMCAxMjAgVjQ2IEwxNDQgMjQgTDE1OCA0NiBWMTIwWiIvPjxwYXRoIGQ9Ik01NCA2NiBMMTA2IDI2IEwxNTAgNjIgTDE0NCA2NiBMMTA2IDM2IEw2MCA3MFoiLz48cGF0aCBkPSJNMTM4IDI2IEwxNDQgNiBMMTUwIDI2WiIvPjxwYXRoIGQ9Ik0wIDEyMCB2LTQgaDQgdi0xNiBsMiAtNCBsMiA0IHYxNiBoOSB2LTE2IGwyIC00IGwyIDQgdjE2IGg5IHYtMTYgbDIgLTQgbDIgNCB2MTYgaDkgdi0xNiBsMiAtNCBsMiA0IHYxNiBoOSB2LTE2IGwyIC00IGwyIDQgdjE2IGg5IHYtMTYgbDIgLTQgbDIgNCB2MTYgaDYgdjRaIi8+PC9nPjxnIGZpbGw9InVybCgjdykiPjxyZWN0IHg9Ijg0IiB5PSI3MiIgd2lkdGg9IjExIiBoZWlnaHQ9IjE0IiByeD0iMiIvPjxyZWN0IHg9IjExNCIgeT0iNzIiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxNCIgcng9IjIiLz48cmVjdCB4PSIxMzkiIHk9IjU0IiB3aWR0aD0iOSIgaGVpZ2h0PSIxMiIgcng9IjIiLz48cGF0aCBkPSJNOTkgOTYgaDEyIHYyNCBoLTEyWiIvPjwvZz48L3N2Zz4=") no-repeat right 4px bottom 4px / auto 72px,
+        url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4MCA0MCI+PGRlZnM+PHJhZGlhbEdyYWRpZW50IGlkPSJwIiBjeD0iNDUlIiBjeT0iMzUlIiByPSI3MCUiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI0ZGQTU1MiIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI0MyNDEwQyIvPjwvcmFkaWFsR3JhZGllbnQ+PC9kZWZzPjxlbGxpcHNlIGN4PSIyMiIgY3k9IjI2IiByeD0iMjAiIHJ5PSIxNCIgZmlsbD0idXJsKCNwKSIvPjxwYXRoIGQ9Ik0yMSAxMiBxMSAtNyA2IC05IGwyIDMgcS00IDIgLTUgNloiIGZpbGw9IiM0QTVFMUEiLz48cGF0aCBkPSJNMTEgMjMgbDYgLTUgbDIgN1ogTTMzIDIzIGwtNiAtNSBsLTIgN1ogTTEwIDMwIHExMiA4IDI0IDAgbC00IDEgbC0yIC0zIGwtMyAzIGwtMyAtMyBsLTMgMyBsLTMgLTMgbC0yIDNaIiBmaWxsPSIjRkZFMDhBIi8+PGVsbGlwc2UgY3g9IjYwIiBjeT0iMzEiIHJ4PSIxMyIgcnk9IjkiIGZpbGw9InVybCgjcCkiLz48cGF0aCBkPSJNNTkgMjIgcTEgLTUgNCAtNiBsMSAyIHEtMyAxIC0zIDRaIiBmaWxsPSIjNEE1RTFBIi8+PHBhdGggZD0iTTUzIDI5IGw0IC0zIGwxIDRaIE02NyAyOSBsLTQgLTMgbC0xIDRaIE01MyAzNCBxNyA0IDE0IDBaIiBmaWxsPSIjRkZFMDhBIi8+PC9zdmc+") no-repeat left 46% bottom 4px / auto 24px,
+        url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMTAgMTMwIj48ZyBmaWxsPSIjMEMwNjE0Ij48cGF0aCBkPSJNNDggMTMwIEw1NCA2MCBRNDggNDAgMjIgMjYgTDI2IDIxIFE0OCAzMiA1NiA0NiBRNjAgMjQgODIgMTAgTDg2IDE1IFE2NiAzMCA2NCA1MiBRODAgNDQgMTAyIDQ2IEwxMDIgNTIgUTc4IDUyIDY0IDY0IEw2MCAxMzBaIi8+PHBhdGggZD0iTTI2IDI0IFExMCAxMiAwIDE0IEwxIDkgUTE2IDggMjggMjBaIE04MiAxMiBROTIgMCAxMDYgLTIgTDEwNyAzIFE5NCA2IDg2IDE1WiBNMTAwIDQ4IFExMDggNDAgMTEwIDQwIEwxMTAgNDUgUTEwNCA0NiAxMDIgNTJaIE00MCAzNCBRMzQgMjIgMzYgMTIgTDQwIDEzIFEzOSAyMyA0NCAzMVoiLz48L2c+PC9zdmc+") no-repeat left -18px bottom 2px / auto 78px,
+        url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAwIDcwIiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImgiIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMyRTE4NDYiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMxNzBCMjQiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cGF0aCBkPSJNMCAzMCBRMTQwIDAgMzAwIDIyIFQ2MjAgMTYgVDkyMCAyNiBUMTIwMCA4IFY3MCBIMFoiIGZpbGw9InVybCgjaCkiLz48cGF0aCBkPSJNMCA1MiBRMjAwIDI4IDQyMCA0OCBUODIwIDQ0IFQxMjAwIDM2IFY3MCBIMFoiIGZpbGw9IiMwQzA2MTQiLz48L3N2Zz4=") no-repeat center bottom / 100% 46px;
+    }
+  }
+  @keyframes hwGlow{ 0%,100%{ filter:drop-shadow(0 0 12px rgba(255,130,30,.45)); } 50%{ filter:drop-shadow(0 0 22px rgba(255,150,40,.75)); } }
+  :root[data-season="halloween"] header.hero::before{
+    content:none; pointer-events:none; z-index:0;
+    animation:hwBat 9s ease-in-out infinite;
+  }
+  @keyframes hwBat{ 0%,100%{ transform:translate(0,0) rotate(-6deg); } 25%{ transform:translate(-8px,4px) rotate(4deg); } 50%{ transform:translate(-14px,-3px) rotate(-4deg); } 75%{ transform:translate(-6px,5px) rotate(6deg); } }
+  :root[data-season="halloween"] .hero-hl{ background:linear-gradient(transparent 66%, rgba(255,122,24,0.95) 66%, rgba(255,122,24,0.95) 92%, transparent 92%); }
+  :root[data-season="halloween"] header.hero h1{ text-shadow:0 0 22px rgba(255,140,40,.35); }
+  @keyframes hwFloat{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-5px); } }
+  :root[data-season="halloween"] header.hero{ padding-bottom:58px; }
+  @media (max-width:700px){ :root[data-season="halloween"] header.hero{ padding-bottom:50px; } }
+  :root[data-season="halloween"] .hero-stat{ background:rgba(20,10,30,0.55); border:1px solid rgba(255,160,90,0.28); backdrop-filter:blur(2px); }
+  :root[data-season="halloween"] .hero-stat .n{ color:#FF9F43; }
+  :root[data-season="halloween"] .hero-badge{ background:rgba(255,138,61,0.18); color:#FFD8B5; }
+  :root[data-season="halloween"] .hero-voice{ background:rgba(255,255,255,0.10); }
+  /* mạng nhện mờ ở góc màn hình */
+  :root[data-season="halloween"] body::before{
+    content:""; position:fixed; top:0; left:0; width:170px; height:170px; pointer-events:none; z-index:0;
+    background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' fill='none' stroke='%23ffffff' stroke-width='1.2'%3E%3Cpath d='M0 0L200 200M0 0L200 70M0 0L70 200M0 0L130 200M0 0L200 130'/%3E%3Cpath d='M38 0Q30 18 0 38M75 0Q60 38 0 75M115 0Q90 60 0 115M155 0Q120 85 0 155'/%3E%3C/svg%3E") no-repeat top left / contain; opacity:.10;
+  }
+  @media (prefers-color-scheme: light){ :root[data-season="halloween"]:not([data-theme="dark"]) body::before{ filter:invert(1); opacity:.07; } }
+  :root[data-season="halloween"][data-theme="light"] body::before{ filter:invert(1); opacity:.07; }
+  :root[data-season="halloween"] main{ position:relative; z-index:1; }
+  /* tiêu đề mục, thanh tab, nút chính */
+  :root[data-season="halloween"] nav.tabbar{ border-top:2px solid color-mix(in srgb, var(--rust) 45%, transparent); box-shadow:0 -8px 24px -14px rgba(255,110,20,.45); }
+  :root[data-season="halloween"] .btn-primary{ box-shadow:0 6px 18px -8px color-mix(in srgb, var(--rust) 70%, transparent); }
+  :root[data-season="halloween"] .tense-card{ border-color:color-mix(in srgb, var(--rust) 16%, var(--paper-line)); }
+  :root[data-season="halloween"] ::selection{ background:#FF8A3D; color:#1A0E05; }
+  /* nút bật/tắt giao diện mùa */
+  .hero-season{ font-size:15px; padding-left:9px !important; padding-right:9px !important; }
+  .hero-badge{ white-space:nowrap; }
+  @media (max-width:440px){ .hero-acct .hv-label{ display:none; } }
+  :root[data-season="halloween"] header.hero::before{ z-index:2; }
+  :root[data-season="halloween"] .sd-thumb{ background:linear-gradient(135deg, hsl(calc(22 + var(--h) / 12) 88% 56%), hsl(calc(262 + var(--h) / 10) 58% 28%)); }
+  @media (prefers-reduced-motion: reduce){ :root[data-season="halloween"] header.hero::before, :root[data-season="halloween"] header.hero::after, :root[data-season="halloween"] header.hero h1::after{ animation:none; } }
+
+  /* ---- Dịch đoạn văn (v96) ---- */
+  #page-para{ --rust:var(--c-para); --rust-light:var(--c-para-l); }
+  nav.tabbar button[data-page="page-para"].active{ background:var(--c-para-l); color:var(--c-para); }
+  @media (min-width:900px){ body:has(#page-para.active) main{ max-width:1100px; } }
+  .pa-card{ padding:14px; margin-top:12px; }
+  .pa-dir{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
+  .pa-dir .tr-lang{ flex:1; text-align:center; }
+  .pa-in{ width:100%; box-sizing:border-box; min-height:180px; margin-top:10px; padding:12px 14px; border-radius:14px; border:1.5px solid var(--paper-line); background:var(--card); color:var(--ink); font:15.5px/1.6 var(--font-body); resize:vertical; outline:none; }
+  .pa-in:focus{ border-color:var(--rust); box-shadow:0 0 0 3px var(--rust-light); }
+  .pa-row{ display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin-top:10px; }
+  .pa-count{ font:500 12px var(--font-mono); color:var(--ink-soft); margin-right:auto; }
+  .pa-go{ min-width:160px; }
+  .pa-prog{ margin-top:12px; }
+  .pa-prog-t{ font:600 12.5px var(--font-mono); color:var(--rust); margin-bottom:6px; }
+  .pa-out-h{ display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin:16px 0 8px; }
+  .pa-out-h .ls-modes{ margin:0; flex:1; min-width:240px; grid-template-columns:1fr 1fr; }
+  .pa-acts{ display:flex; flex-wrap:wrap; gap:6px; }
+  .pa-acts .ls-slow{ padding:8px 12px; font-size:13px; }
+  .pa-pairs{ display:flex; flex-direction:column; gap:8px; }
+  .pa-para-gap{ height:6px; }
+  .pa-pair{ display:grid; grid-template-columns:1fr; gap:6px; padding:10px 12px; border-radius:14px; background:var(--card); border:1px solid var(--paper-line); box-shadow:var(--shadow); }
+  @media (min-width:760px){ .pa-pair{ grid-template-columns:1fr 1fr; gap:16px; } }
+  .pa-pair.now, .pa-pair:hover{ border-color:var(--rust); }
+  .pa-pair.now{ background:var(--rust-light); }
+  .pa-src{ display:flex; gap:8px; align-items:flex-start; font-size:15px; line-height:1.55; color:var(--ink); }
+  .pa-n{ flex:0 0 auto; font:700 10.5px/2 var(--font-mono); color:var(--ink-soft); min-width:20px; }
+  .pa-tgt{ font-size:15px; line-height:1.55; color:var(--moss); padding-left:28px; }
+  @media (min-width:760px){ .pa-tgt{ padding-left:0; border-left:2px solid var(--paper-line); padding-left:14px; } }
+  .pa-tgt.wait{ color:var(--ink-soft); font-style:italic; }
+  .pa-tgt.err{ color:var(--mark); }
+  .pa-pbtn{ display:flex; gap:4px; margin-left:auto; flex:0 0 auto; }
+  .pa-pbtn button{ width:30px; height:30px; border-radius:50%; border:1px solid var(--paper-line); background:var(--paper); color:var(--ink); font-size:12px; cursor:pointer; }
+  .pa-full{ padding:16px 18px; font-size:15.5px; line-height:1.75; color:var(--ink); white-space:pre-wrap; }
+  .pa-full p{ margin:0 0 12px; }
+  .pa-full .pa-s{ border-radius:4px; cursor:pointer; }
+  .pa-full .pa-s:hover, .pa-full .pa-s.now{ background:var(--rust-light); }
+  .pa-tip{ font-size:12.5px; color:var(--ink-soft); margin-top:8px; line-height:1.5; }
+  .pa-toast{ font:600 12px var(--font-body); color:var(--moss); }
+
+  /* ---- bài tập dịch đoạn (v97) ---- */
+  .pe-intro{ padding:14px 16px; }
+  .pe-how{ font-size:13px; line-height:1.55; color:var(--ink-soft); margin:10px 0 0; }
+  #page-para .vc-levels{ margin-top:12px; }
+  .pe-list{ margin-top:12px; }
+  .pe-para{ padding:14px 16px; margin-top:12px; }
+  .pe-para-t{ font-size:16px; line-height:1.75; color:var(--ink); margin:6px 0 0; }
+  .pe-ps{ border-radius:5px; transition:background .2s; }
+  .pe-ps.done{ color:var(--moss); }
+  .pe-ps.now{ background:var(--rust-light); color:var(--ink); }
+  .pe-words-t{ font:600 12px var(--font-body); color:var(--ink-soft); margin:12px 0 6px; }
+  .pe-words{ display:flex; flex-wrap:wrap; gap:6px; }
+  .pe-word.open{ background:var(--rust-light); color:var(--rust); border-color:var(--rust); }
+  .pe-modes{ margin:14px 0 4px; }
+  .pe-card{ padding:12px 14px; margin-top:10px; }
+  .pe-card-h{ display:flex; align-items:flex-start; gap:10px; }
+  .pe-num{ flex:0 0 auto; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font:700 12px var(--font-mono); background:var(--rust-light); color:var(--rust); margin-top:1px; }
+  .pe-vi{ flex:1; font-size:15.5px; line-height:1.5; color:var(--ink); font-weight:600; }
+  .pe-badge{ flex:0 0 auto; font:700 11px/1.7 var(--font-mono); padding:0 7px; border-radius:7px; }
+  .pe-badge.ok{ color:var(--moss); background:var(--moss-light); } .pe-badge.mid{ color:#B7791F; background:color-mix(in srgb, #F5B700 18%, transparent); } .pe-badge.bad{ color:var(--mark); background:color-mix(in srgb, var(--mark) 14%, transparent); }
+  .pe-in{ width:100%; box-sizing:border-box; margin-top:10px; padding:10px 12px; border-radius:12px; border:1.5px solid var(--paper-line); background:var(--card); color:var(--ink); font:15px/1.55 var(--font-body); resize:vertical; outline:none; }
+  .pe-in:focus{ border-color:var(--rust); box-shadow:0 0 0 3px var(--rust-light); }
+  .pe-btns{ display:flex; flex-wrap:wrap; justify-content:flex-end; gap:8px; margin-top:8px; }
+  .pe-btns .ls-slow{ padding:8px 12px; font-size:13px; }
+  .pe-ck{ min-width:120px; }
+  .pe-res:empty{ display:none; }
+  .pe-res{ margin-top:10px; }
+  .pe-hint{ font:600 15px/1.6 var(--font-mono); letter-spacing:.04em; color:var(--rust); padding:8px 12px; border-radius:10px; background:var(--rust-light); overflow-wrap:anywhere; }
+  .pe-model{ display:flex; flex-direction:column; gap:8px; padding:10px 12px; border-radius:12px; background:var(--paper); border:1px solid var(--paper-line); }
+  .pe-grade{ font-size:13.5px; padding:6px 10px; border-radius:10px; }
+  .pe-grade b{ font:800 18px var(--font-display); margin-right:4px; }
+  .pe-grade.ok{ color:var(--moss); background:var(--moss-light); } .pe-grade.mid{ color:#B27A00; background:color-mix(in srgb, #F5B700 16%, transparent); } .pe-grade.bad{ color:var(--mark); background:color-mix(in srgb, var(--mark) 12%, transparent); }
+  .pe-line{ display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; font-size:15px; line-height:1.55; }
+  .pe-lab{ flex:0 0 auto; font:700 10.5px/1.8 var(--font-mono); text-transform:uppercase; letter-spacing:.06em; color:var(--ink-soft); min-width:70px; }
+  .pe-model-t, .pe-user-t{ flex:1; min-width:0; color:var(--ink); }
+  .pe-hit{ color:var(--moss); font-weight:600; }
+  .pe-miss{ color:#E8590C; font-weight:700; text-decoration:underline dotted; text-underline-offset:4px; }
+  .pe-extra{ color:var(--mark); text-decoration:line-through; text-decoration-thickness:1.5px; }
+  .pe-missing{ color:#E8590C; }
+  .pe-play{ flex:0 0 auto; width:28px; height:28px; border-radius:50%; border:1px solid var(--paper-line); background:var(--card); color:var(--rust); font-size:11px; cursor:pointer; }
+  .pe-accept{ align-self:flex-start; padding:7px 12px !important; font-size:12.5px !important; }
+  .pe-legend{ font-size:11.5px; color:var(--ink-soft); }
+  .pe-fline{ padding:8px 0; border-bottom:1px dashed var(--paper-line); display:flex; flex-direction:column; gap:4px; }
+  .pe-fvi{ font-size:13.5px; font-weight:600; color:var(--ink-soft); }
+  .pe-in-full{ min-height:180px; }
+  .pe-finish{ padding:14px 16px; margin-top:14px; }
+  .pe-fin-t{ font:800 15px var(--font-display); color:var(--ink); margin-bottom:8px; }
 </style>
 </head>
 <body>
@@ -2660,9 +2866,10 @@
 <header class="hero">
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v94</span>
+      <span class="hero-badge">EN ⇄ VI · v101</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
+        <button class="hero-voice hero-season" id="season-btn" aria-label="Bật/tắt giao diện Halloween" title="Bật/tắt giao diện Halloween">🎃</button>
         <button class="hero-voice" id="voice-btn" aria-label="Chọn giọng đọc">🔊 <span class="hv-label">Giọng đọc</span></button>
       </span>
     </div>
@@ -2736,6 +2943,13 @@
 
     <button class="btn-primary" id="tr-btn" style="width:100%; margin-top:12px;">Dịch</button>
     <p class="pron-note" style="text-align:center;" id="tr-hint">Bấm Dịch để dịch · App tự sửa lỗi chính tả và ngữ pháp trước khi dịch · Cần kết nối mạng</p>
+  </section>
+
+  <!-- PAGE: PARAGRAPH TRANSLATION -->
+  <section class="page" id="page-para">
+    <div class="section-title">Luyện dịch đoạn văn</div>
+    <div class="section-sub">Bài tập dịch đoạn văn tiếng Việt sang tiếng Anh theo trình độ A1 → C1. Bạn dịch cả đoạn, app so với bản mẫu và chấm điểm từng câu.</div>
+    <div id="pa-root"></div>
   </section>
 
   <!-- PAGE 2: PRONUNCIATION -->
@@ -3057,6 +3271,10 @@
   <button data-page="page-exercise">
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H16l3 3v14.5A1.5 1.5 0 0 1 17.5 21h-11A1.5 1.5 0 0 1 5 19.5z"/><path d="M8.5 13.5 10.5 16l5-5.5"/></svg></span>
     Bài tập
+  </button>
+  <button data-page="page-para">
+    <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3" width="17" height="18" rx="2.5"/><path d="M7.5 8h9M7.5 12h9M7.5 16h5.5"/></svg></span>
+    Luyện dịch
   </button>
 </nav>
 
@@ -48210,7 +48428,7 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
 
   const HELP = [
     ['Chung', [
-      ['1 – 7', 'Chuyển tab (1 Dịch · 2 Phát âm · 3 Từ vựng · 4 Shadowing · 5 Ngữ pháp · 6 Bất quy tắc · 7 Bài tập)'],
+      ['1 – 8', 'Chuyển tab (1 Dịch · 2 Phát âm · 3 Từ vựng · 4 Shadowing · 5 Ngữ pháp · 6 Bất quy tắc · 7 Bài tập · 8 Luyện dịch)'],
       ['/', 'Đưa con trỏ vào ô tìm kiếm / ô nhập của tab'],
       ['Esc', 'Thoát ô nhập · đóng bảng · quay lại trang trước'],
       ['T', 'Cuộn lên đầu trang'],
@@ -48327,6 +48545,375 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
     b.addEventListener('click', () => help(true));
     links.appendChild(sep); links.appendChild(b);
   }
+})();
+</script>
+<script>
+/* 🎃 bật/tắt giao diện Halloween (lưu trên máy) */
+(function () {
+  const b = document.getElementById('season-btn'); if (!b) return;
+  const meta = document.querySelector('meta[name="theme-color"]');
+  const paint = () => { const on = document.documentElement.getAttribute('data-season') === 'halloween'; b.textContent = on ? '🎃' : '🌙'; b.setAttribute('aria-pressed', on ? 'true' : 'false'); b.title = on ? 'Tắt giao diện Halloween' : 'Bật giao diện Halloween'; if (meta) meta.setAttribute('content', on ? '#1B1029' : '#14213D'); };
+  b.addEventListener('click', () => {
+    const on = document.documentElement.getAttribute('data-season') === 'halloween';
+    if (on) document.documentElement.removeAttribute('data-season'); else document.documentElement.setAttribute('data-season', 'halloween');
+    try { localStorage.setItem('hoc-tieng-anh-season', on ? 'off' : 'on'); } catch (e) {}
+    paint();
+  });
+  paint();
+})();
+</script>
+<script>
+/* bài tập dịch đoạn văn do app tự soạn */
+const PA_LESSONS = [{"id":"a1-me","lv":1,"icon":"🙋","title":"Giới thiệu bản thân","words":[["kỹ sư","engineer"],["công ty","company"],["thích","like"],["cuối tuần","weekend"]],"s":[["Tên tôi là Minh.","My name is Minh.","I am Minh."],["Tôi hai mươi lăm tuổi.","I am twenty-five years old.","I'm twenty-five."],["Tôi là kỹ sư ở một công ty nhỏ.","I am an engineer at a small company.","I'm an engineer in a small company."],["Tôi sống ở Đà Nẵng với bố mẹ.","I live in Da Nang with my parents."],["Tôi thích bóng đá và âm nhạc.","I like football and music."],["Vào cuối tuần, tôi thường đi biển với bạn bè.","At the weekend, I often go to the beach with my friends.","On weekends, I usually go to the beach with my friends."]]},{"id":"a1-family","lv":1,"icon":"👨‍👩‍👧","title":"Gia đình tôi","words":[["y tá","nurse"],["em gái","younger sister"],["nấu ăn","cook"],["cùng nhau","together"]],"s":[["Gia đình tôi có năm người.","There are five people in my family.","My family has five people."],["Bố tôi là tài xế taxi.","My father is a taxi driver.","My dad is a taxi driver."],["Mẹ tôi là y tá.","My mother is a nurse.","My mom is a nurse."],["Tôi có một anh trai và một em gái.","I have an older brother and a younger sister.","I have a brother and a younger sister."],["Mẹ tôi nấu ăn rất ngon.","My mother cooks very well.","My mother is a very good cook."],["Chúng tôi ăn tối cùng nhau mỗi tối.","We have dinner together every evening.","We eat dinner together every night."]]},{"id":"a1-day","lv":1,"icon":"⏰","title":"Một ngày của tôi","words":[["thức dậy","get up"],["đi làm","go to work"],["xe buýt","bus"],["đi ngủ","go to bed"]],"s":[["Tôi thức dậy lúc sáu giờ sáng.","I get up at six in the morning.","I wake up at six a.m."],["Tôi ăn sáng và uống cà phê.","I have breakfast and drink coffee.","I eat breakfast and drink coffee."],["Tôi đi làm bằng xe buýt.","I go to work by bus.","I take the bus to work."],["Tôi làm việc từ tám giờ đến năm giờ.","I work from eight to five.","I work from eight o'clock to five o'clock."],["Buổi tối, tôi xem tivi hoặc đọc sách.","In the evening, I watch TV or read books.","In the evening, I watch TV or read a book."],["Tôi đi ngủ lúc mười một giờ.","I go to bed at eleven o'clock.","I go to bed at eleven."]]},{"id":"a1-home","lv":1,"icon":"🏠","title":"Ngôi nhà của tôi","words":[["phòng ngủ","bedroom"],["nhà bếp","kitchen"],["khu vườn","garden"],["gần","near"]],"s":[["Nhà tôi nhỏ nhưng đẹp.","My house is small but beautiful.","My house is small but nice."],["Nó có hai phòng ngủ và một nhà bếp.","It has two bedrooms and a kitchen.","There are two bedrooms and a kitchen."],["Phòng của tôi ở tầng hai.","My room is on the second floor.","My bedroom is on the second floor."],["Có một khu vườn nhỏ phía sau nhà.","There is a small garden behind the house.","There's a little garden behind the house."],["Nhà tôi ở gần một công viên lớn.","My house is near a big park.","My home is near a large park."],["Tôi rất thích ngôi nhà của mình.","I really like my house.","I like my house very much."]]},{"id":"a1-shop","lv":1,"icon":"🛒","title":"Đi chợ","words":[["chợ","market"],["rau","vegetables"],["trái cây","fruit"],["rẻ","cheap"]],"s":[["Hôm nay là Chủ nhật.","Today is Sunday.","It is Sunday today."],["Mẹ tôi và tôi đi chợ.","My mother and I go to the market.","My mom and I go to the market."],["Chợ rất đông người.","The market is very crowded.","There are a lot of people at the market."],["Chúng tôi mua rau, cá và trái cây.","We buy vegetables, fish and fruit.","We buy some vegetables, fish and fruit."],["Xoài ở đây rất ngọt và rẻ.","The mangoes here are very sweet and cheap.","Mangoes here are very sweet and cheap."],["Tôi thích đi chợ với mẹ.","I like going to the market with my mother.","I like to go to the market with my mom."]]},{"id":"a1-friend","lv":1,"icon":"🤝","title":"Bạn thân của tôi","words":[["bạn thân","best friend"],["vui tính","funny"],["giúp","help"],["bài tập về nhà","homework"]],"s":[["Bạn thân của tôi tên là Lan.","My best friend's name is Lan.","My best friend is called Lan."],["Cô ấy cao và có mái tóc dài.","She is tall and has long hair.","She's tall and she has long hair."],["Lan rất thông minh và vui tính.","Lan is very smart and funny.","Lan is very clever and funny."],["Chúng tôi học cùng một lớp.","We are in the same class.","We study in the same class."],["Cô ấy thường giúp tôi làm bài tập về nhà.","She often helps me with my homework.","She usually helps me do my homework."],["Tôi rất vui khi có một người bạn như Lan.","I am very happy to have a friend like Lan.","I'm very happy to have a friend like Lan."]]},{"id":"a1-cat","lv":1,"icon":"🐱","title":"Con mèo lười","words":[["lười","lazy"],["cửa sổ","window"],["bắt chuột","catch mice"],["kêu meo meo","meow"]],"s":[["Tôi có một con mèo tên là Mít.","I have a cat called Mit.","I have a cat named Mit."],["Nó màu vàng và rất béo.","It is yellow and very fat.","She is yellow and very fat."],["Mít ngủ cả ngày bên cửa sổ.","Mit sleeps all day by the window.","Mit sleeps next to the window all day."],["Nó không bao giờ bắt chuột.","It never catches mice.","She never catches mice."],["Nhưng khi tôi mở tủ lạnh, nó chạy đến rất nhanh.","But when I open the fridge, it runs to me very fast.","But when I open the fridge, it comes running very quickly."],["Mít lười nhưng tôi rất yêu nó.","Mit is lazy, but I love it very much.","Mit is lazy, but I really love her."]]},{"id":"a1-rain","lv":1,"icon":"☔","title":"Ngày mưa","words":[["mưa","rain"],["ướt","wet"],["ấm","warm"],["chăn","blanket"]],"s":[["Hôm nay trời mưa rất to.","It is raining very heavily today.","It's raining hard today."],["Đường phố ướt và vắng người.","The streets are wet and empty.","The streets are wet and there are not many people."],["Tôi không muốn ra ngoài.","I don't want to go out.","I do not want to go outside."],["Tôi ngồi trên ghế sofa với một cái chăn ấm.","I sit on the sofa with a warm blanket.","I am sitting on the sofa with a warm blanket."],["Mẹ tôi làm một nồi cháo nóng.","My mother makes a pot of hot rice porridge.","My mom is making a pot of hot porridge."],["Tôi thích những ngày mưa như thế này.","I like rainy days like this.","I love rainy days like this one."]]},{"id":"a1-teacher","lv":1,"icon":"👩‍🏫","title":"Cô giáo của tôi","words":[["kiên nhẫn","patient"],["giọng","voice"],["mỉm cười","smile"],["hỏi","ask"]],"s":[["Cô giáo tiếng Anh của tôi tên là cô Hạnh.","My English teacher is Ms Hanh.","My English teacher's name is Ms Hanh."],["Cô ấy trẻ và rất xinh.","She is young and very pretty.","She's young and really pretty."],["Cô ấy có giọng nói nhẹ nhàng.","She has a soft voice.","Her voice is gentle."],["Cô ấy luôn mỉm cười trong lớp.","She always smiles in class.","She is always smiling in class."],["Khi chúng tôi không hiểu, cô ấy giải thích lại rất kiên nhẫn.","When we don't understand, she explains again very patiently.","When we do not understand, she patiently explains it again."],["Tất cả học sinh đều thích cô ấy.","All the students like her.","Every student likes her."]]},{"id":"a1-sunday","lv":1,"icon":"🌻","title":"Sáng Chủ nhật ở công viên","words":[["công viên","park"],["chạy bộ","jog"],["chim","bird"],["không khí","air"]],"s":[["Sáng Chủ nhật, tôi đi công viên với ông.","On Sunday morning, I go to the park with my grandfather.","I go to the park with my grandpa on Sunday mornings."],["Không khí ở đó rất trong lành.","The air there is very fresh.","The air is very fresh there."],["Nhiều người chạy bộ quanh hồ.","Many people jog around the lake.","Lots of people are jogging around the lake."],["Ông tôi tập thái cực quyền với bạn của ông.","My grandfather does tai chi with his friends.","My grandpa practises tai chi with his friends."],["Tôi ngồi trên ghế và nghe chim hót.","I sit on a bench and listen to the birds singing.","I sit on a bench and listen to the birds."],["Sau đó, chúng tôi ăn bánh mì ở gần công viên.","After that, we eat banh mi near the park.","Then we have banh mi near the park."]]},{"id":"a1-dream","lv":1,"icon":"✈️","title":"Ước mơ của tôi","words":[["ước mơ","dream"],["phi công","pilot"],["bầu trời","sky"],["thế giới","world"]],"s":[["Ước mơ của tôi là trở thành phi công.","My dream is to become a pilot.","My dream is to be a pilot."],["Tôi thích nhìn máy bay trên bầu trời.","I like watching planes in the sky.","I love looking at planes in the sky."],["Phi công có thể đi đến nhiều nước.","Pilots can travel to many countries.","A pilot can go to many countries."],["Tôi muốn nhìn thấy cả thế giới.","I want to see the whole world.","I want to see all the world."],["Bây giờ tôi học tiếng Anh và toán rất chăm chỉ.","Now I study English and maths very hard.","Now I am studying English and math very hard."],["Một ngày nào đó, ước mơ của tôi sẽ thành hiện thực.","One day, my dream will come true.","Someday my dream will come true."]]},{"id":"a1-tet","lv":1,"icon":"🧧","title":"Tết của tôi","words":[["Tết","Lunar New Year"],["lì xì","lucky money"],["bánh chưng","sticky rice cake"],["họ hàng","relatives"]],"s":[["Tết là ngày lễ tôi thích nhất.","Tet is my favourite holiday.","Tet is the holiday I like best."],["Trước Tết, gia đình tôi dọn dẹp nhà cửa.","Before Tet, my family cleans the house.","Before Tet, my family tidies the house."],["Chúng tôi gói bánh chưng cùng nhau.","We wrap banh chung together.","We make sticky rice cakes together."],["Vào ngày Tết, tôi mặc quần áo mới.","At Tet, I wear new clothes.","During Tet, I wear new clothes."],["Ông bà cho tôi tiền lì xì trong phong bao đỏ.","My grandparents give me lucky money in red envelopes.","My grandparents give me lucky money in a red envelope."],["Chúng tôi đi thăm họ hàng và chúc họ năm mới vui vẻ.","We visit our relatives and wish them a happy new year.","We visit relatives and wish them a happy new year."]]},{"id":"a2-trip","lv":2,"icon":"🏖️","title":"Chuyến đi Nha Trang","words":[["kỳ nghỉ","holiday"],["khách sạn","hotel"],["hải sản","seafood"],["tuyệt vời","wonderful"]],"s":[["Mùa hè năm ngoái, gia đình tôi đi Nha Trang.","Last summer, my family went to Nha Trang.","My family went to Nha Trang last summer."],["Chúng tôi ở một khách sạn gần biển trong bốn ngày.","We stayed at a hotel near the beach for four days.","We stayed in a hotel near the sea for four days."],["Mỗi sáng, chúng tôi bơi và chơi trên cát.","Every morning, we swam and played on the sand.","We swam and played on the sand every morning."],["Buổi tối, chúng tôi ăn hải sản ở một nhà hàng nhỏ.","In the evening, we ate seafood at a small restaurant.","In the evenings, we had seafood in a small restaurant."],["Ngày cuối cùng, trời mưa nên chúng tôi đi bảo tàng.","On the last day, it rained, so we went to a museum.","It rained on the last day, so we visited a museum."],["Đó là một kỳ nghỉ tuyệt vời.","It was a wonderful holiday.","It was a great vacation."]]},{"id":"a2-plan","lv":2,"icon":"📅","title":"Kế hoạch năm mới","words":[["kế hoạch","plan"],["tiết kiệm","save"],["tập thể dục","exercise"],["khóa học","course"]],"s":[["Năm nay tôi có nhiều kế hoạch.","I have a lot of plans this year.","This year I have many plans."],["Tôi sẽ học tiếng Anh mỗi ngày.","I am going to study English every day.","I will study English every day."],["Tôi cũng sẽ tập thể dục ba lần một tuần.","I am also going to exercise three times a week.","I will also exercise three times a week."],["Tôi muốn tiết kiệm tiền để mua một chiếc xe máy mới.","I want to save money to buy a new motorbike.","I want to save money for a new motorbike."],["Vào tháng Sáu, tôi sẽ tham gia một khóa học nấu ăn.","In June, I am going to take a cooking course.","I will join a cooking course in June."],["Tôi hy vọng năm nay sẽ là một năm tốt đẹp.","I hope this year will be a good year.","I hope this will be a great year."]]},{"id":"a2-compare","lv":2,"icon":"🏙️","title":"Hà Nội và Sài Gòn","words":[["thủ đô","capital"],["đông dân","crowded"],["thời tiết","weather"],["năng động","lively"]],"s":[["Hà Nội là thủ đô của Việt Nam.","Hanoi is the capital of Vietnam.","Ha Noi is Vietnam's capital."],["Thành phố Hồ Chí Minh lớn hơn và đông dân hơn Hà Nội.","Ho Chi Minh City is bigger and more crowded than Hanoi.","Ho Chi Minh City is larger and busier than Hanoi."],["Hà Nội có bốn mùa, nhưng Sài Gòn chỉ có hai mùa.","Hanoi has four seasons, but Saigon only has two.","Hanoi has four seasons, but Saigon has only two seasons."],["Mùa đông ở Hà Nội lạnh hơn nhiều.","Winter in Hanoi is much colder.","The winter in Hanoi is much colder."],["Sài Gòn là thành phố năng động nhất cả nước.","Saigon is the liveliest city in the country.","Saigon is the most lively city in the country."],["Theo tôi, cả hai thành phố đều rất thú vị.","In my opinion, both cities are very interesting.","I think both cities are very interesting."]]},{"id":"a2-lost","lv":2,"icon":"👛","title":"Chiếc ví bị mất","words":[["ví","wallet"],["đánh rơi","drop"],["cảnh sát","police"],["trả lại","give back"]],"s":[["Hôm qua tôi bị mất ví trên xe buýt.","Yesterday I lost my wallet on the bus.","I lost my wallet on the bus yesterday."],["Trong ví có tiền và thẻ căn cước của tôi.","There was money and my ID card in the wallet.","My money and ID card were in the wallet."],["Tôi rất lo lắng và gọi cho cảnh sát.","I was very worried and called the police.","I was really worried, so I called the police."],["Hai giờ sau, một người đàn ông gọi điện cho tôi.","Two hours later, a man phoned me.","Two hours later, a man called me."],["Anh ấy đã tìm thấy ví của tôi và trả lại cho tôi.","He had found my wallet and gave it back to me.","He found my wallet and returned it to me."],["Tôi đã cảm ơn anh ấy rất nhiều.","I thanked him very much.","I thanked him a lot."]]},{"id":"a2-cook","lv":2,"icon":"🍲","title":"Món ăn yêu thích","words":[["nước dùng","broth"],["thịt bò","beef"],["hành","onion"],["nổi tiếng","famous"]],"s":[["Món ăn yêu thích của tôi là phở bò.","My favourite dish is beef pho.","My favorite food is beef noodle soup."],["Phở là món ăn nổi tiếng nhất của Việt Nam.","Pho is the most famous dish in Vietnam.","Pho is Vietnam's most famous dish."],["Để nấu phở, bạn cần nước dùng, bánh phở và thịt bò.","To cook pho, you need broth, rice noodles and beef.","To make pho, you need broth, noodles and beef."],["Nước dùng phải nấu trong nhiều giờ.","The broth has to cook for many hours.","You have to cook the broth for many hours."],["Người Việt thường ăn phở vào bữa sáng.","Vietnamese people often eat pho for breakfast.","Vietnamese people usually have pho for breakfast."],["Nếu bạn đến Việt Nam, bạn nên thử món này.","If you come to Vietnam, you should try this dish.","If you visit Vietnam, you should try it."]]},{"id":"a2-weekend","lv":2,"icon":"🎬","title":"Cuối tuần vừa rồi","words":[["rạp chiếu phim","cinema"],["mệt","tired"],["dọn dẹp","clean"],["thư giãn","relax"]],"s":[["Cuối tuần vừa rồi tôi không đi đâu xa.","Last weekend I didn't go anywhere far.","I didn't go far last weekend."],["Sáng thứ Bảy, tôi dọn dẹp nhà cửa.","On Saturday morning, I cleaned the house.","I cleaned my house on Saturday morning."],["Buổi chiều, tôi đi xem phim với em trai.","In the afternoon, I went to the cinema with my brother.","In the afternoon, I watched a film with my younger brother."],["Bộ phim rất hay nhưng hơi dài.","The film was very good but a bit long.","The movie was really good but quite long."],["Chủ nhật, tôi ở nhà và thư giãn.","On Sunday, I stayed at home and relaxed.","I stayed home and relaxed on Sunday."],["Tôi cảm thấy sẵn sàng cho một tuần mới.","I felt ready for a new week.","I felt ready for the new week."]]},{"id":"a2-kind","lv":2,"icon":"💛","title":"Một người lạ tốt bụng","words":[["hết pin","run out of battery"],["lạc đường","get lost"],["chỉ đường","show the way"],["tốt bụng","kind"]],"s":[["Tuần trước, tôi đến Huế lần đầu tiên.","Last week, I went to Hue for the first time.","I visited Hue for the first time last week."],["Buổi tối, điện thoại của tôi hết pin và tôi bị lạc đường.","In the evening, my phone ran out of battery and I got lost.","That evening, my phone died and I got lost."],["Tôi hỏi một bà cụ bán chè bên đường.","I asked an old woman who was selling sweet soup by the road.","I asked an old lady selling sweet soup on the street."],["Bà không chỉ đường mà còn dẫn tôi về tận khách sạn.","She didn't just give me directions; she walked me all the way to my hotel.","She not only showed me the way but also took me to my hotel."],["Bà không nhận tiền tôi đưa.","She didn't accept the money I offered.","She refused to take my money."],["Tôi sẽ không bao giờ quên lòng tốt của bà.","I will never forget her kindness.","I'll never forget how kind she was."]]},{"id":"a2-bike","lv":2,"icon":"🚲","title":"Lần đầu đi xe đạp","words":[["ngã","fall off"],["giữ","hold"],["đầu gối","knee"],["buông tay","let go"]],"s":[["Khi tôi bảy tuổi, bố dạy tôi đi xe đạp.","When I was seven, my father taught me to ride a bike.","My dad taught me how to ride a bicycle when I was seven."],["Lúc đầu, bố giữ phía sau xe cho tôi.","At first, he held the back of the bike for me.","At first, my father held the back of my bike."],["Tôi ngã nhiều lần và bị đau đầu gối.","I fell off many times and hurt my knees.","I fell off lots of times and hurt my knee."],["Tôi khóc và muốn bỏ cuộc.","I cried and wanted to give up.","I cried and wanted to stop."],["Nhưng bố nói: 'Thử thêm một lần nữa nhé.'","But my father said, 'Try one more time.'","But my dad said, 'Let's try one more time.'"],["Lần đó tôi tự đạp được, vì bố đã buông tay từ lúc nào không hay.","That time I rode by myself, because he had let go without me noticing.","That time I rode on my own, because he had let go without my knowing."]]},{"id":"a2-market","lv":2,"icon":"🛶","title":"Chợ nổi Cái Răng","words":[["chợ nổi","floating market"],["thuyền","boat"],["bình minh","sunrise"],["cây sào","pole"]],"s":[["Chợ nổi Cái Răng là một trong những chợ nổi lớn nhất miền Tây.","Cai Rang floating market is one of the biggest floating markets in the Mekong Delta.","Cai Rang is one of the largest floating markets in the south-west of Vietnam."],["Chợ bắt đầu từ lúc bình minh và kết thúc trước buổi trưa.","The market starts at sunrise and finishes before noon.","The market opens at dawn and closes before midday."],["Người bán treo hàng lên một cây sào cao để khách nhìn thấy từ xa.","Sellers hang their goods on a tall pole so that customers can see them from far away.","The sellers hang their products on a high pole so buyers can see them from a distance."],["Bạn có thể mua dứa, xoài và cả một tô hủ tiếu nóng ngay trên thuyền.","You can buy pineapples, mangoes and even a hot bowl of noodle soup right on the boat.","You can buy pineapples, mangoes and even a bowl of hot noodles on a boat."],["Tiếng mời chào và tiếng máy thuyền tạo nên một không khí rất sôi động.","The shouts of the sellers and the sound of boat engines create a very lively atmosphere.","The calls of the vendors and the noise of the engines make the atmosphere really lively."],["Nếu đến Cần Thơ, bạn nhất định phải dậy sớm để ghé chợ.","If you go to Can Tho, you must get up early to visit the market.","If you come to Can Tho, you should definitely wake up early and visit the market."]]},{"id":"a2-letter","lv":2,"icon":"✉️","title":"Thư gửi bạn qua thư","words":[["bạn qua thư","pen pal"],["bưu thiếp","postcard"],["ngoại ô","suburbs"],["trả lời","reply"]],"s":[["Chào Emma, cảm ơn bạn đã gửi tấm bưu thiếp rất đẹp.","Hi Emma, thank you for sending the beautiful postcard.","Hello Emma, thanks for the lovely postcard."],["Bây giờ ở Việt Nam đang là mùa mưa.","It is the rainy season in Vietnam now.","Now it's the rainy season in Vietnam."],["Tuần trước tôi đã thi xong và được nghỉ hè hai tháng.","Last week I finished my exams, and now I have two months of summer holiday.","I finished my exams last week and now I have a two-month summer break."],["Tôi định học bơi và đọc thật nhiều sách.","I am going to learn to swim and read lots of books.","I plan to learn how to swim and to read a lot of books."],["Bạn có muốn đến Việt Nam vào năm sau không?","Would you like to come to Vietnam next year?","Do you want to visit Vietnam next year?"],["Mong sớm nhận được thư trả lời của bạn.","I look forward to hearing from you soon.","I hope to get your reply soon."]]},{"id":"a2-coffee","lv":2,"icon":"☕","title":"Cà phê Việt Nam","words":[["phin","drip filter"],["sữa đặc","condensed milk"],["đậm","strong"],["vỉa hè","pavement"]],"s":[["Việt Nam là một trong những nước xuất khẩu cà phê lớn nhất thế giới.","Vietnam is one of the biggest coffee exporters in the world.","Vietnam is among the world's largest coffee exporters."],["Người Việt thường pha cà phê bằng phin.","Vietnamese people usually make coffee with a drip filter.","Vietnamese people often use a phin filter to make coffee."],["Cà phê sữa đá được làm từ cà phê đậm và sữa đặc.","Iced milk coffee is made from strong coffee and condensed milk.","Iced coffee with milk is made with strong coffee and sweetened condensed milk."],["Ở Hà Nội, bạn còn có thể thử cà phê trứng.","In Hanoi, you can also try egg coffee.","You can also try egg coffee in Hanoi."],["Nhiều người thích ngồi uống cà phê trên vỉa hè và ngắm phố.","Many people like sitting on the pavement, drinking coffee and watching the street.","Lots of people enjoy drinking coffee on the sidewalk while watching the street."],["Với họ, cà phê không chỉ là đồ uống mà còn là một thói quen.","For them, coffee is not just a drink but also a habit.","To them, coffee is more than a drink; it is a habit."]]},{"id":"a2-mistake","lv":2,"icon":"🙈","title":"Một lần nói nhầm","words":[["nhầm","mistake"],["ngượng","embarrassed"],["phục vụ","waiter"],["bật cười","burst out laughing"]],"s":[["Năm ngoái, tôi đi du lịch Úc với một nhóm bạn.","Last year, I travelled to Australia with a group of friends.","I went to Australia with some friends last year."],["Ở nhà hàng, tôi muốn gọi một cốc nước đá.","At a restaurant, I wanted to order a glass of ice water.","In a restaurant, I wanted to ask for a glass of iced water."],["Nhưng tôi phát âm sai và người phục vụ mang cho tôi một đĩa gạo.","But I pronounced it wrongly and the waiter brought me a plate of rice.","But I said it wrong, and the waiter brought me a plate of rice."],["Tôi rất ngượng nhưng mọi người đều bật cười.","I was very embarrassed, but everyone burst out laughing.","I felt really embarrassed, but everybody laughed."],["Người phục vụ cũng cười và đổi lại cho tôi.","The waiter laughed too and changed it for me.","The waiter also laughed and brought me the right thing."],["Từ hôm đó, tôi luyện phát âm cẩn thận hơn.","Since that day, I have practised my pronunciation more carefully.","From that day on, I practised pronunciation more carefully."]]},{"id":"b1-job","lv":3,"icon":"💼","title":"Công việc mới","words":[["phỏng vấn","interview"],["kinh nghiệm","experience"],["đồng nghiệp","colleague"],["thăng chức","promotion"]],"s":[["Tôi đã làm việc ở công ty này được sáu tháng.","I have worked at this company for six months.","I've been working at this company for six months."],["Trước đó, tôi là giáo viên tiếng Anh ở một trung tâm nhỏ.","Before that, I was an English teacher at a small centre.","Before that, I worked as an English teacher in a small centre."],["Buổi phỏng vấn khá khó vì tôi chưa có nhiều kinh nghiệm.","The interview was quite difficult because I didn't have much experience.","The interview was rather hard because I did not have much experience."],["Tuy nhiên, các đồng nghiệp đã giúp tôi rất nhiều.","However, my colleagues have helped me a lot.","However, my colleagues helped me a lot."],["Bây giờ tôi đã quen với công việc và cảm thấy tự tin hơn.","Now I have got used to the job and I feel more confident.","Now I am used to the work and feel more confident."],["Nếu tôi làm tốt, tôi có thể được thăng chức vào năm sau.","If I do well, I may get a promotion next year.","If I work well, I might be promoted next year."]]},{"id":"b1-env","lv":3,"icon":"🌿","title":"Bảo vệ môi trường","words":[["ô nhiễm","pollution"],["túi ni lông","plastic bag"],["tái chế","recycle"],["phương tiện công cộng","public transport"]],"s":[["Ô nhiễm đang trở thành một vấn đề nghiêm trọng ở các thành phố lớn.","Pollution is becoming a serious problem in big cities.","Pollution is becoming a serious issue in large cities."],["Mỗi ngày, hàng triệu túi ni lông bị vứt đi.","Every day, millions of plastic bags are thrown away.","Millions of plastic bags are thrown away every day."],["Chúng ta có thể giúp bằng cách mang túi vải khi đi mua sắm.","We can help by bringing cloth bags when we go shopping.","We can help by taking cloth bags when we go shopping."],["Chúng ta cũng nên tái chế giấy, chai lọ và lon.","We should also recycle paper, bottles and cans.","We should recycle paper, bottles and cans too."],["Đi phương tiện công cộng sẽ giảm khói bụi trên đường.","Using public transport will reduce smoke and dust on the roads.","Taking public transport will reduce pollution on the streets."],["Nếu mọi người cùng hành động, môi trường sẽ sạch hơn.","If everyone acts together, the environment will be cleaner.","If we all take action, the environment will become cleaner."]]},{"id":"b1-phone","lv":3,"icon":"📱","title":"Điện thoại thông minh","words":[["mạng xã hội","social media"],["tập trung","concentrate"],["thói quen","habit"],["tắt","turn off"]],"s":[["Điện thoại thông minh đã thay đổi cuộc sống của chúng ta.","Smartphones have changed our lives.","Smartphones have changed the way we live."],["Chúng ta dùng chúng để làm việc, học tập và giải trí.","We use them to work, study and relax.","We use them for work, study and entertainment."],["Tuy nhiên, nhiều người dành quá nhiều thời gian trên mạng xã hội.","However, many people spend too much time on social media.","However, a lot of people spend too much time on social media."],["Điều này khiến họ khó tập trung và ngủ không ngon.","This makes it hard for them to concentrate and sleep well.","This makes it difficult for them to focus and to sleep well."],["Tôi đã tắt thông báo vào buổi tối được một tháng rồi.","I have turned off notifications in the evening for a month.","I've been turning off notifications in the evening for a month."],["Kể từ đó, tôi đọc sách nhiều hơn và ngủ ngon hơn.","Since then, I have read more books and slept better.","Since then, I've been reading more and sleeping better."]]},{"id":"b1-house","lv":3,"icon":"🔑","title":"Chuyển nhà","words":[["căn hộ","flat"],["tiền thuê","rent"],["hàng xóm","neighbour"],["yên tĩnh","quiet"]],"s":[["Tháng trước, chúng tôi đã chuyển đến một căn hộ mới.","Last month, we moved to a new flat.","We moved into a new apartment last month."],["Căn hộ cũ quá nhỏ và tiền thuê lại tăng.","The old flat was too small and the rent went up.","Our old apartment was too small, and the rent increased."],["Căn hộ mới rộng hơn và gần chỗ làm của tôi hơn.","The new flat is bigger and closer to my workplace.","The new apartment is larger and nearer to my office."],["Nó được xây cách đây hai năm nên vẫn còn rất mới.","It was built two years ago, so it is still very new.","It was built two years ago, so it's still quite new."],["Hàng xóm ở đây rất thân thiện và khu này khá yên tĩnh.","The neighbours here are very friendly and the area is quite quiet.","The neighbours are really friendly and the neighbourhood is fairly quiet."],["Nếu có thời gian, chúng tôi sẽ mời bạn bè đến ăn mừng.","If we have time, we will invite our friends to celebrate.","When we have time, we'll invite our friends over to celebrate."]]},{"id":"b1-health","lv":3,"icon":"🏃","title":"Sống khỏe","words":[["chế độ ăn","diet"],["căng thẳng","stress"],["thay vì","instead of"],["lời khuyên","advice"]],"s":[["Năm ngoái, tôi thường xuyên bị mệt và đau đầu.","Last year, I often felt tired and had headaches.","Last year, I was often tired and had headaches."],["Bác sĩ khuyên tôi nên thay đổi chế độ ăn và tập thể dục nhiều hơn.","The doctor advised me to change my diet and exercise more.","My doctor told me to change my diet and do more exercise."],["Bây giờ tôi đi bộ ba mươi phút mỗi ngày thay vì đi xe máy.","Now I walk for thirty minutes every day instead of riding a motorbike.","Now I walk thirty minutes a day instead of going by motorbike."],["Tôi cũng ăn nhiều rau hơn và uống ít nước ngọt hơn.","I also eat more vegetables and drink fewer soft drinks.","I also eat more vegetables and drink less soda."],["Tôi chưa bao giờ cảm thấy khỏe như bây giờ.","I have never felt as healthy as I do now.","I've never felt this healthy before."],["Nếu bạn hay bị căng thẳng, hãy thử những lời khuyên này.","If you often feel stressed, try this advice.","If you are often stressed, try these tips."]]},{"id":"b1-story","lv":3,"icon":"🌧️","title":"Một ngày đáng nhớ","words":[["kẹt xe","traffic jam"],["lỡ","miss"],["người lạ","stranger"],["ô (dù)","umbrella"]],"s":[["Tôi đang đi bộ đến ga tàu thì trời bắt đầu mưa to.","I was walking to the station when it started to rain heavily.","I was walking to the train station when it began to rain hard."],["Tôi không mang ô nên bị ướt hết.","I didn't bring an umbrella, so I got completely wet.","I had no umbrella, so I got soaked."],["Khi tôi đến ga, tàu đã rời đi.","When I arrived at the station, the train had already left.","By the time I got to the station, the train had left."],["Một người lạ thấy tôi buồn và mời tôi một cốc trà nóng.","A stranger saw that I was sad and offered me a cup of hot tea.","A stranger saw I was upset and bought me a cup of hot tea."],["Chúng tôi nói chuyện trong lúc chờ chuyến tàu tiếp theo.","We talked while we were waiting for the next train.","We chatted while waiting for the next train."],["Bây giờ cô ấy là một trong những người bạn thân nhất của tôi.","Now she is one of my best friends.","She is now one of my closest friends."]]},{"id":"b1-grand","lv":3,"icon":"👵","title":"Bà ngoại và chiếc điện thoại","words":[["gọi video","video call"],["kiên nhẫn","patience"],["lẩm bẩm","mutter"],["tự hào","proud"]],"s":[["Năm nay bà ngoại tôi đã bảy mươi tám tuổi.","My grandmother is seventy-eight this year.","This year my grandma turned seventy-eight."],["Tháng trước, bà quyết định học cách dùng điện thoại thông minh.","Last month, she decided to learn how to use a smartphone.","Last month, she made up her mind to learn to use a smartphone."],["Tuần đầu tiên, bà gọi nhầm cho hàng xóm ít nhất mười lần.","In the first week, she called the neighbours by mistake at least ten times.","During the first week, she accidentally called the neighbours at least ten times."],["Tôi phải giải thích đi giải thích lại, nhưng bà chưa bao giờ bỏ cuộc.","I had to explain again and again, but she never gave up.","I had to explain everything over and over, but she never gave up."],["Bây giờ bà có thể tự gọi video cho các cháu ở nước ngoài.","Now she can make video calls to her grandchildren abroad by herself.","Now she can video call her grandchildren overseas on her own."],["Bà nói rằng học điều mới khiến bà cảm thấy trẻ lại.","She says that learning new things makes her feel young again.","She says learning something new makes her feel younger."]]},{"id":"b1-sapa","lv":3,"icon":"⛰️","title":"Leo Fansipan","words":[["đỉnh","summit"],["sương mù","fog"],["kiệt sức","exhausted"],["đáng giá","worth it"]],"s":[["Fansipan là ngọn núi cao nhất Việt Nam, được gọi là 'nóc nhà Đông Dương'.","Fansipan is the highest mountain in Vietnam and is called 'the roof of Indochina'.","Fansipan, Vietnam's highest mountain, is known as 'the roof of Indochina'."],["Mặc dù có cáp treo, tôi và bạn tôi đã quyết định đi bộ lên đỉnh.","Although there is a cable car, my friend and I decided to walk to the summit.","Even though there is a cable car, my friend and I chose to hike to the top."],["Chúng tôi đã đi bộ suốt hai ngày qua rừng và những con dốc trơn trượt.","We walked for two days through forests and up slippery slopes.","We hiked for two whole days through forests and over slippery slopes."],["Có lúc tôi kiệt sức đến mức chỉ muốn quay về.","At times I was so exhausted that I just wanted to go back.","Sometimes I was so tired that I only wanted to turn back."],["Khi chúng tôi lên đến đỉnh, sương mù bỗng tan và cả thung lũng hiện ra trước mắt.","When we reached the top, the fog suddenly cleared and the whole valley appeared in front of us.","As we reached the summit, the fog suddenly lifted and the entire valley appeared before our eyes."],["Khoảnh khắc đó khiến mọi mệt mỏi đều trở nên đáng giá.","That moment made all the tiredness worth it.","That moment made every bit of exhaustion worthwhile."]]},{"id":"b1-street","lv":3,"icon":"🍜","title":"Ẩm thực đường phố","words":[["ẩm thực đường phố","street food"],["gánh hàng rong","street vendor"],["công thức","recipe"],["vệ sinh","hygiene"]],"s":[["Ẩm thực đường phố là một phần không thể thiếu của cuộc sống ở Việt Nam.","Street food is an essential part of life in Vietnam.","Street food is an indispensable part of life in Vietnam."],["Chỉ với vài chục nghìn đồng, bạn có thể ăn một bữa no và ngon.","With just a few tens of thousands of dong, you can have a filling and delicious meal.","For only a few dollars, you can have a tasty, filling meal."],["Nhiều gánh hàng rong đã bán cùng một món ăn trong hàng chục năm.","Many street vendors have sold the same dish for decades.","Lots of street vendors have been selling the same dish for decades."],["Công thức của họ thường được truyền từ đời này sang đời khác.","Their recipes are often passed down from generation to generation.","Their recipes are usually handed down from one generation to the next."],["Tuy nhiên, khách du lịch đôi khi lo lắng về vấn đề vệ sinh.","However, tourists sometimes worry about hygiene.","However, visitors are sometimes worried about hygiene."],["Lời khuyên tốt nhất là chọn những quán đông khách địa phương.","The best advice is to choose places that are busy with local customers.","The best tip is to pick stalls that are crowded with locals."]]},{"id":"b1-habit","lv":3,"icon":"⏳","title":"Thói quen dậy sớm","words":[["báo thức","alarm"],["trì hoãn","put off"],["năng lượng","energy"],["kỷ luật","discipline"]],"s":[["Trước đây tôi là người rất hay ngủ nướng.","I used to be someone who always slept in.","In the past, I often overslept."],["Tôi thường tắt báo thức và ngủ thêm một tiếng nữa.","I would turn off the alarm and sleep for another hour.","I usually switched off my alarm and slept for one more hour."],["Ba tháng trước, tôi quyết định thử dậy lúc năm giờ sáng.","Three months ago, I decided to try getting up at five a.m.","Three months ago, I decided to try waking up at five in the morning."],["Những tuần đầu rất khó khăn, nhưng dần dần cơ thể tôi đã quen.","The first few weeks were very hard, but gradually my body got used to it.","The first weeks were really difficult, but my body slowly got used to it."],["Giờ đây tôi có thời gian để tập thể dục, đọc sách và lên kế hoạch cho cả ngày.","Now I have time to exercise, read and plan my whole day.","Now I have time to work out, read books and plan the day."],["Tôi nhận ra rằng kỷ luật quan trọng hơn động lực.","I have realised that discipline is more important than motivation.","I realized that discipline matters more than motivation."]]},{"id":"b1-flood","lv":3,"icon":"🌊","title":"Mùa nước nổi","words":[["mùa nước nổi","flood season"],["phù sa","silt"],["cá linh","linh fish"],["thích nghi","adapt"]],"s":[["Mỗi năm vào khoảng tháng Chín, miền Tây bước vào mùa nước nổi.","Every year around September, the Mekong Delta enters the flood season.","Each year in about September, the flood season begins in the south-west."],["Nước sông dâng cao và tràn vào những cánh đồng.","The river rises and floods the fields.","The water level rises and spills over into the fields."],["Với người dân nơi đây, nước lũ không chỉ là thử thách mà còn là món quà.","For the local people, the floodwater is not only a challenge but also a gift.","To the people here, the flood is not just a challenge but also a gift."],["Nó mang theo phù sa làm cho đất đai màu mỡ hơn.","It brings silt that makes the soil more fertile.","It carries silt, which makes the land more fertile."],["Đây cũng là mùa của cá linh và bông điên điển, những đặc sản nổi tiếng.","It is also the season of linh fish and sesbania flowers, which are famous local specialities.","This is also the season for linh fish and sesbania flowers, two well-known specialties."],["Qua nhiều thế hệ, người dân đã học cách sống chung với lũ.","Over many generations, the people have learned to live with the floods.","Over generations, locals have learnt how to live alongside the floods."]]},{"id":"b1-wrong","lv":3,"icon":"🚌","title":"Lên nhầm xe buýt","words":[["lên nhầm","get on the wrong"],["ngoại ô","outskirts"],["hoảng","panic"],["may mắn","luckily"]],"s":[["Sáng hôm đó tôi có một buổi phỏng vấn quan trọng lúc chín giờ.","That morning I had an important interview at nine o'clock.","I had an important interview at nine that morning."],["Vì quá vội, tôi đã lên nhầm xe buýt mà không hề biết.","Because I was in such a hurry, I got on the wrong bus without realising it.","I was in such a rush that I took the wrong bus without knowing it."],["Hai mươi phút sau, tôi nhận ra mình đang ở ngoại ô thành phố.","Twenty minutes later, I realised I was on the outskirts of the city.","Twenty minutes later, I realized that I was on the edge of the city."],["Tôi bắt đầu hoảng và gọi điện xin lỗi công ty.","I started to panic and called the company to apologise.","I began to panic and phoned the company to say sorry."],["May mắn là người phỏng vấn cũng đang bị kẹt xe nên đồng ý dời lịch.","Luckily, the interviewer was also stuck in traffic, so she agreed to reschedule.","Fortunately, the interviewer was stuck in traffic too, so she agreed to move the interview."],["Cuối cùng tôi đã nhận được công việc đó.","In the end, I got the job.","Finally, I got that job."]]},{"id":"b2-remote","lv":4,"icon":"🏡","title":"Làm việc từ xa","words":[["linh hoạt","flexible"],["năng suất","productive"],["cô lập","isolated"],["ranh giới","boundary"]],"s":[["Kể từ năm 2020, ngày càng nhiều công ty cho phép nhân viên làm việc từ xa.","Since 2020, more and more companies have allowed their staff to work remotely.","Since 2020, an increasing number of companies have let employees work from home."],["Nhiều người cho rằng họ làm việc năng suất hơn khi không phải đi lại.","Many people claim that they are more productive when they do not have to commute.","Many people say they work more productively when they don't have to commute."],["Họ cũng có lịch trình linh hoạt hơn và nhiều thời gian hơn cho gia đình.","They also have a more flexible schedule and more time for their families.","They also enjoy more flexible hours and more time with their families."],["Tuy nhiên, làm việc ở nhà lâu dài có thể khiến người ta cảm thấy bị cô lập.","However, working from home for a long time can make people feel isolated.","However, working at home in the long term can leave people feeling isolated."],["Nếu không đặt ra ranh giới rõ ràng, công việc dễ lấn sang thời gian nghỉ ngơi.","Unless clear boundaries are set, work can easily spill over into rest time.","Without clear boundaries, work can easily take over your free time."],["Có lẽ mô hình kết hợp là giải pháp phù hợp nhất cho nhiều người.","Perhaps a hybrid model is the most suitable solution for many people.","A hybrid model may be the best solution for many people."]]},{"id":"b2-tourism","lv":4,"icon":"🧳","title":"Du lịch và địa phương","words":[["du khách","tourist"],["thu nhập","income"],["quá tải","overcrowded"],["bền vững","sustainable"]],"s":[["Du lịch mang lại nguồn thu nhập quan trọng cho nhiều vùng ở Việt Nam.","Tourism provides an important source of income for many regions in Vietnam.","Tourism brings an important source of income to many areas of Vietnam."],["Nhờ du khách, nhiều người dân địa phương đã mở được nhà hàng và homestay.","Thanks to tourists, many local people have been able to open restaurants and homestays.","Because of tourists, lots of locals have opened restaurants and homestays."],["Tuy nhiên, một số điểm đến đang trở nên quá tải vào mùa cao điểm.","However, some destinations are becoming overcrowded in the peak season.","However, certain destinations are getting overcrowded during the high season."],["Rác thải và tiếng ồn đã ảnh hưởng đến cuộc sống của người dân.","Rubbish and noise have affected the lives of local residents.","Waste and noise have had an impact on residents' lives."],["Nếu không được quản lý tốt, những nơi này có thể mất đi vẻ đẹp vốn có.","If they are not managed well, these places may lose their natural beauty.","Unless they are well managed, these places could lose their original charm."],["Vì vậy, chúng ta cần phát triển du lịch theo hướng bền vững hơn.","Therefore, we need to develop tourism in a more sustainable way.","That is why we need to make tourism more sustainable."]]},{"id":"b2-ai","lv":4,"icon":"🤖","title":"Trí tuệ nhân tạo trong học tập","words":[["công cụ","tool"],["phụ thuộc","depend on"],["tư duy phản biện","critical thinking"],["gian lận","cheat"]],"s":[["Trí tuệ nhân tạo đang được sử dụng rộng rãi trong giáo dục.","Artificial intelligence is being widely used in education.","AI is being used widely in education."],["Học sinh có thể nhờ nó giải thích những khái niệm khó hoặc sửa bài viết.","Students can ask it to explain difficult concepts or correct their writing.","Students can use it to explain hard concepts or to check their essays."],["Nếu được dùng đúng cách, đây là một công cụ học tập rất hữu ích.","If it is used properly, it is a very useful learning tool.","Used correctly, it is a very helpful tool for learning."],["Tuy nhiên, một số giáo viên lo rằng học sinh sẽ quá phụ thuộc vào nó.","However, some teachers worry that students will depend on it too much.","However, some teachers are worried that students will rely on it too much."],["Họ cũng e ngại rằng việc gian lận sẽ trở nên dễ dàng hơn.","They are also concerned that cheating will become easier.","They also fear that it will be easier to cheat."],["Điều quan trọng là dạy học sinh tư duy phản biện thay vì cấm hoàn toàn.","What matters is teaching students critical thinking rather than banning it completely.","The important thing is to teach students critical thinking instead of banning it completely."]]},{"id":"b2-reading","lv":4,"icon":"📚","title":"Thói quen đọc sách","words":[["giảm","decline"],["tập trung","attention span"],["trí tưởng tượng","imagination"],["vốn từ","vocabulary"]],"s":[["Theo một số khảo sát, số người đọc sách giấy đang giảm dần.","According to some surveys, the number of people who read printed books is gradually declining.","Some surveys show that fewer and fewer people read paper books."],["Nhiều người nói rằng họ quá bận hoặc thích xem video hơn.","Many people say that they are too busy or prefer watching videos.","Lots of people say they are too busy or would rather watch videos."],["Tuy nhiên, đọc sách mang lại những lợi ích mà video khó thay thế được.","However, reading brings benefits that videos can hardly replace.","However, reading offers benefits that videos cannot easily replace."],["Nó giúp chúng ta mở rộng vốn từ và phát triển trí tưởng tượng.","It helps us expand our vocabulary and develop our imagination.","It helps us to widen our vocabulary and develop our imagination."],["Đọc đều đặn cũng có thể cải thiện khả năng tập trung.","Reading regularly can also improve our attention span.","Regular reading can also improve concentration."],["Chỉ cần mười lăm phút mỗi tối cũng đủ để tạo nên sự khác biệt.","Just fifteen minutes every evening is enough to make a difference.","Even fifteen minutes a night is enough to make a difference."]]},{"id":"b2-volunteer","lv":4,"icon":"🤲","title":"Hoạt động tình nguyện","words":[["tình nguyện viên","volunteer"],["vùng sâu vùng xa","remote area"],["kỹ năng","skill"],["trải nghiệm","experience"]],"s":[["Mùa hè năm ngoái, tôi tham gia một dự án tình nguyện ở vùng núi phía Bắc.","Last summer, I took part in a volunteer project in the northern mountains.","Last summer, I joined a volunteering project in the mountains of the north."],["Chúng tôi dạy tiếng Anh cho trẻ em và sửa lại một lớp học cũ.","We taught English to children and repaired an old classroom.","We taught children English and fixed an old classroom."],["Cuộc sống ở đó khó khăn hơn nhiều so với những gì tôi tưởng tượng.","Life there was much harder than I had imagined.","Life there was a lot more difficult than I had expected."],["Dù vậy, bọn trẻ luôn tươi cười và rất ham học.","Even so, the children were always smiling and very eager to learn.","Nevertheless, the kids always smiled and were keen to learn."],["Trải nghiệm đó đã giúp tôi rèn luyện sự kiên nhẫn và kỹ năng làm việc nhóm.","That experience helped me develop patience and teamwork skills.","The experience helped me build patience and teamwork skills."],["Tôi chắc chắn sẽ quay lại đó vào năm tới.","I will definitely go back there next year.","I am sure I will return there next year."]]},{"id":"b2-money","lv":4,"icon":"💰","title":"Quản lý tiền bạc","words":[["chi tiêu","spending"],["ngân sách","budget"],["khoản nợ","debt"],["bốc đồng","impulsive"]],"s":[["Nhiều người trẻ thấy khó quản lý tiền bạc khi mới đi làm.","Many young people find it hard to manage their money when they first start working.","A lot of young people struggle to manage money when they start their first job."],["Họ thường chi tiêu bốc đồng cho quần áo và đồ ăn ngoài.","They often spend impulsively on clothes and eating out.","They tend to spend money on clothes and restaurants on impulse."],["Một cách đơn giản là ghi lại mọi khoản chi tiêu trong một tháng.","One simple method is to write down every expense for a month.","A simple way is to record all your spending for a month."],["Sau đó, bạn có thể lập một ngân sách thực tế cho mình.","After that, you can make a realistic budget for yourself.","Then you can set yourself a realistic budget."],["Các chuyên gia khuyên nên tiết kiệm ít nhất mười phần trăm thu nhập.","Experts recommend saving at least ten percent of your income.","Experts advise that you should save at least 10% of your income."],["Quan trọng nhất là tránh vay nợ cho những thứ không cần thiết.","Most importantly, avoid borrowing money for things you do not need.","Above all, avoid getting into debt for unnecessary things."]]},{"id":"b2-hoian","lv":4,"icon":"🏮","title":"Hội An về đêm","words":[["phố cổ","old town"],["đèn lồng","lantern"],["di sản","heritage"],["thả đèn hoa đăng","release floating lanterns"]],"s":[["Được UNESCO công nhận là di sản thế giới, Hội An thu hút hàng triệu du khách mỗi năm.","Recognised by UNESCO as a World Heritage Site, Hoi An attracts millions of visitors every year.","Hoi An, which UNESCO has recognised as a World Heritage Site, draws millions of tourists each year."],["Ban ngày, phố cổ hiện lên với những ngôi nhà tường vàng và mái ngói rêu phong.","During the day, the old town is full of yellow-walled houses with moss-covered tiled roofs.","By day, the old town shows off its yellow walls and mossy tiled roofs."],["Nhưng phải đến khi màn đêm buông xuống, Hội An mới thực sự trở nên kỳ diệu.","But it is only when night falls that Hoi An becomes truly magical.","But Hoi An only becomes really magical after dark."],["Hàng nghìn chiếc đèn lồng đủ màu sắc được thắp sáng dọc các con phố.","Thousands of colourful lanterns are lit along the streets.","Thousands of colorful lanterns light up the streets."],["Du khách thường thả đèn hoa đăng xuống sông Hoài và cầu nguyện cho điều may mắn.","Visitors often release floating lanterns onto the Hoai River and make a wish for good luck.","Tourists usually float lanterns on the Hoai River and pray for good fortune."],["Thật khó để tìm được nơi nào vừa bình yên vừa lãng mạn đến vậy.","It is hard to find anywhere that is so peaceful and romantic at the same time.","It would be hard to find another place that is both so peaceful and so romantic."]]},{"id":"b2-failure","lv":4,"icon":"🌱","title":"Bài học từ thất bại","words":[["thất bại","failure"],["khởi nghiệp","start a business"],["phá sản","go bankrupt"],["kiên cường","resilient"]],"s":[["Ở tuổi hai mươi lăm, anh Tuấn bỏ việc ổn định để mở một quán cà phê.","At the age of twenty-five, Tuan quit his stable job to open a café.","When he was twenty-five, Tuan left a secure job to start a coffee shop."],["Chỉ sau một năm, quán đã phải đóng cửa vì không đủ khách.","After only a year, the café had to close because there weren't enough customers.","Just one year later, the café had to shut down due to a lack of customers."],["Anh mất gần hết số tiền tiết kiệm và cảm thấy vô cùng thất vọng.","He lost almost all his savings and felt extremely disappointed.","He lost nearly all of his savings and was deeply disappointed."],["Thay vì bỏ cuộc, anh dành thời gian phân tích những sai lầm của mình.","Instead of giving up, he spent time analysing his mistakes.","Rather than giving up, he took time to analyse what he had done wrong."],["Ba năm sau, anh mở một tiệm bánh nhỏ và lần này nó thành công ngoài mong đợi.","Three years later, he opened a small bakery, and this time it was more successful than expected.","Three years later, he opened a little bakery, and this time it succeeded beyond his expectations."],["Anh thường nói rằng thất bại đầu tiên là người thầy tốt nhất của mình.","He often says that his first failure was his best teacher.","He likes to say that his first failure was the best teacher he ever had."]]},{"id":"b2-sleep","lv":4,"icon":"😴","title":"Vì sao chúng ta cần ngủ đủ","words":[["thiếu ngủ","sleep deprivation"],["trí nhớ","memory"],["hệ miễn dịch","immune system"],["màn hình","screen"]],"s":[["Nhiều người coi việc ngủ ít là dấu hiệu của sự chăm chỉ.","Many people see sleeping little as a sign of hard work.","A lot of people regard getting little sleep as a sign of being hard-working."],["Tuy nhiên, các nhà khoa học đã chứng minh rằng thiếu ngủ gây hại nghiêm trọng cho sức khỏe.","However, scientists have proved that lack of sleep seriously damages our health.","However, scientists have shown that sleep deprivation is seriously harmful to health."],["Trong lúc ngủ, não bộ sắp xếp lại thông tin và củng cố trí nhớ.","While we sleep, the brain reorganises information and strengthens memory.","During sleep, the brain sorts information and consolidates memories."],["Người thường xuyên ngủ dưới sáu tiếng dễ bị ốm hơn vì hệ miễn dịch suy yếu.","People who regularly sleep less than six hours get ill more easily because their immune system is weaker.","Those who often sleep under six hours are more likely to get sick because their immune system weakens."],["Ánh sáng xanh từ màn hình điện thoại cũng khiến chúng ta khó ngủ hơn.","Blue light from phone screens also makes it harder for us to fall asleep.","The blue light from our phone screens also makes it more difficult to sleep."],["Vì vậy, hãy cất điện thoại đi ít nhất một tiếng trước khi lên giường.","So put your phone away at least an hour before going to bed.","Therefore, put your phone away at least one hour before bed."]]},{"id":"b2-language","lv":4,"icon":"🌏","title":"Tiếng Anh mở ra cánh cửa","words":[["cơ hội","opportunity"],["tự tin","confident"],["văn hóa","culture"],["góc nhìn","perspective"]],"s":[["Khi mới bắt đầu học tiếng Anh, tôi chỉ nghĩ đến việc thi đỗ.","When I first started learning English, I only thought about passing exams.","When I began studying English, all I thought about was passing my exams."],["Dần dần, tôi nhận ra rằng ngôn ngữ này đã mở ra cho tôi nhiều cơ hội hơn tôi tưởng.","Gradually, I realised that the language had opened up more opportunities for me than I had imagined.","Over time, I realised that English had given me far more opportunities than I expected."],["Tôi có thể đọc tài liệu gốc, xem phim không cần phụ đề và kết bạn với người nước ngoài.","I can read original materials, watch films without subtitles and make friends with foreigners.","I am able to read original documents, watch movies without subtitles and make friends from other countries."],["Quan trọng hơn, nó giúp tôi hiểu những nền văn hóa khác nhau.","More importantly, it has helped me understand different cultures.","More importantly, it helps me to understand other cultures."],["Mỗi khi nói chuyện với một người đến từ đất nước khác, tôi lại có thêm một góc nhìn mới.","Every time I talk to someone from another country, I gain a new perspective.","Whenever I speak with a person from a different country, I get a new point of view."],["Học một ngôn ngữ, suy cho cùng, là học cách nhìn thế giới theo một cách khác.","Learning a language is, after all, learning to see the world in a different way.","After all, learning a language means learning to see the world differently."]]},{"id":"b2-traffic","lv":4,"icon":"🛵","title":"Biển xe máy","words":[["xe máy","motorbike"],["giờ cao điểm","rush hour"],["luồn lách","weave"],["mũ bảo hiểm","helmet"]],"s":[["Lần đầu đến Thành phố Hồ Chí Minh, nhiều du khách choáng ngợp trước biển xe máy.","On their first visit to Ho Chi Minh City, many tourists are overwhelmed by the sea of motorbikes.","When they first come to Ho Chi Minh City, a lot of visitors are amazed by the sea of motorbikes."],["Ước tính thành phố có hơn bảy triệu chiếc xe máy.","It is estimated that the city has more than seven million motorbikes.","The city is estimated to have over seven million motorbikes."],["Vào giờ cao điểm, xe cộ luồn lách qua từng khe hở nhỏ nhất.","At rush hour, vehicles weave through even the smallest gaps.","During rush hour, bikes squeeze through every tiny gap."],["Điều kỳ lạ là dù trông hỗn loạn, mọi thứ vẫn vận hành theo một trật tự riêng.","The strange thing is that although it looks chaotic, everything still works in its own order.","Oddly enough, even though it looks chaotic, everything still follows its own kind of order."],["Bí quyết để băng qua đường là đi chậm, đều và không dừng lại đột ngột.","The secret to crossing the road is to walk slowly and steadily without stopping suddenly.","The trick to crossing the street is to walk slowly and steadily and never stop suddenly."],["Người lái xe sẽ tự động tránh bạn, giống như dòng nước chảy quanh một hòn đá.","The drivers will automatically go around you, like water flowing around a stone.","Riders will steer around you automatically, just like water flowing around a rock."]]},{"id":"b2-gift","lv":4,"icon":"🎁","title":"Món quà ý nghĩa nhất","words":[["chiếc khăn len","woollen scarf"],["vụng về","clumsy"],["đan","knit"],["trân trọng","treasure"]],"s":[["Món quà ý nghĩa nhất tôi từng nhận được là một chiếc khăn len màu xanh.","The most meaningful gift I have ever received is a blue woollen scarf.","The most meaningful present I've ever been given is a blue wool scarf."],["Em gái tôi đã tự đan nó suốt hai tháng để tặng tôi sinh nhật.","My younger sister spent two months knitting it herself for my birthday.","My little sister knitted it herself over two months as a birthday present for me."],["Những đường len hơi vụng về và một bên dài hơn bên kia.","The stitches are a bit clumsy and one side is longer than the other.","The stitching is a little clumsy, and one end is longer than the other."],["Nhưng tôi biết em đã thức khuya rất nhiều đêm để hoàn thành nó.","But I know she stayed up late many nights to finish it.","But I know that she stayed up late for many nights to complete it."],["Dù đã có nhiều chiếc khăn đắt tiền hơn, tôi vẫn đeo nó mỗi mùa đông.","Even though I have many more expensive scarves, I still wear it every winter.","Although I own several more expensive scarves, I still wear this one every winter."],["Giá trị của một món quà không nằm ở giá tiền mà ở tấm lòng của người tặng.","The value of a gift lies not in its price but in the heart of the giver.","A gift's value is not in how much it costs but in the love of the person who gives it."]]},{"id":"c1-city","lv":5,"icon":"🌆","title":"Đô thị hóa","words":[["đô thị hóa","urbanisation"],["cơ sở hạ tầng","infrastructure"],["chênh lệch","gap"],["quy hoạch","planning"]],"s":[["Trong hai thập kỷ qua, Việt Nam đã trải qua quá trình đô thị hóa nhanh chóng.","Over the past two decades, Vietnam has undergone rapid urbanisation.","In the last twenty years, Vietnam has experienced rapid urbanization."],["Hàng triệu người đã rời nông thôn lên thành phố để tìm kiếm cơ hội việc làm tốt hơn.","Millions of people have left the countryside for the cities in search of better job opportunities.","Millions of people have moved from rural areas to cities to look for better jobs."],["Điều này đã thúc đẩy tăng trưởng kinh tế, nhưng cũng gây áp lực lớn lên cơ sở hạ tầng.","This has boosted economic growth, but it has also put enormous pressure on infrastructure.","This has driven economic growth but has also placed great pressure on infrastructure."],["Kẹt xe, ngập lụt và giá nhà tăng cao đã trở thành vấn đề thường ngày.","Traffic jams, flooding and soaring house prices have become everyday problems.","Congestion, floods and rising housing prices have become daily issues."],["Bên cạnh đó, khoảng cách giàu nghèo giữa thành thị và nông thôn ngày càng lớn.","In addition, the gap between rich and poor in urban and rural areas is widening.","Moreover, the wealth gap between cities and the countryside keeps growing."],["Nếu không có quy hoạch dài hạn, các thành phố sẽ khó phát triển một cách bền vững.","Without long-term planning, cities will struggle to develop sustainably.","Unless there is long-term planning, it will be hard for cities to grow sustainably."]]},{"id":"c1-lang","lv":5,"icon":"🗣️","title":"Học ngoại ngữ khi trưởng thành","words":[["quan niệm","belief"],["động lực","motivation"],["tiếp xúc","exposure"],["kiên trì","persistent"]],"s":[["Có một quan niệm phổ biến rằng người lớn khó học ngoại ngữ hơn trẻ em.","There is a common belief that adults find it harder to learn foreign languages than children do.","It is widely believed that adults have more difficulty learning languages than children."],["Mặc dù trẻ em có lợi thế về phát âm, người lớn lại có khả năng tư duy và tự học tốt hơn.","Although children have an advantage in pronunciation, adults are better at reasoning and self-study.","While children have an edge in pronunciation, adults are better at analytical thinking and independent learning."],["Điều thực sự quyết định thành công là động lực và mức độ tiếp xúc với ngôn ngữ.","What really determines success is motivation and the amount of exposure to the language.","What truly decides success is motivation and how much exposure you get to the language."],["Những người học kiên trì mỗi ngày, dù chỉ vài phút, thường tiến bộ nhanh hơn người học dồn.","People who study persistently every day, even for a few minutes, tend to progress faster than those who cram.","Learners who practise daily, even for just a few minutes, usually improve faster than those who cram."],["Hơn nữa, việc sử dụng ngôn ngữ trong những tình huống thật giúp ghi nhớ lâu hơn nhiều.","Moreover, using the language in real situations helps you remember it far longer.","Furthermore, using the language in real-life situations makes it stick much longer."],["Nói cách khác, chưa bao giờ là quá muộn để bắt đầu.","In other words, it is never too late to start.","In other words, it's never too late to begin."]]},{"id":"c1-social","lv":5,"icon":"📲","title":"Mạng xã hội và sức khỏe tinh thần","words":[["sức khỏe tinh thần","mental health"],["so sánh","compare"],["lo âu","anxiety"],["điều độ","moderation"]],"s":[["Mạng xã hội giúp chúng ta kết nối với bạn bè bất kể khoảng cách địa lý.","Social media helps us stay connected with friends regardless of geographical distance.","Social media allows us to connect with friends no matter how far away they are."],["Tuy vậy, ngày càng có nhiều bằng chứng cho thấy nó có thể gây hại cho sức khỏe tinh thần.","Nevertheless, there is growing evidence that it can harm our mental health.","However, more and more evidence suggests it can be harmful to mental health."],["Việc liên tục so sánh bản thân với người khác dễ dẫn đến cảm giác tự ti và lo âu.","Constantly comparing ourselves with others can easily lead to low self-esteem and anxiety.","Comparing yourself to others all the time can easily cause insecurity and anxiety."],["Điều đáng lo ngại là thanh thiếu niên đặc biệt dễ bị ảnh hưởng.","What is worrying is that teenagers are particularly vulnerable.","Worryingly, teenagers are especially susceptible."],["Thay vì từ bỏ hoàn toàn, chúng ta nên sử dụng mạng xã hội một cách điều độ và có ý thức.","Rather than giving it up completely, we should use social media in moderation and mindfully.","Instead of quitting entirely, we should use social media moderately and consciously."],["Suy cho cùng, công nghệ chỉ là công cụ, còn cách dùng là do chúng ta quyết định.","After all, technology is only a tool, and how we use it is up to us.","Ultimately, technology is just a tool, and it is up to us how we use it."]]},{"id":"c1-climate","lv":5,"icon":"🌡️","title":"Biến đổi khí hậu ở đồng bằng","words":[["xâm nhập mặn","saltwater intrusion"],["mực nước biển","sea level"],["sinh kế","livelihood"],["thích ứng","adapt"]],"s":[["Đồng bằng sông Cửu Long được coi là một trong những khu vực chịu ảnh hưởng nặng nề nhất của biến đổi khí hậu.","The Mekong Delta is considered one of the regions most severely affected by climate change.","The Mekong Delta is regarded as one of the areas hardest hit by climate change."],["Mực nước biển dâng khiến tình trạng xâm nhập mặn ngày càng nghiêm trọng.","Rising sea levels are making saltwater intrusion increasingly serious.","As sea levels rise, saltwater intrusion is becoming more and more severe."],["Nhiều nông dân đã mất mùa vì nước ngọt không còn đủ để tưới tiêu.","Many farmers have lost their crops because there is no longer enough fresh water for irrigation.","Lots of farmers have had crop failures because there is not enough fresh water to irrigate their fields."],["Để bảo vệ sinh kế, một số người đã chuyển từ trồng lúa sang nuôi tôm.","To protect their livelihoods, some people have switched from growing rice to farming shrimp.","In order to protect their livelihoods, some have moved from rice farming to shrimp farming."],["Tuy nhiên, những giải pháp này chỉ mang tính tạm thời nếu thiếu sự hỗ trợ của chính phủ.","However, these solutions are only temporary without government support.","However, such measures will only be temporary unless the government provides support."],["Thích ứng với biến đổi khí hậu không còn là lựa chọn mà là điều bắt buộc.","Adapting to climate change is no longer a choice but a necessity.","Adapting to climate change is no longer optional; it is essential."]]},{"id":"c1-success","lv":5,"icon":"🏆","title":"Thế nào là thành công?","words":[["định nghĩa","define"],["thước đo","measure"],["ý nghĩa","meaningful"],["áp lực","pressure"]],"s":[["Xã hội thường đo thành công bằng tiền bạc, chức vụ và danh tiếng.","Society often measures success in terms of money, status and fame.","Society tends to measure success by money, position and reputation."],["Chính áp lực đó khiến nhiều người trẻ theo đuổi những mục tiêu mà họ không thực sự mong muốn.","It is this pressure that drives many young people to pursue goals they do not really want.","That very pressure pushes many young people to chase goals they don't truly want."],["Không ít người đạt được mọi thứ nhưng vẫn cảm thấy trống rỗng.","Quite a few people achieve everything yet still feel empty.","Many people achieve everything but still feel empty inside."],["Theo tôi, thành công nên được định nghĩa bởi chính mỗi người.","In my view, success should be defined by each individual.","In my opinion, each person should define success for themselves."],["Đó có thể là một công việc có ý nghĩa, một gia đình hạnh phúc hay đơn giản là sự bình yên trong tâm hồn.","It could be a meaningful job, a happy family or simply peace of mind.","It might be meaningful work, a happy family, or just inner peace."],["Chỉ khi hiểu rõ điều mình thực sự coi trọng, chúng ta mới có thể sống một cuộc đời trọn vẹn.","Only when we understand what we truly value can we live a fulfilling life.","Only by knowing what we really value can we lead a fulfilling life."]]},{"id":"c1-tradition","lv":5,"icon":"🏮","title":"Giữ gìn truyền thống","words":[["toàn cầu hóa","globalisation"],["bản sắc","identity"],["làng nghề","craft village"],["thế hệ","generation"]],"s":[["Trong thời đại toàn cầu hóa, nhiều giá trị truyền thống đang dần bị mai một.","In the age of globalisation, many traditional values are gradually fading away.","In this era of globalization, a lot of traditional values are slowly disappearing."],["Các làng nghề thủ công đang gặp khó khăn vì người trẻ không muốn theo nghề của cha ông.","Traditional craft villages are struggling because young people do not want to follow in their ancestors' footsteps.","Craft villages are in trouble since young people are unwilling to take up their parents' trades."],["Tuy nhiên, giữ gìn truyền thống không có nghĩa là từ chối cái mới.","However, preserving traditions does not mean rejecting new things.","However, keeping traditions alive doesn't mean refusing anything new."],["Một số nghệ nhân đã kết hợp kỹ thuật cổ truyền với thiết kế hiện đại để thu hút khách hàng trẻ.","Some artisans have combined traditional techniques with modern designs to attract young customers.","Some craftspeople have blended traditional methods with modern design to appeal to younger buyers."],["Nhờ mạng xã hội, sản phẩm của họ đã đến được với khách hàng trên khắp thế giới.","Thanks to social media, their products have reached customers all over the world.","Thanks to social networks, their products have reached buyers worldwide."],["Bản sắc văn hóa chỉ thực sự sống khi được thế hệ sau tiếp nối và làm mới.","Cultural identity only truly lives on when it is continued and renewed by the next generation.","A cultural identity only stays alive when younger generations carry it on and reinvent it."]]},{"id":"c1-silence","lv":5,"icon":"🤫","title":"Giá trị của sự im lặng","words":[["ồn ào","noisy"],["suy ngẫm","reflect"],["lắng nghe","listen"],["xa xỉ","luxury"]],"s":[["Trong một thế giới ngày càng ồn ào, sự im lặng đã trở thành một thứ xa xỉ.","In an increasingly noisy world, silence has become a luxury.","In a world that grows noisier every day, silence has become a luxury."],["Chúng ta lấp đầy mọi khoảng trống bằng âm nhạc, tin tức và những cuộc trò chuyện vô tận.","We fill every gap with music, news and endless conversations.","We fill every empty moment with music, news and never-ending conversations."],["Thế nhưng chính trong im lặng, chúng ta mới có cơ hội lắng nghe bản thân.","Yet it is in silence that we have the chance to listen to ourselves.","However, it is only in silence that we get the opportunity to hear our own thoughts."],["Nhiều nhà văn và nhà khoa học cho biết những ý tưởng hay nhất của họ đến vào những lúc tĩnh lặng.","Many writers and scientists say that their best ideas come to them in quiet moments.","A number of writers and scientists report that their greatest ideas arrive during moments of stillness."],["Im lặng cũng là một kỹ năng giao tiếp bị đánh giá thấp: biết khi nào không nên nói đôi khi quan trọng hơn biết nói gì.","Silence is also an underrated communication skill: knowing when not to speak is sometimes more important than knowing what to say.","Silence is also an undervalued communication skill, since knowing when to stay quiet can matter more than knowing what to say."],["Có lẽ mỗi ngày, chúng ta nên dành cho mình vài phút không âm thanh, không màn hình.","Perhaps every day we should give ourselves a few minutes with no sound and no screens.","Maybe we should allow ourselves a few minutes each day without any sound or screens."]]},{"id":"c1-ai-art","lv":5,"icon":"🎨","title":"Khi máy móc sáng tác nghệ thuật","words":[["sáng tạo","creativity"],["bản quyền","copyright"],["cảm xúc","emotion"],["thay thế","replace"]],"s":[["Chỉ trong vài giây, trí tuệ nhân tạo giờ đây có thể vẽ tranh, sáng tác nhạc và viết thơ.","In just a few seconds, artificial intelligence can now paint pictures, compose music and write poetry.","AI can now create paintings, compose music and write poems in a matter of seconds."],["Điều này đặt ra một câu hỏi khó: liệu máy móc có thực sự sáng tạo hay không?","This raises a difficult question: can machines really be creative?","This poses a tough question: are machines truly creative?"],["Những người ủng hộ cho rằng AI là một công cụ mới, giống như máy ảnh từng là công cụ mới của hội họa.","Supporters argue that AI is a new tool, just as the camera was once a new tool for painting.","Its supporters say AI is simply a new tool, in the same way that the camera was once a new tool for art."],["Ngược lại, nhiều nghệ sĩ lo ngại tác phẩm của họ bị sử dụng mà không được xin phép.","On the other hand, many artists are concerned that their work is being used without permission.","By contrast, many artists worry that their work is used without their consent."],["Vấn đề bản quyền vì thế đang trở thành chủ đề tranh luận gay gắt.","The issue of copyright is therefore becoming a hotly debated topic.","As a result, copyright has become a fiercely debated issue."],["Dù công nghệ tiến xa đến đâu, nghệ thuật vẫn cần đến cảm xúc và trải nghiệm của con người.","No matter how far technology advances, art still needs human emotion and experience.","However advanced technology becomes, art will always require human feelings and experiences."]]},{"id":"c1-minimal","lv":5,"icon":"🪴","title":"Lối sống tối giản","words":[["tối giản","minimalist"],["vật chất","material possessions"],["lộn xộn","clutter"],["tự do","freedom"]],"s":[["Lối sống tối giản đang ngày càng được giới trẻ quan tâm.","The minimalist lifestyle is attracting more and more interest from young people.","Minimalism is becoming increasingly popular among young people."],["Ý tưởng cốt lõi rất đơn giản: sở hữu ít hơn để sống nhiều hơn.","The core idea is very simple: own less in order to live more.","The basic idea is simple: have less so that you can live more."],["Những người theo đuổi lối sống này cho rằng đồ đạc lộn xộn khiến tâm trí cũng trở nên rối bời.","Followers of this lifestyle believe that a cluttered home leads to a cluttered mind.","People who live this way argue that physical clutter makes the mind cluttered too."],["Khi bớt mua sắm, họ có thêm tiền bạc và thời gian cho những trải nghiệm có ý nghĩa.","When they shop less, they have more money and time for meaningful experiences.","By buying less, they gain more money and time for experiences that matter."],["Tuy nhiên, tối giản không có nghĩa là phải vứt bỏ mọi thứ hay sống khắc khổ.","However, minimalism does not mean throwing everything away or living a harsh life.","However, being minimalist doesn't mean getting rid of everything or living in hardship."],["Điều quan trọng là mỗi món đồ ta giữ lại đều thực sự có giá trị với mình.","What matters is that every item we keep truly has value to us.","The key is that everything we keep genuinely means something to us."]]},{"id":"c1-doctor","lv":5,"icon":"🩺","title":"Người bác sĩ vùng cao","words":[["vùng cao","highlands"],["trạm y tế","health centre"],["hy sinh","sacrifice"],["tận tụy","devoted"]],"s":[["Sau khi tốt nghiệp đại học y, chị Mai từ chối lời mời làm việc tại một bệnh viện lớn ở Hà Nội.","After graduating from medical school, Mai turned down a job offer at a large hospital in Hanoi.","When she graduated from medical university, Mai refused an offer to work at a big hospital in Hanoi."],["Thay vào đó, chị chọn về làm việc tại một trạm y tế nhỏ ở vùng cao Hà Giang.","Instead, she chose to work at a small health centre in the highlands of Ha Giang.","Instead, she decided to work in a small clinic in the mountainous province of Ha Giang."],["Có những đêm chị phải đi bộ hàng giờ qua đường núi để đỡ đẻ cho sản phụ.","There were nights when she had to walk for hours along mountain paths to help women give birth.","On some nights she had to walk for hours through the mountains to deliver babies."],["Lương thấp và cuộc sống thiếu thốn, nhưng chị chưa bao giờ hối hận về quyết định của mình.","The pay is low and life is hard, but she has never regretted her decision.","Her salary is low and conditions are tough, yet she has never regretted her choice."],["Với người dân bản địa, chị không chỉ là bác sĩ mà còn là một người thân trong gia đình.","To the local people, she is not only a doctor but also a member of the family.","For the locals, she is more than a doctor; she is like family."],["Câu chuyện của chị nhắc chúng ta rằng thành công thực sự đôi khi được đo bằng những gì ta cho đi.","Her story reminds us that true success is sometimes measured by what we give.","Her story is a reminder that real success can sometimes be measured by how much we give."]]},{"id":"c1-memory","lv":5,"icon":"📸","title":"Ký ức trong thời đại số","words":[["ký ức","memory"],["lưu trữ","store"],["khoảnh khắc","moment"],["trải nghiệm","experience"]],"s":[["Chưa bao giờ con người chụp nhiều ảnh như ngày nay.","Never before have people taken as many photos as they do today.","People have never taken so many photographs as they do now."],["Mỗi bữa ăn, mỗi chuyến đi đều được ghi lại và chia sẻ ngay lập tức.","Every meal and every trip is recorded and shared instantly.","Each meal and each trip is captured and shared immediately."],["Nghịch lý là càng chụp nhiều, chúng ta dường như càng nhớ ít.","The paradox is that the more photos we take, the less we seem to remember.","Paradoxically, the more pictures we take, the less we seem to remember."],["Một số nghiên cứu cho thấy khi dựa vào máy ảnh, não bộ ít nỗ lực ghi nhớ khoảnh khắc hơn.","Some studies suggest that when we rely on a camera, the brain makes less effort to remember the moment.","Some research shows that when we depend on cameras, our brains try less hard to remember the moment."],["Chúng ta mải lo góc chụp đẹp mà quên mất việc tận hưởng trải nghiệm.","We are so busy finding a good angle that we forget to enjoy the experience.","We focus so much on getting the perfect shot that we forget to enjoy the experience itself."],["Đôi khi, cách tốt nhất để giữ một kỷ niệm là cất điện thoại đi và thực sự sống trong khoảnh khắc đó.","Sometimes the best way to keep a memory is to put your phone away and truly live in the moment.","Sometimes, the best way to preserve a memory is to put down your phone and really be present."]]},{"id":"c1-ocean","lv":5,"icon":"🐋","title":"Đại dương và rác thải nhựa","words":[["rác thải nhựa","plastic waste"],["vi nhựa","microplastics"],["chuỗi thức ăn","food chain"],["hệ sinh thái","ecosystem"]],"s":[["Mỗi năm, khoảng mười triệu tấn nhựa bị thải ra đại dương.","Every year, about ten million tonnes of plastic end up in the ocean.","Around ten million tons of plastic are dumped into the oceans each year."],["Nhựa không phân hủy mà chỉ vỡ thành những mảnh vi nhựa nhỏ đến mức mắt thường không thấy được.","Plastic does not decompose; it only breaks down into microplastics too small to see with the naked eye.","Instead of decomposing, plastic just breaks into microplastics that are too tiny to be seen."],["Những mảnh vi nhựa này đi vào chuỗi thức ăn và cuối cùng xuất hiện trên bàn ăn của chúng ta.","These microplastics enter the food chain and eventually end up on our dinner tables.","These particles get into the food chain and finally reach our plates."],["Các nhà khoa học cảnh báo rằng đến năm 2050, lượng nhựa trong đại dương có thể nhiều hơn cá.","Scientists warn that by 2050, there could be more plastic than fish in the ocean.","Scientists have warned that the oceans may contain more plastic than fish by 2050."],["Giải quyết vấn đề này đòi hỏi sự chung tay của cả chính phủ, doanh nghiệp và từng cá nhân.","Solving this problem requires the combined efforts of governments, businesses and individuals.","Tackling this issue needs governments, companies and individuals to work together."],["Một hành động nhỏ như từ chối ống hút nhựa, nếu được nhân lên hàng triệu lần, cũng có thể tạo nên khác biệt lớn.","A small action such as refusing a plastic straw, if multiplied millions of times, can make a big difference.","Even a small step like saying no to plastic straws can make a huge difference when millions of people do it."]]}];
+/* ============================================================
+   DỊCH ĐOẠN VĂN (v97): bài tập dịch đoạn văn Việt → Anh
+   App soạn sẵn đoạn văn tiếng Việt theo trình độ A1 → C1, bạn dịch sang tiếng Anh,
+   app so với bản dịch mẫu (và cách dịch khác), tô màu từng từ và chấm điểm. Không cần mạng.
+============================================================ */
+(() => {
+  const root = document.getElementById('pa-root');
+  if (!root || typeof PA_LESSONS === 'undefined') return;
+  const E = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  const LV = [null, { code: 'A1', vi: 'Mới bắt đầu' }, { code: 'A2', vi: 'Sơ cấp' }, { code: 'B1', vi: 'Trung cấp' }, { code: 'B2', vi: 'Trung cao cấp' }, { code: 'C1', vi: 'Nâng cao' }];
+  const KEY = 'hoc-tieng-anh-para-ex', LVK = 'hoc-tieng-anh-para-lv';
+  let prog = {}; try { prog = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) {}
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(prog)); } catch (e) {} };
+  const st = { lv: 1, cur: null, mode: 'each' };
+  try { const v = +localStorage.getItem(LVK); if (v >= 1 && v <= 5) st.lv = v; } catch (e) {}
+  const P = id => prog[id] || (prog[id] = { a: {}, sc: {}, full: '' });
+  const lessonScore = l => { const p = prog[l.id]; if (!p) return null; const v = l.s.map((_, i) => p.sc[i]).filter(x => x != null); return v.length === l.s.length ? Math.round(v.reduce((a, b) => a + b, 0) / v.length) : null; };
+  const doneCount = l => { const p = prog[l.id]; return p ? l.s.filter((_, i) => p.sc[i] != null).length : 0; };
+
+  /* ---------- chấm điểm ---------- */
+  const CONTR = [[/\bcan't\b/g, 'can not'], [/\bcannot\b/g, 'can not'], [/\bwon't\b/g, 'will not'], [/\bshan't\b/g, 'shall not'], [/n't\b/g, ' not'], [/'re\b/g, ' are'], [/'ve\b/g, ' have'], [/'ll\b/g, ' will'], [/'d\b/g, ' would'], [/\bi'm\b/g, 'i am'], [/\b(it|that|there|what|he|she|who|where|here)'s\b/g, '$1 is'], [/\blet's\b/g, 'let us']];
+  const SPELL = [[/(col|fav|neighb|behavi|hon|lab|flav|hum|harb|rum)our/g, '$1or'], [/isation/g, 'ization'], [/ise(s|d)?\b/g, 'ize$1'], [/ising\b/g, 'izing'], [/tre\b/g, 'ter'], [/ll(ed|ing)\b/g, 'l$1'], [/\bmum\b/g, 'mom'], [/\bflat\b/g, 'apartment'], [/\bholiday\b/g, 'vacation'], [/\bfilm\b/g, 'movie'], [/\bfavourite\b/g, 'favorite']];
+  const TENS = { twenty: 20, thirty: 30, forty: 40, fifty: 50, sixty: 60, seventy: 70, eighty: 80, ninety: 90 };
+  const UNITS = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9 };
+  function norm(t, poss) {
+    let x = ' ' + t.toLowerCase().replace(/[’‘`]/g, "'") + ' ';
+    x = x.replace(/\b(twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)[-\s](one|two|three|four|five|six|seven|eight|nine)\b/g, (m, a, b) => String(TENS[a] + UNITS[b]))
+         .replace(/\b(seventy|eighty|ninety)\b/g, m => String(TENS[m]));
+    if (poss) x = x.replace(/\b([a-z]+)'s\b/g, '$1 is');
+    CONTR.forEach(([a, b]) => { x = x.replace(a, b); });
+    let w = lsNorm(x);
+    w = w.map(s => { let y = s; SPELL.forEach(([a, b]) => { y = y.replace(a, b); }); return y; });
+    return w;
+  }
+  function score(user, l, i) {
+    const models = l.s[i].slice(1).filter(Boolean);
+    let best = null;
+    // thử cả hai cách hiểu "'s" (is / sở hữu) và lấy kết quả tốt hơn
+    [false, true].forEach(poss => {
+      const u = norm(user, poss);
+      models.forEach((m, k) => {
+        const a = norm(m, poss);
+        const r = lsMatch(a, u);
+        const f1 = a.length + u.length ? 2 * r.ta.size / (a.length + u.length) : 0;
+        if (!best || f1 > best.f1) best = { f1, k, ta: r.ta, tb: r.tb, a, u, poss };
+      });
+    });
+    best.pct = Math.round(best.f1 * 100);
+    return best;
+  }
+  const grade = p => p >= 90 ? 'ok' : p >= 70 ? 'mid' : 'bad';
+  const gradeText = p => p >= 90 ? 'Rất tốt!' : p >= 70 ? 'Gần đúng, xem lại chỗ tô màu.' : 'Chưa đúng ý, so với bản mẫu nhé.';
+  // tô màu câu mẫu: từ bạn đã dùng (xanh) và từ còn thiếu (cam)
+  function colorModel(text, matchedNorm, poss) {
+    const box = E('span', 'pe-model-t');
+    const toks = text.split(/(\s+)/);
+    let j = 0;
+    toks.forEach(t => {
+      if (/^\s+$/.test(t) || !t) { box.appendChild(document.createTextNode(t)); return; }
+      const parts = norm(t, poss);
+      let hit = parts.length ? true : null;
+      parts.forEach(() => { if (!matchedNorm.has(j)) hit = false; j++; });
+      box.appendChild(E('span', hit === null ? '' : hit ? 'pe-hit' : 'pe-miss', t));
+    });
+    return box;
+  }
+  function colorUser(text, matchedNorm, poss) {
+    const box = E('span', 'pe-user-t');
+    const toks = text.split(/(\s+)/);
+    let j = 0;
+    toks.forEach(t => {
+      if (/^\s+$/.test(t) || !t) { box.appendChild(document.createTextNode(t)); return; }
+      const parts = norm(t, poss);
+      let hit = parts.length ? true : null;
+      parts.forEach(() => { if (!matchedNorm.has(j)) hit = false; j++; });
+      box.appendChild(E('span', hit === null ? '' : hit ? '' : 'pe-extra', t));
+    });
+    return box;
+  }
+
+  /* ---------- danh sách bài ---------- */
+  function renderHome() {
+    try { speechSynthesis.cancel(); } catch (e) {}
+    st.cur = null;
+    root.innerHTML = '';
+    const all = PA_LESSONS, done = all.filter(l => lessonScore(l) != null);
+    const intro = E('div', 'tense-card pe-intro');
+    const top = E('div', 'vc-prog-top');
+    const nums = E('div');
+    const n = E('div', 'vc-prog-n'); n.appendChild(E('b', null, String(done.length))); n.appendChild(document.createTextNode(' / ' + all.length));
+    nums.appendChild(n);
+    nums.appendChild(E('div', 'vc-prog-l', 'đoạn văn đã dịch xong · ' + all.reduce((k, l) => k + l.s.length, 0) + ' câu'));
+    top.appendChild(nums);
+    intro.appendChild(top);
+    intro.appendChild(vcBar(done.length / all.length));
+    intro.appendChild(E('p', 'pe-how', 'Đọc đoạn văn tiếng Việt rồi dịch cả đoạn sang tiếng Anh. App tách từng câu bạn viết và so với bản mẫu: từ xanh là bạn dịch trùng, từ cam là còn thiếu hoặc khác. Câu dịch khác bản mẫu vẫn có thể đúng, khi đó bấm "✓ Câu này tôi dịch đúng ý".'));
+    root.appendChild(intro);
+    const chips = E('div', 'vc-levels');
+    for (let k = 1; k <= 5; k++) {
+      const ls = all.filter(l => l.lv === k), got = ls.filter(l => lessonScore(l) != null).length;
+      const b = E('button', 'vc-level vc-lvl' + k + (st.lv === k ? ' active' : '') + (got === ls.length ? ' done' : ''));
+      b.appendChild(E('span', 'vc-level-code', LV[k].code));
+      b.appendChild(E('span', 'vc-level-vi', LV[k].vi));
+      b.appendChild(E('span', 'vc-level-n', got === ls.length ? `✓ ${ls.length} bài` : got ? `${got}/${ls.length}` : `${ls.length} bài`));
+      b.addEventListener('click', () => { st.lv = k; try { localStorage.setItem(LVK, String(k)); } catch (e) {} renderHome(); });
+      chips.appendChild(b);
+    }
+    root.appendChild(chips);
+    const list = E('div', 'vc-units pe-list');
+    all.filter(l => l.lv === st.lv).forEach((l, i) => {
+      const sc = lessonScore(l), d = doneCount(l);
+      const b = E('button', 'vc-unit' + (sc != null ? ' done' : ''));
+      b.appendChild(E('span', 'vc-unit-num', l.icon));
+      const info = E('span', 'vc-unit-info');
+      info.appendChild(E('span', 'vc-unit-vi', `Bài ${i + 1} · ${l.title}`));
+      info.appendChild(E('span', 'vc-unit-en', l.s[0][0].slice(0, 70) + (l.s[0][0].length > 70 ? '…' : '')));
+      info.appendChild(E('span', 'vc-tmeta', sc != null ? `✓ Điểm ${sc}% · ${l.s.length} câu` : d ? `Đã dịch ${d}/${l.s.length} câu` : `${l.s.length} câu`));
+      info.appendChild(vcBar(d / l.s.length));
+      b.appendChild(info);
+      b.appendChild(E('span', 'vc-unit-go', '›'));
+      b.addEventListener('click', () => openLesson(l));
+      list.appendChild(b);
+    });
+    root.appendChild(list);
+  }
+
+  /* ---------- làm bài ---------- */
+  function openLesson(l) { st.cur = l; renderLesson(); try { grScrollTop(); } catch (e) {} }
+  function renderLesson() {
+    const l = st.cur, p = P(l.id);
+    root.innerHTML = '';
+    const back = E('button', 'gr-back', '← Danh sách đoạn văn');
+    back.addEventListener('click', () => { renderHome(); try { grScrollTop(); } catch (e) {} });
+    root.appendChild(back);
+    const head = E('div', 'vc-head');
+    head.appendChild(E('div', 'vc-head-icon', l.icon));
+    const hm = E('div', 'vc-head-meta');
+    hm.appendChild(E('div', 'vc-head-vi', l.title));
+    hm.appendChild(E('div', 'vc-head-en', `${LV[l.lv].code} ${LV[l.lv].vi} · ${l.s.length} câu · đã dịch ${doneCount(l)}/${l.s.length}`));
+    head.appendChild(hm);
+    root.appendChild(head);
+    // đoạn văn tiếng Việt
+    const para = E('div', 'tense-card pe-para');
+    para.appendChild(E('div', 'vc-q-label', 'Đoạn văn cần dịch'));
+    const pt = E('p', 'pe-para-t');
+    l.s.forEach((r, i) => { const sp = E('span', 'pe-ps' + (p.sc[i] != null ? ' done' : ''), r[0] + ' '); sp.dataset.i = i; pt.appendChild(sp); });
+    para.appendChild(pt);
+    if (l.words && l.words.length) {
+      para.appendChild(E('div', 'pe-words-t', 'Từ gợi ý (chạm để xem tiếng Anh)'));
+      const ws = E('div', 'pe-words');
+      l.words.forEach(([vi, en]) => {
+        const c = E('button', 'colloc-chip pe-word', vi);
+        c.addEventListener('click', () => { const on = c.classList.toggle('open'); c.textContent = on ? `${vi} = ${en}` : vi; if (on) speak(en, 0.85); });
+        ws.appendChild(c);
+      });
+      para.appendChild(ws);
+    }
+    root.appendChild(para);
+    root.appendChild(fullCard(l));
+    root.appendChild(finishBox(l));
+  }
+
+  function sentCard(l, i) {
+    const p = P(l.id), r = l.s[i];
+    const card = E('div', 'tense-card pe-card'); card.dataset.i = i;
+    const h = E('div', 'pe-card-h');
+    h.appendChild(E('span', 'pe-num', String(i + 1)));
+    h.appendChild(E('span', 'pe-vi', r[0]));
+    if (p.sc[i] != null) h.appendChild(E('span', 'pe-badge ' + grade(p.sc[i]), p.sc[i] + '%'));
+    card.appendChild(h);
+    const ta = E('textarea', 'pe-in'); ta.rows = 2; ta.value = p.a[i] || '';
+    ta.placeholder = 'Viết câu tiếng Anh của bạn…';
+    ta.setAttribute('autocapitalize', 'sentences'); ta.setAttribute('autocorrect', 'off'); ta.spellcheck = false;
+    ta.addEventListener('input', () => { p.a[i] = ta.value; save(); });
+    ta.addEventListener('focus', () => hl(i));
+    ta.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); check(); } });
+    card.appendChild(ta);
+    const res = E('div', 'pe-res');
+    const btns = E('div', 'pe-btns');
+    const hint = E('button', 'ls-slow', '💡 Gợi ý');
+    hint.addEventListener('click', () => {
+      const words = r[1].split(/\s+/);
+      const h2 = words.map(w => w.replace(/^([^A-Za-z]*[A-Za-z])([A-Za-z'’-]*)/, (m, a, b) => a + b.replace(/[A-Za-z]/g, '_'))).join(' ');
+      res.innerHTML = ''; res.appendChild(E('div', 'pe-hint', '💡 ' + h2));
+    });
+    const show = E('button', 'ls-slow', '👀 Xem bản mẫu');
+    show.addEventListener('click', () => { res.innerHTML = ''; res.appendChild(modelBlock(l, i, null)); });
+    const ck = E('button', 'btn-primary pe-ck', 'Kiểm tra');
+    const check = () => {
+      const v = ta.value.trim();
+      if (!v) { ta.focus(); return; }
+      const b = score(v, l, i);
+      p.a[i] = ta.value;
+      if (p.sc[i] == null || b.pct > p.sc[i]) p.sc[i] = b.pct;
+      save();
+      const badge = h.querySelector('.pe-badge'); if (badge) badge.remove();
+      h.appendChild(E('span', 'pe-badge ' + grade(p.sc[i]), p.sc[i] + '%'));
+      const ps = root.querySelector(`.pe-ps[data-i="${i}"]`); if (ps) ps.classList.add('done');
+      res.innerHTML = ''; res.appendChild(modelBlock(l, i, b, v));
+      updateFinish(l);
+    };
+    ck.addEventListener('click', check);
+    btns.appendChild(hint); btns.appendChild(show); btns.appendChild(ck);
+    card.appendChild(btns);
+    card.appendChild(res);
+    if (p.sc[i] != null && p.a[i]) res.appendChild(modelBlock(l, i, score(p.a[i], l, i), p.a[i]));
+    return card;
+  }
+  function modelBlock(l, i, b, user) {
+    const r = l.s[i], p = P(l.id);
+    const box = E('div', 'pe-model');
+    if (b) {
+      const g = E('div', 'pe-grade ' + grade(b.pct));
+      g.appendChild(E('b', null, b.pct + '%'));
+      g.appendChild(document.createTextNode(' ' + gradeText(b.pct)));
+      box.appendChild(g);
+      const u = E('div', 'pe-line');
+      u.appendChild(E('span', 'pe-lab', 'Bạn viết'));
+      u.appendChild(colorUser(user, b.tb, b.poss));
+      box.appendChild(u);
+    }
+    const models = r.slice(1).filter(Boolean);
+    models.forEach((m, k) => {
+      const line = E('div', 'pe-line');
+      line.appendChild(E('span', 'pe-lab', k === 0 ? 'Bản mẫu' : 'Cách khác'));
+      line.appendChild(b && b.k === k ? colorModel(m, b.ta, b.poss) : E('span', 'pe-model-t', m));
+      const pl = E('button', 'pe-play', '▶'); pl.setAttribute('aria-label', 'Nghe câu mẫu');
+      pl.addEventListener('click', () => speak(m, 0.85));
+      line.appendChild(pl);
+      box.appendChild(line);
+    });
+    if (b && b.pct < 100) {
+      const ok = E('button', 'ls-slow pe-accept', '✓ Tôi dịch đúng ý');
+      ok.title = 'Bản dịch của bạn khác bản mẫu nhưng vẫn đúng nghĩa';
+      ok.addEventListener('click', () => { p.sc[i] = 100; save(); ok.disabled = true; ok.textContent = '✓ Đã tính là đúng'; const card = root.querySelector(`.pe-card[data-i="${i}"] .pe-badge`); if (card) { card.className = 'pe-badge ok'; card.textContent = '100%'; } updateFinish(l); });
+      box.appendChild(ok);
+    }
+    if (b) box.appendChild(E('div', 'pe-legend', 'Xanh: từ trùng với bản mẫu · Cam: từ bạn còn thiếu hoặc dùng khác · Gạch ngang: từ không có trong bản mẫu'));
+    return box;
+  }
+  function hl(i) { root.querySelectorAll('.pe-ps').forEach(x => x.classList.toggle('now', +x.dataset.i === i)); }
+
+  function fullCard(l) {
+    const p = P(l.id);
+    const card = E('div', 'tense-card pe-card');
+    card.appendChild(E('div', 'vc-q-label', 'Dịch cả đoạn văn sang tiếng Anh'));
+    const ta = E('textarea', 'pe-in pe-in-full'); ta.rows = 8; ta.value = p.full || '';
+    ta.placeholder = 'Viết bản dịch tiếng Anh của cả đoạn văn ở đây…';
+    ta.addEventListener('keydown', e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); ck.click(); } });
+    ta.setAttribute('autocorrect', 'off'); ta.spellcheck = false;
+    ta.addEventListener('input', () => { p.full = ta.value; save(); });
+    card.appendChild(ta);
+    const res = E('div', 'pe-res');
+    const btns = E('div', 'pe-btns');
+    const hint = E('button', 'ls-slow', '💡 Gợi ý');
+    hint.addEventListener('click', () => {
+      const h2 = l.s.map(r => r[1].split(/\s+/).map(w => w.replace(/^([^A-Za-z]*[A-Za-z])([A-Za-z'’-]*)/, (m, a, b) => a + b.replace(/[A-Za-z]/g, '_'))).join(' ')).join(' ');
+      res.innerHTML = ''; res.appendChild(E('div', 'pe-hint', '💡 ' + h2));
+    });
+    btns.appendChild(hint);
+    const show = E('button', 'ls-slow', '👀 Xem bản mẫu cả đoạn');
+    show.addEventListener('click', () => { res.innerHTML = ''; res.appendChild(fullModel(l, null)); });
+    const ck = E('button', 'btn-primary pe-ck', 'Kiểm tra cả đoạn');
+    ck.addEventListener('click', () => {
+      const v = ta.value.trim(); if (!v) { ta.focus(); return; }
+      res.innerHTML = ''; res.appendChild(fullModel(l, v));
+      updateFinish(l);
+    });
+    btns.appendChild(show); btns.appendChild(ck);
+    card.appendChild(btns);
+    card.appendChild(res);
+    return card;
+  }
+  // chấm cả đoạn: tách câu bạn viết, ghép với câu mẫu theo thứ tự và chấm từng câu
+  function fullModel(l, user) {
+    const p = P(l.id);
+    const box = E('div', 'pe-model');
+    let sents = [];
+    if (user) {
+      sents = user.replace(/\s+/g, ' ').match(/[^.!?]+[.!?]*/g) || [user];
+      sents = sents.map(x => x.trim()).filter(Boolean);
+    }
+    const scores = [];
+    l.s.forEach((r, i) => {
+      const line = E('div', 'pe-fline');
+      line.appendChild(E('div', 'pe-fvi', `${i + 1}. ${r[0]}`));
+      if (user) {
+        // chọn câu bạn viết khớp nhất trong khoảng gần vị trí tương ứng
+        let best = null;
+        for (let k = Math.max(0, i - 1); k <= Math.min(sents.length - 1, i + 1); k++) { const b = score(sents[k], l, i); if (!best || b.pct > best.pct) best = Object.assign(b, { text: sents[k] }); }
+        if (best) {
+          scores.push(best.pct);
+          if (p.sc[i] == null || best.pct > p.sc[i]) p.sc[i] = best.pct;
+          const u = E('div', 'pe-line'); u.appendChild(E('span', 'pe-lab', 'Bạn viết')); u.appendChild(colorUser(best.text, best.tb, best.poss)); u.appendChild(E('span', 'pe-badge ' + grade(best.pct), best.pct + '%'));
+          line.appendChild(u);
+          const m = E('div', 'pe-line'); m.appendChild(E('span', 'pe-lab', 'Bản mẫu')); m.appendChild(colorModel(r[1 + best.k], best.ta, best.poss));
+          const pl = E('button', 'pe-play', '▶'); pl.setAttribute('aria-label', 'Nghe câu mẫu'); pl.addEventListener('click', () => speak(r[1 + best.k], 0.85)); m.appendChild(pl);
+          line.appendChild(m);
+          if (best.pct < 100) {
+            const ok = E('button', 'ls-slow pe-accept', '✓ Câu này tôi dịch đúng ý');
+            ok.addEventListener('click', () => { p.sc[i] = 100; save(); ok.disabled = true; ok.textContent = '✓ Đã tính là đúng'; const bd = u.querySelector('.pe-badge'); if (bd) { bd.className = 'pe-badge ok'; bd.textContent = '100%'; } updateFinish(l); });
+            line.appendChild(ok);
+          }
+        } else { scores.push(0); const m = E('div', 'pe-line'); m.appendChild(E('span', 'pe-lab', 'Bản mẫu')); m.appendChild(E('span', 'pe-model-t pe-missing', r[1])); line.appendChild(m); }
+      } else {
+        const m = E('div', 'pe-line'); m.appendChild(E('span', 'pe-lab', 'Bản mẫu')); m.appendChild(E('span', 'pe-model-t', r[1]));
+        const pl = E('button', 'pe-play', '▶'); pl.addEventListener('click', () => speak(r[1], 0.85)); m.appendChild(pl);
+        line.appendChild(m);
+      }
+      box.appendChild(line);
+    });
+    if (user) {
+      save();
+      const avg = Math.round(scores.reduce((a, b) => a + b, 0) / Math.max(1, scores.length));
+      const g = E('div', 'pe-grade ' + grade(avg));
+      g.appendChild(E('b', null, avg + '%'));
+      g.appendChild(document.createTextNode(' ' + gradeText(avg)));
+      box.insertBefore(g, box.firstChild);
+    }
+    const all = E('button', 'ls-slow', '▶ Nghe cả đoạn mẫu');
+    all.addEventListener('click', () => speak(l.s.map(r => r[1]).join(' '), 0.85));
+    box.appendChild(all);
+    return box;
+  }
+
+  function finishBox(l) {
+    const box = E('div', 'tense-card pe-finish'); box.id = 'pe-finish';
+    fillFinish(box, l);
+    return box;
+  }
+  function updateFinish(l) { const b = document.getElementById('pe-finish'); if (b) fillFinish(b, l); const hm = root.querySelector('.vc-head-en'); if (hm) hm.textContent = `${LV[l.lv].code} ${LV[l.lv].vi} · ${l.s.length} câu · đã dịch ${doneCount(l)}/${l.s.length}`; }
+  function fillFinish(box, l) {
+    box.innerHTML = '';
+    const sc = lessonScore(l), d = doneCount(l);
+    box.appendChild(E('div', 'pe-fin-t', sc != null ? `🎉 Hoàn thành · điểm trung bình ${sc}%` : `Đã dịch ${d}/${l.s.length} câu`));
+    box.appendChild(vcBar(d / l.s.length));
+    const row = E('div', 'pe-btns');
+    if (d) {
+      const rs = E('button', 'ls-slow', '↺ Làm lại bài này');
+      rs.addEventListener('click', () => { if (!rs.dataset.sure) { rs.dataset.sure = '1'; rs.textContent = 'Bấm lần nữa để xoá bài làm'; return; } delete prog[l.id]; save(); renderLesson(); });
+      row.appendChild(rs);
+    }
+    const list = PA_LESSONS, nx = list[list.indexOf(l) + 1];
+    if (nx) { const b = E('button', 'btn-primary', `Bài tiếp: ${nx.title} →`); b.addEventListener('click', () => { st.lv = nx.lv; openLesson(nx); }); row.appendChild(b); }
+    box.appendChild(row);
+  }
+
+  document.querySelectorAll('nav.tabbar button').forEach(b => b.addEventListener('click', () => { if (b.dataset.page === 'page-para' && !st.cur) renderHome(); }));
+  renderHome();
 })();
 </script>
 </body>
