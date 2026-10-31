@@ -3028,6 +3028,15 @@
   :root[data-season="christmas"] #page-exercise .section-title::after{ background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3MCA4MCI+PHBhdGggZD0iTTM1IDQgYTEyIDEyIDAgMCAxIDEyIDEyIGExMiAxMiAwIDAgMSAtNCA5IGgxNCBhNyA3IDAgMCAxIDAgMTQgaC0xMCBsOCAyNiBhNyA3IDAgMCAxIC0xMyA1IGwtNyAtMTYgbC03IDE2IGE3IDcgMCAwIDEgLTEzIC01IGw4IC0yNiBoLTEwIGE3IDcgMCAwIDEgMCAtMTQgaDE0IGExMiAxMiAwIDAgMSAtNCAtOSBhMTIgMTIgMCAwIDEgMTIgLTEyWiIgZmlsbD0iI0M0NkEyQiIvPjxjaXJjbGUgY3g9IjMwIiBjeT0iMTQiIHI9IjIiIGZpbGw9IiMzQjFGMEUiLz48Y2lyY2xlIGN4PSI0MCIgY3k9IjE0IiByPSIyIiBmaWxsPSIjM0IxRjBFIi8+PHBhdGggZD0iTTMwIDIwIFEzNSAyNCA0MCAyMCIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxjaXJjbGUgY3g9IjM1IiBjeT0iMzMiIHI9IjIuNSIgZmlsbD0iI0UwMzEzMSIvPjxjaXJjbGUgY3g9IjM1IiBjeT0iNDIiIHI9IjIuNSIgZmlsbD0iIzJGOUU0NCIvPjxwYXRoIGQ9Ik0xNiAzMiBoNCBNNTAgMzIgaDQiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L3N2Zz4="); }
   :root[data-season="christmas"] #page-para .section-title::after{ background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MCA2MCI+PGcgc3Ryb2tlPSIjNzRDMEZDIiBzdHJva2Utd2lkdGg9IjMuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIj48cGF0aCBkPSJNMzAgNCBWNTYgTTcuNSAxNyBMNTIuNSA0MyBNNy41IDQzIEw1Mi41IDE3Ii8+PHBhdGggZD0iTTI0IDkgTDMwIDE0IEwzNiA5IE0yNCA1MSBMMzAgNDYgTDM2IDUxIE0xMCAyMyBMMTcgMjEgTDE1IDE0IE01MCAzNyBMNDMgMzkgTDQ1IDQ2IE0xMCAzNyBMMTcgMzkgTDE1IDQ2IE01MCAyMyBMNDMgMjEgTDQ1IDE0Ii8+PC9nPjwvc3ZnPg=="); }
   @media (prefers-reduced-motion: reduce){ .xm-deco i{ animation:none !important; } }
+  /* Ôn tập từ vựng (v104) */
+  .vr-chip{ position:relative; font-weight:700; }
+  .vr-dot{ display:inline-block; min-width:18px; margin-left:6px; padding:0 5px; border-radius:9px; background:var(--rust); color:var(--on-accent); font:700 11px/18px var(--font-mono); text-align:center; }
+  .vr-chip.active .vr-dot{ background:var(--card); color:var(--rust); }
+  .vr-how{ font-size:12.5px; line-height:1.5; color:var(--ink-soft); margin-top:10px; }
+  .vr-filter{ margin-top:12px; }
+  .vr-tag{ font:600 10.5px/1.5 var(--font-mono); padding:1px 7px; border-radius:6px; background:var(--paper-line); color:var(--ink-soft); }
+  .vr-tag.due{ background:var(--rust-light); color:var(--rust); }
+  .vr-tag.strong{ background:var(--moss-light); color:var(--moss); }
 </style>
 </head>
 <body>
@@ -3037,7 +3046,7 @@
   <div class="hw-deco" aria-hidden="true"><i class="hw-witch"></i><i class="hw-spider"></i><i class="hw-ghost"></i><i class="hw-caul"></i><i class="hw-candy"></i><i class="hw-cat"></i><i class="hw-skel"></i></div>
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v103</span>
+      <span class="hero-badge">EN ⇄ VI · v104</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice hero-season" id="season-btn" aria-label="Đổi giao diện theo mùa" title="Đổi giao diện theo mùa">🎃</button>
@@ -40891,7 +40900,27 @@ const vcIs = it => vcLearned.has(vcK(it));
 function vcSet(it, on) {
   if (on) vcLearned.add(vcK(it)); else vcLearned.delete(vcK(it));
   try { localStorage.setItem(VC_KEY, JSON.stringify([...vcLearned])); } catch (e) {}
+  if (on) { if (!vrData[vcK(it)]) { vrData[vcK(it)] = [0, vrToday()]; vrSave(); } }
+  else if (vrData[vcK(it)]) { delete vrData[vcK(it)]; vrSave(); }
 }
+/* ---------- Ôn tập: từ đã thuộc được nhắc lại theo lịch giãn cách 1 → 2 → 4 → 7 → 15 → 30 → 60 ngày ---------- */
+const VR_KEY = 'hoc-tieng-anh-vocab-review';
+const VR_GAP = [1, 2, 4, 7, 15, 30, 60];
+let vrData = {};   // key → [mức nhớ 0–7, ngày ôn gần nhất (số ngày kể từ 1970)]
+try { const o = JSON.parse(localStorage.getItem(VR_KEY) || '{}'); if (o && typeof o === 'object') vrData = o; } catch (e) {}
+const vrToday = () => Math.floor((Date.now() - new Date().getTimezoneOffset() * 60000) / 86400000);
+function vrSave() { try { localStorage.setItem(VR_KEY, JSON.stringify(vrData)); } catch (e) {} }
+const vrRec = it => vrData[vcK(it)] || [0, 0];            // từ đánh dấu từ bản cũ: coi như cần ôn ngay
+const vrLeft = it => { const [st, d] = vrRec(it); return d + VR_GAP[Math.min(st, VR_GAP.length - 1)] - vrToday(); };
+const vrDue = it => vrLeft(it) <= 0;
+const vrStrong = it => vrRec(it)[0] >= 4;
+function vrGrade(it, ok) {
+  if (!vcIs(it)) return;
+  const [st] = vrRec(it);
+  vrData[vcK(it)] = [ok ? Math.min(st + 1, VR_GAP.length) : 0, vrToday()];
+  vrSave();
+}
+const vrLearnedAll = () => VC_ALL.filter(vcIs);
 /* ---------- speaking score: say each word (or its example) and get a score ---------- */
 const VSP_KEY = 'hoc-tieng-anh-vocab-speak';
 let vspBest = {};
@@ -41138,7 +41167,7 @@ function vcSpeakSummary() {
 const vcTopic = id => VOCAB_TOPICS.find(t => t.id === id);
 const vcFold = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd');
 const vcRoot = document.getElementById('vc-root');
-const vc = { view: 'home', topic: null, unit: null, mode: 'list', filter: 'all', q: '', cards: null, quiz: null, lv: {}, pos: null, posLv: 0, posN: 60, cat: 'all', tst: 'all' };
+const vc = { view: 'home', topic: null, unit: null, mode: 'list', filter: 'all', q: '', cards: null, quiz: null, lv: {}, pos: null, posLv: 0, posN: 60, cat: 'all', tst: 'all', rev: false, revF: 'due', revN: 60 };
 const VC_POS_TABS = [['v', 'Động từ'], ['adj', 'Tính từ'], ['adv', 'Trạng từ'], ['n', 'Danh từ'], ['phr', 'Cụm từ'], ['other', 'Từ khác']];
 const vcPosOk = it => !vc.pos || (vc.pos === 'other' ? !['v', 'adj', 'adv', 'n', 'phr'].includes(it.pos) : it.pos === vc.pos);
 let vcFront = 'en';
@@ -41253,12 +41282,19 @@ function vcRenderHome() {
   // lọc theo loại từ
   const pc = lsEl('div', 'colloc-chips vc-pos-chips');
   pc.setAttribute('role', 'group'); pc.setAttribute('aria-label', 'Lọc theo loại từ');
+  const learnedAll = vrLearnedAll(), dueN = learnedAll.filter(vrDue).length;
+  const rc = lsEl('button', 'colloc-chip vr-chip' + (vc.rev ? ' active' : ''), '📚 Ôn tập · ' + learnedAll.length.toLocaleString('vi-VN'));
+  if (dueN) { const d = lsEl('span', 'vr-dot', String(dueN)); d.title = dueN + ' từ cần ôn hôm nay'; rc.appendChild(d); }
+  rc.setAttribute('aria-pressed', vc.rev ? 'true' : 'false');
+  rc.addEventListener('click', () => { vc.rev = !vc.rev; vc.pos = null; vc.revN = 60; vcRenderHome(); });
+  pc.appendChild(rc);
   VC_POS_TABS.forEach(([k, label]) => {
     const c = lsEl('button', 'colloc-chip' + (vc.pos === k ? ' active' : ''), label);
     c.setAttribute('aria-pressed', vc.pos === k ? 'true' : 'false');
     c.addEventListener('click', () => {
-      vc.pos = vc.pos === k ? null : k; vc.posLv = 0; vc.posN = 60;
-      pc.querySelectorAll('.colloc-chip').forEach((b, i) => { const on = VC_POS_TABS[i][0] === vc.pos; b.classList.toggle('active', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+      vc.pos = vc.pos === k ? null : k; vc.posLv = 0; vc.posN = 60; vc.rev = false;
+      rc.classList.remove('active'); rc.setAttribute('aria-pressed', 'false');
+      pc.querySelectorAll('.colloc-chip:not(.vr-chip)').forEach((b, i) => { const on = VC_POS_TABS[i][0] === vc.pos; b.classList.toggle('active', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
       vcRenderHomeBody();
     });
     pc.appendChild(c);
@@ -41313,6 +41349,7 @@ function vcRenderHomeBody() {
     body.appendChild(card);
     return;
   }
+  if (vc.rev) return vrRender(body);
   if (vc.pos) return vcRenderPos(body);
   // bộ lọc chủ đề: theo nhóm và theo tiến độ
   const stOf = t => { const got = vcCount(t.items); return got === 0 ? 'new' : got >= t.items.length ? 'done' : 'doing'; };
@@ -41400,6 +41437,79 @@ function vcRenderPos(body) {
       const from = vc.posN; vc.posN += 60;
       items.slice(from, vc.posN).forEach(it => card.appendChild(vcRow(it, true)));
       if (items.length > vc.posN) more.textContent = `Xem thêm (còn ${(items.length - vc.posN).toLocaleString('vi-VN')} từ)`; else more.remove();
+    });
+    body.appendChild(more);
+  }
+}
+
+/* ---------- Ôn tập: tất cả từ đã thuộc ---------- */
+function vrRender(body) {
+  const all = vrLearnedAll();
+  const due = all.filter(vrDue), strong = all.filter(vrStrong);
+  const head = lsEl('div', 'tense-card vc-pos-head vr-head');
+  const top = lsEl('div', 'vc-prog-top');
+  const nums = lsEl('div');
+  const n = lsEl('div', 'vc-prog-n');
+  n.appendChild(lsEl('b', null, '📚 Ôn tập'));
+  nums.appendChild(n);
+  nums.appendChild(lsEl('div', 'vc-prog-l', all.length
+    ? `${all.length.toLocaleString('vi-VN')} từ đã thuộc · ${due.length.toLocaleString('vi-VN')} từ cần ôn hôm nay · ${strong.length.toLocaleString('vi-VN')} từ nhớ lâu`
+    : 'Chưa có từ nào đã thuộc'));
+  top.appendChild(nums);
+  head.appendChild(top);
+  head.appendChild(vcBar(all.length ? strong.length / all.length : 0));
+  head.appendChild(lsEl('div', 'vr-how', 'Từ bạn bấm ✓ sẽ vào đây. App nhắc ôn lại sau 1, 2, 4, 7, 15, 30 rồi 60 ngày. Nhớ đúng thì lần sau giãn ra, quên thì ôn lại từ đầu.'));
+  if (!all.length) {
+    body.appendChild(head);
+    body.appendChild(lsEl('div', 'empty-state', 'Mở một chủ đề, bấm ✓ cạnh từ bạn đã thuộc (hoặc “✓ Đã thuộc” khi lật thẻ). Các từ đó sẽ hiện ở đây để ôn lại.'));
+    return;
+  }
+  const order = arr => arr.slice().sort((a, b) => vrLeft(a) - vrLeft(b));
+  const pick = () => { const d = order(due); return d.length ? d.slice(0, 20) : lsShuffle(all).slice(0, 20); };
+  const sub = due.length ? `${Math.min(20, due.length)} từ đến hạn ôn` : '20 từ đã thuộc ngẫu nhiên';
+  const acts = lsEl('div', 'vc-actions vc-pos-acts');
+  const rv = lsEl('button', 'btn-primary', due.length ? `🃏 Ôn ${Math.min(20, due.length)} từ đến hạn` : '🃏 Ôn thêm 20 từ');
+  rv.addEventListener('click', () => vcOpenUnit({ mix: true, rev: true, icon: '📚', vi: 'Ôn tập từ đã thuộc', en: sub, items: pick() }, 'cards'));
+  const qz = lsEl('button', 'btn-ghost', '📝 Kiểm tra');
+  qz.addEventListener('click', () => vcOpenUnit({ mix: true, rev: true, icon: '📝', vi: 'Kiểm tra từ đã thuộc', en: sub, items: pick() }, 'quiz'));
+  const wr = lsEl('button', 'btn-ghost', '✍️ Viết từ');
+  wr.addEventListener('click', () => vcOpenUnit({ mix: true, rev: true, icon: '✍️', vi: 'Viết lại từ đã thuộc', en: sub, items: pick() }, 'write'));
+  acts.appendChild(rv); acts.appendChild(qz); acts.appendChild(wr);
+  head.appendChild(acts);
+  const td = vrToday();
+  const fresh = all.filter(it => td - (vrData[vcK(it)] || [0, 0])[1] <= 7 && vrRec(it)[0] === 0);
+  const chips = lsEl('div', 'colloc-chips vr-filter');
+  const F = [['due', 'Cần ôn hôm nay', due], ['all', 'Tất cả', all], ['new', 'Mới thuộc', fresh], ['strong', 'Nhớ lâu', strong]];
+  F.forEach(([k, label, arr]) => {
+    const c = lsEl('button', 'colloc-chip' + (vc.revF === k ? ' active' : ''), `${label} · ${arr.length.toLocaleString('vi-VN')}`);
+    c.addEventListener('click', () => { vc.revF = k; vc.revN = 60; vcRenderHomeBody(); });
+    chips.appendChild(c);
+  });
+  head.appendChild(chips);
+  body.appendChild(head);
+  let items = (F.find(x => x[0] === vc.revF) || F[1])[2];
+  items = vc.revF === 'all' || vc.revF === 'strong' ? items.slice().sort((a, b) => (vrData[vcK(b)] || [0, 0])[1] - (vrData[vcK(a)] || [0, 0])[1]) : order(items);
+  if (!items.length) {
+    body.appendChild(lsEl('div', 'empty-state', vc.revF === 'due' ? '🎉 Hôm nay bạn đã ôn xong. Hẹn mai nhé!' : vc.revF === 'strong' ? 'Chưa có từ nào nhớ lâu. Ôn đúng 4 lần liên tiếp là từ được tính “nhớ lâu”.' : 'Chưa có từ nào.'));
+    return;
+  }
+  const card = lsEl('div', 'tense-card vc-card');
+  const add = it => {
+    const row = vcRow(it, true);
+    const left = vrLeft(it), st = vrRec(it)[0];
+    const tag = lsEl('span', 'vr-tag ' + (left <= 0 ? 'due' : st >= 4 ? 'strong' : ''), left <= 0 ? '⏰ cần ôn' : left === 1 ? 'ôn lại ngày mai' : `ôn lại sau ${left} ngày`);
+    tag.title = 'Mức nhớ ' + st + '/' + VR_GAP.length;
+    row.querySelector('.vc-line').appendChild(tag);
+    card.appendChild(row);
+  };
+  items.slice(0, vc.revN).forEach(add);
+  body.appendChild(card);
+  if (items.length > vc.revN) {
+    const more = lsEl('button', 'btn-ghost vc-pos-more', `Xem thêm (còn ${(items.length - vc.revN).toLocaleString('vi-VN')} từ)`);
+    more.addEventListener('click', () => {
+      const from = vc.revN; vc.revN += 60;
+      items.slice(from, vc.revN).forEach(add);
+      if (items.length > vc.revN) more.textContent = `Xem thêm (còn ${(items.length - vc.revN).toLocaleString('vi-VN')} từ)`; else more.remove();
     });
     body.appendChild(more);
   }
@@ -41521,7 +41631,7 @@ function vcRenderUnit() {
   const u = vc.unit;
   vc.view = 'unit';
   vcRoot.innerHTML = '';
-  const back = lsEl('button', 'gr-back', u.mix ? '← Tất cả chủ đề' : '← ' + u.topic.vi);
+  const back = lsEl('button', 'gr-back', u.rev ? '← Ôn tập' : u.mix ? '← Tất cả chủ đề' : '← ' + u.topic.vi);
   back.addEventListener('click', () => { if (u.mix) vcRenderHome(); else vcRenderTopicPage(); grScrollTop(); });
   vcRoot.appendChild(back);
   if (u.level && u.topic) vc.lv[u.topic.id] = u.level;
@@ -41608,7 +41718,7 @@ function vcRenderCard() {
     const box = lsEl('div', 'tense-card vc-done');
     box.appendChild(lsEl('div', 'vc-done-big', '🎉'));
     box.appendChild(lsEl('div', 'ls-verdict', `Xong ${C.deck.length} thẻ!`));
-    box.appendChild(lsEl('div', 'vc-done-sub', C.newly ? `Bạn vừa thuộc thêm ${C.newly} từ.` : 'Lật lại thêm vài lượt để nhớ lâu hơn nhé.'));
+    box.appendChild(lsEl('div', 'vc-done-sub', vc.unit.rev ? (C.again.size ? `Còn ${C.again.size} từ bạn quên, app sẽ nhắc lại vào ngày mai.` : 'Bạn nhớ hết! Các từ này được giãn lịch ôn ra xa hơn.') : C.newly ? `Bạn vừa thuộc thêm ${C.newly} từ.` : 'Lật lại thêm vài lượt để nhớ lâu hơn nhé.'));
     const btns = lsEl('div', 'ls-sum-btns');
     const again = lsEl('button', 'btn-ghost', 'Học lại');
     again.addEventListener('click', vcStartCards);
@@ -41649,14 +41759,16 @@ function vcRenderCard() {
   }
 
   const btns = lsEl('div', 'vc-card-btns');
-  const no = lsEl('button', 'btn-ghost', '↺ Chưa thuộc');
+  const R = !!vc.unit.rev;
+  const no = lsEl('button', 'btn-ghost', R ? '↺ Quên rồi' : '↺ Chưa thuộc');
   no.addEventListener('click', () => {
-    if (vcIs(it)) vcSet(it, false);
+    if (R) vrGrade(it, false);           // mục Ôn tập: giữ từ trong danh sách, ôn lại từ đầu
+    else if (vcIs(it)) vcSet(it, false);
     if (!C.again.has(it)) { C.again.add(it); C.deck.push(it); }   // gặp lại ở cuối lượt
     vcNextCard();
   });
-  const yes = lsEl('button', 'btn-primary', '✓ Đã thuộc');
-  yes.addEventListener('click', () => { if (!vcIs(it)) { vcSet(it, true); C.newly++; } vcNextCard(); });
+  const yes = lsEl('button', 'btn-primary', R ? '✓ Vẫn nhớ' : '✓ Đã thuộc');
+  yes.addEventListener('click', () => { if (!vcIs(it)) { vcSet(it, true); C.newly++; } else if (!C.again.has(it)) vrGrade(it, true); vcNextCard(); });
   btns.appendChild(no); btns.appendChild(yes);
   body.appendChild(btns);
 }
@@ -41756,6 +41868,7 @@ function vcRenderQuiz() {
       if (q.picked) return;
       q.picked = o;
       if (o === it) Q.score++; else Q.wrong.push(it);
+      vrGrade(it, o === it);
       vcRenderQuiz();
       speak(it.w, 0.8);
     });
