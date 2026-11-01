@@ -2724,6 +2724,95 @@
   .mz-airtip{ fill:none; stroke:var(--moss); stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; }
   .mz-lar{ fill:none; stroke:var(--ink-soft); stroke-width:2.4; opacity:.6; }
   .mz-vib{ fill:none; stroke:var(--moss); stroke-width:2.4; stroke-linecap:round; }
+  /* v116 phát âm */
+  .mz-anim .mz-vib:not(.mz-off){ animation:mzVib .35s linear infinite; transform-box:fill-box; transform-origin:center; }
+  .mz-anim .mz-air{ animation:mzAir .9s linear infinite; }
+  @keyframes mzVib{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-1.5px); } }
+  @keyframes mzAir{ to{ stroke-dashoffset:-22; } }
+  @media (prefers-reduced-motion: reduce){ .mz-anim .mz-vib, .mz-anim .mz-air{ animation:none; } }
+  .mz-replay{ display:block; margin:4px auto 0; }
+  .pr-score-l{ font:700 12px var(--font-body); opacity:.85; }
+  .pr-alt{ font-size:12px; color:var(--ink-soft); margin-top:6px; line-height:1.45; }
+  .pr-info{ margin-top:8px; }
+  .p2-home{ display:flex; flex-direction:column; gap:12px; margin-bottom:8px; }
+  .p2-prog{ padding:14px 16px; }
+  .p2-accent{ display:flex; gap:6px; flex-wrap:wrap; }
+  .p2-stline{ font-size:12px; color:var(--ink-soft); margin-top:8px; line-height:1.5; }
+  .p2-note{ font-size:12px; color:var(--ink-soft); line-height:1.5; margin-top:8px; }
+  .p2-weak{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-top:10px; font-size:12.5px; color:#B27A00; }
+  .p2-weak-b{ border:1px solid color-mix(in srgb, #F5B700 55%, var(--paper-line)); background:var(--card); color:var(--ink); border-radius:8px; padding:2px 9px; font:700 13px var(--font-mono); cursor:pointer; }
+  .p2-secs{ display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:8px; }
+  .p2-secb{ display:flex; align-items:center; gap:10px; text-align:left; padding:12px 14px; border-radius:14px; border:1px solid var(--paper-line); background:var(--card); color:var(--ink); cursor:pointer; }
+  .p2-secb:hover{ border-color:var(--rust); }
+  .p2-sec-no{ font:800 12px var(--font-mono); color:var(--ink-soft); }
+  .p2-sec-ic{ min-width:44px; height:44px; border-radius:12px; display:inline-flex; align-items:center; justify-content:center; background:var(--rust-light); color:var(--rust); font:800 16px var(--font-display); }
+  .p2-sec-tx{ display:flex; flex-direction:column; gap:2px; }
+  .p2-sec-tx b{ font:800 14.5px var(--font-display); }
+  .p2-sec-tx span{ font-size:12px; color:var(--ink-soft); }
+  .ipa-tile.p2-st-seen{ box-shadow:inset 0 -3px 0 color-mix(in srgb, var(--ink-soft) 45%, transparent); }
+  .ipa-tile.p2-st-practiced{ box-shadow:inset 0 -3px 0 var(--rust); }
+  .ipa-tile.p2-st-redo{ box-shadow:inset 0 -3px 0 #F5B700; }
+  .ipa-tile.p2-st-master{ box-shadow:inset 0 -3px 0 var(--moss); }
+  .p2-sst{ display:flex; flex-direction:column; gap:2px; padding:8px 12px; border-radius:10px; background:var(--paper); border:1px solid var(--paper-line); font-size:12.5px; color:var(--ink-soft); margin:10px 0; }
+  .p2-sst b{ color:var(--ink); font-size:13.5px; }
+  .p2-sst.p2-st-master b{ color:var(--moss); } .p2-sst.p2-st-redo b{ color:#B27A00; }
+  .p2-step .ipa-d-h, .p2-step-h{ color:var(--rust); }
+  .p2-layers button{ flex:1 1 auto; }
+  .p2-l1{ border-color:var(--moss) !important; color:var(--moss) !important; }
+  .p2-us{ font-size:12.5px; line-height:1.5; padding:8px 10px; border-radius:10px; background:color-mix(in srgb, var(--rust) 8%, transparent); margin-top:8px; color:var(--ink); }
+  .p2-us.gb{ background:var(--paper); color:var(--ink-soft); }
+  .p2-con{ padding:12px 14px; margin-top:8px; }
+  .p2-con-h{ display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; font-size:14px; }
+  .p2-pairs{ display:flex; flex-direction:column; gap:6px; }
+  .p2-pair{ display:grid; grid-template-columns:1fr auto 1fr; gap:6px; align-items:center; }
+  .p2-pw{ padding:8px; border-radius:10px; border:1px solid var(--paper-line); background:var(--paper); color:var(--ink); font:700 15px var(--font-body); cursor:pointer; }
+  .p2-pw.alt{ background:var(--card); }
+  .p2-pw:hover{ border-color:var(--rust); }
+  .p2-cmp{ width:36px; height:36px; border-radius:50%; border:1px solid var(--rust); background:var(--rust-light); color:var(--rust); font-weight:800; cursor:pointer; }
+  .p2-testbox{ margin-top:10px; display:flex; flex-direction:column; gap:10px; }
+  .p2-q{ text-align:center; }
+  .p2-q-prompt{ font:700 20px/1.4 var(--font-display); color:var(--ink); margin:6px 0; }
+  .p2-play{ width:72px; height:72px; font-size:28px; }
+  .p2-ok{ color:var(--moss); } .p2-bad{ color:var(--mark); }
+  .p2-acts{ margin-top:12px; }
+  .p2-pg-ic{ font:800 14px var(--font-mono) !important; }
+  .p2-sec{ padding:14px 16px; }
+  .p2-srow{ display:flex; flex-wrap:wrap; align-items:center; gap:8px; padding:6px 0; border-bottom:1px solid var(--paper-line); }
+  .p2-sw{ min-width:120px; font-size:15px; }
+  .p2-stress{ display:flex; flex-wrap:wrap; gap:4px; align-items:center; }
+  .p2-syl{ border:1px solid var(--paper-line); background:var(--paper); color:var(--ink-soft); border-radius:8px; padding:4px 8px; font:600 13.5px var(--font-body); cursor:pointer; }
+  .p2-syl.on{ background:var(--rust); border-color:var(--rust); color:var(--on-accent, #fff); font-weight:800; }
+  .p2-stress.big .p2-syl{ font-size:16px; padding:6px 10px; }
+  .p2-syl-all{ border:0; background:none; color:var(--rust); font:700 13px var(--font-body); cursor:pointer; }
+  .p2-sdb{ margin:10px 0; }
+  .p2-ss{ padding:10px 0; border-bottom:1px solid var(--paper-line); }
+  .p2-ss-vi{ font-size:12.5px; color:var(--ink-soft); margin-bottom:6px; }
+  .p2-ss-row{ margin:6px 0; }
+  .p2-ss-s{ display:flex; flex-wrap:wrap; gap:6px; font:600 16px var(--font-display); color:var(--ink-soft); }
+  .p2-ss-s .on{ color:var(--rust); font-weight:800; }
+  .p2-ss-why{ font-size:12.5px; color:var(--ink); }
+  .p2-in{ display:grid; grid-template-columns:62px 1fr auto; gap:10px; align-items:center; padding:8px 0; border-bottom:1px solid var(--paper-line); }
+  .p2-in-ar{ font:800 18px var(--font-display); color:var(--rust); text-align:center; }
+  .p2-in-s{ font:600 15px var(--font-body); color:var(--ink); }
+  .p2-in-why{ font-size:12px; color:var(--ink-soft); }
+  .p2-lchips{ display:flex; flex-direction:column; gap:6px; margin:8px 0 4px; }
+  .p2-lrow{ display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+  .p2-llab{ font:700 12px var(--font-body); color:var(--ink-soft); margin-right:2px; }
+  .p2-lchip{ border:1px solid var(--paper-line); background:var(--card); color:var(--ink); border-radius:999px; padding:4px 10px; font:600 12.5px var(--font-body); cursor:pointer; }
+  .p2-lchip.fav{ border-color:color-mix(in srgb, #E0A800 60%, var(--paper-line)); }
+  .p2-fav{ background:none; border:0; font-size:20px; color:var(--ink-soft); cursor:pointer; margin-left:6px; vertical-align:middle; }
+  .p2-fav.on{ color:#E0A800; }
+  .p2-hide{ display:flex; gap:6px; margin:6px 0; }
+  .p2-hide-ipa .pr-ipa-row, .p2-hide-vi .pron-meaning{ filter:blur(6px); user-select:none; }
+  .p2-usline{ font-size:12.5px; color:var(--rust); margin:4px 0; }
+  .p2-usline:empty{ display:none; }
+  .p2-more, .p2-favs{ margin-top:8px; }
+  .p2-guide{ padding:10px 14px; margin-top:10px; }
+  .p2-guide summary{ cursor:pointer; font:700 13px var(--font-body); }
+  .p2-lknote{ margin:0 0 12px; }
+  .p2-phr summary{ cursor:pointer; font:700 12px var(--font-body); color:var(--ink-soft); }
+  .p2-phr .p2-lrow{ margin-top:6px; }
+
   .mz-off{ stroke:var(--ink-soft); opacity:.45; }
   .mz-legend{ margin:6px auto 0; max-width:330px; font-size:12.5px; line-height:1.5; text-align:center; }
   .mz-cap{ display:block; color:var(--rust); font-weight:600; }
@@ -3586,7 +3675,7 @@
   <div class="hw-deco" aria-hidden="true"><i class="hw-witch"></i><i class="hw-spider"></i><i class="hw-ghost"></i><i class="hw-caul"></i><i class="hw-candy"></i><i class="hw-cat"></i><i class="hw-skel"></i></div>
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v115</span>
+      <span class="hero-badge">EN ⇄ VI · v116</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice hero-season" id="season-btn" aria-label="Đổi giao diện theo mùa" title="Đổi giao diện theo mùa">🎃</button>
@@ -3682,7 +3771,7 @@
   <!-- PAGE 2: PRONUNCIATION -->
   <section class="page" id="page-pron">
     <div class="section-title">Luyện phát âm</div>
-    <div class="section-sub">Học bảng phiên âm IPA 44 âm, nghe giọng chuẩn, xem trọng âm và mẹo phát âm, rồi nói theo để app chấm điểm.</div>
+    <div class="section-sub">Học 44 âm IPA (âm mẫu và âm mô phỏng), khẩu hình, trọng âm, nối âm và ngữ điệu; nói vào micro để xem độ khớp nhận diện giọng nói.</div>
 
     <div id="pron-home">
     <div class="pron-input-row">
@@ -14938,7 +15027,7 @@ function prTips(ipa) {
 let prRepeatToken = 0;
 function prSay(text, rate, voice) {
   prRepeatToken++;
-  if (!voice) return speak(text, rate || prRate);
+  if (!voice) { const av = typeof prAccentVoice === 'function' ? prAccentVoice() : null; if (!av) return speak(text, rate || prRate); voice = av; }
   if (!('speechSynthesis' in window)) return null;
   const u = new SpeechSynthesisUtterance(text);
   u.voice = voice; u.lang = (voice.lang || 'en-US').replace('_', '-'); u.rate = rate || prRate;
@@ -15016,7 +15105,7 @@ function prScore(target, heard) {
   const { ta } = lsMatch(a, b);
   return { score: ta.size / a.length, hit: ta, a };
 }
-function prSpeakBox(target) {
+function prSpeakBox(target, onScore) {
   const box = prEl('div', 'pr-speak');
   box.appendChild(prEl('div', 'pr-sec-title', 'Luyện nói'));
   const row = prEl('div', 'pr-speak-btns');
@@ -15027,11 +15116,11 @@ function prSpeakBox(target) {
   const out = prEl('div', 'pr-speak-out');
   const recOut = prEl('div', 'pr-rec-out');
   box.appendChild(out); box.appendChild(recOut);
-  mic.addEventListener('click', () => prListen(target, mic, out));
+  mic.addEventListener('click', () => prListen(target, mic, out, onScore));
   rec.addEventListener('click', () => prToggleRecord(target, rec, recOut));
   return box;
 }
-function prListen(target, btn, out) {
+function prListen(target, btn, out, onScore) {
   if (prRecog) { try { prRecog.abort(); } catch (e) {} prRecog = null; }
   if (!PR_SR) {
     out.className = 'pr-speak-out warn';
@@ -15050,12 +15139,13 @@ function prListen(target, btn, out) {
   r.onresult = ev => {
     got = true;
     const res = ev.results[0];
-    let best = null;
-    for (let i = 0; i < res.length; i++) {
-      const sc = prScore(target, res[i].transcript);
-      if (!best || sc.score > best.score) best = { ...sc, heard: res[i].transcript };
-    }
-    prShowScore(out, best);
+    // điểm chính = bản nhận diện đầu tiên (máy tin nhất); các phương án khác chỉ để tham khảo
+    const first = { ...prScore(target, res[0].transcript), heard: res[0].transcript };
+    let best = first;
+    for (let i = 1; i < res.length; i++) { const sc = prScore(target, res[i].transcript); if (sc.score > best.score) best = { ...sc, heard: res[i].transcript }; }
+    prShowScore(out, first);
+    if (best !== first && best.score > first.score) out.appendChild(prEl('div', 'pr-alt', `Nếu tính cả các phương án khác máy đoán, độ khớp cao nhất là ${Math.round(best.score * 100)}% ("${best.heard}"). App lấy phương án đầu tiên làm kết quả chính.`));
+    if (onScore) try { onScore(Math.round(first.score * 100)); } catch (e) {}
   };
   r.onerror = ev => {
     got = true;
@@ -15075,6 +15165,7 @@ function prShowScore(out, best) {
   out.className = 'pr-speak-out ' + (pct >= 90 ? 'ok' : pct >= 60 ? 'mid' : 'bad');
   const head = prEl('div', 'pr-score');
   head.appendChild(prEl('span', 'pr-score-n', pct + '%'));
+  head.appendChild(prEl('span', 'pr-score-l', 'độ khớp nhận diện giọng nói'));
   head.appendChild(prEl('span', 'pr-score-msg', pct >= 90 ? 'Tuyệt vời! Máy nghe rất rõ 🎉' : pct >= 60 ? 'Khá tốt! Luyện thêm các từ màu đỏ.' : 'Thử lại nhé: đọc chậm, rõ từng âm cuối.'));
   out.appendChild(head);
   if (best.a.length > 1) {
@@ -15083,6 +15174,11 @@ function prShowScore(out, best) {
     out.appendChild(words);
   }
   out.appendChild(prEl('div', 'pr-heard', 'Máy nghe được: "' + best.heard + '"'));
+  const info = prEl('details', 'sd-info pr-info');
+  info.appendChild(prEl('summary', null, 'ⓘ Con số này là gì?'));
+  info.appendChild(prEl('p', null, 'Độ khớp nhận diện = máy nghe ra bao nhiêu từ đúng so với câu mẫu. Đây không phải đánh giá phát âm: máy có thể đoán đúng từ dù bạn đọc sai âm /θ/, /ʃ/…, hoặc nghe nhầm khi bạn đọc đúng; nó cũng không kiểm tra trọng âm và ngữ điệu.'));
+  info.appendChild(prEl('p', null, 'Để tự đánh giá phát âm: ghi âm, nghe lại và so với giọng mẫu, chú ý âm cuối, trọng âm và nhịp.'));
+  out.appendChild(info);
 }
 async function prToggleRecord(target, btn, out) {
   if (prRec) { try { prRec.stop(); } catch (e) {} return; }
@@ -15138,7 +15234,11 @@ function renderPronResult(rawText, hint) {
   if (words.length === 1) {
     const word = text.replace(/[^A-Za-z'\- ]/g, '') || text;
     const info = Object.assign({}, prLookup(word), hint || {});
-    left.appendChild(prEl('div', 'pron-word', word));
+    const wl = prEl('div', 'pron-word', word);
+    const fv = prEl('button', 'p2-fav' + (prFav.some(x => x.toLowerCase() === word.toLowerCase()) ? ' on' : ''), prFav.some(x => x.toLowerCase() === word.toLowerCase()) ? '★' : '☆');
+    fv.setAttribute('aria-label', 'Yêu thích'); fv.addEventListener('click', () => { const on = prFavToggle(word); fv.classList.toggle('on', on); fv.textContent = on ? '★' : '☆'; });
+    wl.appendChild(fv);
+    left.appendChild(wl);
     const ipaRow = prEl('div', 'pr-ipa-row');
     const ipaEl = prEl('span', 'pron-ipa', info.ipa || 'Đang tra phiên âm…');
     ipaRow.appendChild(ipaEl);
@@ -15148,6 +15248,12 @@ function renderPronResult(rawText, hint) {
     card.appendChild(top);
     const mean = prEl('div', 'pron-meaning', info.vi || 'Đang tra nghĩa…');
     card.appendChild(mean);
+    const hide = prEl('div', 'p2-hide');
+    [['ipa', '🙈 Ẩn IPA', '.pr-ipa-row'], ['vi', '🙈 Ẩn nghĩa', '.pron-meaning']].forEach(([k, t, sel]) => { const b = prEl('button', 'sd-tg', t); b.addEventListener('click', () => { const on = card.classList.toggle('p2-hide-' + k); b.classList.toggle('on', on); b.textContent = (on ? '👁 Hiện ' : '🙈 Ẩn ') + (k === 'ipa' ? 'IPA' : 'nghĩa'); }); hide.appendChild(b); });
+    card.insertBefore(hide, mean);
+    const usLine = prEl('div', 'p2-usline'); card.appendChild(usLine);
+    const sdb = stressEl(word, true);
+    if (sdb) { const sw = prEl('div', 'p2-sdb'); sw.appendChild(prEl('div', 'pr-sec-title', 'Trọng âm (đã kiểm tra) · chạm từng âm tiết để nghe')); sw.appendChild(sdb); card.appendChild(sw); }
     const stressBox = prEl('div', 'pr-stress');
     const tipsBox = prEl('div', 'pr-tips');
     card.appendChild(stressBox);
@@ -15159,12 +15265,13 @@ function renderPronResult(rawText, hint) {
     const fillIpa = ipa => {
       ipaEl.textContent = ipa || 'Chưa tìm thấy phiên âm';
       stressBox.innerHTML = '';
-      const st = prStress(ipa);
+      usLine.textContent = ipa && prAccent === 'us' && prToUS(ipa) !== ipa ? `🇺🇸 Giọng Mỹ (gần đúng): ${prToUS(ipa)}` + (/r/i.test(word) ? ' · chữ r trong từ thường được đọc thành /r/' : '') : '';
+      const st = sdb ? null : prStress(ipa);
       if (st && st.total > 1) {
         const dots = prEl('span', 'pr-dots');
         for (let i = 1; i <= st.total; i++) dots.appendChild(prEl('span', i === st.at ? 'on' : null));
         stressBox.appendChild(dots);
-        stressBox.appendChild(prEl('span', null, `Trọng âm rơi vào âm tiết thứ ${st.at} (trong ${st.total} âm tiết), phần đứng sau dấu ˈ. Đọc phần đó to và dài hơn.`));
+        stressBox.appendChild(prEl('span', null, `Trọng âm (ước lượng từ phiên âm): âm tiết thứ ${st.at} trong ${st.total} âm tiết, phần đứng sau dấu ˈ. Đọc phần đó to và dài hơn.`));
       } else if (st && st.total === 1) {
         stressBox.appendChild(prEl('span', null, 'Từ một âm tiết: đọc gọn, dứt khoát và nhớ âm cuối.'));
       }
@@ -15193,7 +15300,7 @@ function renderPronResult(rawText, hint) {
     const chipsTitle = prEl('div', 'pr-sec-title', 'Chạm từng từ để nghe');
     const chips = prEl('div', 'pr-words');
     let online = 0;
-    words.slice(0, 20).forEach(raw => {
+    const addChip = raw => {
       const w = raw.replace(/^[^A-Za-z']+|[^A-Za-z']+$/g, '');
       if (!w) return;
       const chip = prEl('button', 'pr-word');
@@ -15207,9 +15314,13 @@ function renderPronResult(rawText, hint) {
       }
       chip.addEventListener('click', () => prSay(w));
       chips.appendChild(chip);
-    });
+    };
+    words.slice(0, 20).forEach(addChip);
     card.appendChild(chipsTitle);
     card.appendChild(chips);
+    if (words.length > 20) { const more = prEl('button', 'btn-ghost p2-more', `Xem tiếp ${words.length - 20} từ sau`); more.addEventListener('click', () => { words.slice(20).forEach(addChip); more.remove(); }); card.appendChild(more); }
+    card.appendChild(prSentGuide(text));
+    const fv = prEl('button', 'btn-ghost p2-favs', prFav.includes(text) ? '★ Đã lưu yêu thích' : '☆ Lưu câu này'); fv.addEventListener('click', () => { const on = prFavToggle(text); fv.textContent = on ? '★ Đã lưu yêu thích' : '☆ Lưu câu này'; }); card.appendChild(fv);
     card.appendChild(prSpeakBox(text));
     pronResult.appendChild(card);
   }
@@ -15217,6 +15328,7 @@ function renderPronResult(rawText, hint) {
 
 function prLoad(text, hint) {
   pronInput.value = text;
+  if (!hint && typeof prHistAdd === 'function') prHistAdd(text);
   renderPronResult(text, hint);
   prSay(text);
   try { pronResult.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) {}
@@ -15717,9 +15829,9 @@ function prIpaCard() {
 function ipaProg() {
   const el = document.getElementById('pr-set-prog');
   if (!el) return;
-  const n = IPA_SOUNDS.length, got = ipaGot();
+  const n = IPA_SOUNDS.length, got = ipaMastered();
   el.innerHTML = '';
-  el.appendChild(prEl('span', null, `Đã thuộc ${got}/${n}`));
+  el.appendChild(prEl('span', null, `Thành thạo ${got}/${n}`));
   const bar = prEl('span', 'vc-bar'); const fill = prEl('span'); fill.style.width = (got / n * 100) + '%'; bar.appendChild(fill);
   bar.style.flex = '1'; el.appendChild(bar);
 }
@@ -15739,7 +15851,7 @@ function prOpenIpa() {
   head.appendChild(prEl('div', 'vc-head-icon ipa-head-icon', '/æ/'));
   const hm = prEl('div', 'vc-head-meta');
   hm.appendChild(prEl('div', 'vc-head-vi', 'Bảng phiên âm IPA'));
-  hm.appendChild(prEl('div', 'vc-head-en', '44 âm · giọng Anh-Anh, giống phiên âm trong app'));
+  hm.appendChild(prEl('div', 'vc-head-en', '44 âm · mô hình IPA tham chiếu Anh-Anh (không đọc /r/ cuối âm tiết)' + (prAccent === 'us' ? ' · có ghi chú giọng Mỹ' : '')));
   const pr = prEl('div', 'vc-head-prog'); pr.id = 'pr-set-prog'; hm.appendChild(pr);
   head.appendChild(hm); v.appendChild(head);
   ipaProg();
@@ -15775,7 +15887,8 @@ function prOpenIpa() {
   });
   v.appendChild(chips);
   const acts = prEl('div', 'pr-acts');
-  acts.appendChild(prEl('span', 'pr-acts-hint', 'Chạm vào một âm để nghe và xem cách phát âm, mẹo và 3 từ ví dụ'));
+  acts.appendChild(prEl('span', 'pr-acts-hint', 'Chạm vào một âm để học theo 5 bước: nghe âm mẫu → từ ví dụ → phân biệt → luyện trong câu → kiểm tra'));
+  const lg = prEl('div', 'p2-stline'); lg.textContent = Object.keys(IPA_ST).map(k => IPA_ST[k][1] + ' ' + IPA_ST[k][0]).join(' · '); v.appendChild(lg);
   v.appendChild(acts);
 
   const wrap = prEl('div', 'ipa-wrap');
@@ -15792,7 +15905,8 @@ function prOpenIpa() {
       wrap.appendChild(gh);
       const grid = prEl('div', 'ipa-grid ipa-grid-' + g.id);
       list.forEach(s => {
-        const t = prEl('button', 'ipa-tile' + (prDone.has(ipaKey(s[0])) ? ' learned' : ''));
+        const t = prEl('button', 'ipa-tile p2-st-' + ipaSt(s[0]) + (ipaSt(s[0]) === 'master' ? ' learned' : ''));
+        t.title = IPA_ST[ipaSt(s[0])][0];
         t.dataset.sym = s[0];
         t.setAttribute('aria-label', 'Âm /' + s[0] + '/ như trong ' + ipaPlain(s[5][0][0]));
         t.appendChild(prEl('span', 'ipa-sym', s[0]));
@@ -15816,7 +15930,7 @@ function prOpenIpa() {
 
 // detail sheet for one sound
 function ipaRefreshTile(sym) {
-  document.querySelectorAll('.ipa-tile').forEach(t => { if (t.dataset.sym === sym) t.classList.toggle('learned', prDone.has(ipaKey(sym))); });
+  document.querySelectorAll('.ipa-tile').forEach(t => { if (t.dataset.sym === sym) { Object.keys(IPA_ST).forEach(k => t.classList.remove('p2-st-' + k)); t.classList.add('p2-st-' + ipaSt(sym)); t.classList.toggle('learned', ipaSt(sym) === 'master'); t.title = IPA_ST[ipaSt(sym)][0]; } });
   ipaProg();
 }
 /* ---------- Hình minh hoạ khẩu hình cho từng âm IPA ---------- */
@@ -15911,7 +16025,11 @@ function mzFig(cfg, opts) {
   g += '<path class="mz-teeth" d="M 153 116 L 161 113 L 162 125 L 154 126 Z"/>';
   // lưỡi
   if (opts.ghost) g += '<path class="mz-tongue mz-ghost" d="' + opts.ghost + '"/>';
-  g += '<path class="mz-tongue" d="' + mzTongue(cfg.f, cfg.h, cfg.tip, cfg.tipX) + '"/>';
+  const tD = mzTongue(cfg.f, cfg.h, cfg.tip, cfg.tipX);
+  // chuyển động: lưỡi đi từ vị trí nghỉ tới vị trí của âm (nguyên âm đôi: trượt qua lại giữa hai vị trí)
+  const anim = opts.loop ? '<animate attributeName="d" values="' + tD + ';' + tD + ';' + opts.loop + ';' + opts.loop + ';' + tD + '" keyTimes="0;0.15;0.5;0.8;1" dur="2.6s" repeatCount="indefinite"/>'
+    : opts.from ? '<animate attributeName="d" from="' + opts.from + '" to="' + tD + '" dur="0.7s" begin="0.15s" fill="freeze"/>' : '';
+  g += '<path class="mz-tongue" d="' + (opts.from ? opts.from : tD) + '">' + anim + '</path>';
   if (opts.arrow) g += '<path class="mz-arrow" d="' + opts.arrow + '"/>';
   // luồng hơi
   if (nasal) g += '<path class="mz-air" d="M 104 72 H 166"/><path class="mz-airtip" d="M 170 68 l 7 4 l -7 4"/>';
@@ -15940,25 +16058,25 @@ function ipaMouthEl(sym) {
   let svg = '', cap = '', note = '';
   if (MZ_C[sym]) {
     const c = MZ_C[sym];
-    svg = mzFig({ f: c[0], h: c[1], tip: c[2], tipX: c[3], lips: c[4], mark: c[5], flags: c[6] });
+    svg = mzFig({ f: c[0], h: c[1], tip: c[2], tipX: c[3], lips: c[4], mark: c[5], flags: c[6] }, { from: mzTongue(0.5, 0.3, 122, 146) });
     cap = c[7] + ' · ' + c[8];
-    note = c[6].indexOf('v') >= 0 ? 'Đặt tay lên cổ họng sẽ thấy rung.' : 'Đặt tay lên cổ họng: không rung.';
+    note = c[6].indexOf('v') >= 0 ? 'Hữu thanh: dây thanh rung (đường sóng). Đặt tay lên cổ họng sẽ thấy rung.' : 'Vô thanh: chỉ có luồng hơi (nét đứt), cổ họng không rung.';
   } else if (MZ_D[sym]) {
     const k1 = MZ_D[sym][0], k2 = MZ_D[sym][1], v1 = MZ_V[k1], v2 = MZ_V[k2];
     const x1 = MZ_HX + v1[0] * MZ_HXR, y1 = MZ_HY - v1[1] * MZ_HYR;
     const x2 = MZ_HX + v2[0] * MZ_HXR, y2 = MZ_HY - v2[1] * MZ_HYR;
     svg = mzFig({ f: v1[0], h: v1[1], tip: 118, lips: v1[2], mark: null, flags: 'v' },
-                { ghost: mzTongue(v2[0], v2[1], 118), arrow: mzArrow(x1 + 4, y1 - 8, x2 + 4, y2 - 8) });
+                { ghost: mzTongue(v2[0], v2[1], 118), arrow: mzArrow(x1 + 4, y1 - 8, x2 + 4, y2 - 8), loop: mzTongue(v2[0], v2[1], 118) });
     cap = 'lưỡi trượt từ vị trí /' + k1 + '/ sang /' + k2 + '/';
     note = 'Nét đứt là vị trí lưỡi lúc kết thúc; môi ' +
            (v2[2] === 'round' ? 'tròn dần lại' : v2[2] === 'spread' ? 'kéo ngang dần' : 'thả lỏng dần') + '.';
   } else if (MZ_V[sym]) {
     const v = MZ_V[sym];
-    svg = mzFig({ f: v[0], h: v[1], tip: 118, lips: v[2], mark: null, flags: 'v' });
+    svg = mzFig({ f: v[0], h: v[1], tip: 118, lips: v[2], mark: null, flags: 'v' }, { from: mzTongue(0.5, 0.45, 118) });
     cap = 'lưỡi ' + v[3] + ' · ' + v[4] + ' · môi ' + MZ_LIPVI[v[2]];
     note = 'Nguyên âm luôn rung dây thanh.';
   } else return null;
-  const wrap = prEl('div', 'mz-wrap');
+  const wrap = prEl('div', 'mz-wrap mz-anim');
   wrap.innerHTML = svg;
   const lg = prEl('div', 'mz-legend');
   lg.appendChild(prEl('span', 'mz-cap', cap));
@@ -15975,6 +16093,7 @@ const IPA_SAY = {
   'eɪ': 'ay', 'aɪ': 'eye', 'ɔɪ': 'oy', 'aʊ': 'ow', 'əʊ': 'oh', 'ɪə': 'ear', 'eə': 'air'
 };
 function ipaSoundOrSay(sym) {
+  try { if (typeof ipaPlayRec === 'function' && ipaPlayRec(sym)) return; } catch (e) {}   /* lớp 1: bản ghi giọng người (nếu có) */
   ipaUnlock();
   try { if (ipaPlayWav(sym)) return; } catch (e) {}     /* iPhone + mọi máy: phát file WAV tự tạo */
   try { if (ipaPlaySound(sym)) return; } catch (e) {}   /* dự phòng: Web Audio trực tiếp */
@@ -16302,13 +16421,16 @@ function ipaShow(sym, silent) {
   meta.appendChild(tags);
   top.appendChild(meta);
   body.appendChild(top);
+  ipaStepListen(s, body);
   const how = prEl('div', 'ipa-d-sec');
-  how.appendChild(prEl('div', 'ipa-d-h', '👄 Cách phát âm'));
+  const hh = prEl('div', 'ipa-d-h', '👄 Khẩu hình: cách đặt lưỡi, môi và luồng hơi');
+  how.appendChild(hh);
   const mz = ipaMouthEl(s[0]);
-  if (mz) how.appendChild(mz);
+  if (mz) { how.appendChild(mz); const rp = prEl('button', 'sd-link mz-replay', '↻ Xem lại chuyển động'); rp.addEventListener('click', () => { const n2 = ipaMouthEl(s[0]); if (n2) { how.querySelector('.mz-wrap').replaceWith(n2); } }); how.appendChild(rp); }
   how.appendChild(prEl('p', null, s[3]));
   body.appendChild(how);
   body.appendChild(prEl('div', 'pr-set-tip', '💡 ' + s[4]));
+  body.appendChild(prEl('div', 'ipa-d-h p2-step-h', 'Bước 2 · Nghe từ ví dụ và bắt chước'));
   const card = prEl('div', 'tense-card vc-card ipa-d-ex');
   s[5].forEach(([w, ipa, vi]) => {
     const plain = ipaPlain(w);
@@ -16318,12 +16440,14 @@ function ipaShow(sym, silent) {
     const ip = prEl('div'); ip.appendChild(ipaIpaEl(ipa, s[0])); main.appendChild(ip);
     main.appendChild(prEl('div', 'vc-mean', vi));
     const btns = prEl('div', 'vc-btns');
-    btns.appendChild(prBtn('▶', 'Nghe ' + plain, () => prSay(plain)));
-    btns.appendChild(prBtn('🐢', 'Nghe chậm ' + plain, () => prSay(plain, 0.5), true));
+    btns.appendChild(prBtn('▶', 'Nghe ' + plain, () => { prSay(plain); ipaMark(s[0], 'pr'); }));
+    btns.appendChild(prBtn('🐢', 'Nghe chậm ' + plain, () => { prSay(plain, 0.5); ipaMark(s[0], 'pr'); }, true));
     row.appendChild(main); row.appendChild(btns);
     card.appendChild(row);
   });
   body.appendChild(card);
+  body.appendChild(prSpeakBox(s[5].map(x => ipaPlain(x[0])).join(', '), pct => ipaMark(s[0], 'sp', pct)));
+  ipaStepContrast(s, body);
   // how this sound is spelled, and sentences to practise it
   const spell = IPA_SPELL[s[0]];
   if (spell) {
@@ -16351,7 +16475,7 @@ function ipaShow(sym, silent) {
     body.appendChild(sec);
 
     const sec2 = prEl('div', 'ipa-d-sec');
-    sec2.appendChild(prEl('div', 'ipa-d-h', '🗣️ Câu luyện âm /' + s[0] + '/'));
+    sec2.appendChild(prEl('div', 'ipa-d-h', 'Bước 4 · Luyện trong câu: âm /' + s[0] + '/'));
     const box2 = prEl('div', 'tense-card ipa-sp');
     spell.s.forEach((st, n) => {
       const row = prEl('div', 'ipa-sent');
@@ -16364,16 +16488,18 @@ function ipaShow(sym, silent) {
       box2.appendChild(row);
     });
     sec2.appendChild(box2);
+    sec2.appendChild(prSpeakBox(ipaPlain(spell.s[0]), pct => ipaMark(s[0], 'sp', pct)));
     body.appendChild(sec2);
   }
+  ipaStepTest(s, body);
 
   const acts = prEl('div', 'ipa-d-acts');
   const k = ipaKey(s[0]);
-  const ck = prEl('button', 'btn-ghost ipa-d-check' + (prDone.has(k) ? ' on' : ''), prDone.has(k) ? '✓ Đã thuộc' : '✓ Đánh dấu đã thuộc');
+  const ck = prEl('button', 'btn-ghost ipa-d-check' + (prDone.has(k) ? ' on' : ''), prDone.has(k) ? '✓ Đã tự đánh dấu đã luyện' : '✓ Tự đánh dấu đã luyện');
   ck.addEventListener('click', () => {
     if (prDone.has(k)) prDone.delete(k); else prDone.add(k);
     prDoneSave();
-    ck.classList.toggle('on', prDone.has(k)); ck.textContent = prDone.has(k) ? '✓ Đã thuộc' : '✓ Đánh dấu đã thuộc';
+    ck.classList.toggle('on', prDone.has(k)); ck.textContent = prDone.has(k) ? '✓ Đã tự đánh dấu đã luyện' : '✓ Tự đánh dấu đã luyện';
     ipaRefreshTile(s[0]);
   });
   acts.appendChild(ck);
@@ -16626,6 +16752,7 @@ function prOpenLink(startQuiz) {
   const pr = prEl('div', 'vc-head-prog'); pr.id = 'pr-set-prog'; hm.appendChild(pr);
   head.appendChild(hm); v.appendChild(head);
   prSetProg(LINK_SET);
+  v.appendChild(prEl('div', 'p2-note p2-lknote', 'Các hiện tượng nối âm, đọc yếu (weak forms), nuốt âm (elision) và đồng hóa (assimilation) là cách phát âm thường gặp khi nói tự nhiên, không phải quy tắc bắt buộc với mọi người nói hay mọi giọng địa phương. Phần trọng âm câu và ngữ điệu nằm ở mục “Trọng âm và ngữ điệu”.'));
 
   // tab con: học quy tắc / luyện đoán
   const tabs = prEl('div', 'colloc-chips lk-tabs');
@@ -16867,10 +16994,8 @@ function linkQuiz(body) {
 
 function renderPronSets() {
   pronSets.innerHTML = '';
-  pronSets.appendChild(prEl('div', 'tense-group-title', 'Bảng phiên âm IPA'));
-  pronSets.appendChild(prIpaCard());
-  pronSets.appendChild(prEl('div', 'tense-group-title ipa-sets-title', 'Nối âm trong câu'));
-  pronSets.appendChild(prLinkCard());
+  pronSets.appendChild(prEl('div', 'tense-group-title', 'Các khu vực học'));
+  pronSets.appendChild(p2HomeTop());
   pronSets.appendChild(prEl('div', 'tense-group-title ipa-sets-title', 'Luyện các âm khó với người Việt'));
   const grid = prEl('div', 'vc-grid');
   PRON_SETS.forEach(set => {
@@ -16984,6 +17109,647 @@ function prOpenSetView(set) {
     v.appendChild(nb);
   }
 }
+/* ============================================================
+   v116 · Phát âm: giọng UK/US · âm mẫu 3 lớp · học từng âm theo 5 bước + kiểm tra
+   · tiến độ 5 trạng thái · phân biệt cặp âm (nghe & chọn, nghe & phân loại)
+   · trọng âm từ (dữ liệu kiểm tra sẵn), trọng âm câu, ngữ điệu · kiểm tra tổng hợp · 3D
+============================================================ */
+const P2 = { accent: 'hoc-tieng-anh-pron-accent', prog: 'hoc-tieng-anh-ipa-prog', pairs: 'hoc-tieng-anh-pron-pairs', hist: 'hoc-tieng-anh-pron-hist', fav: 'hoc-tieng-anh-pron-fav', test: 'hoc-tieng-anh-pron-test', stress: 'hoc-tieng-anh-pron-stress' };
+const p2Load = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } };
+const p2Save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+const p2Day = () => { const d = new Date(); return Math.floor((d.getTime() - d.getTimezoneOffset() * 60000) / 864e5); };
+const p2Top = () => { try { document.getElementById('page-pron').scrollIntoView({ block: 'start' }); } catch (e) {} };
+
+/* ---------- giọng học: Anh-Anh hoặc Anh-Mỹ ---------- */
+let prAccent = p2Load(P2.accent, '');
+if (prAccent !== 'us' && prAccent !== 'gb') { try { prAccent = typeof pronVoice !== 'undefined' && pronVoice && /GB|UK/i.test(pronVoice.lang) ? 'gb' : 'us'; } catch (e) { prAccent = 'us'; } }
+function prAccentVoice() {
+  // giọng bạn đã chọn ở đầu trang đúng giọng đang học → giữ nguyên
+  try { if (typeof pronVoice !== 'undefined' && pronVoice && (prAccent === 'us' ? /US/i : /GB/i).test(pronVoice.lang)) return null; } catch (e) {}
+  try { return prAccent === 'us' ? (vResolved['us-f'] || vResolved['us-m'] || null) : (vResolved['gb-f'] || vResolved['gb-m'] || null); } catch (e) { return null; }
+}
+// điểm khác của giọng Mỹ so với bảng IPA Anh-Anh (mô hình tham chiếu không đọc /r/ cuối âm tiết)
+const IPA_US = {
+  'ɒ': 'Giọng Mỹ: hầu hết từ có /ɒ/ đọc thành /ɑː/ (hot /hɑːt/, dog /dɑːɡ/ hoặc /dɔːɡ/).',
+  'əʊ': 'Giọng Mỹ: viết là /oʊ/, bắt đầu từ “ô” rồi tròn môi sang “u” (go /ɡoʊ/).',
+  'ɜː': 'Giọng Mỹ: có /r/ cong lưỡi, viết là /ɝ/ (bird /bɝːd/, work /wɝːk/).',
+  'ə': 'Giọng Mỹ: “-er” cuối từ có /r/, viết là /ɚ/ (teacher /ˈtiːtʃɚ/).',
+  'ɑː': 'Giọng Mỹ: khi có chữ r thì đọc cả /r/ (car /kɑːr/); father vẫn là /ɑː/.',
+  'ɔː': 'Giọng Mỹ: có chữ r thì đọc /r/ (door /dɔːr/); nhiều người Mỹ đọc talk, caught gần /ɑː/.',
+  'ɪə': 'Giọng Mỹ: thường là /ɪr/ (here /hɪr/, beer /bɪr/).',
+  'eə': 'Giọng Mỹ: thường là /er/ (hair /her/, where /wer/).',
+  'ʊə': 'Giọng Mỹ: thường là /ʊr/ (tour /tʊr/); pure, cure là /jʊr/.',
+  'r': 'Giọng Mỹ đọc /r/ ở mọi vị trí, kể cả cuối từ (car, more). Giọng Anh-Anh chỉ đọc /r/ khi ngay sau là nguyên âm.',
+  't': 'Giọng Mỹ: /t/ giữa hai nguyên âm thường thành âm bật nhẹ giống /d/ (water /ˈwɑːt̬ɚ/, better).',
+  'æ': 'Giọng Mỹ dùng /æ/ cả trong nhiều từ mà giọng Anh đọc /ɑː/: bath, ask, can’t.'
+};
+const prToUS = ipa => ipa.replace(/əʊ/g, 'oʊ').replace(/ɒ/g, 'ɑː').replace(/ɜː/g, 'ɝː').replace(/ɪə/g, 'ɪr').replace(/eə/g, 'er').replace(/ʊə/g, 'ʊr');
+
+/* ---------- âm mẫu: lớp 1 bản ghi giọng người (nếu bạn thêm vào thư mục am-mau/) ---------- */
+const IPA_FILE = { 'ɪ': 'i-ngan', 'iː': 'i-dai', 'ʊ': 'u-ngan', 'uː': 'u-dai', 'e': 'e', 'æ': 'ae', 'ə': 'schwa', 'ɜː': 'er-dai', 'ɒ': 'o-ngan', 'ɔː': 'o-dai', 'ʌ': 'uh', 'ɑː': 'a-dai',
+  'eɪ': 'ei', 'aɪ': 'ai', 'ɔɪ': 'oi', 'aʊ': 'au', 'əʊ': 'ou', 'ɪə': 'ia', 'eə': 'ea', 'ʊə': 'ua',
+  'p': 'p', 'b': 'b', 't': 't', 'd': 'd', 'k': 'k', 'ɡ': 'g', 'f': 'f', 'v': 'v', 'θ': 'th-vo-thanh', 'ð': 'th-huu-thanh', 's': 's', 'z': 'z', 'ʃ': 'sh', 'ʒ': 'zh', 'tʃ': 'ch', 'dʒ': 'j',
+  'm': 'm', 'n': 'n', 'ŋ': 'ng', 'h': 'h', 'l': 'l', 'r': 'r', 'w': 'w', 'j': 'y' };
+let ipaRec = {};   // ký hiệu → đường dẫn file (đọc từ am-mau/danh-sach.json)
+(function ipaRecLoad() {
+  if (!/^https?:$/.test(location.protocol) || !window.fetch) return;
+  fetch('am-mau/danh-sach.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).then(j => {
+    if (!j || typeof j !== 'object') return;
+    Object.keys(IPA_FILE).forEach(sym => { const f = j[IPA_FILE[sym]] || j[sym]; if (typeof f === 'string' && /^[\w\-./]+\.(mp3|m4a|wav|ogg)$/i.test(f)) ipaRec[sym] = 'am-mau/' + f.replace(/^am-mau\//, ''); });
+  }).catch(() => {});
+})();
+function ipaPlayRec(sym) {
+  const src = ipaRec[sym]; if (!src) return false;
+  try { speechSynthesis.cancel(); } catch (e) {}
+  try { const a = new Audio(src); a.play().catch(() => { delete ipaRec[sym]; ipaSim(sym); }); return true; } catch (e) { return false; }
+}
+function ipaSim(sym) {
+  ipaUnlock();
+  try { if (ipaPlayWav(sym)) return; } catch (e) {}
+  try { if (ipaPlaySound(sym)) return; } catch (e) {}
+  prSay(IPA_SAY[sym] || ipaWords(sym)[0], Math.min(prRate, 0.75));
+}
+
+/* ---------- tiến độ từng âm: Chưa học · Đã xem · Đã luyện · Cần luyện lại · Thành thạo ---------- */
+let ipaP = p2Load(P2.prog, {}); if (!ipaP || typeof ipaP !== 'object' || Array.isArray(ipaP)) ipaP = {};
+const IPA_ST = { new: ['Chưa học', '○'], seen: ['Đã xem', '👀'], practiced: ['Đã luyện', '🎧'], redo: ['Cần luyện lại', '🔁'], master: ['Thành thạo', '🏆'] };
+function ipaSt(sym) {
+  const r = ipaP[sym];
+  if (!r) return prDone.has(ipaKey(sym)) ? 'practiced' : 'new';
+  if ((r.pass || []).length >= 2 && r.lastOk !== false) return 'master';
+  if (r.lastOk === false) return 'redo';
+  if (r.pr || r.sp || (r.pass || []).length || prDone.has(ipaKey(sym))) return 'practiced';
+  return 'seen';
+}
+function ipaMark(sym, what, val) {
+  const r = ipaP[sym] || (ipaP[sym] = { pr: 0, sp: 0, pass: [], fail: 0 });
+  const t = p2Day(); r.last = t;
+  if (what === 'seen') r.seen = r.seen || t;
+  if (what === 'pr') r.pr = (r.pr || 0) + 1;
+  if (what === 'sp') { r.sp = (r.sp || 0) + 1; if (val != null) { r.spLast = val; r.spBest = Math.max(r.spBest || 0, val); } }
+  if (what === 'test') { r.tests = (r.tests || 0) + 1; r.lastRes = val; if (val >= 80) { r.lastOk = true; if (!r.pass.includes(t)) r.pass.push(t); r.pass = r.pass.slice(-10); } else { r.lastOk = false; r.fail = (r.fail || 0) + 1; } }
+  p2Save(P2.prog, ipaP);
+}
+const ipaMastered = () => IPA_SOUNDS.filter(s => ipaSt(s[0]) === 'master').length;
+const ipaWeak = () => IPA_SOUNDS.map(s => s[0]).filter(sym => { const r = ipaP[sym]; return r && (r.lastOk === false || (r.spLast != null && r.spLast < 60)); })
+  .sort((a, b) => ((ipaP[b].fail || 0) - (ipaP[a].fail || 0)));
+
+/* ---------- âm dễ nhầm với từng âm: [âm so sánh, [[từ có âm này, từ có âm kia], …]] ---------- */
+const IPA_CON = {
+  'ɪ': [['iː', [['ship', 'sheep'], ['live', 'leave'], ['sit', 'seat'], ['fill', 'feel']]]],
+  'iː': [['ɪ', [['sheep', 'ship'], ['leave', 'live'], ['seat', 'sit'], ['feel', 'fill']]]],
+  'ʊ': [['uː', [['full', 'fool'], ['pull', 'pool'], ['look', 'Luke'], ['could', 'cooed']]]],
+  'uː': [['ʊ', [['fool', 'full'], ['pool', 'pull'], ['Luke', 'look'], ['suit', 'soot']]]],
+  'e': [['æ', [['bed', 'bad'], ['men', 'man'], ['pen', 'pan'], ['said', 'sad']]]],
+  'æ': [['e', [['bad', 'bed'], ['man', 'men'], ['pan', 'pen'], ['sad', 'said']]], ['ʌ', [['cat', 'cut'], ['bag', 'bug'], ['hat', 'hut'], ['ran', 'run']]]],
+  'ʌ': [['æ', [['cut', 'cat'], ['bug', 'bag'], ['hut', 'hat'], ['run', 'ran']]], ['ɑː', [['cut', 'cart'], ['hut', 'heart'], ['come', 'calm']]]],
+  'ɜː': [['ɔː', [['work', 'walk'], ['bird', 'board'], ['shirt', 'short'], ['firm', 'form']]]],
+  'ɑː': [['ʌ', [['cart', 'cut'], ['heart', 'hut'], ['calm', 'come'], ['march', 'much']]]],
+  'ɒ': [['ɔː', [['cot', 'caught'], ['pot', 'port'], ['not', 'nought'], ['don', 'dawn']]], ['ʌ', [['cot', 'cut'], ['lock', 'luck'], ['shot', 'shut']]]],
+  'ɔː': [['ɒ', [['caught', 'cot'], ['port', 'pot'], ['dawn', 'don']]], ['əʊ', [['caught', 'coat'], ['law', 'low'], ['bought', 'boat']]]],
+  'eɪ': [['e', [['late', 'let'], ['main', 'men'], ['wait', 'wet'], ['taste', 'test']]]],
+  'aɪ': [['eɪ', [['line', 'lane'], ['white', 'wait'], ['mine', 'main'], ['like', 'lake']]]],
+  'ɔɪ': [['aɪ', [['boy', 'buy'], ['toy', 'tie'], ['oil', 'aisle']]]],
+  'aʊ': [['əʊ', [['now', 'no'], ['town', 'tone'], ['loud', 'load'], ['found', 'phoned']]]],
+  'əʊ': [['ɔː', [['coat', 'caught'], ['low', 'law'], ['boat', 'bought']]], ['aʊ', [['no', 'now'], ['tone', 'town'], ['load', 'loud']]]],
+  'ɪə': [['eə', [['here', 'hair'], ['beer', 'bear'], ['fear', 'fair'], ['near', 'nair']]]],
+  'eə': [['ɪə', [['hair', 'here'], ['bear', 'beer'], ['fair', 'fear']]]],
+  'p': [['b', [['pin', 'bin'], ['pear', 'bear'], ['cap', 'cab'], ['pie', 'buy']]], ['f', [['pan', 'fan'], ['pine', 'fine']]]],
+  'b': [['p', [['bin', 'pin'], ['bear', 'pear'], ['cab', 'cap']]], ['v', [['berry', 'very'], ['best', 'vest'], ['ban', 'van']]]],
+  't': [['d', [['ten', 'den'], ['tie', 'die'], ['bat', 'bad']]], ['θ', [['tree', 'three'], ['tank', 'thank'], ['team', 'theme']]]],
+  'd': [['t', [['den', 'ten'], ['die', 'tie'], ['bad', 'bat']]], ['ð', [['day', 'they'], ['dare', 'there'], ['den', 'then']]]],
+  'k': [['ɡ', [['coat', 'goat'], ['cold', 'gold'], ['back', 'bag'], ['card', 'guard']]]],
+  'ɡ': [['k', [['goat', 'coat'], ['gold', 'cold'], ['bag', 'back']]]],
+  'f': [['v', [['fan', 'van'], ['fine', 'vine'], ['leaf', 'leave']]], ['p', [['fan', 'pan'], ['fine', 'pine']]]],
+  'v': [['b', [['very', 'berry'], ['vest', 'best'], ['van', 'ban']]], ['f', [['van', 'fan'], ['vine', 'fine'], ['leave', 'leaf']]]],
+  'θ': [['s', [['think', 'sink'], ['thick', 'sick'], ['mouth', 'mouse'], ['thing', 'sing']]], ['t', [['three', 'tree'], ['thank', 'tank'], ['theme', 'team']]]],
+  'ð': [['d', [['they', 'day'], ['there', 'dare'], ['then', 'den']]], ['z', [['breathe', 'breeze'], ['clothe', 'close']]]],
+  's': [['ʃ', [['see', 'she'], ['sip', 'ship'], ['save', 'shave'], ['sort', 'short']]], ['z', [['rice', 'rise'], ['bus', 'buzz'], ['place', 'plays']]], ['θ', [['sink', 'think'], ['sick', 'thick'], ['mouse', 'mouth']]]],
+  'z': [['s', [['rise', 'rice'], ['buzz', 'bus'], ['plays', 'place'], ['zoo', 'Sue']]]],
+  'ʃ': [['s', [['she', 'see'], ['ship', 'sip'], ['shave', 'save']]], ['tʃ', [['share', 'chair'], ['shoes', 'choose'], ['wash', 'watch']]]],
+  'tʃ': [['ʃ', [['chair', 'share'], ['watch', 'wash'], ['cheap', 'sheep'], ['chop', 'shop']]], ['dʒ', [['cheap', 'jeep'], ['choke', 'joke'], ['rich', 'ridge']]]],
+  'dʒ': [['tʃ', [['jeep', 'cheap'], ['joke', 'choke'], ['ridge', 'rich']]], ['j', [['jet', 'yet'], ['jam', 'yam'], ['jaw', 'your']]]],
+  'm': [['n', [['mail', 'nail'], ['some', 'sun'], ['map', 'nap']]]],
+  'n': [['ŋ', [['thin', 'thing'], ['ran', 'rang'], ['sin', 'sing'], ['ban', 'bang']]], ['l', [['night', 'light'], ['know', 'low']]]],
+  'ŋ': [['n', [['thing', 'thin'], ['rang', 'ran'], ['sing', 'sin'], ['bang', 'ban']]]],
+  'h': [['∅', [['hat', 'at'], ['hair', 'air'], ['heat', 'eat'], ['hold', 'old']]]],
+  'l': [['r', [['light', 'right'], ['long', 'wrong'], ['lead', 'read'], ['fly', 'fry']]], ['n', [['light', 'night'], ['low', 'know']]]],
+  'r': [['l', [['right', 'light'], ['wrong', 'long'], ['read', 'lead'], ['fry', 'fly']]]],
+  'w': [['v', [['west', 'vest'], ['wine', 'vine'], ['wet', 'vet']]]],
+  'j': [['dʒ', [['yet', 'jet'], ['yam', 'jam'], ['your', 'jaw']]]]
+};
+/* nhóm cặp âm dễ nhầm, xếp theo cấp độ: [âm A, âm B, cấp] */
+const PAIR_GROUPS = [
+  ['ɪ', 'iː', 1], ['ʊ', 'uː', 1], ['e', 'æ', 1], ['θ', 's', 1], ['θ', 't', 1], ['ð', 'd', 1], ['v', 'b', 1], ['s', 'z', 2],
+  ['s', 'ʃ', 2], ['æ', 'ʌ', 2], ['tʃ', 'ʃ', 2], ['l', 'r', 2], ['p', 'b', 2], ['k', 'ɡ', 2],
+  ['n', 'ŋ', 3], ['ɒ', 'ɔː', 3], ['eɪ', 'e', 3], ['aʊ', 'əʊ', 3], ['ɜː', 'ɔː', 3], ['w', 'v', 3], ['tʃ', 'dʒ', 3], ['ɪə', 'eə', 3]
+].map(([a, b, lv]) => { const c = (IPA_CON[a] || []).find(x => x[0] === b); return c ? { id: a + '-' + b, a, b, lv, pairs: c[1] } : null; }).filter(Boolean);
+const PAIR_LV = ['', 'Cơ bản', 'Trung bình', 'Nâng cao'];
+const ipaName = sym => { const s = IPA_SOUNDS.find(x => x[0] === sym); return s ? ipaPlain(s[5][0][0]) : sym === '∅' ? 'không có /h/' : ''; };
+
+/* ---------- trọng âm từ: vị trí nhấn đã kiểm tra cho các từ hay gặp (giọng Anh-Anh) ---------- */
+const STRESS_DB = {
+  photograph: ['pho·to·graph', 0], photography: ['pho·tog·ra·phy', 1], photographic: ['pho·to·graph·ic', 2], photographer: ['pho·tog·ra·pher', 1],
+  economy: ['e·con·o·my', 1], economic: ['e·co·nom·ic', 2], banana: ['ba·na·na', 1], hotel: ['ho·tel', 1], computer: ['com·pu·ter', 1],
+  vegetable: ['veg·ta·ble', 0], comfortable: ['comf·ta·ble', 0], interesting: ['in·ter·est·ing', 0], vietnamese: ['Vi·et·nam·ese', 3],
+  pronunciation: ['pro·nun·ci·a·tion', 3], temperature: ['tem·pera·ture', 0], develop: ['de·vel·op', 1], schedule: ['sched·ule', 0],
+  wednesday: ['Wednes·day', 0], important: ['im·por·tant', 1], information: ['in·for·ma·tion', 2], education: ['ed·u·ca·tion', 2],
+  necessary: ['ne·ces·sa·ry', 0], family: ['fam·i·ly', 0], restaurant: ['res·tau·rant', 0], chocolate: ['choc·late', 0], different: ['dif·fer·ent', 0],
+  especially: ['es·pe·cial·ly', 1], opportunity: ['op·por·tu·ni·ty', 2], technology: ['tech·nol·o·gy', 1], technical: ['tech·ni·cal', 0],
+  engineer: ['en·gi·neer', 2], japanese: ['Jap·a·nese', 2], television: ['tel·e·vi·sion', 0], advertisement: ['ad·ver·tise·ment', 1],
+  begin: ['be·gin', 1], result: ['re·sult', 1], competition: ['com·pe·ti·tion', 2], compete: ['com·pete', 1], analyse: ['an·a·lyse', 0],
+  analysis: ['a·nal·y·sis', 1], mathematics: ['math·e·mat·ics', 2], biology: ['bi·ol·o·gy', 1], event: ['e·vent', 1], percent: ['per·cent', 1],
+  idea: ['i·de·a', 1], career: ['ca·reer', 1], coffee: ['cof·fee', 0], guitar: ['gui·tar', 1], police: ['po·lice', 1], museum: ['mu·se·um', 1],
+  manager: ['man·a·ger', 0], management: ['man·age·ment', 0], deliver: ['de·liv·er', 1], decide: ['de·cide', 1], decision: ['de·ci·sion', 1],
+  hospital: ['hos·pi·tal', 0], holiday: ['hol·i·day', 0], tomorrow: ['to·mor·row', 1], yesterday: ['yes·ter·day', 0], beautiful: ['beau·ti·ful', 0],
+  understand: ['un·der·stand', 2], volunteer: ['vol·un·teer', 2], canada: ['Can·a·da', 0], canadian: ['Ca·na·di·an', 1],
+  texture: ['tex·ture', 0], topology: ['to·pol·o·gy', 1], material: ['ma·te·ri·al', 1], environment: ['en·vi·ron·ment', 1],
+  resolution: ['res·o·lu·tion', 2], architecture: ['ar·chi·tec·ture', 0], animation: ['an·i·ma·tion', 2], geometry: ['ge·om·e·try', 1],
+  polygon: ['pol·y·gon', 0], rendering: ['ren·der·ing', 0], lighting: ['light·ing', 0], specular: ['spec·u·lar', 0], metallic: ['me·tal·lic', 1],
+  character: ['char·ac·ter', 0], revision: ['re·vi·sion', 1], deadline: ['dead·line', 0], feedback: ['feed·back', 0], software: ['soft·ware', 0]
+};
+const stressOf = w => { const e = STRESS_DB[(w || '').toLowerCase()]; return e ? { parts: e[0].split('·'), at: e[1] } : null; };
+function stressEl(w, big) {
+  const st = stressOf(w); if (!st) return null;
+  const box = prEl('div', 'p2-stress' + (big ? ' big' : ''));
+  st.parts.forEach((p, k) => {
+    const b = prEl('button', 'p2-syl' + (k === st.at ? ' on' : ''), k === st.at ? p.toUpperCase() : p);
+    b.title = k === st.at ? 'Âm tiết được nhấn' : 'Âm tiết đọc nhẹ';
+    b.addEventListener('click', () => prSay(p.toLowerCase(), k === st.at ? 0.7 : 0.8));
+    box.appendChild(b);
+  });
+  const all = prEl('button', 'p2-syl-all', '▶ Cả từ'); all.addEventListener('click', () => prSay(w, 0.75)); box.appendChild(all);
+  return box;
+}
+
+/* ---------- trọng âm câu và ngữ điệu ---------- */
+const SENT_STRESS = [
+  { s: 'I want to learn English.', vi: 'Tôi muốn học tiếng Anh.', w: ['I', 'want', 'to', 'learn', 'English.'],
+    opts: [[1, 'Nhấn “want”: tôi thật sự muốn học (dù có người nghĩ là không).'], [3, 'Nhấn “learn”: muốn học hẳn hoi, chứ không chỉ nghe cho vui.'], [4, 'Nhấn “English”: muốn học tiếng Anh, không phải tiếng khác.']],
+    q: [['Bạn muốn học tiếng Pháp à?', 4], ['Bạn có thật sự muốn học không?', 1]] },
+  { s: 'She bought a red car.', vi: 'Cô ấy đã mua một chiếc xe màu đỏ.', w: ['She', 'bought', 'a', 'red', 'car.'],
+    opts: [[0, 'Nhấn “She”: chính cô ấy mua, không phải người khác.'], [3, 'Nhấn “red”: màu đỏ, không phải màu khác.'], [4, 'Nhấn “car”: một chiếc xe hơi, không phải xe máy.']],
+    q: [['Anh trai cô ấy mua xe đỏ à?', 0], ['Cô ấy mua xe màu xanh à?', 3]] },
+  { s: 'I didn’t say he took it.', vi: 'Tôi không nói là anh ta lấy nó.', w: ['I', 'didn’t', 'say', 'he', 'took', 'it.'],
+    opts: [[0, 'Nhấn “I”: người khác nói, không phải tôi.'], [2, 'Nhấn “say”: tôi có nghĩ vậy nhưng không nói ra.'], [3, 'Nhấn “he”: tôi nói người khác lấy.'], [4, 'Nhấn “took”: anh ta mượn, chứ không phải lấy.']],
+    q: [['Vậy là ai đó khác đã nói ra điều này?', 0], ['Vậy theo bạn người khác lấy à?', 3]] },
+  { s: 'Can you send me the file today?', vi: 'Bạn gửi cho tôi file hôm nay được không?', w: ['Can', 'you', 'send', 'me', 'the', 'file', 'today?'],
+    opts: [[1, 'Nhấn “you”: muốn chính bạn gửi, không phải người khác.'], [5, 'Nhấn “file”: cần file, không phải đường link hay ảnh.'], [6, 'Nhấn “today”: cần ngay hôm nay, không đợi ngày mai.']],
+    q: [['Mai gửi có được không?', 6], ['Để đồng nghiệp tôi gửi nhé?', 1]] }
+];
+const INTON = [
+  ['↘', 'Câu kể', 'I live in Da Nang.', 'Giọng hạ xuống ở cuối câu.'],
+  ['↘', 'Câu hỏi có từ để hỏi', 'Where do you work?', 'What, where, when, why, how… thường xuống giọng ở cuối.'],
+  ['↗', 'Câu hỏi Yes/No', 'Do you like coffee?', 'Giọng lên ở cuối câu.'],
+  ['↗ ↗ ↘', 'Liệt kê', 'I need eggs, milk, and bread.', 'Lên ở các mục đầu, xuống ở mục cuối để báo đã hết.'],
+  ['↗ ↘', 'Câu hỏi lựa chọn', 'Tea or coffee?', 'Lên ở lựa chọn thứ nhất, xuống ở lựa chọn cuối.'],
+  ['↘', 'Câu hỏi đuôi để xác nhận', 'It’s a nice day, isn’t it?', 'Xuống ở đuôi: bạn chắc chắn và chỉ muốn người kia đồng ý.'],
+  ['↗', 'Câu hỏi đuôi hỏi thật', 'You’re coming tomorrow, aren’t you?', 'Lên ở đuôi: bạn không chắc và thật sự hỏi.']
+];
+const INTON_Q = [['Are you ready?', '↗'], ['What time is it?', '↘'], ['I finished the report.', '↘'], ['Is this your bag?', '↗'], ['How do you spell it?', '↘'], ['Can I sit here?', '↗'], ['We met in 2019.', '↘'], ['Did you call her?', '↗']];
+const PR_PHRASES = ['How are you?', 'Nice to meet you.', 'Could you repeat that, please?', 'What do you mean?', 'I’m not sure.', 'Thank you very much.', 'See you later.', 'Excuse me.', 'Could you speak more slowly?', 'Let me think about it.'];
+
+/* ---------- bộ từ ngành 3D ---------- */
+PRON_SETS.push(
+  { id: 'cg3d', icon: '🧊', title: 'Từ vựng ngành 3D', tip: 'Chú ý trọng âm của từ nhiều âm tiết và các âm cuối. Chạm vào từ để xem trọng âm từng âm tiết và nói thử.',
+    words: [['texture', '/ˈtekstʃə/', 'kết cấu bề mặt · trọng âm đầu, âm /tʃ/'], ['topology', '/təˈpɒlədʒi/', 'cấu trúc lưới · nhấn âm tiết 2'], ['lighting', '/ˈlaɪtɪŋ/', 'ánh sáng · âm /aɪ/ và đuôi -ing'],
+      ['material', '/məˈtɪəriəl/', 'vật liệu · nhấn âm tiết 2, âm /ə/'], ['rendering', '/ˈrendərɪŋ/', 'kết xuất · âm /r/, /d/ và -ing'], ['environment', '/ɪnˈvaɪrənmənt/', 'môi trường · nhấn âm tiết 2, âm yếu'],
+      ['resolution', '/ˌrezəˈluːʃn/', 'độ phân giải · âm /z/, nhấn âm tiết 3'], ['architecture', '/ˈɑːkɪtektʃə/', 'kiến trúc · nhấn âm đầu, cụm /ktʃ/'], ['geometry', '/dʒiˈɒmətri/', 'hình học · nhấn âm tiết 2'],
+      ['polygon', '/ˈpɒlɪɡən/', 'đa giác · nhấn âm đầu'], ['animation', '/ˌænɪˈmeɪʃn/', 'hoạt hình · nhấn âm tiết 3'], ['specular', '/ˈspekjələ/', 'phản xạ gương · cụm /sp/'],
+      ['metallic', '/məˈtælɪk/', 'kim loại · nhấn âm tiết 2'], ['roughness', '/ˈrʌfnəs/', 'độ nhám · gh đọc /f/'], ['character', '/ˈkærəktə/', 'nhân vật · ch đọc /k/'], ['viewport', '/ˈvjuːpɔːt/', 'khung nhìn · /vj/ ở đầu']] },
+  { id: 'cg3ds', icon: '🎬', title: 'Câu giao tiếp ngành 3D', tip: 'Đọc chậm trước rồi nhanh dần; nhấn vào các từ chuyên ngành và nối âm tự nhiên.',
+    sentences: [['The texture needs more detail.', 'Texture cần thêm chi tiết.'], ['Please adjust the lighting.', 'Vui lòng điều chỉnh ánh sáng.'], ['The final render has too much noise.', 'Bản render cuối bị nhiễu quá nhiều.'],
+      ['Could you check the topology around the shoulder?', 'Bạn kiểm tra topology quanh vai được không?'], ['I’ll send you the updated model tonight.', 'Tối nay tôi sẽ gửi bạn mô hình đã cập nhật.'],
+      ['Let’s increase the resolution of the normal map.', 'Mình tăng độ phân giải của normal map nhé.'], ['The client wants a different camera angle.', 'Khách hàng muốn một góc camera khác.'], ['The material looks too shiny.', 'Vật liệu trông bóng quá.']] }
+);
+PR_SET_SUB.cg3d = 'Trọng âm từ chuyên ngành'; PR_SET_SUB.cg3ds = 'Nói trôi chảy trong công việc';
+
+/* ---------- khung hiển thị một màn trong tab ---------- */
+function p2View(icon, title, sub, backFn) {
+  prSeqStop();
+  prOpenSet = 'p2';
+  pronHome.hidden = true; pronSets.hidden = true; if (pronMore) pronMore.hidden = true;
+  const v = pronSetView;
+  if (pronResult.parentNode === v) pronSets.parentNode.insertBefore(pronResult, pronSets);
+  pronResult.innerHTML = '';
+  v.innerHTML = ''; v.hidden = false;
+  const back = prEl('button', 'gr-back', '← Trang phát âm');
+  back.addEventListener('click', () => { (backFn || prShowHome)(); p2Top(); });
+  v.appendChild(back);
+  const head = prEl('div', 'vc-head');
+  head.appendChild(prEl('div', 'vc-head-icon', icon));
+  const hm = prEl('div', 'vc-head-meta');
+  hm.appendChild(prEl('div', 'vc-head-vi', title));
+  hm.appendChild(prEl('div', 'vc-head-en', sub));
+  head.appendChild(hm); v.appendChild(head);
+  return v;
+}
+/* trình chạy câu hỏi chung: q = { label, prompt, play, opts:[text], ans, why } */
+function p2Quiz(box, qs, onDone) {
+  let k = 0, score = 0, picked = null;
+  const draw = () => {
+    box.innerHTML = '';
+    if (k >= qs.length) { const p = Math.round(score / qs.length * 100); onDone && onDone(p, score, qs.length, box); return; }
+    const q = qs[k];
+    const top = prEl('div', 'vc-card-top'); top.appendChild(prEl('span', 'ls-count', `Câu ${k + 1} / ${qs.length}`)); top.appendChild(prEl('span', 'ls-count', `Đúng: ${score}`)); box.appendChild(top);
+    const card = prEl('div', 'tense-card vc-q p2-q');
+    card.appendChild(prEl('div', 'vc-q-label', q.label));
+    if (q.prompt) card.appendChild(prEl('div', 'p2-q-prompt', q.prompt));
+    if (q.play) { const pb = prEl('button', 'irr-hear-play p2-play', '🔊'); pb.setAttribute('aria-label', 'Nghe lại'); pb.addEventListener('click', q.play); card.appendChild(pb); }
+    box.appendChild(card);
+    const opts = prEl('div', 'vc-opts' + (q.wide ? ' p2-wide' : ''));
+    q.opts.forEach((o, i) => {
+      let cls = 'vc-opt';
+      if (picked != null) { if (i === q.ans) cls += ' ok'; else if (i === picked) cls += ' bad'; }
+      const b = prEl('button', cls, o);
+      b.addEventListener('click', () => { if (picked != null) return; picked = i; if (i === q.ans) score++; q.after && q.after(i === q.ans); draw(); });
+      opts.appendChild(b);
+    });
+    box.appendChild(opts);
+    if (picked != null) {
+      if (q.why) box.appendChild(prEl('div', 'vc-fb ' + (picked === q.ans ? 'ok' : 'bad'), (picked === q.ans ? '✓ ' : '✗ ') + q.why));
+      const nx = prEl('button', 'btn-primary vc-next', k + 1 < qs.length ? 'Câu tiếp →' : 'Xem kết quả');
+      nx.addEventListener('click', () => { k++; picked = null; draw(); });
+      box.appendChild(nx);
+    } else if (q.play && !q.played) { q.played = true; setTimeout(q.play, 250); }
+  };
+  draw();
+}
+const p2Shuf = a => lsShuffle(a.slice());
+
+/* ---------- học từng âm: bước 1 (nghe), 3 (phân biệt), 5 (kiểm tra) ---------- */
+function ipaStatusLine(sym) {
+  const st = ipaSt(sym), r = ipaP[sym] || {};
+  const el = prEl('div', 'p2-sst p2-st-' + st);
+  el.appendChild(prEl('b', null, IPA_ST[st][1] + ' ' + IPA_ST[st][0]));
+  const bits = [];
+  if (r.tests) bits.push(`kiểm tra ${r.tests} lần, đạt ${(r.pass || []).length} ngày`);
+  if (r.sp) bits.push(`nói thử ${r.sp} lần` + (r.spLast != null ? ` (gần nhất ${r.spLast}%)` : ''));
+  if (r.last != null) { const d = p2Day() - r.last; bits.push(d <= 0 ? 'luyện hôm nay' : `luyện ${d} ngày trước`); }
+  el.appendChild(prEl('span', null, bits.length ? bits.join(' · ') : 'Thành thạo khi đạt bài kiểm tra ở bước 5 vào ít nhất 2 ngày khác nhau.'));
+  return el;
+}
+function ipaStepListen(s, body) {
+  const sym = s[0];
+  body.appendChild(ipaStatusLine(sym));
+  const sec = prEl('div', 'ipa-d-sec p2-step');
+  sec.appendChild(prEl('div', 'ipa-d-h', 'Bước 1 · Nghe âm mẫu'));
+  const row = prEl('div', 'pron-actions p2-layers');
+  if (ipaRec[sym]) { const a = prEl('button', 'p2-l1', '🎙️ Bản ghi giọng người'); a.addEventListener('click', () => { ipaPlayRec(sym); ipaMark(sym, 'pr'); }); row.appendChild(a); }
+  const b = prEl('button', null, '🔊 Âm mô phỏng'); b.addEventListener('click', () => { ipaSim(sym); ipaMark(sym, 'pr'); }); row.appendChild(b);
+  const words = ipaWords(sym);
+  const c = prEl('button', null, '💬 Nghe trong từ “' + words[0] + '”'); c.addEventListener('click', () => { prSay(words[0], 0.6); ipaMark(sym, 'pr'); }); row.appendChild(c);
+  const d = prEl('button', null, '🔁 Âm → từ, 3 lần');
+  d.addEventListener('click', () => { let n = 0; const go = () => { if (n++ >= 3) return; ipaSoundOrSay(sym); setTimeout(() => { const u = prSay(words[0], 0.7); setTimeout(go, 1800); }, 1100); }; go(); ipaMark(sym, 'pr'); });
+  row.appendChild(d);
+  sec.appendChild(row);
+  sec.appendChild(prEl('div', 'p2-note', ipaRec[sym]
+    ? 'Bản ghi là âm mẫu chính; âm mô phỏng tạo bằng máy giúp bạn hình dung đặc điểm của âm; từ ví dụ do giọng đọc của thiết bị phát.'
+    : 'Âm mô phỏng được tạo bằng máy (tần số cộng hưởng) để bạn hình dung đặc điểm của âm, không thay thế giọng người. Hãy nghe thêm âm này trong từ ví dụ.'));
+  if (prAccent === 'us' && IPA_US[sym]) sec.appendChild(prEl('div', 'p2-us', '🇺🇸 ' + IPA_US[sym]));
+  else if (IPA_US[sym]) sec.appendChild(prEl('div', 'p2-us gb', '🇬🇧 Bảng này theo giọng Anh-Anh. ' + IPA_US[sym]));
+  body.appendChild(sec);
+  ipaMark(sym, 'seen');
+}
+function ipaStepContrast(s, body) {
+  const sym = s[0], cons = IPA_CON[sym];
+  if (!cons) return;
+  const sec = prEl('div', 'ipa-d-sec p2-step');
+  sec.appendChild(prEl('div', 'ipa-d-h', 'Bước 3 · Phân biệt với âm gần giống'));
+  cons.forEach(([o, pairs]) => {
+    const box = prEl('div', 'tense-card p2-con');
+    const h = prEl('div', 'p2-con-h');
+    h.appendChild(prEl('b', null, `/${sym}/ – ${o === '∅' ? 'không có âm' : '/' + o + '/'}`));
+    if (o !== '∅' && IPA_SOUNDS.some(x => x[0] === o)) { const go = prEl('button', 'sd-link', 'Xem âm /' + o + '/ →'); go.addEventListener('click', () => ipaShow(o)); h.appendChild(go); }
+    box.appendChild(h);
+    const list = prEl('div', 'p2-pairs');
+    pairs.forEach(([a, b2]) => {
+      const it = prEl('div', 'p2-pair');
+      const x = prEl('button', 'p2-pw', a); x.addEventListener('click', () => { prSay(a, 0.7); ipaMark(sym, 'pr'); });
+      const y = prEl('button', 'p2-pw alt', b2); y.addEventListener('click', () => prSay(b2, 0.7));
+      const both = prEl('button', 'p2-cmp', '⇄'); both.setAttribute('aria-label', 'Nghe liền hai từ');
+      both.addEventListener('click', () => { const u = prSay(a, 0.7); setTimeout(() => prSay(b2, 0.7), 1300); });
+      it.appendChild(x); it.appendChild(both); it.appendChild(y);
+      list.appendChild(it);
+    });
+    box.appendChild(list);
+    sec.appendChild(box);
+  });
+  body.appendChild(sec);
+}
+function ipaTestQs(sym) {
+  const qs = [];
+  const cons = IPA_CON[sym] || [];
+  cons.forEach(([o, pairs]) => pairs.forEach(([a, b]) => {
+    const pickA = Math.random() < 0.5, w = pickA ? a : b;
+    qs.push({ label: 'Nghe rồi chọn từ bạn vừa nghe', play: () => prSay(w, 0.75), opts: [a + '  /' + sym + '/', b + (o === '∅' ? '  (không /h/)' : '  /' + o + '/')], ans: pickA ? 0 : 1, why: `Từ vừa nghe là “${w}”.` });
+  }));
+  // bổ sung: từ nào có âm này (so với ví dụ của các âm khác cùng nhóm)
+  const s = IPA_SOUNDS.find(x => x[0] === sym);
+  const others = IPA_SOUNDS.filter(x => x[1] === s[1] && x[0] !== sym);
+  ipaWords(sym).forEach(w => {
+    const ds = p2Shuf(others).slice(0, 2).map(x => ipaPlain(x[5][Math.floor(Math.random() * x[5].length)][0]));
+    const opts = p2Shuf([w, ...ds]);
+    qs.push({ label: `Từ nào có âm /${sym}/?`, play: null, opts, ans: opts.indexOf(w), why: `“${w}” có âm /${sym}/.`, after: () => prSay(w, 0.75) });
+  });
+  return p2Shuf(qs).slice(0, 6);
+}
+function ipaStepTest(s, body) {
+  const sym = s[0];
+  const sec = prEl('div', 'ipa-d-sec p2-step');
+  sec.appendChild(prEl('div', 'ipa-d-h', 'Bước 5 · Kiểm tra'));
+  sec.appendChild(prEl('p', 'p2-note', 'Nghe và chọn đúng ít nhất 80% để đạt. Đạt vào 2 ngày khác nhau thì âm được tính là “Thành thạo”. Sau đó thử nói vào micro.'));
+  const box = prEl('div', 'p2-testbox');
+  const start = prEl('button', 'btn-primary', '🧪 Bắt đầu kiểm tra (6 câu)');
+  start.addEventListener('click', () => {
+    p2Quiz(box, ipaTestQs(sym), (p, sc, n, bx) => {
+      ipaMark(sym, 'test', p);
+      bx.appendChild(prEl('div', 'vc-done-big ' + (p >= 80 ? 'p2-ok' : 'p2-bad'), `${sc} / ${n}`));
+      bx.appendChild(prEl('div', 'ls-verdict', p >= 80 ? (ipaSt(sym) === 'master' ? '🏆 Thành thạo! Bạn đã đạt bài kiểm tra vào 2 ngày khác nhau.' : '✓ Đạt! Hãy làm lại vào một ngày khác để thành “Thành thạo”.') : 'Chưa đạt. Nghe lại bước 1 và bước 3 rồi thử lại nhé.'));
+      const t = prEl('div', 'pr-sec-title', 'Thử nói: đọc to 3 từ ví dụ');
+      bx.appendChild(t);
+      bx.appendChild(prSpeakBox(ipaWords(sym).join(', '), pct => ipaMark(sym, 'sp', pct)));
+      const again = prEl('button', 'btn-ghost', '🔄 Làm lại'); again.addEventListener('click', () => start.click()); bx.appendChild(again);
+      const st = document.querySelector('#ipa-body .p2-sst'); if (st) st.replaceWith(ipaStatusLine(sym));
+      ipaRefreshTile(sym);
+    });
+  });
+  box.appendChild(start);
+  sec.appendChild(box);
+  body.appendChild(sec);
+}
+
+/* ---------- phân biệt âm dễ nhầm ---------- */
+let pairBest = p2Load(P2.pairs, {}); if (!pairBest || typeof pairBest !== 'object') pairBest = {};
+function prOpenPairs(id) {
+  if (!id) {
+    const v = p2View('⚖️', 'Phân biệt âm dễ nhầm', `${PAIR_GROUPS.length} nhóm cặp âm · nghe & chọn · nghe & phân loại · luyện nói`);
+    v.appendChild(prEl('p', 'ls-level-desc', 'Có thể bạn nói một âm khá tốt nhưng vẫn chưa nghe ra khác biệt. Mỗi nhóm có danh sách cặp từ và hai bài kiểm tra nghe.'));
+    [1, 2, 3].forEach(lv => {
+      v.appendChild(prEl('div', 'tense-group-title', PAIR_LV[lv]));
+      const grid = prEl('div', 'vc-grid');
+      PAIR_GROUPS.filter(g => g.lv === lv).forEach(g => {
+        const b = prEl('button', 'vc-topic' + (pairBest[g.id] >= 80 ? ' done' : ''));
+        b.appendChild(prEl('span', 'vc-ticon p2-pg-ic', `/${g.a}/ /${g.b}/`));
+        b.appendChild(prEl('span', 'vc-tvi', `${g.pairs[0][0]} – ${g.pairs[0][1]}`));
+        b.appendChild(prEl('span', 'vc-tmeta', pairBest[g.id] != null ? `Tốt nhất ${pairBest[g.id]}%` : `${g.pairs.length} cặp từ`));
+        b.addEventListener('click', () => { prOpenPairs(g.id); p2Top(); });
+        grid.appendChild(b);
+      });
+      v.appendChild(grid);
+    });
+    return;
+  }
+  const g = PAIR_GROUPS.find(x => x.id === id);
+  const v = p2View('⚖️', `/${g.a}/ và /${g.b}/`, `${PAIR_LV[g.lv]} · ${g.pairs.length} cặp từ`, () => prOpenPairs());
+  const tip = prEl('div', 'pr-set-tip pr-set-tip2');
+  const sa = IPA_SOUNDS.find(x => x[0] === g.a), sb = IPA_SOUNDS.find(x => x[0] === g.b);
+  tip.textContent = `/${g.a}/: ${sa ? sa[3] : ''}  ·  /${g.b}/: ${sb ? sb[3] : ''}`;
+  v.appendChild(tip);
+  const card = prEl('div', 'tense-card p2-con');
+  const list = prEl('div', 'p2-pairs');
+  g.pairs.forEach(([a, b]) => {
+    const it = prEl('div', 'p2-pair');
+    const x = prEl('button', 'p2-pw', a); x.addEventListener('click', () => prSay(a, 0.7));
+    const y = prEl('button', 'p2-pw alt', b); y.addEventListener('click', () => prSay(b, 0.7));
+    const both = prEl('button', 'p2-cmp', '⇄'); both.addEventListener('click', () => { prSay(a, 0.7); setTimeout(() => prSay(b, 0.7), 1300); });
+    it.appendChild(x); it.appendChild(both); it.appendChild(y); list.appendChild(it);
+  });
+  card.appendChild(list);
+  const sp = prEl('div', 'pr-sec-title', 'Luyện nói cả cặp'); card.appendChild(sp);
+  card.appendChild(prSpeakBox(g.pairs.map(p => p.join(' ')).join(', ')));
+  v.appendChild(card);
+  const acts = prEl('div', 'ls-sum-btns p2-acts');
+  const box = prEl('div', 'p2-testbox');
+  const done = (p, sc, n, bx) => {
+    if (pairBest[g.id] == null || p > pairBest[g.id]) { pairBest[g.id] = p; p2Save(P2.pairs, pairBest); }
+    bx.appendChild(prEl('div', 'vc-done-big ' + (p >= 80 ? 'p2-ok' : 'p2-bad'), `${sc} / ${n}`));
+    bx.appendChild(prEl('div', 'ls-verdict', p >= 80 ? 'Tai bạn đã phân biệt được hai âm này!' : 'Nghe lại từng cặp bằng nút ⇄ rồi thử lại nhé.'));
+    if (p < 80) [g.a, g.b].forEach(sym => { const r = ipaP[sym] || (ipaP[sym] = { pr: 0, sp: 0, pass: [], fail: 0 }); r.fail = (r.fail || 0) + 1; }); p2Save(P2.prog, ipaP);
+  };
+  const t1 = prEl('button', 'btn-primary', '🎧 Nghe & chọn');
+  t1.addEventListener('click', () => {
+    const qs = p2Shuf([...g.pairs, ...g.pairs]).slice(0, 8).map(([a, b]) => { const A = Math.random() < 0.5, w = A ? a : b; return { label: 'Bạn vừa nghe từ nào?', play: () => prSay(w, 0.75), opts: [a, b], ans: A ? 0 : 1, why: `Đó là “${w}” (${A ? '/' + g.a + '/' : '/' + g.b + '/'}).` }; });
+    p2Quiz(box, qs, done); try { box.scrollIntoView({ block: 'start', behavior: 'smooth' }); } catch (e) {}
+  });
+  const t2 = prEl('button', 'btn-ghost', '🗂️ Nghe & phân loại âm');
+  t2.addEventListener('click', () => {
+    const words = p2Shuf(g.pairs.flatMap(([a, b]) => [[a, 0], [b, 1]])).slice(0, 8);
+    const qs = words.map(([w, side]) => ({ label: 'Từ vừa nghe chứa âm nào?', play: () => prSay(w, 0.75), opts: [`/${g.a}/ như ${ipaName(g.a)}`, g.b === '∅' ? 'không có âm này' : `/${g.b}/ như ${ipaName(g.b)}`], ans: side, why: `“${w}” có âm ${side ? '/' + g.b + '/' : '/' + g.a + '/'}.` }));
+    p2Quiz(box, qs, done); try { box.scrollIntoView({ block: 'start', behavior: 'smooth' }); } catch (e) {}
+  });
+  acts.appendChild(t1); acts.appendChild(t2);
+  v.appendChild(acts); v.appendChild(box);
+}
+
+/* ---------- trọng âm và ngữ điệu ---------- */
+let stressBest = p2Load(P2.stress, {}) || {};
+function prOpenStress() {
+  const v = p2View('🎯', 'Trọng âm và ngữ điệu', 'Trọng âm từ · trọng âm câu · ngữ điệu lên xuống');
+  // trọng âm từ
+  v.appendChild(prEl('div', 'tense-group-title', '1. Trọng âm từ'));
+  const c1 = prEl('div', 'tense-card p2-sec');
+  c1.appendChild(prEl('p', 'tn-goal', 'Âm tiết được nhấn đọc to hơn, dài hơn và cao giọng hơn; các âm tiết khác đọc nhẹ, nguyên âm thường thành /ə/. Cùng một gốc từ, trọng âm có thể chuyển chỗ:'));
+  ['photograph', 'photography', 'photographic'].forEach(w => { const r = prEl('div', 'p2-srow'); r.appendChild(prEl('b', 'p2-sw', w)); r.appendChild(stressEl(w)); c1.appendChild(r); });
+  ['economy', 'economic'].forEach(w => { const r = prEl('div', 'p2-srow'); r.appendChild(prEl('b', 'p2-sw', w)); r.appendChild(stressEl(w)); c1.appendChild(r); });
+  c1.appendChild(prEl('div', 'p2-note', 'Chạm từng âm tiết để nghe tách riêng (giọng máy đọc tách âm tiết chỉ gần đúng), rồi bấm “Cả từ”. Vị trí nhấn của các từ này đã được kiểm tra sẵn theo giọng Anh-Anh.'));
+  const box1 = prEl('div', 'p2-testbox');
+  const st1 = prEl('button', 'btn-primary', `🧪 Kiểm tra trọng âm (10 từ)` + (stressBest.word != null ? ` · tốt nhất ${stressBest.word}%` : ''));
+  st1.addEventListener('click', () => {
+    const ws = p2Shuf(Object.keys(STRESS_DB).filter(w => STRESS_DB[w][0].split('·').length >= 2)).slice(0, 10);
+    p2Quiz(box1, ws.map(w => { const e = stressOf(w); return { label: 'Âm tiết nào được nhấn?', prompt: e.parts.join(' · '), play: () => prSay(w, 0.7), opts: e.parts, ans: e.at, why: `${e.parts.map((p, k) => k === e.at ? p.toUpperCase() : p).join(' · ')}` }; }),
+      (p, sc, n, bx) => { if (stressBest.word == null || p > stressBest.word) { stressBest.word = p; p2Save(P2.stress, stressBest); } bx.appendChild(prEl('div', 'vc-done-big', `${sc} / ${n}`)); bx.appendChild(prEl('div', 'ls-verdict', p >= 80 ? 'Rất tốt! Bạn nghe ra trọng âm.' : 'Nghe lại từng từ, chú ý âm tiết dài và cao nhất.')); });
+  });
+  box1.appendChild(st1); c1.appendChild(box1);
+  v.appendChild(c1);
+  // trọng âm câu
+  v.appendChild(prEl('div', 'tense-group-title', '2. Trọng âm câu'));
+  const c2 = prEl('div', 'tense-card p2-sec');
+  c2.appendChild(prEl('p', 'tn-goal', 'Cùng một câu, nhấn vào từ khác nhau sẽ đổi ý muốn nói. Giọng máy không nhấn được theo ý, nên hãy tự đọc to theo chữ in hoa rồi ghi âm để so.'));
+  SENT_STRESS.forEach(x => {
+    const it = prEl('div', 'p2-ss');
+    it.appendChild(prEl('div', 'p2-ss-vi', x.vi));
+    x.opts.forEach(([k, why]) => {
+      const r = prEl('div', 'p2-ss-row');
+      const s = prEl('div', 'p2-ss-s');
+      x.w.forEach((w, i) => s.appendChild(prEl('span', i === k ? 'on' : null, i === k ? w.toUpperCase() : w)));
+      r.appendChild(s);
+      r.appendChild(prEl('div', 'p2-ss-why', why));
+      it.appendChild(r);
+    });
+    const pb = prEl('button', 'ls-slow', '▶ Nghe câu bình thường'); pb.addEventListener('click', () => prSay(x.s, 0.85)); it.appendChild(pb);
+    c2.appendChild(it);
+  });
+  const box2 = prEl('div', 'p2-testbox');
+  const st2 = prEl('button', 'btn-primary', '🧪 Chọn từ cần nhấn theo ngữ cảnh' + (stressBest.sent != null ? ` · tốt nhất ${stressBest.sent}%` : ''));
+  st2.addEventListener('click', () => {
+    const qs = p2Shuf(SENT_STRESS.flatMap(x => x.q.map(([ctx, k]) => ({ label: `Người kia hỏi: “${ctx}”. Bạn trả lời “${x.s}” và nhấn vào từ nào?`, opts: x.opts.map(o => x.w[o[0]].replace(/[.?]$/, '')), ans: x.opts.findIndex(o => o[0] === k), why: x.opts.find(o => o[0] === k)[1] }))));
+    p2Quiz(box2, qs, (p, sc, n, bx) => { if (stressBest.sent == null || p > stressBest.sent) { stressBest.sent = p; p2Save(P2.stress, stressBest); } bx.appendChild(prEl('div', 'vc-done-big', `${sc} / ${n}`)); });
+  });
+  box2.appendChild(st2); c2.appendChild(box2);
+  c2.appendChild(prSpeakBox(SENT_STRESS[0].s));
+  v.appendChild(c2);
+  // ngữ điệu
+  v.appendChild(prEl('div', 'tense-group-title', '3. Ngữ điệu lên ↗ và xuống ↘'));
+  const c3 = prEl('div', 'tense-card p2-sec');
+  INTON.forEach(([ar, t, s, why]) => {
+    const r = prEl('div', 'p2-in');
+    r.appendChild(prEl('span', 'p2-in-ar', ar));
+    const tx = prEl('div'); tx.appendChild(prEl('b', null, t)); tx.appendChild(prEl('div', 'p2-in-s', s)); tx.appendChild(prEl('div', 'p2-in-why', why)); r.appendChild(tx);
+    const pb = prEl('button', 'irr-conf-play', '▶'); pb.addEventListener('click', () => prSay(s, 0.85)); r.appendChild(pb);
+    c3.appendChild(r);
+  });
+  c3.appendChild(prEl('div', 'p2-note', 'Đây là xu hướng thường gặp, không phải quy tắc bắt buộc: người bản xứ vẫn có thể lên giọng ở câu hỏi Wh- để tỏ ra thân thiện, hoặc tùy giọng địa phương.'));
+  const box3 = prEl('div', 'p2-testbox');
+  const st3 = prEl('button', 'btn-primary', '🧪 Lên hay xuống giọng ở cuối?' + (stressBest.inton != null ? ` · tốt nhất ${stressBest.inton}%` : ''));
+  st3.addEventListener('click', () => {
+    p2Quiz(box3, p2Shuf(INTON_Q).map(([s, a]) => ({ label: 'Cuối câu này giọng thường đi lên hay xuống?', prompt: s, play: () => prSay(s, 0.85), opts: ['↗ Lên', '↘ Xuống'], ans: a === '↗' ? 0 : 1, why: a === '↗' ? 'Câu hỏi Yes/No thường lên giọng.' : /\?$/.test(s) ? 'Câu hỏi có từ để hỏi thường xuống giọng.' : 'Câu kể thường xuống giọng.' })),
+      (p, sc, n, bx) => { if (stressBest.inton == null || p > stressBest.inton) { stressBest.inton = p; p2Save(P2.stress, stressBest); } bx.appendChild(prEl('div', 'vc-done-big', `${sc} / ${n}`)); });
+  });
+  box3.appendChild(st3); c3.appendChild(box3);
+  v.appendChild(c3);
+}
+
+/* ---------- kiểm tra tổng hợp ---------- */
+let prTestBest = p2Load(P2.test, null);
+function prOpenTest() {
+  const v = p2View('📝', 'Kiểm tra tổng hợp', '12 câu: nghe phân biệt cặp âm, nhận ra âm trong từ, trọng âm và ngữ điệu');
+  if (prTestBest != null) v.appendChild(prEl('p', 'ls-level-desc', `Kết quả tốt nhất: ${prTestBest}%.`));
+  const weak = ipaWeak();
+  const box = prEl('div', 'p2-testbox');
+  const run = () => {
+    const qs = [];
+    // ưu tiên nhóm cặp âm có âm bạn hay sai
+    const groups = p2Shuf(PAIR_GROUPS).sort((x, y) => (weak.includes(y.a) || weak.includes(y.b) ? 1 : 0) - (weak.includes(x.a) || weak.includes(x.b) ? 1 : 0)).slice(0, 4);
+    groups.forEach(g => { const [a, b] = g.pairs[Math.floor(Math.random() * g.pairs.length)]; const A = Math.random() < 0.5, w = A ? a : b; qs.push({ label: 'Bạn vừa nghe từ nào?', play: () => prSay(w, 0.75), opts: [a, b], ans: A ? 0 : 1, why: `“${w}” · /${A ? g.a : g.b}/` }); });
+    p2Shuf(IPA_SOUNDS).slice(0, 4).forEach(s => {
+      const w = ipaPlain(s[5][0][0]);
+      const others = p2Shuf(IPA_SOUNDS.filter(x => x[1] === s[1] && x[0] !== s[0])).slice(0, 2).map(x => x[0]);
+      const opts = p2Shuf([s[0], ...others]);
+      qs.push({ label: `Từ “${w}” có âm nào được tô đậm trong ví dụ?`, play: () => prSay(w, 0.75), opts: opts.map(o => '/' + o + '/'), ans: opts.indexOf(s[0]), why: `${s[5][0][0].replace(/\[|\]/g, '')} ${s[5][0][1]}` });
+    });
+    p2Shuf(Object.keys(STRESS_DB)).slice(0, 2).forEach(w => { const e = stressOf(w); qs.push({ label: `Âm tiết nào của “${w}” được nhấn?`, play: () => prSay(w, 0.7), opts: e.parts, ans: e.at, why: e.parts.map((p, k) => k === e.at ? p.toUpperCase() : p).join(' · ') }); });
+    p2Shuf(INTON_Q).slice(0, 2).forEach(([s, a]) => qs.push({ label: 'Cuối câu giọng thường lên hay xuống?', prompt: s, play: () => prSay(s, 0.85), opts: ['↗ Lên', '↘ Xuống'], ans: a === '↗' ? 0 : 1 }));
+    p2Quiz(box, p2Shuf(qs), (p, sc, n, bx) => {
+      if (prTestBest == null || p > prTestBest) { prTestBest = p; p2Save(P2.test, p); }
+      bx.appendChild(prEl('div', 'vc-done-big ' + (p >= 80 ? 'p2-ok' : 'p2-bad'), `${sc} / ${n}`));
+      bx.appendChild(prEl('div', 'ls-verdict', p >= 80 ? 'Rất tốt!' : 'Xem lại các nhóm cặp âm và trọng âm rồi làm lại nhé.'));
+      const again = prEl('button', 'btn-primary', '🔄 Làm đề mới'); again.addEventListener('click', run); bx.appendChild(again);
+    });
+  };
+  const st = prEl('button', 'btn-primary', '🧪 Bắt đầu'); st.addEventListener('click', run);
+  box.appendChild(st);
+  v.appendChild(box);
+}
+
+/* ---------- trang chủ tab phát âm ---------- */
+function p2HomeTop() {
+  const wrap = prEl('div', 'p2-home');
+  const card = prEl('div', 'tense-card vc-prog p2-prog');
+  const top = prEl('div', 'vc-prog-top');
+  const nums = prEl('div');
+  const n = prEl('div', 'vc-prog-n'); n.appendChild(prEl('b', null, String(ipaMastered()))); n.appendChild(document.createTextNode(' / ' + IPA_SOUNDS.length)); nums.appendChild(n);
+  nums.appendChild(prEl('div', 'vc-prog-l', 'âm đã thành thạo (đạt bài kiểm tra 2 ngày khác nhau)'));
+  top.appendChild(nums);
+  const acc = prEl('div', 'p2-accent');
+  [['gb', '🇬🇧 British'], ['us', '🇺🇸 American']].forEach(([k, t]) => {
+    const b = prEl('button', 'colloc-chip' + (prAccent === k ? ' active' : ''), t);
+    b.addEventListener('click', () => { prAccent = k; p2Save(P2.accent, k); prShowHome(); });
+    acc.appendChild(b);
+  });
+  top.appendChild(acc);
+  card.appendChild(top);
+  const bar = prEl('span', 'vc-bar'); const f = prEl('span'); f.style.width = (ipaMastered() / IPA_SOUNDS.length * 100) + '%'; bar.appendChild(f); card.appendChild(bar);
+  const cnt = {}; IPA_SOUNDS.forEach(s => { const k = ipaSt(s[0]); cnt[k] = (cnt[k] || 0) + 1; });
+  card.appendChild(prEl('div', 'p2-stline', Object.keys(IPA_ST).map(k => `${IPA_ST[k][1]} ${cnt[k] || 0} ${IPA_ST[k][0].toLowerCase()}`).join(' · ')));
+  const v = prAccentVoice();
+  card.appendChild(prEl('div', 'p2-note', (prAccent === 'us' ? '🇺🇸 Đang học giọng Anh-Mỹ. Bảng IPA vẫn là mô hình Anh-Anh, mỗi âm có ghi chú điểm khác của giọng Mỹ. ' : '🇬🇧 Đang học giọng Anh-Anh: bảng IPA là mô hình tham chiếu Anh-Anh, không đọc /r/ ở cuối âm tiết. ') +
+    (v ? `Giọng đọc mẫu: ${v.name}.` : 'Thiết bị chưa có giọng đọc phù hợp nên dùng giọng mặc định; có thể cài thêm giọng trong cài đặt của máy.')));
+  const weak = ipaWeak().slice(0, 8);
+  if (weak.length) {
+    const w = prEl('div', 'p2-weak');
+    w.appendChild(prEl('span', null, '🔁 Âm cần luyện lại:'));
+    weak.forEach(sym => { const b = prEl('button', 'p2-weak-b', '/' + sym + '/'); b.addEventListener('click', () => { prOpenIpa(); setTimeout(() => ipaShow(sym), 50); }); w.appendChild(b); });
+    card.appendChild(w);
+  }
+  wrap.appendChild(card);
+  const secs = [
+    ['01', '/æ/', 'Bảng 44 âm IPA', 'Nguyên âm đơn · Nguyên âm đôi · Phụ âm', () => prOpenIpa()],
+    ['02', '👄', 'Luyện phát âm từng âm', 'Nghe mẫu · Khẩu hình · Ví dụ · Phân biệt · Kiểm tra', () => { prOpenIpa(); const first = IPA_SOUNDS.find(s => ipaSt(s[0]) !== 'master') || IPA_SOUNDS[0]; setTimeout(() => ipaShow(first[0]), 50); }],
+    ['03', '⚖️', 'Phân biệt âm dễ nhầm', `${PAIR_GROUPS.length} nhóm · nghe & chọn · nghe & phân loại`, () => prOpenPairs()],
+    ['04', '🎯', 'Trọng âm và ngữ điệu', 'Trọng âm từ · Trọng âm câu · Ngữ điệu', () => prOpenStress()],
+    ['05', 'a‿b', 'Nối âm trong giao tiếp', 'Linking · Weak forms · Elision · Assimilation', () => prOpenLink()],
+    ['06', '📝', 'Kiểm tra tổng hợp', 'Nghe, nhận diện, trọng âm, ngữ điệu' + (prTestBest != null ? ` · tốt nhất ${prTestBest}%` : ''), () => prOpenTest()]
+  ];
+  const grid = prEl('div', 'p2-secs');
+  secs.forEach(([no, ic, t, sub, fn]) => {
+    const b = prEl('button', 'p2-secb');
+    b.appendChild(prEl('span', 'p2-sec-no', no));
+    b.appendChild(prEl('span', 'p2-sec-ic', ic));
+    const tx = prEl('span', 'p2-sec-tx'); tx.appendChild(prEl('b', null, t)); tx.appendChild(prEl('span', null, sub)); b.appendChild(tx);
+    b.addEventListener('click', () => { fn(); p2Top(); });
+    grid.appendChild(b);
+  });
+  wrap.appendChild(grid);
+  return wrap;
+}
+
+/* ---------- tra cứu: lịch sử, yêu thích, gợi ý, cụm từ ---------- */
+let prHist = p2Load(P2.hist, []); if (!Array.isArray(prHist)) prHist = [];
+let prFav = p2Load(P2.fav, []); if (!Array.isArray(prFav)) prFav = [];
+function prHistAdd(t) { t = t.trim(); if (!t || t.length > 120) return; prHist = [t, ...prHist.filter(x => x.toLowerCase() !== t.toLowerCase())].slice(0, 10); p2Save(P2.hist, prHist); prLookupChips(); }
+function prFavToggle(t) { const i = prFav.findIndex(x => x.toLowerCase() === t.toLowerCase()); if (i >= 0) prFav.splice(i, 1); else prFav.unshift(t); prFav = prFav.slice(0, 50); p2Save(P2.fav, prFav); prLookupChips(); return i < 0; }
+function prLookupChips() {
+  let box = document.getElementById('p2-lchips');
+  if (!box) { box = prEl('div', 'p2-lchips'); box.id = 'p2-lchips'; const q = document.getElementById('pron-quick'); if (!q) return; q.after(box); }
+  box.innerHTML = '';
+  const row = (label, items, cls) => { if (!items.length) return; const r = prEl('div', 'p2-lrow'); r.appendChild(prEl('span', 'p2-llab', label)); items.forEach(t => { const b = prEl('button', 'p2-lchip ' + (cls || ''), t); b.addEventListener('click', () => { prLoad(t); prHistAdd(t); }); r.appendChild(b); }); box.appendChild(r); };
+  row('★ Yêu thích', prFav.slice(0, 12), 'fav');
+  row('🕘 Gần đây', prHist.slice(0, 8));
+  const det = prEl('details', 'p2-phr'); det.appendChild(prEl('summary', null, '💬 Cụm từ thông dụng'));
+  const r = prEl('div', 'p2-lrow'); PR_PHRASES.forEach(t => { const b = prEl('button', 'p2-lchip', t); b.addEventListener('click', () => { prLoad(t); prHistAdd(t); }); r.appendChild(b); }); det.appendChild(r); box.appendChild(det);
+}
+// gợi ý từ khi gõ (datalist)
+(function prSuggest() {
+  const inp = document.getElementById('pron-input'); if (!inp) return;
+  const dl = document.createElement('datalist'); dl.id = 'pron-sugg'; inp.after(dl); inp.setAttribute('list', 'pron-sugg');
+  let t = 0;
+  inp.addEventListener('input', () => {
+    clearTimeout(t);
+    t = setTimeout(() => {
+      const q = inp.value.trim().toLowerCase();
+      dl.innerHTML = '';
+      if (q.length < 2 || /\s/.test(q)) return;
+      try { prLookup('a'); } catch (e) {}
+      const out = [];
+      if (PR_IDX) for (const k of PR_IDX.keys()) { if (k.startsWith(q)) { out.push(k); if (out.length >= 8) break; } }
+      out.forEach(k => { const o = document.createElement('option'); o.value = k; dl.appendChild(o); });
+    }, 150);
+  });
+})();
+// hướng dẫn đọc cả câu (gần đúng): từ được nhấn, dạng yếu, nối âm, ngữ điệu
+const P2_FUNC = new Set("a an the and but or so to of in on at for with from by as is am are was were be been do does did have has had i you he she it we they me him her us them my your his its our their this that these those there not can could will would shall should may might must just than then if when because who which what where how".split(' '));
+const P2_WEAK = { to: 'tə', for: 'fə', and: 'ən', of: 'əv', can: 'kən', at: 'ət', from: 'frəm', a: 'ə', the: 'ðə', was: 'wəz', were: 'wə', have: 'əv', has: 'əz', do: 'də', you: 'jə', them: 'ðəm', some: 'səm', than: 'ðən', but: 'bət', are: 'ə' };
+function prSentGuide(text) {
+  const toks = text.split(/\s+/).filter(Boolean), cl = t => t.toLowerCase().replace(/[’]/g, "'").replace(/^[^a-z']+|[^a-z']+$/g, '');
+  const d = prEl('details', 'tense-card p2-guide');
+  d.appendChild(prEl('summary', null, '🗣 Cách đọc cả câu (gợi ý tự động, gần đúng)'));
+  const ul = prEl('ul', 'sd-tip-ol');
+  const add = (h, t) => { const li = prEl('li'); li.appendChild(prEl('b', null, h + ': ')); li.appendChild(document.createTextNode(t)); ul.appendChild(li); };
+  const cont = [...new Set(toks.map(cl).filter(w => w && !P2_FUNC.has(w)))];
+  if (cont.length) add('Nhấn vào', cont.join(', '));
+  const weak = [...new Set(toks.map(cl).filter(w => P2_WEAK[w]))];
+  if (weak.length) add('Đọc yếu', weak.map(w => `${w} /${P2_WEAK[w]}/`).join(', '));
+  const links = [];
+  toks.forEach((t, k) => { const a = cl(t), b = cl(toks[k + 1] || ''); if (a && b && /[bcdfgklmnpstvxz]$/.test(a) && !/[,.;:!?]$/.test(t) && /^[aeiou]/.test(b) && !/^(u(se|ni)|one|eu)/.test(b)) links.push(a + '‿' + b); });
+  if (links.length) add('Nối âm', links.join(', '));
+  const last = text.trim(), first = cl(toks[0] || '');
+  add('Ngữ điệu cuối câu', /\?$/.test(last) ? (/^(what|where|when|who|why|which|how)$/.test(first) ? '↘ câu hỏi có từ để hỏi' : '↗ câu hỏi Yes/No') : '↘ câu kể');
+  d.appendChild(ul);
+  d.appendChild(prEl('div', 'p2-note', 'Nối âm và đọc yếu là cách nói thường gặp trong giao tiếp nhanh, không bắt buộc với mọi người nói hay mọi giọng.'));
+  return d;
+}
+
 renderPronSets();
 // leaving the tab stops the "play all" loop
 document.querySelectorAll('nav.tabbar button').forEach(b => b.addEventListener('click', () => { if (b.dataset.page !== 'page-pron') prSeqStop(); }));
@@ -16996,9 +17762,10 @@ document.querySelectorAll('nav.tabbar button').forEach(b => b.addEventListener('
   pronQuick.appendChild(btn);
 });
 
-pronGoBtn.addEventListener('click', () => { renderPronResult(pronInput.value); if (pronInput.value.trim()) prSay(pronInput.value.trim()); });
+pronGoBtn.addEventListener('click', () => { renderPronResult(pronInput.value); if (pronInput.value.trim()) { prSay(pronInput.value.trim()); prHistAdd(pronInput.value); } });
+prLookupChips();
 pronInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') { renderPronResult(pronInput.value); if (pronInput.value.trim()) prSay(pronInput.value.trim()); }
+  if (e.key === 'Enter') { renderPronResult(pronInput.value); if (pronInput.value.trim()) { prSay(pronInput.value.trim()); prHistAdd(pronInput.value); } }
 });
 
 /* ============================================================
@@ -44567,10 +45334,8 @@ function irrRenderSpeak() {
     out.className = 'pr-speak-out warn'; out.textContent = q.err;
   } else if (q.last) {
     prShowScore(out, q.last);
-    const hn = out.querySelector('.pr-score-n'); if (hn) hn.insertAdjacentElement('afterend', lsEl('span', 'irr-sp-l', 'độ khớp nhận diện giọng nói'));
     if (q.tries > 1) out.appendChild(lsEl('div', 'vsp-tries', `Lần ${q.tries} · độ khớp cao nhất lượt này: ${q.best.pct}%`));
   }
-  if (PR_SR) { const d = lsEl('details', 'sd-info irr-sp-info'); d.appendChild(lsEl('summary', null, 'ⓘ Con số này là gì?')); d.appendChild(lsEl('p', null, 'Là tỉ lệ từ mà công cụ nhận diện giọng nói của trình duyệt nghe ra khớp với mẫu. Đây không phải điểm phát âm tuyệt đối: công nghệ này nhận ra chữ chứ không phân tích chính xác từng âm. Hãy ghi âm và so với giọng mẫu để tự đánh giá.')); out.appendChild(d); }
   out.classList.add('vsp-out');
   const btns = lsEl('div', 'pr-speak-btns vsp-btns');
   const mic = lsEl('button', 'btn-primary pr-mic', S.busy ? '👂 Đang nghe… hãy đọc to' : q.tries ? '🎙️ Nói lại' : '🎙️ Bấm rồi đọc to');
