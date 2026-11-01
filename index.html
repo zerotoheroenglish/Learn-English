@@ -1655,6 +1655,90 @@
   /* ---------- Write mode ---------- */
   .vc-modes{ grid-template-columns:repeat(4, minmax(0, 1fr)); }
   .vc-modes .ls-mode{ font-size:12.5px; padding:10px 2px; }
+  /* v115 bất quy tắc */
+  .irr-modes{ grid-template-columns:repeat(4, minmax(0,1fr)) !important; }
+  @media (min-width:720px){ .irr-modes{ grid-template-columns:repeat(7, minmax(0,1fr)) !important; } }
+  .irr-modes .ls-mode{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .irr-sts{ display:grid; grid-template-columns:repeat(5, minmax(0,1fr)); gap:6px; margin-top:12px; }
+  @media (max-width:520px){ .irr-sts{ grid-template-columns:repeat(3, minmax(0,1fr)); } }
+  .irr-stc{ display:flex; flex-direction:column; align-items:flex-start; gap:2px; padding:8px; border-radius:10px; border:1px solid var(--paper-line); background:var(--paper); color:var(--ink-soft); cursor:pointer; font:600 11.5px/1.3 var(--font-body); text-align:left; }
+  .irr-stc b{ font:800 18px/1.1 var(--font-display); color:var(--ink); }
+  .irr-stc.active{ border-color:var(--rust); background:var(--rust-light); }
+  .irr-sts-note{ font-size:11.5px; color:var(--ink-soft); margin-top:8px; line-height:1.45; }
+  .irr-st{ font:700 10.5px/1.6 var(--font-body); padding:0 7px; border-radius:999px; background:var(--paper); border:1px solid var(--paper-line); color:var(--ink-soft); }
+  .irr-st-review{ color:#B27A00; border-color:color-mix(in srgb, #F5B700 50%, var(--paper-line)); }
+  .irr-st-mastering, .irr-st-master{ color:var(--moss); border-color:color-mix(in srgb, var(--moss) 45%, var(--paper-line)); }
+  .irr-stc.irr-st-review b{ color:#B27A00; } .irr-stc.irr-st-master b, .irr-stc.irr-st-mastering b{ color:var(--moss); }
+  .irr-multi{ font:700 10.5px/1.6 var(--font-body); padding:0 7px; border-radius:999px; background:color-mix(in srgb, var(--rust) 10%, transparent); color:var(--rust); }
+  .irr-alt{ font-size:12px; line-height:1.5; color:var(--ink-soft); margin-top:4px; padding:6px 9px; border-radius:8px; background:var(--paper); border-left:3px solid var(--rust); text-align:left; }
+  .irr-fav{ background:none; border:0; font-size:18px; color:var(--ink-soft); cursor:pointer; padding:4px; }
+  .irr-fav.on{ color:#E0A800; }
+  .irr-hist{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin:-4px 0 12px; font-size:12.5px; color:var(--ink-soft); }
+  .irr-hist-c{ border:1px solid var(--paper-line); background:var(--card); border-radius:999px; padding:3px 10px; font:600 12.5px var(--font-body); color:var(--ink); cursor:pointer; }
+  .irr-hist-x{ background:none; border:0; color:var(--ink-soft); text-decoration:underline; cursor:pointer; font-size:12px; }
+  .irr-tools{ display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:8px; margin:6px 0 12px; }
+  @media (max-width:520px){ .irr-tools{ grid-template-columns:1fr 1fr; } .irr-tool{ padding:10px; gap:6px; } .irr-tool-ic{ width:22px; font-size:18px; } .irr-tool b{ font-size:13px; } }
+  .irr-tool{ display:flex; gap:10px; align-items:center; text-align:left; padding:12px; border-radius:14px; border:1px solid var(--paper-line); background:var(--card); color:var(--ink); cursor:pointer; }
+  .irr-tool:hover{ border-color:var(--rust); }
+  .irr-tool-ic{ font-size:22px; width:30px; text-align:center; }
+  .irr-tool span:last-child{ display:flex; flex-direction:column; gap:2px; }
+  .irr-tool b{ font:800 14px var(--font-display); }
+  .irr-tool span span{ font-size:12px; color:var(--ink-soft); }
+  .irr-test{ padding:14px 16px; margin-bottom:14px; }
+  .irr-test-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+  .irr-test-row button{ flex:1 1 150px; }
+  .irr-sf{ display:flex; flex-direction:column; gap:6px; margin-bottom:10px; }
+  .irr-more{ width:100%; margin-top:10px; }
+  .irr-cdir{ margin-left:auto; }
+  .irr-card2{ min-height:240px; justify-content:center; }
+  .irr-card-ask{ font:700 15px var(--font-body); color:var(--rust); margin-top:14px; }
+  .irr-card-tap{ font-size:12.5px; color:var(--ink-soft); margin-top:10px; }
+  .irr-flipbtn{ width:100%; }
+  .irr-cx-s{ font:600 19px/1.6 var(--font-display); color:var(--ink); margin:6px 0; }
+  .irr-cx-gap{ display:inline-block; min-width:80px; padding:0 6px; border-bottom:2px dashed var(--rust); color:var(--rust); }
+  .irr-cx-gap.ok{ color:var(--moss); border-color:var(--moss); border-bottom-style:solid; }
+  .irr-cx-gap.bad{ color:var(--mark); border-color:var(--mark); border-bottom-style:solid; }
+  .irr-cx-bad{ color:var(--mark); text-decoration:underline wavy; text-underline-offset:5px; }
+  .irr-cx-bad.fixed{ color:var(--moss); text-decoration:none; }
+  .irr-cx-vi{ font:600 15px/1.5 var(--font-body); color:var(--ink); padding:8px 10px; border-radius:10px; background:var(--paper); margin-bottom:6px; }
+  .irr-cx-vi.sm{ font-size:13px; color:var(--ink-soft); font-weight:500; }
+  .irr-cx-in{ display:flex; gap:8px; margin-top:12px; }
+  .irr-cx-in input{ flex:1; min-width:0; }
+  .irr-cx-skip{ display:block; margin:8px auto 0; }
+  .irr-cx-why{ font-size:13px; line-height:1.5; margin:6px 0; color:var(--ink); }
+  .irr-hear{ text-align:center; }
+  .irr-hear-play{ width:84px; height:84px; border-radius:50%; border:0; background:var(--rust); color:var(--on-accent, #fff); font-size:34px; cursor:pointer; margin:12px auto 8px; display:block; }
+  .irr-hear-o b{ margin-right:2px; }
+  .irr-hear-ipa{ display:block; font:500 12px var(--font-mono); opacity:.8; margin-top:2px; }
+  .irr-pt-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:10px; }
+  .irr-pt{ padding:14px 16px; display:flex; flex-direction:column; gap:8px; }
+  .irr-pt-h{ display:flex; align-items:baseline; justify-content:space-between; }
+  .irr-pt-h b{ font:800 22px var(--font-display); color:var(--rust); }
+  .irr-pt-n{ font:700 12px var(--font-mono); color:var(--ink-soft); }
+  .irr-pt-hint{ font-size:13px; color:var(--ink); }
+  .irr-pt-ex{ display:flex; flex-wrap:wrap; gap:6px; }
+  .irr-pt-v{ border:1px solid var(--paper-line); background:var(--paper); color:var(--ink); border-radius:8px; padding:4px 8px; font:600 12.5px var(--font-body); cursor:pointer; }
+  .irr-pt-meta{ font-size:12px; color:var(--ink-soft); }
+  .irr-conf{ padding:14px 16px; }
+  .irr-conf-t{ width:100%; border-collapse:collapse; font-size:13.5px; }
+  .irr-conf-t th{ text-align:left; font:700 11px var(--font-body); color:var(--ink-soft); text-transform:uppercase; padding:4px 6px; border-bottom:1px solid var(--paper-line); }
+  .irr-conf-t td{ padding:7px 6px; border-bottom:1px solid var(--paper-line); vertical-align:top; }
+  .irr-conf-w{ background:none; border:0; padding:0; font:700 14.5px var(--font-body); color:var(--rust); cursor:pointer; text-align:left; }
+  .irr-conf-m{ font-size:12.5px; color:var(--ink); }
+  .irr-conf-ipa{ font:500 11.5px var(--font-mono); color:var(--ink-soft); margin-top:2px; }
+  .irr-conf-ex{ display:flex; gap:8px; align-items:flex-start; margin:6px 0; }
+  .irr-conf-play{ flex:none; width:30px; height:30px; border-radius:50%; border:1px solid var(--paper-line); background:var(--card); color:var(--rust); cursor:pointer; }
+  .irr-conf-en{ font:600 14.5px/1.45 var(--font-body); color:var(--ink); }
+  .irr-conf-err{ font-size:13px; line-height:1.5; padding:8px 10px; border-radius:10px; background:color-mix(in srgb, var(--mark) 10%, transparent); color:var(--ink); }
+  .irr-conf-qz{ padding:14px 16px; margin-top:12px; }
+  .irr-conf-q{ padding:10px 0; border-bottom:1px solid var(--paper-line); }
+  .irr-conf-qs{ font:600 15px/1.5 var(--font-body); color:var(--ink); margin-bottom:6px; }
+  .irr-conf-q .colloc-chip.ok{ border-color:var(--moss); background:var(--moss-light); color:var(--moss); }
+  .irr-conf-q .colloc-chip.bad{ border-color:var(--mark); color:var(--mark); }
+  .irr-conf-fb{ font-size:12.5px; line-height:1.45; margin-top:6px; } .irr-conf-fb.ok{ color:var(--moss); } .irr-conf-fb.bad{ color:var(--mark); }
+  .irr-sp-l{ font:700 12px var(--font-body); margin-left:6px; }
+  .irr-sp-info{ margin-top:8px; }
+
   .vc-modes{ grid-template-columns:repeat(5, minmax(0, 1fr)); }
   .vc-pos-chips{ padding:10px 0 4px; flex-wrap:wrap; overflow-x:visible; }
   .vc-tfilter{ margin-top:12px; padding:10px 12px 12px; }
@@ -3502,7 +3586,7 @@
   <div class="hw-deco" aria-hidden="true"><i class="hw-witch"></i><i class="hw-spider"></i><i class="hw-ghost"></i><i class="hw-caul"></i><i class="hw-candy"></i><i class="hw-cat"></i><i class="hw-skel"></i></div>
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v114</span>
+      <span class="hero-badge">EN ⇄ VI · v115</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice hero-season" id="season-btn" aria-label="Đổi giao diện theo mùa" title="Đổi giao diện theo mùa">🎃</button>
@@ -42427,7 +42511,7 @@ function vcSpeakSummary() {
   const avg = Math.round(done.reduce((k, q) => k + q.best.pct, 0) / done.length);
   const big = lsEl('div', 'vc-done-big vsp-avg ' + vspCls(avg), avg + '%');
   box.appendChild(big);
-  box.appendChild(lsEl('div', 'vc-done-sub', `Độ khớp phát âm trung bình (ước lượng) · ${done.length} ${S.what === 'ex' ? 'câu' : 'từ'} đã chấm`));
+  box.appendChild(lsEl('div', 'vc-done-sub', `Độ khớp nhận diện giọng nói trung bình · ${done.length} ${S.what === 'ex' ? 'câu' : 'từ'} đã nói (không phải điểm phát âm tuyệt đối)`));
   box.appendChild(lsEl('div', 'ls-verdict', avg >= 90 ? 'Tuyệt vời! Máy nghe bạn rất rõ 🎉' : avg >= 70 ? 'Khá tốt! Luyện thêm vài từ chưa đạt là ổn.' : 'Cứ luyện tiếp nhé: nghe mẫu, đọc chậm và rõ âm cuối.'));
   const ok = done.filter(q => q.best.pct >= 90), mid = done.filter(q => q.best.pct >= 60 && q.best.pct < 90), bad = done.filter(q => q.best.pct < 60);
   const stats = lsEl('div', 'ls-stats');
@@ -43610,7 +43694,7 @@ IRR_LEVELS.forEach(L => {
 });
 try {
   const sub = document.querySelector('#page-irregular .section-sub');
-  if (sub) sub.textContent = `${IRREGULAR_VERBS.length} động từ chia theo cấp A1 → C1, mỗi cấp gồm các bài khoảng 12 từ. Mỗi từ có V1 · V2 · V3, phiên âm và câu ví dụ. Chạm ▶ để nghe, ✓ để đánh dấu đã thuộc`;
+  if (sub) sub.textContent = `${IRREGULAR_VERBS.length} động từ chia theo cấp A1 → C1, mỗi cấp gồm các bài khoảng 20 từ. Học bằng thẻ nhớ hai mặt, điền V2/V3 vào câu, nghe nhận diện, chấm độ khớp giọng nói và lịch ôn 1 · 3 · 7 · 14 · 30 ngày`;
 } catch (e) {}
 
 /* ---------- progress ---------- */
@@ -43621,6 +43705,11 @@ try { const o = JSON.parse(localStorage.getItem(IRR_SP_KEY) || '{}'); if (o && t
 const irrIs = v => irrDone.has(v.v1);
 function irrSet(v, on) {
   if (on) irrDone.add(v.v1); else irrDone.delete(v.v1);
+  if (typeof irrSrs !== 'undefined') {
+    const r = irrSrs[v.v1] || (irrSrs[v.v1] = { b: 0, n: 0, w: 0, due: irrToday(), last: irrToday() });
+    if (on) { r.b = Math.max(r.b || 0, 2); r.due = irrToday() + 3; r.bad = false; } else { r.b = 0; r.bad = false; r.due = irrToday(); }
+    irrSrsSave();
+  }
   try { localStorage.setItem(IRR_DONE_KEY, JSON.stringify([...irrDone])); } catch (e) {}
 }
 const irrCount = items => items.filter(irrIs).length;
@@ -43678,16 +43767,24 @@ function irrRow(v, showLv) {
   const line = lsEl('div', 'vc-line');
   line.appendChild(lsEl('span', 'vc-word', v.v1));
   line.appendChild(lsEl('span', 'irr-pat', IRR_PATTERNS[v.pat]));
+  if (v.multi) { const m = lsEl('span', 'irr-multi', '⚑ nhiều dạng'); m.title = 'Có dạng thay thế ở V2 hoặc V3'; line.appendChild(m); }
   if (showLv) line.appendChild(lsEl('span', 'vc-lv vc-lv' + v.lv, IRR_LEVELS[v.lv - 1].code));
+  const st = irrStatus(v);
+  if (st !== 'new') { const sb = lsEl('span', 'irr-st irr-st-' + st, IRR_ST[st][1] + ' ' + IRR_ST[st][0]); sb.title = IRR_ST[st][2] + (irrSrs[v.v1] ? ' · ' + irrFmtDue(irrSrs[v.v1]) : ''); line.appendChild(sb); }
   main.appendChild(line);
   main.appendChild(irrForms(v));
   main.appendChild(lsEl('div', 'vc-mean', v.meaning));
+  const an = irrAltNote(v); if (an) main.appendChild(lsEl('div', 'irr-alt', '⚑ ' + an));
   if (v.ex) { const ex = lsEl('div', 'vc-ex'); ex.innerHTML = irrExHtml(v); main.appendChild(ex); }
   const btns = lsEl('div', 'vc-btns');
-  btns.appendChild(vcPlayBtn('▶', 'Nghe 3 dạng của ' + v.v1, irrSay3(v)));
+  btns.appendChild(vcPlayBtn('▶', 'Nghe 3 dạng của ' + v.v1, irrSaySample(v)));
   if (v.ex) btns.appendChild(vcPlayBtn('💬', 'Nghe câu ví dụ', v.ex, 0.85));
+  const fv = lsEl('button', 'irr-fav' + (irrFav.has(v.v1) ? ' on' : ''), irrFav.has(v.v1) ? '★' : '☆');
+  fv.setAttribute('aria-label', 'Yêu thích ' + v.v1);
+  fv.addEventListener('click', () => { if (irrFav.has(v.v1)) irrFav.delete(v.v1); else irrFav.add(v.v1); irrFavSave(); fv.classList.toggle('on', irrFav.has(v.v1)); fv.textContent = irrFav.has(v.v1) ? '★' : '☆'; });
+  btns.appendChild(fv);
   const ck = lsEl('button', 'vc-check' + (irrIs(v) ? ' on' : ''), '✓');
-  ck.setAttribute('aria-label', 'Đánh dấu đã thuộc ' + v.v1);
+  ck.setAttribute('aria-label', 'Đánh dấu đã thuộc ' + v.v1); ck.title = 'Đánh dấu đã thuộc (chuyển sang “Đang thành thạo”, ôn lại sau 3 ngày)';
   ck.addEventListener('click', () => {
     const on = !irrIs(v);
     irrSet(v, on);
@@ -43712,9 +43809,11 @@ function irrRenderHome() {
   n.appendChild(lsEl('b', null, String(got)));
   n.appendChild(document.createTextNode(' / ' + total));
   nums.appendChild(n);
-  nums.appendChild(lsEl('div', 'vc-prog-l', `động từ đã thuộc · 5 cấp độ · ${IRR_UNITS.length} bài`));
+  nums.appendChild(lsEl('div', 'vc-prog-l', `động từ đã thuộc (đang thành thạo + thành thạo) · ${IRR_UNITS.length} bài`));
   top.appendChild(nums);
-  const rnd = lsEl('button', 'btn-primary vc-rnd', '🎲 Ôn nhanh 20 từ');
+  const due = irrDue();
+  const rnd = lsEl('button', 'btn-primary vc-rnd', due.length ? `📅 Ôn hôm nay · ${due.length}` : '🎲 Ôn nhanh 20 từ');
+  if (due.length) rnd.addEventListener('click', e => { e.stopImmediatePropagation(); irrOpenUnit({ mix: true, icon: '📅', vi: 'Ôn tập hôm nay', en: `${Math.min(30, due.length)} động từ đến lịch ôn hoặc trả lời sai`, items: lsShuffle(due).slice(0, 30) }, 'cards'); });
   rnd.addEventListener('click', () => {
     const todo = IRREGULAR_VERBS.filter(v => !irrIs(v));
     irrOpenUnit({ mix: true, icon: '🎲', vi: 'Ôn nhanh ngẫu nhiên', en: '20 động từ từ mọi cấp độ', items: lsShuffle(todo.length >= 20 ? todo : IRREGULAR_VERBS).slice(0, 20) }, 'cards');
@@ -43722,6 +43821,18 @@ function irrRenderHome() {
   top.appendChild(rnd);
   prog.appendChild(top);
   prog.appendChild(vcBar(got / total));
+  const cnt = {}; IRREGULAR_VERBS.forEach(v => { const k = irrStatus(v); cnt[k] = (cnt[k] || 0) + 1; });
+  const sts = lsEl('div', 'irr-sts');
+  IRR_ST_ORDER.forEach(k => {
+    const b = lsEl('button', 'irr-stc irr-st-' + k + (irr.stf === k ? ' active' : ''));
+    b.appendChild(lsEl('b', null, String(cnt[k] || 0)));
+    b.appendChild(lsEl('span', null, IRR_ST[k][1] + ' ' + IRR_ST[k][0]));
+    b.title = IRR_ST[k][2];
+    b.addEventListener('click', () => { irr.stf = irr.stf === k ? null : k; irr.q = ''; irr.pat = null; irr.lim = 80; irrRenderHome(); });
+    sts.appendChild(b);
+  });
+  prog.appendChild(sts);
+  prog.appendChild(lsEl('div', 'irr-sts-note', 'Trả lời đúng thì từ được hẹn ôn lại sau 1 → 3 → 7 → 14 → 30 ngày; trả lời sai thì về “Cần ôn”.'));
   irrRoot.appendChild(prog);
 
   const sr = lsEl('div', 'verb-search-row');
@@ -43729,18 +43840,41 @@ function irrRenderHome() {
   inp.type = 'text'; inp.id = 'verb-search'; inp.value = irr.q;
   inp.placeholder = `Tìm trong ${total} động từ… (go, ăn, written)`;
   inp.setAttribute('autocomplete', 'off'); inp.setAttribute('autocapitalize', 'off');
-  inp.addEventListener('input', () => { irr.q = inp.value; irrRenderHomeBody(); });
+  inp.placeholder = `Tìm V1, V2, V3, nghĩa hoặc IPA… (go, ăn, /ɡɒt/)`;
+  let histT = 0;
+  const pushHist = () => { const q = irr.q.trim(); if (q.length < 2) return; irrHist = [q, ...irrHist.filter(x => x !== q)].slice(0, 8); try { localStorage.setItem(IRR_HIST_KEY, JSON.stringify(irrHist)); } catch (e) {} };
+  inp.addEventListener('input', () => { irr.q = inp.value; irr.lim = 80; irrRenderHomeBody(); clearTimeout(histT); histT = setTimeout(pushHist, 1500); });
+  inp.addEventListener('keydown', e => { if (e.key === 'Enter') { clearTimeout(histT); pushHist(); } });
   sr.appendChild(inp);
   irrRoot.appendChild(sr);
+  if (irrHist.length && !irr.q) {
+    const hh = lsEl('div', 'irr-hist');
+    hh.appendChild(lsEl('span', 'irr-hist-l', '🕘 Tìm gần đây:'));
+    irrHist.forEach(h => { const c = lsEl('button', 'irr-hist-c', h); c.addEventListener('click', () => { irr.q = h; irrRenderHome(); }); hh.appendChild(c); });
+    const clr = lsEl('button', 'irr-hist-x', 'Xóa'); clr.addEventListener('click', () => { irrHist = []; try { localStorage.removeItem(IRR_HIST_KEY); } catch (e) {} hh.remove(); }); hh.appendChild(clr);
+    irrRoot.appendChild(hh);
+  }
+  if (!irr.q && !irr.stf && !irr.pat) {
+    const tools = lsEl('div', 'irr-tools');
+    [['📚', 'Danh sách 305 động từ', 'Xem tất cả, lọc và phân trang', () => { irr.stf = 'all'; irr.lim = 80; irrRenderHome(); }],
+     ['🧩', 'Bảng 4 nhóm biến đổi', 'A-A-A · A-B-B · A-B-A · A-B-C', () => { irrRenderPatTable(); irrTop(); }],
+     ['⚠️', 'Động từ dễ nhầm', 'lie/lay, rise/raise, read…', () => { irrRenderConf(); irrTop(); }],
+     ['👂', 'Nghe & nhận diện', 'Nghe một dạng, chọn V1 / V2 / V3', () => { const todo = IRREGULAR_VERBS.filter(v => v.lv <= Math.max(2, irr.lv) && v.pat !== 'AAA'); irrOpenUnit({ mix: true, icon: '👂', vi: 'Nghe & nhận diện', en: '20 động từ ngẫu nhiên', items: lsShuffle(todo).slice(0, 20) }, 'hear'); }],
+     ['★', 'Yêu thích', `${irrFav.size} động từ`, () => { irr.stf = 'fav'; irr.lim = 80; irrRenderHome(); }]
+    ].forEach(([ic, t, sub, fn]) => { const b = lsEl('button', 'irr-tool'); b.appendChild(lsEl('span', 'irr-tool-ic', ic)); const tx = lsEl('span'); tx.appendChild(lsEl('b', null, t)); tx.appendChild(lsEl('span', null, sub)); b.appendChild(tx); b.addEventListener('click', fn); tools.appendChild(b); });
+    irrRoot.appendChild(tools);
+    irrRoot.appendChild(irrTestBox());
+  }
 
   const pc = lsEl('div', 'colloc-chips vc-pos-chips');
   pc.setAttribute('role', 'group'); pc.setAttribute('aria-label', 'Lọc theo nhóm biến đổi');
+  if (irr.stf) irr.pat = null;
   IRR_PAT_ORDER.forEach(k => {
     const c = lsEl('button', 'colloc-chip' + (irr.pat === k ? ' active' : ''), IRR_PATTERNS[k]);
     c.title = IRR_PAT_HINT[k];
     c.setAttribute('aria-pressed', irr.pat === k ? 'true' : 'false');
     c.addEventListener('click', () => {
-      irr.pat = irr.pat === k ? null : k; irr.patLv = 0;
+      irr.pat = irr.pat === k ? null : k; irr.patLv = 0; if (irr.stf) { irr.stf = null; irrRenderHome(); return; }
       pc.querySelectorAll('.colloc-chip').forEach((b, i) => { const on = IRR_PAT_ORDER[i] === irr.pat; b.classList.toggle('active', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
       irrRenderHomeBody();
     });
@@ -43767,6 +43901,26 @@ function irrUnitCard(u, showLv) {
   return b;
 }
 
+// bộ lọc phụ khi tìm kiếm / xem danh sách
+function irrSfOk(v) { const f = irr.sf || 'all'; return (f === 'all' || (f === 'review' ? irrStatus(v) === 'review' : f === 'todo' ? !irrIs(v) : f === 'fav' ? irrFav.has(v.v1) : f === 'multi' ? v.multi : true)) && (!irr.slv || v.lv === irr.slv); }
+function irrSfChips() {
+  const w = lsEl('div', 'irr-sf');
+  const row = lsEl('div', 'colloc-chips');
+  [['all', 'Tất cả'], ['review', '🔁 Cần ôn'], ['todo', 'Chưa thuộc'], ['fav', '★ Yêu thích'], ['multi', '⚑ Có dạng thay thế']].forEach(([k, t]) => { const c = lsEl('button', 'colloc-chip' + ((irr.sf || 'all') === k ? ' active' : ''), t); c.addEventListener('click', () => { irr.sf = k; irr.lim = 80; irrRenderHomeBody(); }); row.appendChild(c); });
+  w.appendChild(row);
+  const lv = lsEl('div', 'colloc-chips');
+  [[0, 'Mọi cấp'], ...IRR_LEVELS.map(L => [L.n, L.code])].forEach(([k, t]) => { const c = lsEl('button', 'colloc-chip' + ((irr.slv || 0) === k ? ' active' : ''), t); c.addEventListener('click', () => { irr.slv = k; irr.lim = 80; irrRenderHomeBody(); }); lv.appendChild(c); });
+  w.appendChild(lv);
+  return w;
+}
+function irrPaged(body, res) {
+  const lim = irr.lim || 80;
+  body.appendChild(lsEl('div', 'vc-count', `${res.length} động từ` + (res.length > lim ? ` · đang hiện ${lim}` : '')));
+  const card = lsEl('div', 'tense-card vc-card');
+  res.slice(0, lim).forEach(v => card.appendChild(irrRow(v, true)));
+  body.appendChild(card);
+  if (res.length > lim) { const m = lsEl('button', 'btn-ghost irr-more', `Xem thêm ${Math.min(80, res.length - lim)} động từ ↓`); m.addEventListener('click', () => { irr.lim = lim + 80; const y = window.scrollY; irrRenderHomeBody(); window.scrollTo(0, y); }); body.appendChild(m); }
+}
 function irrRenderHomeBody() {
   const body = irrBody();
   if (!body) return;
@@ -43777,14 +43931,27 @@ function irrRenderHomeBody() {
     const inForms = v => !viq && [v.v1, v.v2, v.v3].some(x => irrAlts(x).some(f => f.includes(fq)));
     const wordRe = new RegExp('(^|[\\s,;()/])' + escapeRe(viq ? lq : fq));
     const inMean = v => wordRe.test(viq ? v.meaning.toLowerCase() : vcFold(v.meaning));
-    const res = IRREGULAR_VERBS.filter(v => (!irr.pat || v.pat === irr.pat) && (inForms(v) || inMean(v)));
+    const ipaQ = /[ɑæɒɔəɜɪʊʌθðʃʒŋˈː\/]/.test(q);
+    const inIpa = v => ipaQ && [v.ipa, v.ipa2, v.ipa3].some(x => (x || '').replace(/[\/ˈˌ]/g, '').includes(q.replace(/[\/ˈˌ]/g, '').trim()));
+    const res = IRREGULAR_VERBS.filter(v => (!irr.pat || v.pats.has(irr.pat)) && irrSfOk(v) && (inIpa(v) || (!ipaQ && (inForms(v) || inMean(v)))));
     const rank = v => irrAlts(v.v1).includes(fq) ? 0 : [v.v2, v.v3].some(x => irrAlts(x).includes(fq)) ? 1 : inForms(v) ? 2 : 3;
     res.sort((a, b) => rank(a) - rank(b) || a.lv - b.lv);
+    body.appendChild(irrSfChips());
     if (!res.length) { body.appendChild(lsEl('div', 'empty-state', 'Không tìm thấy động từ phù hợp.')); return; }
-    body.appendChild(lsEl('div', 'vc-count', `${res.length} động từ`));
-    const card = lsEl('div', 'tense-card vc-card');
-    res.slice(0, 80).forEach(v => card.appendChild(irrRow(v, true)));
-    body.appendChild(card);
+    irrPaged(body, res);
+    return;
+  }
+  if (irr.stf) {
+    const res = IRREGULAR_VERBS.filter(v => irr.stf === 'all' ? true : irr.stf === 'fav' ? irrFav.has(v.v1) : irrStatus(v) === irr.stf).filter(irrSfOk).slice().sort((a, b) => a.lv - b.lv || a.v1.localeCompare(b.v1));
+    const h = lsEl('div', 'vc-lvhead');
+    h.appendChild(lsEl('div', 'tense-group-title', irr.stf === 'all' ? '📚 Tất cả động từ' : irr.stf === 'fav' ? '★ Động từ yêu thích' : `${IRR_ST[irr.stf][1]} ${IRR_ST[irr.stf][0]}`));
+    const x = lsEl('button', 'btn-ghost vc-lvrv', '✕ Đóng'); x.addEventListener('click', () => { irr.stf = null; irrRenderHome(); }); h.appendChild(x);
+    body.appendChild(h);
+    if (irr.stf !== 'all' && irr.stf !== 'fav') body.appendChild(lsEl('p', 'ls-level-desc', IRR_ST[irr.stf][2] + '.'));
+    body.appendChild(irrSfChips());
+    if (!res.length) { body.appendChild(lsEl('div', 'empty-state', irr.stf === 'fav' ? 'Chưa có động từ yêu thích. Bấm ☆ bên cạnh động từ để lưu.' : 'Không có động từ nào ở mục này.')); return; }
+    if (res.length >= 4) { const pr = lsEl('div', 'ls-sum-btns'); const a = lsEl('button', 'btn-primary', '🃏 Luyện bằng thẻ'); a.addEventListener('click', () => irrOpenUnit({ mix: true, icon: '🃏', vi: 'Luyện danh sách đã lọc', en: `${Math.min(30, res.length)} động từ`, items: lsShuffle(res).slice(0, 30) }, 'cards')); const b = lsEl('button', 'btn-ghost', '📝 Kiểm tra'); b.addEventListener('click', () => irrOpenUnit({ mix: true, icon: '📝', vi: 'Kiểm tra danh sách đã lọc', en: `${Math.min(20, res.length)} động từ`, items: lsShuffle(res).slice(0, 20) }, 'quiz')); pr.appendChild(a); pr.appendChild(b); body.appendChild(pr); }
+    irrPaged(body, res);
     return;
   }
   if (irr.pat) return irrRenderPat(body);
@@ -43834,7 +44001,7 @@ function irrRenderHomeBody() {
 
 /* ---------- danh sách theo nhóm biến đổi ---------- */
 function irrRenderPat(body) {
-  const all = IRREGULAR_VERBS.filter(v => v.pat === irr.pat);
+  const all = IRREGULAR_VERBS.filter(v => v.pats.has(irr.pat));
   const items = (irr.patLv ? all.filter(v => v.lv === irr.patLv) : all).slice().sort((a, b) => a.lv - b.lv || a.v1.localeCompare(b.v1));
   const head = lsEl('div', 'tense-card vc-pos-head');
   const top = lsEl('div', 'vc-prog-top');
@@ -43904,7 +44071,8 @@ function irrRenderUnit() {
   const hp = hd.querySelector('#vc-head-prog'); if (hp) hp.id = 'irr-head-prog';
   irrRoot.appendChild(hd);
   const modes = lsEl('div', 'ls-modes vc-modes');
-  [['list', 'Danh sách'], ['cards', 'Thẻ nhớ'], ['quiz', 'Kiểm tra'], ['write', 'Viết V2 · V3']].forEach(([m, label]) => {
+  modes.classList.add('irr-modes');
+  [['list', 'Danh sách'], ['cards', 'Thẻ nhớ'], ['quiz', 'Kiểm tra'], ['write', 'Viết V2·V3'], ['ctx', 'Điền câu'], ['hear', 'Nghe'], ['speak', 'Phát âm']].forEach(([m, label]) => {
     const b = lsEl('button', 'ls-mode' + (irr.mode === m ? ' active' : ''), label);
     b.dataset.vcMode = m;
     b.addEventListener('click', () => { irr.mode = m; irrRenderUnit(); });
@@ -43914,10 +44082,12 @@ function irrRenderUnit() {
   const body = lsEl('div'); body.id = 'irr-body';
   irrRoot.appendChild(body);
   irrUpdateProg();
-  if (irr.mode === 'speak') irr.mode = 'list';
   if (irr.mode === 'list') irrRenderList();
   else if (irr.mode === 'cards') irrStartCards();
   else if (irr.mode === 'quiz') irrStartQuiz();
+  else if (irr.mode === 'ctx') irrStartCtx();
+  else if (irr.mode === 'hear') irrStartHear();
+  else if (irr.mode === 'speak') irrStartSpeak();
   else irrStartWrite();
 }
 function irrUpdateProg() {
@@ -43990,12 +44160,13 @@ function irrSeqPlay(btn) {
 }
 
 /* ---------- flashcards ---------- */
+/* thẻ nhớ hai mặt: mặt trước bắt nhớ lại, chạm để lật xem đáp án */
+const IRR_CDIR_KEY = 'hoc-tieng-anh-irr-cdir';
 function irrStartCards() {
   const items = irr.unit.items;
-  irr.cards = { deck: [...lsShuffle(items.filter(v => !irrIs(v))), ...lsShuffle(items.filter(irrIs))], idx: 0, newly: 0, again: new Set() };
+  try { irr.cdir = localStorage.getItem(IRR_CDIR_KEY) === 'vi' ? 'vi' : 'v1'; } catch (e) { irr.cdir = 'v1'; }
+  irr.cards = { deck: [...lsShuffle(items.filter(v => irrStatus(v) === 'review')), ...lsShuffle(items.filter(v => irrStatus(v) !== 'review' && !irrIs(v))), ...lsShuffle(items.filter(v => irrIs(v) && irrStatus(v) !== 'review'))], idx: 0, newly: 0, again: new Set(), flip: false, ok: 0 };
   irrRenderCard();
-  const v = irr.cards.deck[0];
-  if (v) speak(irrSay3(v), 0.8);
 }
 function irrRenderCard() {
   const body = irrBody();
@@ -44005,12 +44176,12 @@ function irrRenderCard() {
     const box = lsEl('div', 'tense-card vc-done');
     box.appendChild(lsEl('div', 'vc-done-big', '🎉'));
     box.appendChild(lsEl('div', 'ls-verdict', `Xong ${C.deck.length} thẻ!`));
-    box.appendChild(lsEl('div', 'vc-done-sub', C.newly ? `Bạn vừa thuộc thêm ${C.newly} động từ.` : 'Lật lại thêm vài lượt để nhớ lâu hơn nhé.'));
+    box.appendChild(lsEl('div', 'vc-done-sub', `Bạn nhớ ${C.ok} lượt, ${C.again.size} từ cần ôn lại. Kết quả đã được ghi vào lịch ôn.`));
     const btns = lsEl('div', 'ls-sum-btns');
     const again = lsEl('button', 'btn-ghost', 'Học lại');
     again.addEventListener('click', irrStartCards);
-    const quiz = lsEl('button', 'btn-primary', 'Làm bài kiểm tra →');
-    quiz.addEventListener('click', () => { irr.mode = 'quiz'; irrRenderUnit(); });
+    const quiz = lsEl('button', 'btn-primary', 'Điền V2 / V3 vào câu →');
+    quiz.addEventListener('click', () => { irr.mode = 'ctx'; irrRenderUnit(); });
     btns.appendChild(again); btns.appendChild(quiz);
     box.appendChild(btns);
     irrNextUnitBtn(box);
@@ -44020,42 +44191,67 @@ function irrRenderCard() {
   const v = C.deck[C.idx];
   const top = lsEl('div', 'vc-card-top');
   top.appendChild(lsEl('span', 'ls-count', `Thẻ ${C.idx + 1} / ${C.deck.length}`));
+  const dir = lsEl('div', 'colloc-chips irr-cdir');
+  [['v1', 'V1 → V2, V3'], ['vi', 'Nghĩa → V1, V2, V3']].forEach(([k, t]) => {
+    const c = lsEl('button', 'colloc-chip' + (irr.cdir === k ? ' active' : ''), t);
+    c.addEventListener('click', () => { irr.cdir = k; try { localStorage.setItem(IRR_CDIR_KEY, k); } catch (e) {} C.flip = false; irrRenderCard(); });
+    dir.appendChild(c);
+  });
+  top.appendChild(dir);
   body.appendChild(top);
-  const card = lsEl('button', 'vc-flash flipped irr-flash');
-  card.setAttribute('aria-label', 'Nghe lại ' + v.v1);
-  if (irrIs(v)) card.appendChild(lsEl('span', 'vc-f-badge', '✓ đã thuộc'));
-  card.appendChild(lsEl('div', 'vc-f-big', v.v1));
-  card.appendChild(lsEl('div', 'vc-f-mean', v.meaning));
-  card.appendChild(irrForms(v, true));
-  card.appendChild(lsEl('div', 'irr-pat', `${IRR_PATTERNS[v.pat]} · ${IRR_PAT_HINT[v.pat]}`));
-  if (v.ex) { card.appendChild(lsEl('div', 'vc-f-sep')); const ex = lsEl('div', 'vc-f-ex'); ex.innerHTML = irrExHtml(v); card.appendChild(ex); }
-  card.addEventListener('click', () => speak(irrSay3(v), 0.8));
+  const card = lsEl('button', 'vc-flash irr-flash irr-card2' + (C.flip ? ' back' : ''));
+  const st = irrStatus(v);
+  if (st !== 'new') card.appendChild(lsEl('span', 'vc-f-badge', IRR_ST[st][1] + ' ' + IRR_ST[st][0]));
+  if (!C.flip) {
+    card.setAttribute('aria-label', 'Lật thẻ');
+    if (irr.cdir === 'vi') {
+      card.appendChild(lsEl('div', 'vc-q-label', 'Động từ nào có nghĩa'));
+      card.appendChild(lsEl('div', 'vc-f-big vc-f-vi', v.meaning));
+      card.appendChild(lsEl('div', 'irr-card-ask', 'Nhớ lại cả V1, V2 và V3'));
+    } else {
+      card.appendChild(lsEl('div', 'vc-f-big', v.v1));
+      card.appendChild(lsEl('div', 'vc-f-ipa', (v.ipa || '') + ' · ' + v.meaning));
+      card.appendChild(lsEl('div', 'irr-card-ask', 'Bạn nhớ V2 và V3 của từ này không?'));
+    }
+    card.appendChild(lsEl('div', 'irr-card-tap', '👆 Chạm để lật thẻ'));
+    card.addEventListener('click', () => { C.flip = true; irrSeen(v); irrRenderCard(); speak(irrSaySample(v), 0.8); });
+  } else {
+    card.setAttribute('aria-label', 'Nghe lại ' + v.v1);
+    card.appendChild(lsEl('div', 'vc-f-mean', `${v.v1} · ${v.meaning}`));
+    card.appendChild(irrForms(v, true));
+    card.appendChild(lsEl('div', 'irr-pat', `${IRR_PATTERNS[v.pat]} · ${IRR_PAT_HINT[v.pat]}`));
+    const an = irrAltNote(v); if (an) card.appendChild(lsEl('div', 'irr-alt', '⚑ ' + an));
+    if (v.ex) { card.appendChild(lsEl('div', 'vc-f-sep')); const ex = lsEl('div', 'vc-f-ex'); ex.innerHTML = irrExHtml(v); card.appendChild(ex); }
+    card.addEventListener('click', () => speak(irrSaySample(v), 0.8));
+  }
   body.appendChild(card);
   const audio = lsEl('div', 'vc-audio');
-  const a1 = lsEl('button', 'ls-slow', '▶ Nghe từ');
-  a1.addEventListener('click', () => speak(irrSay3(v), 0.8));
-  audio.appendChild(a1);
-  if (v.ex) { const a2 = lsEl('button', 'ls-slow', '💬 Nghe câu ví dụ'); a2.addEventListener('click', () => speak(v.ex, 0.85)); audio.appendChild(a2); }
+  if (C.flip) {
+    const a1 = lsEl('button', 'ls-slow', '▶ Nghe 3 dạng'); a1.addEventListener('click', () => speak(irrSaySample(v), 0.8)); audio.appendChild(a1);
+    if (v.ex) { const a2 = lsEl('button', 'ls-slow', '💬 Nghe câu ví dụ'); a2.addEventListener('click', () => speak(v.ex, 0.85)); audio.appendChild(a2); }
+  } else if (irr.cdir === 'v1') { const a0 = lsEl('button', 'ls-slow', '▶ Nghe V1'); a0.addEventListener('click', () => speak(irrSayForm(v, 0), 0.8)); audio.appendChild(a0); }
   body.appendChild(audio);
   const btns = lsEl('div', 'vc-card-btns');
-  const no = lsEl('button', 'btn-ghost', '↺ Chưa thuộc');
-  no.addEventListener('click', () => {
-    if (irrIs(v)) irrSet(v, false);
-    if (!C.again.has(v)) { C.again.add(v); C.deck.push(v); }
-    irrNextCard();
-  });
-  const yes = lsEl('button', 'btn-primary', '✓ Đã thuộc');
-  yes.addEventListener('click', () => { if (!irrIs(v)) { irrSet(v, true); C.newly++; } irrNextCard(); });
-  btns.appendChild(no); btns.appendChild(yes);
+  if (!C.flip) {
+    const fl = lsEl('button', 'btn-primary irr-flipbtn', '👀 Lật thẻ xem đáp án');
+    fl.addEventListener('click', () => { C.flip = true; irrSeen(v); irrRenderCard(); speak(irrSaySample(v), 0.8); });
+    btns.appendChild(fl);
+  } else {
+    const no = lsEl('button', 'btn-ghost', '↺ Chưa nhớ');
+    no.addEventListener('click', () => { irrGrade(v, false, 'card'); if (!C.again.has(v)) { C.again.add(v); C.deck.push(v); } irrNextCard(); });
+    const yes = lsEl('button', 'btn-primary', '✓ Đã nhớ');
+    yes.addEventListener('click', () => { irrGrade(v, true, 'card'); C.ok++; irrNextCard(); });
+    btns.appendChild(no); btns.appendChild(yes);
+  }
   body.appendChild(btns);
 }
 function irrNextCard() {
   const C = irr.cards;
-  C.idx++;
+  C.idx++; C.flip = false;
   irrRenderCard();
   irrUpdateProg();
   const v = C.deck[C.idx];
-  if (v) speak(irrSay3(v), 0.8);
+  if (v && irr.cdir === 'v1') speak(irrSayForm(v, 0), 0.8);
 }
 
 /* ---------- quiz: hỏi V2, V3 hoặc nghĩa ---------- */
@@ -44068,12 +44264,18 @@ function irrRegular(w) {
 function irrStartQuiz() {
   const items = irr.unit.items;
   const pool = items.length >= 8 ? items : IRREGULAR_VERBS.filter(v => v.lv === items[0].lv);
-  const types = ['v2', 'v3', 'mean'];
+  const types = irr.unit.test ? ['v2', 'ctx', 'v3', 'mean'] : ['v2', 'v3', 'mean'];
   irr.quiz = {
     qs: lsShuffle(items).map((v, i) => {
-      const type = types[i % 3];
+      let type = types[i % types.length];
+      if (type === 'ctx' && !irrCtx(v)) type = 'v2';
       let right, opts;
-      if (type === 'mean') {
+      if (type === 'ctx') {
+        const c = irrCtx(v); right = c.form;
+        const bad = new Set(irrNeedForms(v, c)); opts = [right];
+        [c.need === 'v2' ? irrFirst(v.v3) : irrFirst(v.v2), irrRegular(v.v1), irrFirst(v.v1).replace(/e$/, '') + 'ing', ...(c.need === 'v3' ? [irrFirst(v.v1)] : [])].forEach(x => { if (opts.length < 4 && !bad.has(x) && !opts.includes(x)) opts.push(x); });
+        opts = lsShuffle(opts);
+      } else if (type === 'mean') {
         right = v.v1;
         const ds = [];
         for (const x of lsShuffle(pool.length >= 4 ? pool : IRREGULAR_VERBS)) {
@@ -44136,7 +44338,12 @@ function irrRenderQuiz() {
   top.appendChild(lsEl('span', 'ls-count', `Đúng: ${Q.score}`));
   body.appendChild(top);
   const pr = lsEl('div', 'tense-card vc-q');
-  if (q.type === 'mean') {
+  if (q.type === 'ctx') {
+    const c = irrCtx(v);
+    pr.appendChild(lsEl('div', 'vc-q-label', 'Chọn dạng đúng của “' + irrFirst(v.v1) + '” trong câu'));
+    pr.appendChild(irrCtxSentence(c, lsEl('span', 'irr-cx-gap' + (q.picked ? (q.picked === q.right ? ' ok' : ' bad') : ''), q.picked ? c.raw : '_____')));
+    if (v.exvi) pr.appendChild(lsEl('div', 'irr-cx-vi sm', v.exvi));
+  } else if (q.type === 'mean') {
     pr.appendChild(lsEl('div', 'vc-q-label', 'Động từ nào có nghĩa'));
     pr.appendChild(lsEl('div', 'vc-f-big vc-f-vi', v.meaning));
   } else {
@@ -44157,8 +44364,9 @@ function irrRenderQuiz() {
       if (q.picked) return;
       q.picked = o;
       if (o === q.right) Q.score++; else Q.wrong.push(v);
+      irrGrade(v, o === q.right, 'quiz');
       irrRenderQuiz();
-      speak(irrSay3(v), 0.8);
+      speak(q.type === 'ctx' ? v.ex : irrSaySample(v), 0.8);
     });
     opts.appendChild(b);
   });
@@ -44170,7 +44378,8 @@ function irrRenderQuiz() {
     line.appendChild(lsEl('b', null, `${v.v1} – ${v.v2} – ${v.v3}`));
     line.appendChild(document.createTextNode(` · ${v.meaning}`));
     fb.appendChild(line);
-    if (v.ex) { const ex = lsEl('div', 'vc-ex'); ex.innerHTML = irrExHtml(v); fb.appendChild(ex); }
+    if (q.type === 'ctx') fb.appendChild(lsEl('div', 'irr-cx-why', '💡 ' + IRR_WHY[irrCtx(v).why]));
+    else if (v.ex) { const ex = lsEl('div', 'vc-ex'); ex.innerHTML = irrExHtml(v); fb.appendChild(ex); }
     body.appendChild(fb);
     const next = lsEl('button', 'btn-primary vc-next', Q.idx + 1 < Q.qs.length ? 'Câu tiếp →' : 'Xem kết quả');
     next.addEventListener('click', () => { Q.idx++; irrRenderQuiz(); });
@@ -44230,7 +44439,7 @@ function irrRenderWrite() {
     const norm = s => s.toLowerCase().replace(/[’']/g, '').replace(/\s+/g, ' ').trim();
     q.ok2 = irrAlts(v.v2).includes(norm(q.a2)); q.ok3 = irrAlts(v.v3).includes(norm(q.a3));
     q.tries++;
-    if (q.ok2 && q.ok3) { q.done = true; if (q.first === null) q.first = q.tries === 1; speak(irrSay3(v), 0.8); }
+    if (q.ok2 && q.ok3) { q.done = true; if (q.first === null) q.first = q.tries === 1; irrGrade(v, q.first, 'wr', q.first ? 100 : 50); speak(irrSaySample(v), 0.8); }
     irrRenderWrite();
   };
   [f2.inp, f3.inp].forEach(inp => inp.addEventListener('keydown', e => {
@@ -44260,7 +44469,7 @@ function irrRenderWrite() {
     }
     const btns = lsEl('div', 'ls-sum-btns');
     const show = lsEl('button', 'btn-ghost', '👀 Xem đáp án');
-    show.addEventListener('click', () => { q.a2 = irrFirst(v.v2); q.a3 = irrFirst(v.v3); q.ok2 = q.ok3 = true; q.done = true; q.first = false; speak(irrSay3(v), 0.8); irrRenderWrite(); });
+    show.addEventListener('click', () => { q.a2 = irrFirst(v.v2); q.a3 = irrFirst(v.v3); q.ok2 = q.ok3 = true; q.done = true; q.first = false; irrGrade(v, false, 'wr', 0); speak(irrSaySample(v), 0.8); irrRenderWrite(); });
     const ck = lsEl('button', 'btn-primary', 'Kiểm tra');
     ck.addEventListener('click', check);
     btns.appendChild(show); btns.appendChild(ck);
@@ -44280,12 +44489,7 @@ function irrWriteSummary() {
     miss.forEach(q => card.appendChild(irrRow(q.v, false)));
     box.appendChild(card);
   }
-  const newOk = ok.map(q => q.v).filter(v => !irrIs(v));
-  if (newOk.length) {
-    const mk = lsEl('button', 'btn-ghost wr-mark', `✓ Đánh dấu đã thuộc ${newOk.length} từ viết đúng`);
-    mk.addEventListener('click', () => { newOk.forEach(v => irrSet(v, true)); irrUpdateProg(); mk.disabled = true; mk.textContent = '✓ Đã đánh dấu'; });
-    box.appendChild(mk);
-  }
+  box.appendChild(lsEl('div', 'vc-done-sub', 'Kết quả đã được ghi vào lịch ôn: từ viết đúng ngay được hẹn ôn lại, từ sai chuyển sang “Cần ôn”.'));
   const btns = lsEl('div', 'ls-sum-btns');
   const again = lsEl('button', 'btn-ghost', 'Viết lại tất cả'); again.addEventListener('click', () => irrStartWrite());
   btns.appendChild(again);
@@ -44336,6 +44540,7 @@ function irrRenderSpeak() {
   body.appendChild(top);
   const card = lsEl('div', 'tense-card wr-card vsp-card');
   card.appendChild(lsEl('div', 'vc-q-label', S.what === 'ex' ? 'Đọc to câu này' : 'Đọc to cả 3 dạng'));
+  if (S.what !== 'ex' && IRR_SOUND[v.v1]) card.appendChild(lsEl('div', 'irr-alt', `⚑ Viết giống nhau nhưng đọc khác: V1 ${(v.ipa || '').split(' · ')[0]}, V2 – V3 ${(v.ipa2 || '').split(' · ')[0]}. Nên luyện thêm bằng câu ví dụ.`));
   if (S.what === 'ex' && v.ex) {
     const ex = lsEl('div', 'vsp-sent'); ex.innerHTML = irrExHtml(v, false); card.appendChild(ex);
     if (v.exvi) card.appendChild(lsEl('div', 'vsp-sent-vi', v.exvi));
@@ -44347,8 +44552,9 @@ function irrRenderSpeak() {
   }
   if (q.prev != null) card.appendChild(lsEl('div', 'vsp-prev ' + vspCls(q.prev), `Kỷ lục trước: ${q.prev}%`));
   const audio = lsEl('div', 'wr-audio');
-  const a1 = lsEl('button', 'ls-slow', '🔊 Nghe mẫu'); a1.addEventListener('click', () => speak(target, S.what === 'ex' ? 0.85 : 0.75));
-  const a2 = lsEl('button', 'ls-slow', '🐢 Chậm'); a2.addEventListener('click', () => speak(target, 0.5));
+  const sample = S.what === 'ex' ? target : irrSaySample(v);
+  const a1 = lsEl('button', 'ls-slow', '🔊 Nghe mẫu'); a1.addEventListener('click', () => speak(sample, S.what === 'ex' ? 0.85 : 0.75));
+  const a2 = lsEl('button', 'ls-slow', '🐢 Chậm'); a2.addEventListener('click', () => speak(sample, 0.5));
   audio.appendChild(a1); audio.appendChild(a2);
   card.appendChild(audio);
   body.appendChild(card);
@@ -44361,8 +44567,10 @@ function irrRenderSpeak() {
     out.className = 'pr-speak-out warn'; out.textContent = q.err;
   } else if (q.last) {
     prShowScore(out, q.last);
-    if (q.tries > 1) out.appendChild(lsEl('div', 'vsp-tries', `Lần ${q.tries} · điểm cao nhất lượt này: ${q.best.pct}%`));
+    const hn = out.querySelector('.pr-score-n'); if (hn) hn.insertAdjacentElement('afterend', lsEl('span', 'irr-sp-l', 'độ khớp nhận diện giọng nói'));
+    if (q.tries > 1) out.appendChild(lsEl('div', 'vsp-tries', `Lần ${q.tries} · độ khớp cao nhất lượt này: ${q.best.pct}%`));
   }
+  if (PR_SR) { const d = lsEl('details', 'sd-info irr-sp-info'); d.appendChild(lsEl('summary', null, 'ⓘ Con số này là gì?')); d.appendChild(lsEl('p', null, 'Là tỉ lệ từ mà công cụ nhận diện giọng nói của trình duyệt nghe ra khớp với mẫu. Đây không phải điểm phát âm tuyệt đối: công nghệ này nhận ra chữ chứ không phân tích chính xác từng âm. Hãy ghi âm và so với giọng mẫu để tự đánh giá.')); out.appendChild(d); }
   out.classList.add('vsp-out');
   const btns = lsEl('div', 'pr-speak-btns vsp-btns');
   const mic = lsEl('button', 'btn-primary pr-mic', S.busy ? '👂 Đang nghe… hãy đọc to' : q.tries ? '🎙️ Nói lại' : '🎙️ Bấm rồi đọc to');
@@ -44408,7 +44616,7 @@ function irrSpeakSummary() {
   if (!done.length) {
     box.appendChild(lsEl('div', 'vc-done-big', '🎙️'));
     box.appendChild(lsEl('div', 'ls-verdict', 'Bạn chưa nói từ nào trong lượt này.'));
-    box.appendChild(lsEl('div', 'vc-done-sub', 'Bấm 🎙️ rồi đọc to cả 3 dạng để app chấm điểm phát âm.'));
+    box.appendChild(lsEl('div', 'vc-done-sub', 'Bấm 🎙️ rồi đọc to cả 3 dạng để app đo độ khớp nhận diện giọng nói.'));
     const again = lsEl('button', 'btn-primary', 'Bắt đầu lại'); again.addEventListener('click', () => irrStartSpeak());
     box.appendChild(again);
     body.appendChild(box);
@@ -44416,7 +44624,7 @@ function irrSpeakSummary() {
   }
   const avg = Math.round(done.reduce((k, q) => k + q.best.pct, 0) / done.length);
   box.appendChild(lsEl('div', 'vc-done-big vsp-avg ' + vspCls(avg), avg + '%'));
-  box.appendChild(lsEl('div', 'vc-done-sub', `Độ khớp phát âm trung bình (ước lượng) · ${done.length} ${S.what === 'ex' ? 'câu' : 'từ'} đã chấm`));
+  box.appendChild(lsEl('div', 'vc-done-sub', `Độ khớp nhận diện giọng nói trung bình · ${done.length} ${S.what === 'ex' ? 'câu' : 'từ'} đã nói (không phải điểm phát âm tuyệt đối)`));
   box.appendChild(lsEl('div', 'ls-verdict', avg >= 90 ? 'Tuyệt vời! Máy nghe bạn rất rõ 🎉' : avg >= 70 ? 'Khá tốt! Luyện thêm vài từ chưa đạt là ổn.' : 'Cứ luyện tiếp nhé: nghe mẫu, đọc chậm và rõ âm cuối.'));
   const ok = done.filter(q => q.best.pct >= 90), mid = done.filter(q => q.best.pct >= 60 && q.best.pct < 90), bad = done.filter(q => q.best.pct < 60);
   const stats = lsEl('div', 'ls-stats');
@@ -44444,6 +44652,512 @@ function irrSpeakSummary() {
   box.appendChild(btns);
   irrNextUnitBtn(box);
   body.appendChild(box);
+}
+
+/* ============================================================
+   v115 · Bất quy tắc: tiến độ 5 trạng thái + lịch ôn 1·3·7·14·30 ngày, dạng thay thế,
+   bài điền V2/V3 theo ngữ cảnh, nghe & nhận diện, động từ dễ nhầm, kiểm tra tổng hợp
+============================================================ */
+const IRR_SRS_KEY = 'hoc-tieng-anh-irr-srs', IRR_FAV_KEY = 'hoc-tieng-anh-irr-fav', IRR_HIST_KEY = 'hoc-tieng-anh-irr-hist';
+const IRR_INT = [1, 3, 7, 14, 30];
+const irrToday = () => { const d = new Date(); return Math.floor((d.getTime() - d.getTimezoneOffset() * 60000) / 864e5); };
+let irrSrs = {}, irrFav = new Set(), irrHist = [];
+try { const o = JSON.parse(localStorage.getItem(IRR_SRS_KEY) || '{}'); if (o && typeof o === 'object' && !Array.isArray(o)) irrSrs = o; } catch (e) {}
+try { const a = JSON.parse(localStorage.getItem(IRR_FAV_KEY) || '[]'); if (Array.isArray(a)) irrFav = new Set(a); } catch (e) {}
+try { const a = JSON.parse(localStorage.getItem(IRR_HIST_KEY) || '[]'); if (Array.isArray(a)) irrHist = a.slice(0, 8); } catch (e) {}
+// từ đã đánh dấu ✓ ở bản cũ → coi như "đang thành thạo", ôn lại sau 3 ngày
+irrDone.forEach(k => { if (!irrSrs[k]) irrSrs[k] = { b: 2, n: 0, w: 0, due: irrToday() + 3, last: irrToday() }; });
+const irrSrsSave = () => { try { localStorage.setItem(IRR_SRS_KEY, JSON.stringify(irrSrs)); } catch (e) {} };
+const irrFavSave = () => { try { localStorage.setItem(IRR_FAV_KEY, JSON.stringify([...irrFav])); } catch (e) {} };
+const IRR_ST = {
+  new: ['Chưa học', '○', 'Chưa bắt đầu'],
+  learning: ['Đang học', '📖', 'Đã xem V1 – V2 – V3'],
+  review: ['Cần ôn', '🔁', 'Trả lời sai, chưa nhớ hoặc đến lịch ôn'],
+  mastering: ['Đang thành thạo', '🌿', 'Đã trả lời đúng qua các bài kiểm tra'],
+  master: ['Thành thạo', '🏆', 'Nhớ chính xác qua nhiều lần ôn cách ngày']
+};
+const IRR_ST_ORDER = ['new', 'learning', 'review', 'mastering', 'master'];
+function irrStatus(v) {
+  const r = irrSrs[v.v1];
+  if (!r) return 'new';
+  if (r.bad || (r.b >= 1 && r.due <= irrToday())) return 'review';
+  return r.b >= 4 ? 'master' : r.b >= 2 ? 'mastering' : 'learning';
+}
+const irrDue = () => IRREGULAR_VERBS.filter(v => irrStatus(v) === 'review');
+function irrSeen(v) { if (!irrSrs[v.v1]) { irrSrs[v.v1] = { b: 0, n: 0, w: 0, due: irrToday(), last: irrToday() }; irrSrsSave(); } }
+// chấm một lần trả lời: đúng → lên một bậc và hẹn ôn sau 1, 3, 7, 14, 30 ngày; sai → về bậc thấp, ôn ngay
+function irrGrade(v, ok, kind, val) {
+  const r = irrSrs[v.v1] || (irrSrs[v.v1] = { b: 0, n: 0, w: 0, due: irrToday(), last: irrToday() });
+  const t = irrToday();
+  r.n = (r.n || 0) + 1; r.last = t;
+  if (ok) {
+    // chỉ lên bậc khi đã đến hạn (học dồn trong một ngày không làm bậc tăng vọt)
+    if (r.bad || r.b < 2 || r.due <= t) { r.b = Math.min(5, (r.b || 0) + 1); r.due = t + IRR_INT[r.b - 1]; }
+    r.bad = false;
+  } else { r.w = (r.w || 0) + 1; r.b = r.b >= 2 ? 1 : 0; r.due = t; r.bad = true; }
+  if (kind === 'wr' && val != null) r.wr = Math.max(r.wr || 0, val);
+  if (r.b >= 2) irrDone.add(v.v1); else irrDone.delete(v.v1);
+  try { localStorage.setItem(IRR_DONE_KEY, JSON.stringify([...irrDone])); } catch (e) {}
+  irrSrsSave();
+}
+const irrFmtDue = r => { if (!r) return ''; const d = r.due - irrToday(); return d <= 0 ? 'ôn hôm nay' : d === 1 ? 'ôn ngày mai' : `ôn sau ${d} ngày`; };
+
+/* ---------- dạng thay thế: mỗi tổ hợp V2/V3 có thể thuộc một nhóm khác ---------- */
+const irrPatOf = (a, b, c) => a === b && b === c ? 'AAA' : b === c ? 'ABB' : a === c ? 'ABA' : 'ABC';
+const IRR_ALT_NOTE = {
+  get: 'gotten là dạng V3 phổ biến trong tiếng Anh Mỹ (I have gotten better); tiếng Anh Anh dùng got (I have got better). “have got” còn có nghĩa là “có”.',
+  dive: 'dove hay gặp trong tiếng Anh Mỹ, dived dùng cả Anh và Mỹ. V3 luôn là dived.',
+  prove: 'proved và proven đều đúng ở V3; proven hay dùng như tính từ (a proven method).',
+  sneak: 'snuck là dạng thân mật, phổ biến ở Mỹ; sneaked trang trọng hơn.',
+  bear: 'borne: “mang, chịu đựng” (costs borne by the company). born chỉ dùng trong “be born” = được sinh ra.',
+  be: 'was dùng với I / he / she / it; were dùng với you / we / they.',
+  fit: 'fit (V2, V3) phổ biến trong tiếng Anh Mỹ; tiếng Anh Anh thường dùng fitted.',
+  speed: 'sped: đi nhanh, lao đi; speeded (up): làm tăng tốc độ.',
+  plead: 'pled hay gặp ở Mỹ (văn nói, pháp lý); pleaded dùng phổ biến hơn.',
+  mow: 'mown hay dùng như tính từ (freshly mown grass); mowed dùng được ở cả V2 và V3.',
+  sow: 'sown phổ biến hơn ở V3; sowed vẫn đúng.',
+  knit: 'knitted dùng khi nói đan len; knit hay dùng nghĩa bóng (a close-knit family).',
+  wet: 'wet phổ biến hơn; wetted ít gặp, thường trong văn kỹ thuật.',
+  wed: 'wed và wedded đều đúng; wed hay gặp trên báo chí.',
+  thrive: 'thrived phổ biến hơn nhiều; throve / thriven mang tính văn chương.',
+  hew: 'hewn hay dùng như tính từ (rough-hewn); hewed cũng đúng.',
+  saw: 'saw (cưa) khác với saw là V2 của see. V3: sawn (Anh) hoặc sawed (Mỹ).',
+  input: 'input phổ biến hơn; inputted cũng được chấp nhận.',
+  bust: 'busted phổ biến trong tiếng Anh Mỹ, mang tính thân mật.',
+  clothe: 'clad mang tính văn chương, thường dùng như tính từ (ivy-clad walls).',
+  bereave: 'bereaved: mất người thân; bereft (of): mất đi, thiếu (bereft of hope).'
+};
+IRREGULAR_VERBS.forEach(v => {
+  const A = irrAlts(v.v1), B = irrAlts(v.v2), C = irrAlts(v.v3);
+  const combos = [];
+  // cùng số dạng ở V2 và V3 → ghép theo thứ tự (burnt–burnt, burned–burned); khác số → mọi tổ hợp (dived/dove – dived)
+  const pairs = B.length === C.length ? B.map((b, i) => [b, C[i]]) : B.flatMap(b => C.map(c => [b, c]));
+  pairs.forEach(([b, c]) => { const p = irrPatOf(A[0], b, c); if (!combos.some(x => x.p === p)) combos.push({ b, c, p }); });
+  v.pats = new Set(combos.map(x => x.p));
+  v.combos = combos;
+  v.multi = B.length > 1 || C.length > 1;
+});
+function irrAltNote(v) {
+  if (!v.multi && !IRR_ALT_NOTE[v.v1]) return '';
+  const parts = [];
+  if (v.pats.size > 1) parts.push(v.combos.map(x => `${irrFirst(v.v1)} – ${x.b} – ${x.c} (${IRR_PATTERNS[x.p]})`).join(' · ') + '.');
+  if (IRR_ALT_NOTE[v.v1]) parts.push(IRR_ALT_NOTE[v.v1]);
+  else if ([...irrAlts(v.v2), ...irrAlts(v.v3)].some(x => /t$/.test(x)) && [...irrAlts(v.v2), ...irrAlts(v.v3)].some(x => /ed$/.test(x)))
+    parts.push('Cả hai dạng đều đúng: dạng -ed phổ biến hơn trong tiếng Anh Mỹ, dạng -t hay gặp hơn trong tiếng Anh Anh.');
+  else if (v.multi) parts.push('Các dạng cách nhau bằng “/” đều đúng; dạng đứng trước phổ biến hơn.');
+  return parts.join(' ');
+}
+
+/* ---------- câu ngữ cảnh lấy từ câu ví dụ: tìm chỗ V2/V3 và lý do ---------- */
+const IRR_SKIP = /^(always|never|just|already|ever|not|n't|recently|finally|also|often|all|both|been|being|once|still|really|nearly|almost|completely|suddenly|quickly)$/;
+const irrTokW = t => t.toLowerCase().replace(/[’]/g, "'").replace(/[^a-z'-]/g, '');
+function irrCtx(v) {
+  if (v._ctx !== undefined) return v._ctx;
+  v._ctx = null;
+  if (!v.ex) return null;
+  const toks = v.ex.split(/\s+/);
+  const f2 = irrAlts(v.v2), f3 = irrAlts(v.v3), f1 = irrAlts(v.v1);
+  let k = -1;
+  toks.forEach((t, i) => { const w = irrTokW(t); if (k < 0 && (f2.includes(w) || f3.includes(w)) && !(f1.includes(w) && !f2.includes(w) && !f3.includes(w))) k = i; });
+  if (k < 0) return null;
+  const form = irrTokW(toks[k]);
+  let need = 'v2', why = 'past';
+  for (let j = k - 1; j >= Math.max(0, k - 4); j--) {
+    const w = irrTokW(toks[j]);
+    if (IRR_SKIP.test(w)) continue;
+    if (/^(have|has|had|'ve|'d|haven't|hasn't|hadn't)$/.test(w) || /'ve$|'d$/.test(w)) { need = 'v3'; why = 'perfect'; }
+    else if (/^(is|are|am|was|were|be|been|being|get|gets|got|isn't|aren't|wasn't|weren't)$/.test(w) || /'s$|'re$|'m$/.test(w) && f3.includes(form) && !f2.includes(form)) { need = 'v3'; why = 'passive'; }
+    break;
+  }
+  if (need === 'v2' && !f2.includes(form) && f3.includes(form)) { need = 'v3'; why = 'adj'; }
+  if (v.v1 === 'be') { need = 'v2'; why = 'past'; }
+  const pre = toks.slice(0, k).join(' '), m = toks[k].match(/^([^A-Za-z]*)([A-Za-z'’-]+)(.*)$/) || ['', '', toks[k], ''];
+  const post = toks.slice(k + 1).join(' ');
+  v._ctx = { pre: (pre ? pre + ' ' : '') + m[1], post: m[3] + (post ? ' ' + post : ''), form, need, why, raw: m[2] };
+  return v._ctx;
+}
+const IRR_WHY = {
+  past: 'Câu kể một việc đã xảy ra và kết thúc trong quá khứ (thì quá khứ đơn), nên dùng V2.',
+  perfect: 'Sau have / has / had là thì hoàn thành, nên dùng V3 (quá khứ phân từ).',
+  passive: 'Sau be (is, was, were, been…) mang nghĩa bị động, nên dùng V3.',
+  adj: 'Ở đây động từ được dùng như tính từ / bị động rút gọn, nên dùng V3.'
+};
+const irrNeedForms = (v, c) => c.need === 'v2' ? irrAlts(v.v2) : irrAlts(v.v3);
+// dạng sai để làm câu "sửa lỗi": dạng còn lại (nếu khác) hoặc dạng -ed tự tạo
+function irrWrongForm(v, c) {
+  const ok = new Set(irrNeedForms(v, c));
+  const other = c.need === 'v2' ? irrAlts(v.v3) : irrAlts(v.v2);
+  const o = other.find(x => !ok.has(x));
+  if (o) return o;
+  const reg = irrRegular(v.v1);
+  if (!ok.has(reg) && !irrAlts(v.v2).includes(reg) && !irrAlts(v.v3).includes(reg)) return reg;
+  if (c.need === 'v3') { const b = irrFirst(v.v1); if (!ok.has(b)) return b; }
+  return null;
+}
+
+/* ---------- chế độ "Điền câu": 5 dạng bài, có giải thích V2 hay V3 ---------- */
+function irrStartCtx(only) {
+  const items = (only || irr.unit.items).filter(v => irrCtx(v));
+  const types = ['fill', 'choose', 'fix', 'trans', 'fill'];
+  irr.cx = { qs: lsShuffle(items).map((v, i) => {
+    const c = irrCtx(v);
+    let type = types[i % types.length];
+    if (type === 'fix' && !irrWrongForm(v, c)) type = 'choose';
+    if (type === 'trans' && !v.exvi) type = 'fill';
+    let opts = null;
+    if (type === 'choose') {
+      const right = c.form;
+      const cand = [c.need === 'v2' ? irrFirst(v.v3) : irrFirst(v.v2), irrRegular(v.v1), irrFirst(v.v1).replace(/e$/, '') + 'ing'];
+      if (c.need === 'v3') cand.push(irrFirst(v.v1));
+      const bad = new Set(irrNeedForms(v, c));
+      opts = [right];
+      cand.forEach(x => { if (opts.length < 4 && !bad.has(x) && !opts.includes(x)) opts.push(x); });
+      opts = lsShuffle(opts);
+    }
+    return { v, c, type, opts, ans: '', picked: null, done: false, ok: null };
+  }), idx: 0, score: 0 };
+  irrRenderCtx();
+}
+function irrCtxSentence(c, gap) {
+  const s = lsEl('div', 'irr-cx-s');
+  s.appendChild(document.createTextNode(c.pre));
+  s.appendChild(gap);
+  s.appendChild(document.createTextNode(c.post));
+  return s;
+}
+function irrRenderCtx() {
+  const body = irrBody(); body.innerHTML = '';
+  const X = irr.cx;
+  if (!X.qs.length) { body.appendChild(lsEl('div', 'empty-state', 'Bài này chưa có câu ngữ cảnh.')); return; }
+  if (X.idx >= X.qs.length) {
+    const n = X.qs.length, wrong = X.qs.filter(q => !q.ok).map(q => q.v);
+    const box = lsEl('div', 'tense-card vc-done');
+    box.appendChild(lsEl('div', 'vc-done-big', `${X.score} / ${n}`));
+    box.appendChild(lsEl('div', 'ls-verdict', X.score / n >= 0.9 ? 'Xuất sắc! Bạn dùng V2 / V3 rất chắc.' : X.score / n >= 0.6 ? 'Khá tốt! Xem lại giải thích các câu sai nhé.' : 'Cần luyện thêm: nhớ quy tắc “quá khứ đơn → V2, sau have/be → V3”.'));
+    if (wrong.length) { box.appendChild(lsEl('div', 'vc-done-sub', 'Những động từ cần xem lại:')); const card = lsEl('div', 'vc-card vc-wrong'); [...new Set(wrong)].forEach(v => card.appendChild(irrRow(v, false))); box.appendChild(card); }
+    const btns = lsEl('div', 'ls-sum-btns');
+    const again = lsEl('button', 'btn-ghost', 'Làm lại'); again.addEventListener('click', () => irrStartCtx());
+    btns.appendChild(again);
+    if (wrong.length) { const rv = lsEl('button', 'btn-primary', `Luyện lại ${new Set(wrong).size} từ sai`); rv.addEventListener('click', () => irrStartCtx([...new Set(wrong)])); btns.appendChild(rv); }
+    box.appendChild(btns); irrNextUnitBtn(box); body.appendChild(box); return;
+  }
+  const q = X.qs[X.idx], v = q.v, c = q.c;
+  const top = lsEl('div', 'vc-card-top');
+  top.appendChild(lsEl('span', 'ls-count', `Câu ${X.idx + 1} / ${X.qs.length}`));
+  top.appendChild(lsEl('span', 'ls-count', `Đúng: ${X.score}`));
+  body.appendChild(top);
+  const card = lsEl('div', 'tense-card vc-q irr-cx');
+  const LBL = { fill: '✍️ Điền dạng đúng của động từ trong ngoặc', choose: '🔘 Chọn dạng đúng', fix: '🛠️ Câu có một lỗi động từ — gõ lại từ đúng', trans: '🇻🇳 Dịch sang tiếng Anh: điền động từ còn thiếu' };
+  card.appendChild(lsEl('div', 'vc-q-label', LBL[q.type]));
+  const show = q.done;
+  if (q.type === 'trans') card.appendChild(lsEl('div', 'irr-cx-vi', v.exvi));
+  let inp = null;
+  if (q.type === 'fix') {
+    const wrongW = irrWrongForm(v, c);
+    card.appendChild(irrCtxSentence(c, lsEl('b', 'irr-cx-bad' + (show ? ' fixed' : ''), show ? c.raw : wrongW)));
+  } else {
+    const gap = lsEl('span', 'irr-cx-gap' + (show ? (q.ok ? ' ok' : ' bad') : ''), show ? c.raw : (q.type === 'fill' ? `_____ (${irrFirst(v.v1)})` : '_____'));
+    card.appendChild(irrCtxSentence(c, gap));
+  }
+  if (q.type === 'fill' && v.exvi && show) card.appendChild(lsEl('div', 'irr-cx-vi sm', v.exvi));
+  body.appendChild(card);
+  const finish = ok => {
+    q.done = true; q.ok = ok; if (ok) X.score++;
+    irrGrade(v, ok, 'cx');
+    irrRenderCtx();
+    speak(v.ex, 0.85);
+  };
+  if (q.type === 'choose') {
+    const opts = lsEl('div', 'vc-opts');
+    q.opts.forEach(o => {
+      let cls = 'vc-opt';
+      if (q.done) { if (o === c.form) cls += ' ok'; else if (o === q.picked) cls += ' bad'; }
+      const b = lsEl('button', cls, o);
+      b.addEventListener('click', () => { if (q.done) return; q.picked = o; finish(irrNeedForms(v, c).includes(o)); });
+      opts.appendChild(b);
+    });
+    body.appendChild(opts);
+  } else if (!q.done) {
+    const row = lsEl('div', 'irr-cx-in');
+    inp = lsEl('input', 'wr-input'); inp.type = 'text'; inp.value = q.ans;
+    inp.placeholder = q.type === 'fix' ? 'Từ đúng là…' : 'Gõ động từ đúng dạng…';
+    inp.setAttribute('autocomplete', 'off'); inp.setAttribute('autocapitalize', 'off'); inp.setAttribute('autocorrect', 'off'); inp.spellcheck = false;
+    const ck = lsEl('button', 'btn-primary', 'Kiểm tra');
+    const go = () => { const a = inp.value.trim().toLowerCase().replace(/[’']/g, "'"); if (!a) { inp.focus(); return; } q.ans = a; finish(irrNeedForms(v, c).includes(a)); };
+    ck.addEventListener('click', go);
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); go(); } });
+    row.appendChild(inp); row.appendChild(ck);
+    body.appendChild(row);
+    const skip = lsEl('button', 'sd-link irr-cx-skip', '👀 Không biết, xem đáp án');
+    skip.addEventListener('click', () => { q.ans = ''; finish(false); });
+    body.appendChild(skip);
+    setTimeout(() => { try { inp.focus({ preventScroll: true }); } catch (e) {} }, 0);
+  }
+  if (q.done) {
+    const fb = lsEl('div', 'vc-fb ' + (q.ok ? 'ok' : 'bad'));
+    fb.appendChild(lsEl('div', 'vc-fb-title', q.ok ? 'Chính xác!' : q.ans || q.picked ? `Chưa đúng: “${q.ans || q.picked}”. Đáp án: ${irrNeedForms(v, c).join(' / ')}` : `Đáp án: ${irrNeedForms(v, c).join(' / ')}`));
+    let why = IRR_WHY[c.why];
+    if (!q.ok && q.ans && irrAlts(v.v1).includes(q.ans) && c.need === 'v2') why += ' V1 chỉ dùng cho hiện tại.';
+    else if (!q.ok && (q.ans || q.picked) && c.need === 'v2' && irrAlts(v.v3).includes(q.ans || q.picked)) why += ' V3 chỉ đứng sau have / has / had hoặc be, không đứng một mình.';
+    else if (!q.ok && (q.ans || q.picked) && c.need === 'v3' && irrAlts(v.v2).includes(q.ans || q.picked)) why += ' V2 không đứng sau have hoặc be.';
+    fb.appendChild(lsEl('div', 'irr-cx-why', '💡 ' + why));
+    const line = lsEl('div', 'vc-fb-line'); line.appendChild(lsEl('b', null, `${v.v1} – ${v.v2} – ${v.v3}`)); line.appendChild(document.createTextNode(` · ${v.meaning}`)); fb.appendChild(line);
+    body.appendChild(fb);
+    const next = lsEl('button', 'btn-primary vc-next', X.idx + 1 < X.qs.length ? 'Câu tiếp →' : 'Xem kết quả');
+    next.addEventListener('click', () => { X.idx++; irrRenderCtx(); });
+    body.appendChild(next);
+    setTimeout(() => { try { next.focus({ preventScroll: true }); } catch (e) {} }, 0);
+  }
+}
+
+/* ---------- Nghe & nhận diện: nghe một dạng, chọn V1 / V2 / V3 ---------- */
+// "read" viết giống nhau nhưng đọc khác: dùng cách viết đồng âm để giọng máy đọc đúng
+const IRR_SOUND = { read: ['reed', 'red', 'red'], reread: ['reread', 'rered', 'rered'], misread: ['misreed', 'misred', 'misred'], proofread: ['proofreed', 'proofred', 'proofred'], lipread: ['lipreed', 'lipred', 'lipred'] };
+const irrSayForm = (v, k) => IRR_SOUND[v.v1] ? IRR_SOUND[v.v1][k] : irrFirst([v.v1, v.v2, v.v3][k]);
+const irrSaySample = v => IRR_SOUND[v.v1] ? IRR_SOUND[v.v1].join(', ') : irrSay3(v);
+function irrStartHear(only) {
+  const items = (only || irr.unit.items).filter(v => v.pat !== 'AAA' || IRR_SOUND[v.v1]);
+  irr.hr = { qs: lsShuffle(items).map(v => {
+    const F = [irrFirst(v.v1), irrFirst(v.v2), irrFirst(v.v3)];
+    const ks = [0, 1, 2].filter(k => IRR_SOUND[v.v1] || k === 0 || F[k] !== F[0]);
+    const k = ks[Math.floor(Math.random() * ks.length)];
+    return { v, k, picked: null };
+  }), idx: 0, score: 0 };
+  irrRenderHear();
+}
+function irrRenderHear() {
+  const body = irrBody(); body.innerHTML = '';
+  const H = irr.hr;
+  if (!H.qs.length) { body.appendChild(lsEl('div', 'empty-state', 'Bài này toàn động từ có 3 dạng giống nhau nên không cần luyện nghe phân biệt.')); return; }
+  if (H.idx >= H.qs.length) {
+    const box = lsEl('div', 'tense-card vc-done');
+    box.appendChild(lsEl('div', 'vc-done-big', `${H.score} / ${H.qs.length}`));
+    box.appendChild(lsEl('div', 'ls-verdict', H.score / H.qs.length >= 0.9 ? 'Tai rất tốt! Bạn phân biệt được các dạng động từ.' : 'Nghe lại các từ sai, chú ý nguyên âm và âm cuối.'));
+    const btns = lsEl('div', 'ls-sum-btns'); const again = lsEl('button', 'btn-primary', 'Nghe lượt mới'); again.addEventListener('click', () => irrStartHear()); btns.appendChild(again); box.appendChild(btns);
+    irrNextUnitBtn(box); body.appendChild(box); return;
+  }
+  const q = H.qs[H.idx], v = q.v;
+  const F = [irrFirst(v.v1), irrFirst(v.v2), irrFirst(v.v3)];
+  const top = lsEl('div', 'vc-card-top');
+  top.appendChild(lsEl('span', 'ls-count', `Câu ${H.idx + 1} / ${H.qs.length}`));
+  top.appendChild(lsEl('span', 'ls-count', `Đúng: ${H.score}`));
+  body.appendChild(top);
+  const card = lsEl('div', 'tense-card vc-q irr-hear');
+  card.appendChild(lsEl('div', 'vc-q-label', `Bạn vừa nghe dạng nào của động từ ${F[0].toUpperCase()}?`));
+  card.appendChild(lsEl('div', 'vsp-sub', v.meaning));
+  const play = lsEl('button', 'irr-hear-play', '🔊'); play.setAttribute('aria-label', 'Nghe lại');
+  play.addEventListener('click', () => speak(irrSayForm(v, q.k), 0.75));
+  card.appendChild(play);
+  const slow = lsEl('button', 'ls-slow', '🐢 Nghe chậm'); slow.addEventListener('click', () => speak(irrSayForm(v, q.k), 0.5));
+  card.appendChild(slow);
+  body.appendChild(card);
+  const opts = lsEl('div', 'vc-opts irr-hear-opts');
+  // các dạng viết giống nhau gộp thành một lựa chọn (trừ read: viết giống nhưng đọc khác)
+  const choices = [];
+  [0, 1, 2].forEach(k => { const lab = ['V1', 'V2', 'V3'][k]; const same = !IRR_SOUND[v.v1] && choices.find(c => c.w === F[k]); if (same) same.labs.push(lab), same.ks.push(k); else choices.push({ w: F[k], labs: [lab], ks: [k], ipa: [v.ipa, v.ipa2, v.ipa3][k] }); });
+  choices.forEach(ch => {
+    const right = ch.ks.includes(q.k);
+    let cls = 'vc-opt irr-hear-o';
+    if (q.picked) { if (right) cls += ' ok'; else if (q.picked === ch) cls += ' bad'; }
+    const b = lsEl('button', cls);
+    b.appendChild(lsEl('b', null, ch.labs.join(' / ')));
+    b.appendChild(document.createTextNode(' · ' + ch.w));
+    if (q.picked) b.appendChild(lsEl('span', 'irr-hear-ipa', (ch.ipa || '').split(' · ')[0]));
+    b.addEventListener('click', () => { if (q.picked) return; q.picked = ch; if (right) H.score++; irrGrade(v, right, 'hr'); irrRenderHear(); });
+    opts.appendChild(b);
+  });
+  body.appendChild(opts);
+  if (q.picked) {
+    const fb = lsEl('div', 'vc-fb ' + (q.picked.ks.includes(q.k) ? 'ok' : 'bad'));
+    fb.appendChild(lsEl('div', 'vc-fb-title', q.picked.ks.includes(q.k) ? 'Chính xác!' : `Đó là ${['V1', 'V2', 'V3'][q.k]}: ${F[q.k]}`));
+    const line = lsEl('div', 'vc-fb-line'); line.appendChild(lsEl('b', null, `${v.v1} – ${v.v2} – ${v.v3}`)); line.appendChild(document.createTextNode(`  ${[v.ipa, v.ipa2, v.ipa3].map(x => (x || '').split(' · ')[0]).join(' ')}`)); fb.appendChild(line);
+    const cmp = lsEl('div', 'vc-audio');
+    [0, 1, 2].forEach(k => { const b = lsEl('button', 'ls-slow', `▶ ${['V1', 'V2', 'V3'][k]}`); b.addEventListener('click', () => speak(irrSayForm(v, k), 0.75)); cmp.appendChild(b); });
+    fb.appendChild(cmp);
+    body.appendChild(fb);
+    const next = lsEl('button', 'btn-primary vc-next', H.idx + 1 < H.qs.length ? 'Câu tiếp →' : 'Xem kết quả');
+    next.addEventListener('click', () => { H.idx++; irrRenderHear(); });
+    body.appendChild(next);
+  } else if (!q.played) { q.played = true; setTimeout(() => speak(irrSayForm(v, q.k), 0.75), 200); }
+}
+
+/* ---------- động từ dễ nhầm lẫn ---------- */
+const IRR_CONF = [
+  { id: 'lie-lay', t: 'lie – lay', sub: 'nằm · đặt (và lie = nói dối)', rows: [
+      ['lie', 'lay', 'lain', '/laɪ/ · /leɪ/ · /leɪn/', 'nằm (không có tân ngữ)'],
+      ['lay', 'laid', 'laid', '/leɪ/ · /leɪd/ · /leɪd/', 'đặt, để, đẻ trứng (cần tân ngữ)'],
+      ['lie', 'lied', 'lied', '/laɪ/ · /laɪd/ · /laɪd/', 'nói dối (động từ có quy tắc)']],
+    use: 'lie (nằm) không có tân ngữ: lie on the bed. lay (đặt) luôn cần tân ngữ: lay the book on the table. Dễ nhầm vì V2 của lie lại là lay.',
+    ex: [['I lay on the sofa and fell asleep.', 'Tôi nằm trên ghế sofa rồi ngủ thiếp đi.'], ['She laid the baby in the cot.', 'Cô ấy đặt em bé vào cũi.'], ['He lied about his age.', 'Anh ta nói dối về tuổi của mình.']],
+    err: '✗ I laid down for a nap. → ✓ I lay down for a nap. (không có tân ngữ nên dùng lie → lay)',
+    qz: [['Yesterday I ___ in bed until ten.', 'lay', ['laid', 'lay', 'lied'], 'Nằm, không có tân ngữ, quá khứ → lie – lay.'], ['Please ___ the plates on the table.', 'lay', ['lie', 'lay', 'laid'], 'Đặt cái đĩa (có tân ngữ) → lay.'], ['The hen has ___ three eggs.', 'laid', ['lain', 'laid', 'lied'], 'Đẻ trứng → lay – laid – laid; sau has dùng V3.'], ['He ___ to the police about the accident.', 'lied', ['lay', 'laid', 'lied'], 'Nói dối → lie – lied – lied.']] },
+  { id: 'rise-raise', t: 'rise – raise', sub: 'tăng lên, mọc · nâng lên', rows: [
+      ['rise', 'rose', 'risen', '/raɪz/ · /rəʊz/ · /ˈrɪzn/', 'tăng, mọc, đứng dậy (tự xảy ra, không có tân ngữ)'],
+      ['raise', 'raised', 'raised', '/reɪz/ · /reɪzd/ · /reɪzd/', 'nâng, giơ, tăng, nuôi (cần tân ngữ, có quy tắc)']],
+    use: 'rise: chủ ngữ tự tăng / tự lên (prices rise, the sun rises). raise: ai đó làm cho cái gì tăng / lên (raise your hand, raise prices).',
+    ex: [['The sun rose at six this morning.', 'Sáng nay mặt trời mọc lúc sáu giờ.'], ['Prices have risen sharply.', 'Giá cả đã tăng mạnh.'], ['She raised her hand to ask a question.', 'Cô ấy giơ tay để đặt câu hỏi.']],
+    err: '✗ The company rose the prices. → ✓ The company raised the prices.',
+    qz: [['Please ___ your hand if you know the answer.', 'raise', ['rise', 'raise', 'rose'], 'Giơ tay (có tân ngữ your hand) → raise.'], ['House prices have ___ again.', 'risen', ['raised', 'risen', 'rose'], 'Giá tự tăng, sau have → rise – rose – risen.'], ['They ___ three children in a small flat.', 'raised', ['rose', 'risen', 'raised'], 'Nuôi con (có tân ngữ) → raise – raised.']] },
+  { id: 'sit-set', t: 'sit – set – seat', sub: 'ngồi · đặt · mời ngồi', rows: [
+      ['sit', 'sat', 'sat', '/sɪt/ · /sæt/ · /sæt/', 'ngồi'],
+      ['set', 'set', 'set', '/set/ · /set/ · /set/', 'đặt, cài đặt, (mặt trời) lặn'],
+      ['seat', 'seated', 'seated', '/siːt/ · /ˈsiːtɪd/', 'xếp chỗ ngồi (có quy tắc, hay dùng be seated)']],
+    use: 'sit là tự ngồi; set là đặt cái gì xuống; seat là xếp chỗ cho người khác (please be seated = mời ngồi).',
+    ex: [['We sat in the front row.', 'Chúng tôi ngồi ở hàng ghế đầu.'], ['I set the alarm for six.', 'Tôi đặt báo thức lúc sáu giờ.'], ['Please remain seated.', 'Xin vui lòng ngồi yên tại chỗ.']],
+    err: '✗ He sit next to me yesterday. → ✓ He sat next to me yesterday.',
+    qz: [['She ___ by the window during the flight.', 'sat', ['set', 'sat', 'seated'], 'Tự ngồi, quá khứ → sit – sat.'], ['The sun ___ behind the hills.', 'set', ['sat', 'set', 'seat'], 'Mặt trời lặn → set (ba dạng giống nhau).'], ['Guests will be ___ at round tables.', 'seated', ['sat', 'set', 'seated'], 'Được xếp chỗ ngồi (bị động) → be seated.']] },
+  { id: 'bear', t: 'bear – borne / born', sub: 'chịu đựng, mang · được sinh ra', rows: [
+      ['bear', 'bore', 'borne', '/beə/ · /bɔː/ · /bɔːn/', 'chịu đựng, mang, gánh (chi phí)'],
+      ['be born', 'was / were born', '—', '/bɔːn/', 'được sinh ra (chỉ dùng ở bị động)']],
+    use: 'borne dùng sau have hoặc trong câu bị động có nghĩa “mang, chịu”: The costs were borne by the company. born chỉ dùng trong cụm be born: I was born in 1998. Hai từ đọc giống nhau /bɔːn/.',
+    ex: [['I was born in Da Nang.', 'Tôi sinh ra ở Đà Nẵng.'], ['All costs will be borne by the client.', 'Mọi chi phí sẽ do khách hàng chịu.'], ['She bore the pain bravely.', 'Cô ấy chịu đựng cơn đau một cách dũng cảm.']],
+    err: '✗ I was borne in Hue. → ✓ I was born in Hue.',
+    qz: [['My daughter was ___ in May.', 'born', ['borne', 'born', 'bore'], 'Được sinh ra → be born.'], ['The travel costs were ___ by the company.', 'borne', ['born', 'borne', 'bore'], 'Chi phí được gánh chịu → borne.'], ['He ___ the bad news calmly.', 'bore', ['born', 'borne', 'bore'], 'Chịu đựng, quá khứ đơn → bear – bore.']] },
+  { id: 'hang', t: 'hang – hung / hanged', sub: 'treo · treo cổ', rows: [
+      ['hang', 'hung', 'hung', '/hæŋ/ · /hʌŋ/ · /hʌŋ/', 'treo (đồ vật), lơ lửng'],
+      ['hang', 'hanged', 'hanged', '/hæŋ/ · /hæŋd/ · /hæŋd/', 'treo cổ (xử tử) — có quy tắc']],
+    use: 'Khi treo đồ vật dùng hung. hanged chỉ dùng với nghĩa xử tử bằng cách treo cổ, thường gặp trong lịch sử, tin tức.',
+    ex: [['She hung the painting above the sofa.', 'Cô ấy treo bức tranh phía trên ghế sofa.'], ['A thick fog hung over the city.', 'Một màn sương dày lơ lửng trên thành phố.'], ['The prisoner was hanged in 1820.', 'Tù nhân bị treo cổ vào năm 1820.']],
+    err: '✗ I hanged my coat on the door. → ✓ I hung my coat on the door.',
+    qz: [['I ___ my jacket behind the door.', 'hung', ['hanged', 'hung', 'hang'], 'Treo đồ vật → hung.'], ['Have you ___ the new curtains yet?', 'hung', ['hanged', 'hung', 'hang'], 'Treo rèm, sau have → hung.']] },
+  { id: 'get', t: 'get – got / gotten', sub: 'Anh – Mỹ khác nhau ở V3', rows: [
+      ['get', 'got', 'got (Anh)', '/ɡet/ · /ɡɒt/ · /ɡɒt/', 'nhận, có được, trở nên'],
+      ['get', 'got', 'gotten (Mỹ)', '/ɡet/ · /ɡɑːt/ · /ˈɡɑːtn/', 'nhận, có được, trở nên']],
+    use: 'Tiếng Anh Mỹ dùng gotten làm V3 (I have gotten a new job). Tiếng Anh Anh dùng got. Riêng “have got” (= có) thì cả Anh và Mỹ đều dùng got: I have got a car.',
+    ex: [['She has got a new phone.', 'Cô ấy có một chiếc điện thoại mới.'], ['My English has gotten much better.', 'Tiếng Anh của tôi đã tiến bộ hơn nhiều. (Mỹ)'], ['We got home late last night.', 'Tối qua chúng tôi về nhà muộn.']],
+    err: '✗ I have gotten two brothers. → ✓ I have got two brothers. (“have got” = có, không dùng gotten)',
+    qz: [['We ___ home very late yesterday.', 'got', ['gotten', 'got', 'get'], 'Quá khứ đơn → got (cả Anh và Mỹ).'], ['I have ___ two sisters.', 'got', ['gotten', 'got', 'get'], '“have got” = có → luôn dùng got.']] },
+  { id: 'read', t: 'read – read – read', sub: 'viết giống nhau, đọc khác nhau', rows: [
+      ['read', 'read', 'read', '/riːd/ · /red/ · /red/', 'đọc']],
+    use: 'V1 đọc /riːd/ (giống “reed”), còn V2 và V3 đọc /red/ (giống màu “red”). Người nghe chỉ phân biệt được qua phát âm và ngữ cảnh, nên khi luyện hãy đọc trong câu.',
+    ex: [['I read every night before bed. /riːd/', 'Tối nào tôi cũng đọc sách trước khi ngủ.'], ['I read that book last summer. /red/', 'Tôi đã đọc cuốn sách đó vào mùa hè năm ngoái.'], ['Have you read the report? /red/', 'Bạn đã đọc bản báo cáo chưa?']],
+    err: 'Lỗi hay gặp: đọc “I read it yesterday” thành /riːd/. Vì là quá khứ nên phải đọc /red/.',
+    say: ['I read every night before bed.', 'I red that book last summer.', 'Have you red the report?'],
+    qz: [['“I read it yesterday.” Từ read đọc là…', '/red/', ['/riːd/', '/red/'], 'Có “yesterday” → quá khứ → /red/.'], ['“I usually read the news online.” Từ read đọc là…', '/riːd/', ['/riːd/', '/red/'], 'Thói quen ở hiện tại → V1 /riːd/.'], ['“She has read all his novels.” Từ read đọc là…', '/red/', ['/riːd/', '/red/'], 'Sau has → V3 → /red/.']] },
+  { id: 'find-found', t: 'find – found (– found)', sub: 'tìm thấy · thành lập', rows: [
+      ['find', 'found', 'found', '/faɪnd/ · /faʊnd/ · /faʊnd/', 'tìm thấy, thấy rằng'],
+      ['found', 'founded', 'founded', '/faʊnd/ · /ˈfaʊndɪd/', 'thành lập (có quy tắc)']],
+    use: 'found vừa là V2/V3 của find, vừa là một động từ riêng nghĩa “thành lập”, có V2/V3 là founded. Tương tự: fall – fell (ngã) và fell – felled (đốn cây).',
+    ex: [['I found my keys under the sofa.', 'Tôi tìm thấy chìa khóa dưới ghế sofa.'], ['The company was founded in 1995.', 'Công ty được thành lập năm 1995.'], ['She fell off her bike.', 'Cô ấy ngã xe đạp.']],
+    err: '✗ The school was found in 1990. → ✓ The school was founded in 1990.',
+    qz: [['The university was ___ in 1906.', 'founded', ['found', 'founded', 'finded'], 'Được thành lập → found – founded – founded.'], ['We ___ a great café near the beach.', 'found', ['founded', 'found', 'finded'], 'Tìm thấy, quá khứ → find – found.']] }
+];
+function irrRenderConf(id) {
+  irrSpStop(); irr.view = 'conf';
+  irrRoot.innerHTML = '';
+  const back = lsEl('button', 'gr-back', id ? '← Các động từ dễ nhầm' : '← Tất cả động từ');
+  back.addEventListener('click', () => { if (id) irrRenderConf(); else irrRenderHome(); irrTop(); });
+  irrRoot.appendChild(back);
+  if (!id) {
+    irrRoot.appendChild(vcHead('⚠️', 'Động từ dễ nhầm lẫn', `${IRR_CONF.length} cặp hay nhầm: dạng, nghĩa, cách đọc và bài tập phân biệt`));
+    const list = lsEl('div', 'vc-units');
+    IRR_CONF.forEach((c, i) => {
+      const b = lsEl('button', 'vc-unit');
+      b.appendChild(lsEl('span', 'vc-unit-num', String(i + 1)));
+      const info = lsEl('span', 'vc-unit-info'); info.appendChild(lsEl('span', 'vc-unit-vi', c.t)); info.appendChild(lsEl('span', 'vc-unit-en', c.sub)); b.appendChild(info);
+      b.appendChild(lsEl('span', 'vc-unit-go', '›'));
+      b.addEventListener('click', () => { irrRenderConf(c.id); irrTop(); });
+      list.appendChild(b);
+    });
+    irrRoot.appendChild(list);
+    return;
+  }
+  const c = IRR_CONF.find(x => x.id === id);
+  irrRoot.appendChild(vcHead('⚠️', c.t, c.sub));
+  const card = lsEl('div', 'tense-card irr-conf');
+  const tb = lsEl('table', 'irr-conf-t'); const hr = lsEl('tr'); ['V1', 'V2', 'V3', 'Nghĩa'].forEach(h => hr.appendChild(lsEl('th', null, h))); tb.appendChild(hr);
+  c.rows.forEach(r => {
+    const tr = lsEl('tr');
+    [r[0], r[1], r[2]].forEach((f, k) => { const td = lsEl('td'); const b = lsEl('button', 'irr-conf-w', f); b.addEventListener('click', () => speak(c.id === 'read' ? ['reed', 'red', 'red'][k] : f.replace(/\(.*\)/, '').split('/')[0].trim(), 0.75)); td.appendChild(b); tr.appendChild(td); });
+    const tdm = lsEl('td', 'irr-conf-m'); tdm.appendChild(lsEl('div', null, r[4])); tdm.appendChild(lsEl('div', 'irr-conf-ipa', r[3])); tr.appendChild(tdm);
+    tb.appendChild(tr);
+  });
+  card.appendChild(tb);
+  card.appendChild(lsEl('div', 'sd-tip-t', 'Cách dùng'));
+  card.appendChild(lsEl('p', 'tn-goal', c.use));
+  card.appendChild(lsEl('div', 'sd-tip-t', 'Ví dụ'));
+  c.ex.forEach(([en, vi], k) => { const r = lsEl('div', 'irr-conf-ex'); const pb = lsEl('button', 'irr-conf-play', '▶'); pb.setAttribute('aria-label', 'Nghe câu'); pb.addEventListener('click', () => speak(c.say ? c.say[k] : en.replace(/\s*\/.*\/$/, ''), 0.85)); r.appendChild(pb); const t = lsEl('div'); t.appendChild(lsEl('div', 'irr-conf-en', en)); t.appendChild(lsEl('div', 'vc-exvi', vi)); r.appendChild(t); card.appendChild(r); });
+  card.appendChild(lsEl('div', 'sd-tip-t', 'Lỗi thường gặp'));
+  card.appendChild(lsEl('div', 'irr-conf-err', c.err));
+  irrRoot.appendChild(card);
+  // bài tập phân biệt
+  const qz = lsEl('div', 'tense-card irr-conf-qz');
+  qz.appendChild(lsEl('div', 'vc-q-label', '🧩 Bài tập phân biệt'));
+  c.qz.forEach(([s, ans, opts, why]) => {
+    const it = lsEl('div', 'irr-conf-q');
+    it.appendChild(lsEl('div', 'irr-conf-qs', s));
+    const row = lsEl('div', 'colloc-chips');
+    const fb = lsEl('div', 'irr-conf-fb');
+    opts.forEach(o => {
+      const b = lsEl('button', 'colloc-chip', o);
+      b.addEventListener('click', () => {
+        if (it.dataset.done) return; it.dataset.done = '1';
+        row.querySelectorAll('button').forEach(x => { if (x.textContent === ans) x.classList.add('ok'); else if (x === b) x.classList.add('bad'); x.disabled = true; });
+        fb.className = 'irr-conf-fb ' + (o === ans ? 'ok' : 'bad');
+        fb.textContent = (o === ans ? '✓ Đúng. ' : `✗ Đáp án: ${ans}. `) + why;
+      });
+      row.appendChild(b);
+    });
+    it.appendChild(row); it.appendChild(fb);
+    qz.appendChild(it);
+  });
+  irrRoot.appendChild(qz);
+  const i = IRR_CONF.indexOf(c);
+  if (IRR_CONF[i + 1]) { const nx = lsEl('button', 'btn-primary vc-next-unit', `Tiếp: ${IRR_CONF[i + 1].t} →`); nx.addEventListener('click', () => { irrRenderConf(IRR_CONF[i + 1].id); irrTop(); }); irrRoot.appendChild(nx); }
+}
+
+/* ---------- bảng tổng hợp 4 nhóm biến đổi ---------- */
+function irrRenderPatTable() {
+  irrSpStop(); irr.view = 'pats';
+  irrRoot.innerHTML = '';
+  const back = lsEl('button', 'gr-back', '← Tất cả động từ'); back.addEventListener('click', () => { irrRenderHome(); irrTop(); }); irrRoot.appendChild(back);
+  irrRoot.appendChild(vcHead('🧩', 'Bảng 4 nhóm biến đổi', 'Học theo quy luật thay vì thuộc danh sách dài'));
+  const EXS = { AAA: ['cut', 'put', 'let', 'hit', 'cost', 'set'], ABB: ['buy', 'make', 'have', 'find', 'tell', 'keep'], ABA: ['come', 'run', 'become', 'overcome'], ABC: ['go', 'see', 'write', 'take', 'speak', 'eat'] };
+  const grid = lsEl('div', 'irr-pt-grid');
+  ['AAA', 'ABB', 'ABA', 'ABC'].forEach(p => {
+    const all = IRREGULAR_VERBS.filter(v => v.pat === p), alt = IRREGULAR_VERBS.filter(v => v.pat !== p && v.pats.has(p));
+    const got = irrCount(all);
+    const c = lsEl('div', 'tense-card irr-pt');
+    const h = lsEl('div', 'irr-pt-h'); h.appendChild(lsEl('b', null, IRR_PATTERNS[p])); h.appendChild(lsEl('span', 'irr-pt-n', `${all.length} từ`)); c.appendChild(h);
+    c.appendChild(lsEl('div', 'irr-pt-hint', IRR_PAT_HINT[p]));
+    const exl = lsEl('div', 'irr-pt-ex');
+    EXS[p].map(w => IRREGULAR_VERBS.find(v => v.v1 === w)).filter(Boolean).forEach(v => { const b = lsEl('button', 'irr-pt-v', `${irrFirst(v.v1)} – ${irrFirst(v.v2)} – ${irrFirst(v.v3)}`); b.addEventListener('click', () => speak(irrSaySample(v), 0.75)); exl.appendChild(b); });
+    c.appendChild(exl);
+    c.appendChild(lsEl('div', 'irr-pt-meta', `Đã thuộc ${got}/${all.length}` + (alt.length ? ` · thêm ${alt.length} từ có dạng thay thế thuộc nhóm này` : '')));
+    c.appendChild(vcBar(all.length ? got / all.length : 0));
+    const acts = lsEl('div', 'ls-sum-btns');
+    const ls = lsEl('button', 'btn-ghost', '📋 Xem danh sách'); ls.addEventListener('click', () => { irr.pat = p; irr.patLv = 0; irrRenderHome(); irrTop(); });
+    const pr = lsEl('button', 'btn-primary', '🃏 Luyện 20 từ'); pr.addEventListener('click', () => { const todo = all.filter(v => !irrIs(v)); irrOpenUnit({ mix: true, icon: '🃏', vi: 'Luyện nhóm ' + IRR_PATTERNS[p], en: IRR_PAT_HINT[p], items: lsShuffle(todo.length >= 20 ? todo : all).slice(0, 20) }, 'cards'); });
+    acts.appendChild(ls); acts.appendChild(pr); c.appendChild(acts);
+    grid.appendChild(c);
+  });
+  irrRoot.appendChild(grid);
+  const multi = IRREGULAR_VERBS.filter(v => v.multi);
+  irrRoot.appendChild(lsEl('p', 'ls-level-desc', `⚑ ${multi.length} động từ có dạng thay thế ở V2 hoặc V3 (ví dụ dive – dived/dove – dived). Mỗi từ được xếp vào nhóm theo dạng phổ biến nhất, và hiện ghi chú khi dạng còn lại thuộc nhóm khác.`));
+}
+
+/* ---------- kiểm tra tổng hợp 10 / 30 / 50 câu, ưu tiên từ cần ôn và hay sai ---------- */
+function irrPickTest(n, lv) {
+  const pool = IRREGULAR_VERBS.filter(v => !lv || v.lv === lv);
+  const score = v => { const r = irrSrs[v.v1]; const st = irrStatus(v); return (st === 'review' ? 0 : st === 'learning' ? 1 : st === 'new' ? 2 : st === 'mastering' ? 3 : 4) - (r ? Math.min(2, (r.w || 0) * 0.5) : 0) + Math.random() * 1.5; };
+  return pool.map(v => [v, score(v)]).sort((a, b) => a[1] - b[1]).slice(0, n).map(x => x[0]);
+}
+function irrTestBox() {
+  const box = lsEl('div', 'tense-card irr-test');
+  box.appendChild(lsEl('div', 'vc-q-label', '📝 Kiểm tra tổng hợp'));
+  box.appendChild(lsEl('p', 'ls-level-desc', 'Câu hỏi chọn ngẫu nhiên, ưu tiên từ cần ôn, từ hay sai và từ chưa học. Gồm hỏi V2, V3, nghĩa và chọn dạng đúng trong câu.'));
+  let lv = 0;
+  const lvs = lsEl('div', 'colloc-chips');
+  [[0, 'Mọi cấp'], ...IRR_LEVELS.map(L => [L.n, L.code])].forEach(([k, t]) => { const c = lsEl('button', 'colloc-chip' + (k === lv ? ' active' : ''), t); c.addEventListener('click', () => { lv = k; lvs.querySelectorAll('.colloc-chip').forEach(x => x.classList.toggle('active', x === c)); }); lvs.appendChild(c); });
+  box.appendChild(lvs);
+  const row = lsEl('div', 'irr-test-row');
+  [[10, '⚡ Nhanh · 10 câu'], [30, '🎯 Theo cấp · 30 câu'], [50, '🏁 Tổng hợp · 50 câu']].forEach(([n, t]) => {
+    const b = lsEl('button', n === 10 ? 'btn-primary' : 'btn-ghost', t);
+    b.addEventListener('click', () => { const items = irrPickTest(n, lv); irrOpenUnit({ mix: true, test: true, icon: '📝', vi: `Kiểm tra ${n} câu`, en: (lv ? 'Cấp ' + IRR_LEVELS[lv - 1].code : 'Mọi cấp độ') + ' · ưu tiên từ cần ôn', items }, 'quiz'); });
+    row.appendChild(b);
+  });
+  box.appendChild(row);
+  return box;
 }
 
 document.querySelectorAll('nav.tabbar button').forEach(b => b.addEventListener('click', () => {
