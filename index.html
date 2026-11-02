@@ -2236,6 +2236,7 @@
   .tr-toast{ position:fixed; left:50%; bottom:96px; transform:translateX(-50%) translateY(20px); background:var(--ink); color:var(--paper); padding:10px 16px; border-radius:12px; font:600 13px var(--font-body); opacity:0; pointer-events:none; transition:.2s; z-index:999; max-width:90vw; text-align:center; }
   .tr-toast.on{ opacity:1; transform:translateX(-50%) translateY(0); }
 
+  .gx-fx-subj{font-size:13px;line-height:1.5;background:var(--paper);border-left:3px solid var(--rust);border-radius:10px;padding:8px 10px;margin:0 0 10px}
   .sd-create-est{ font-size:12.5px; color:var(--rust); margin:6px 0; line-height:1.45; }
   .sd-quiz-n{ font:700 12px var(--font-body); color:var(--ink-soft); margin-bottom:8px; }
   .sd-quiz-q{ font:600 20px/1.45 var(--font-display); color:var(--ink); margin-bottom:10px; }
@@ -3777,7 +3778,7 @@
   <div class="hw-deco" aria-hidden="true"><i class="hw-witch"></i><i class="hw-spider"></i><i class="hw-ghost"></i><i class="hw-caul"></i><i class="hw-candy"></i><i class="hw-cat"></i><i class="hw-skel"></i></div>
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v125</span>
+      <span class="hero-badge">EN ⇄ VI · v127</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice hero-season" id="season-btn" aria-label="Đổi giao diện theo mùa" title="Đổi giao diện theo mùa">🎃</button>
@@ -4929,7 +4930,7 @@ const GRAMMAR_TOPICS = [
    },
    {
     "name": "Unless = If … not",
-    "formula": "Unless + chủ ngữ + V, …",
+    "formula": "Unless + I/you/we/they + V, … · Unless + he/she/it + V-s/es, …",
     "usage": "Unless nghĩa là \"trừ khi\", tương đương If … not.",
     "examples": [
      {
@@ -5160,7 +5161,7 @@ const GRAMMAR_TOPICS = [
   "sections": [
    {
     "name": "Công thức",
-    "formula": "Chủ ngữ + love / like / enjoy / don't mind / don't like / hate + V-ing",
+    "formula": "I/You/We/They + love / like / enjoy / don't mind / don't like / hate + V-ing · He/She/It + loves / likes / enjoys / doesn't mind / doesn't like / hates + V-ing",
     "usage": "Dùng để nói thích hay không thích làm việc gì.",
     "table": {
      "head": [
@@ -6088,7 +6089,7 @@ const GRAMMAR_TOPICS = [
   "sections": [
    {
     "name": "Công thức",
-    "formula": "Chủ ngữ + want / need / decide / hope / try / learn / forget / promise / plan + to + V",
+    "formula": "I/You/We/They + want / need / decide / hope / try / learn / forget / promise / plan + to + V · He/She/It + wants / needs / decides / hopes / tries / learns / forgets / promises / plans + to + V",
     "table": {
      "head": [
       "Động từ",
@@ -9094,7 +9095,7 @@ const GRAMMAR_TOPICS = [
     "fx": [
      [
       "+",
-      "So + trợ động từ + chủ ngữ (So do I · So am I · So did we)"
+      "So + trợ động từ + chủ ngữ (So do I, So am I, So did we)"
      ],
      [
       "−",
@@ -9590,7 +9591,7 @@ const GRAMMAR_TOPICS = [
     "fx": [
      [
       "1",
-      "It + am/is/are + said / believed / thought / reported + that + mệnh đề"
+      "It + is / was + said / believed / thought / reported + that + mệnh đề"
      ],
      [
       "2",
@@ -12261,7 +12262,7 @@ const GRAMMAR_TOPICS = [
   "sections": [
    {
     "name": "Công thức",
-    "formula": "Chủ ngữ + have / has / had + cái gì + V3 · Chủ ngữ + get / gets / got + cái gì + V3 · Chủ ngữ + have + ai đó + V (nguyên thể) · Chủ ngữ + get + ai đó + to V",
+    "formula": "Chủ ngữ + have / has / had + cái gì + V3 · Chủ ngữ + get / gets / got + cái gì + V3 · I/You/We/They + have + ai đó + V (nguyên thể) · He/She/It + has + ai đó + V (nguyên thể) · I/You/We/They + get + ai đó + to V · He/She/It + gets + ai đó + to V",
     "usage": "Dạng sth + V3 là bị động: không cần nói ai làm.",
     "examples": [
      {
@@ -12324,7 +12325,7 @@ const GRAMMAR_TOPICS = [
   "sections": [
    {
     "name": "Công thức",
-    "formula": "Chủ ngữ + ask / tell / advise / want / remind + ai đó + (not) to V",
+    "formula": "I/You/We/They + ask / tell / advise / want / remind + ai đó + (not) to V · He/She/It + asks / tells / advises / wants / reminds + ai đó + (not) to V · Quá khứ: chủ ngữ + asked / told / advised / wanted / reminded + ai đó + (not) to V",
     "usage": "Các động từ này theo sau là tân ngữ chỉ người rồi đến to V.",
     "examples": [
      {
@@ -12355,7 +12356,7 @@ const GRAMMAR_TOPICS = [
   "sections": [
    {
     "name": "Công thức",
-    "formula": "I/You/We/They + suggest + V-ing · He/She/It + suggests + V-ing · Chủ ngữ + suggest + that + chủ ngữ + (should) + V",
+    "formula": "I/You/We/They + suggest + V-ing · He/She/It + suggests + V-ing · I/You/We/They + suggest + that + chủ ngữ + (should) + V · He/She/It + suggests + that + chủ ngữ + (should) + V",
     "usage": "Sau that dùng động từ nguyên thể cho mọi chủ ngữ.",
     "examples": [
      {
@@ -12486,7 +12487,7 @@ const GRAMMAR_TOPICS = [
   "sections": [
    {
     "name": "Công thức",
-    "formula": "I/You/We/They + spend / waste + thời gian / tiền + V-ing · He/She/It + spends / wastes + thời gian / tiền + V-ing · Chủ ngữ + spend + tiền + on + danh từ",
+    "formula": "I/You/We/They + spend / waste + thời gian / tiền + V-ing · He/She/It + spends / wastes + thời gian / tiền + V-ing · I/You/We/They + spend + tiền + on + danh từ · He/She/It + spends + tiền + on + danh từ",
     "usage": "Theo sau là V-ing, hoặc on + danh từ.",
     "examples": [
      {
@@ -12517,7 +12518,7 @@ const GRAMMAR_TOPICS = [
   "sections": [
    {
     "name": "Công thức",
-    "formula": "Chủ ngữ + prevent / stop / keep + ai đó / cái gì + from + V-ing",
+    "formula": "I/You/We/They + prevent / stop / keep + ai đó / cái gì + from + V-ing · He/She/It + prevents / stops / keeps + ai đó / cái gì + from + V-ing",
     "usage": "Sau from luôn là V-ing.",
     "examples": [
      {
@@ -18389,12 +18390,85 @@ function tnTop() {
   window.scrollTo(0, m ? Math.max(0, m.offsetTop - 8) : 0);
 }
 
+/* v126: viết rõ chủ ngữ cho từng dạng (am/is/are, do/does, have/has, was/were…) để người học khỏi phải đoán "S" là ai */
+function fxSplit(txt) {
+  const out = []; let d = 0, cur = '';
+  const t = String(txt);
+  for (let i = 0; i < t.length; i++) {
+    const c = t[i];
+    if (c === '(') d++; else if (c === ')') d = Math.max(0, d - 1);
+    if (!d && c === '·' && /\s/.test(t[i - 1] || '') && /\s/.test(t[i + 1] || '')) { out.push(cur.trim()); cur = ''; continue; }
+    cur += c;
+  }
+  out.push(cur.trim());
+  return out.filter(Boolean);
+}
+const FX_SG = { i: 'I', hsi: 'He/She/It', ywt: 'You/We/They', iywt: 'I/You/We/They', ihsi: 'I/He/She/It', all: 'I/You/He/She/It/We/They' };
+function fxSubjTxt(k, cap) { const v = FX_SG[k]; return cap ? v : v.replace(/(^|\/)(He|She|It|You|We|They)/g, (m, a, b) => a + b.toLowerCase()); }
+const FX_SUBJ_RE = "(?:Chủ ngữ|chủ ngữ|(?<![\\w'’/])S(?![\\w'’]))";
+function fxWord(w) { return w.split(' ').map(x => '[' + x[0].toUpperCase() + x[0].toLowerCase() + ']' + x.slice(1).replace(/'/g, "['’]")).join('\\s+'); }
+const FX_RULES = [
+  // chủ ngữ đứng trước
+  [1, ['have', 'has', 'had'], [['iywt', 'have'], ['hsi', 'has'], ['all', 'had']]],
+  [1, ['have to', 'has to'], [['iywt', 'have to'], ['hsi', 'has to']]],
+  [1, ['have', 'has'], [['iywt', 'have'], ['hsi', 'has']]],
+  [1, ['do', 'does', 'did'], [['iywt', 'do'], ['hsi', 'does'], ['all', 'did']]],
+  [1, ['do', 'does'], [['iywt', 'do'], ['hsi', 'does']]],
+  [1, ["don't", "doesn't"], [['iywt', "don't"], ['hsi', "doesn't"]]],
+  [1, ['get', 'gets', 'got'], [['iywt', 'get'], ['hsi', 'gets'], ['all', 'got']]],
+  [1, ['get', 'gets'], [['iywt', 'get'], ['hsi', 'gets']]],
+  [1, ["'m not", "isn't", "aren't"], [['i', "'m not"], ['hsi', "isn't"], ['ywt', "aren't"]]],
+  [1, ['am', 'is', 'are'], [['i', 'am'], ['hsi', 'is'], ['ywt', 'are']]],
+  [1, ["wasn't", "weren't"], [['ihsi', "wasn't"], ['ywt', "weren't"]]],
+  [1, ['was', 'were'], [['ihsi', 'was'], ['ywt', 'were']]],
+  // trợ động từ đứng trước (câu hỏi)
+  [0, ['am', 'is', 'are', 'was', 'were'], [['i', 'am'], ['hsi', 'is'], ['ywt', 'are'], ['ihsi', 'was'], ['ywt', 'were']]],
+  [0, ['am', 'is', 'are'], [['i', 'am'], ['hsi', 'is'], ['ywt', 'are']]],
+  [0, ['was', 'were'], [['ihsi', 'was'], ['ywt', 'were']]],
+  [0, ['do', 'does', 'did'], [['iywt', 'do'], ['hsi', 'does'], ['all', 'did']]],
+  [0, ['do', 'does', 'can'], [['iywt', 'do'], ['hsi', 'does'], ['all', 'can']]],
+  [0, ['do', 'does'], [['iywt', 'do'], ['hsi', 'does']]],
+  [0, ['have', 'has', 'had'], [['iywt', 'have'], ['hsi', 'has'], ['all', 'had']]],
+  [0, ['have', 'has'], [['iywt', 'have'], ['hsi', 'has']]]
+].map(([sf, words, out]) => {
+  const aux = words.map(fxWord).join('\\s*\\/\\s*');
+  const re = sf ? new RegExp(FX_SUBJ_RE + '\\s*\\+\\s*' + aux + "(?![\\w'’])") : new RegExp("(?<![\\w'’])" + aux + '\\s*\\+\\s*' + FX_SUBJ_RE);
+  return { sf, re, out };
+});
+function fxExpand(part, depth) {
+  depth = depth || 0;
+  if (depth < 2) for (const r of FX_RULES) {
+    const m = part.match(r.re);
+    if (!m) continue;
+    const pre = part.slice(0, m.index), post = part.slice(m.index + m[0].length);
+    const auxCap = !r.sf && /^[A-Z]/.test(m[0]);
+    const cap = r.sf && (!pre.trim() || /^[^+()]{2,24}:\s*$/.test(pre));
+    // ví dụ trong ngoặc ở cuối (What is your name?) chỉ giữ ở dòng đầu, khỏi lặp lại
+    const exm = post.match(/\s*\([^()]*[?.!][^()]*\)\s*$/);
+    return r.out.flatMap(([k, a], j) => {
+      const sub = fxSubjTxt(k, cap);
+      const aa = auxCap ? a[0].toUpperCase() + a.slice(1) : a;
+      const tail = j && exm ? post.slice(0, exm.index) : post;
+      return fxExpand(pre + (r.sf ? sub + ' + ' + aa : aa + ' + ' + sub) + tail, depth + 1);
+    });
+  }
+  // "S" còn lại (không đổi dạng theo chủ ngữ) → "chủ ngữ"
+  return [part.replace(/(^|\+\s*|,\s*)S(?=\s*(?:\+|…|\?|$))/g, (m, a) => a + (a ? 'chủ ngữ' : 'Chủ ngữ'))];
+}
+function fxParts(txt) { return fxSplit(txt).flatMap(p => fxExpand(p)); }
+function fxSubjNote() {
+  const d = document.createElement('div');
+  d.className = 'gx-fx-subj';
+  d.textContent = '👤 Chủ ngữ: I · you · he / she / it · we · they, hoặc danh từ. Danh từ số ít (Lan, my mother, the cat) đi như he / she / it; danh từ số nhiều (my friends, the students) đi như they.';
+  return d;
+}
+
 /* formula box: every variant on its own line, only the first keeps the badge */
 function tnFxBox(rows) {
   const box = tnEl('div', 'tn-formula');
   rows.forEach(([sym, lbl, txt]) => {
     if (!txt) return;
-    String(txt).split(/\s+·\s+/).filter(Boolean).forEach((part, i) => {
+    fxParts(txt).forEach((part, i) => {
       const r = tnEl('div', 'tn-frow' + (i ? ' tn-frow-sub' : ''));
       const s = tnEl('span', 'tn-sym' + (i ? ' tn-sym-ghost' : (sym.length > 1 ? ' tn-sym-w' : '')), i ? '·' : sym);
       if (!i && lbl) s.title = lbl;
@@ -18656,13 +18730,19 @@ function grTableCell(c) {
 function grFormula(sec) {
   let rows = sec.fx;
   if (!rows) {
-    const parts = String(sec.formula).split(/\s+·\s+/).map(x => x.trim()).filter(Boolean);
+    // biến thể theo chủ ngữ (I/You/We/They … rồi He/She/It …) gộp vào cùng một số thứ tự
+    const parts = fxSplit(sec.formula).reduce((acc, p) => {
+      const prev = acc[acc.length - 1];
+      if (prev && /he\/she\/it/i.test(p) && /(^|\+\s)(I\/You\/We\/They|I\/you\/we\/they)\b/.test(prev.split(' · ').pop())) acc[acc.length - 1] = prev + ' · ' + p;
+      else acc.push(p);
+      return acc;
+    }, []);
     rows = parts.map((p, i) => [parts.length > 1 ? String(i + 1) : '+', p]);
   }
   const box = grEl('div', 'tn-formula');
   rows.forEach(([sym, txt]) => {
     // each variant on its own line; only the first keeps the badge
-    String(txt).split(/\s+·\s+/).filter(Boolean).forEach((part, i) => {
+    fxParts(txt).forEach((part, i) => {
       const r = grEl('div', 'tn-frow' + (i ? ' tn-frow-sub' : ''));
       const m = part.match(/^([^:+()]{2,24}):\s+(.*)$/);         // "Tính từ ngắn: adj-er + than"
       const label = i ? '·' : sym;
@@ -19348,10 +19428,10 @@ const GX_EXTRA_FX = {
     ['Trả lời', [['+', 'My name is + tên. · I\'m + số + (years old).'], ['+', 'I\'m a / an + nghề. · I live in + nơi.'], ['+', 'My phone number is + số. · It\'s + đánh vần từng chữ.']]]],
   'howto-time': [['Nói giờ', [['?', 'What time is it? · What\'s the time?'], ['+', 'It\'s + giờ + o\'clock: It\'s seven o\'clock.'], ['+', 'It\'s + phút + past / to + giờ · It\'s half past / a quarter past / a quarter to + giờ.']]],
     ['Thứ, ngày, tháng', [['on', 'on + thứ: on Monday · on + the + số thứ tự + of + tháng: on the fifth of May'], ['in', 'in + tháng / năm: in May, in 2025']]],
-    ['Kể việc hằng ngày', [['+', 'S + V (hiện tại đơn) + at + giờ: I get up at six.'], ['+', 'First … Then … After that … Finally …']]]],
+    ['Kể việc hằng ngày', [['+', 'I/You/We/They + V + at + giờ: I get up at six. · He/She/It + V-s/es + at + giờ: She gets up at six.'], ['+', 'First … Then … After that … Finally …']]]],
   'howto-family': [['Nói về gia đình', [['+', 'I have / I\'ve got + số + thành viên: I have two sisters.'], ['+', 'There are + số + people in my family.'], ['+', 'My + thành viên + is + nghề / tuổi / tính từ: My father is a doctor.']]],
     ['Hỏi về gia đình', [['?', 'Do you have any brothers or sisters?'], ['?', 'How many people are there in your family?'], ['?', 'What does your + thành viên + do?']]]],
-  'simple-vs-continuous': [['Hiện tại đơn: thói quen, sự thật', [['+', 'S + V(s/es) …'], ['−', 'S + do / does + not + V'], ['?', 'Do / Does + S + V?']]],
+  'simple-vs-continuous': [['Hiện tại đơn: thói quen, sự thật', [['+', 'I/You/We/They + V (nguyên thể) … · He/She/It + V-s/es …'], ['−', 'I/You/We/They + do not (don\'t) + V · He/She/It + does not (doesn\'t) + V'], ['?', 'Do + I/you/we/they + V? · Does + he/she/it + V?']]],
     ['Hiện tại tiếp diễn: đang xảy ra, tạm thời', [['+', 'S + am / is / are + V-ing …'], ['−', 'S + am / is / are + not + V-ing'], ['?', 'Am / Is / Are + S + V-ing?']]],
     ['Động từ trạng thái', [['!', 'know, like, want, need, believe, understand, have (sở hữu) → chỉ dùng thì đơn: I know (không nói I am knowing).']]]],
   'howto-restaurant': [['Vào quán và gọi món', [['1', 'A table for + số người, please.'], ['2', 'Can / Could I have + món, please? · I\'d like + món.'], ['?', 'What do you recommend? · Is this dish spicy?']]],
@@ -19360,10 +19440,10 @@ const GX_EXTRA_FX = {
     ['Thử đồ và hỏi giá', [['?', 'Can I try this on? · Do you have this in a smaller / bigger size?'], ['?', 'How much is this? · How much are these?']]],
     ['Trả tiền và đổi trả', [['+', 'I\'ll take it. · Can I pay by card?'], ['?', 'Can I return / exchange this?']]]],
   'prep-movement': [['Công thức', [['+', 'S + động từ chuyển động (go, walk, run, drive…) + giới từ + nơi: She walked into the room.'], ['1', 'into / out of: vào trong / ra khỏi'], ['2', 'up / down: lên / xuống'], ['3', 'across / along / through / past: băng qua / dọc theo / xuyên qua / đi ngang qua'], ['4', 'towards / onto / off: về phía / lên trên bề mặt / rời khỏi']]]],
-  'gerund-1': [['Động từ + V-ing', [['+', 'S + enjoy / finish / avoid / mind / keep / practise / suggest + V-ing: I enjoy reading.']]],
-    ['Động từ + to V', [['+', 'S + want / need / decide / hope / plan / promise / agree / refuse + to V: I want to learn.']]],
+  'gerund-1': [['Động từ + V-ing', [['+', 'I/You/We/They + enjoy / finish / avoid / mind / keep / practise / suggest + V-ing: I enjoy reading. · He/She/It + enjoys / finishes / avoids / minds / keeps / practises / suggests + V-ing: She enjoys reading.']]],
+    ['Động từ + to V', [['+', 'I/You/We/They + want / need / decide / hope / plan / promise / agree / refuse + to V: I want to learn. · He/She/It + wants / needs / decides / hopes / plans / promises / agrees / refuses + to V: He wants to learn.']]],
     ['Sau giới từ', [['+', 'giới từ (in, on, at, of, for, about, before, after, without) + V-ing: good at cooking']]]],
-  'relative-1': [['Công thức', [['who', 'N chỉ người + who / that + V …: The man who lives next door is a doctor.'], ['which', 'N chỉ vật + which / that + (S) + V …: The book which I bought is good.'], ['whose', 'N + whose + N + V …: a friend whose father is a pilot'], ['where', 'N nơi chốn + where + S + V: the town where I grew up'], ['Ø', 'Đại từ quan hệ làm tân ngữ có thể bỏ: The book (that) I bought…']]]],
+  'relative-1': [['Công thức', [['who', 'N chỉ người + who / that + V …: The man who lives next door is a doctor.'], ['which', 'N chỉ vật + which / that + (chủ ngữ) + V …: The book which I bought is good.'], ['whose', 'N + whose + N + V …: a friend whose father is a pilot'], ['where', 'N nơi chốn + where + S + V: the town where I grew up'], ['Ø', 'Đại từ quan hệ làm tân ngữ có thể bỏ: The book (that) I bought…']]]],
   'relative-2': [['Công thức', [['+', 'N (đã xác định) + , who / which + V … , + phần còn lại của câu: My father, who is 70, still works.'], ['+', 'Câu + , which + V … (which thay cho cả câu trước): She failed, which surprised us.'], ['!', 'Có dấu phẩy · không dùng that · không được bỏ đại từ quan hệ']]]],
   'gerund-2': [['Công thức', [['stop', 'stop + V-ing: thôi, bỏ hẳn · stop + to V: dừng lại để làm việc khác'], ['remember', 'remember + V-ing: nhớ đã làm · remember + to V: nhớ phải làm'], ['forget', 'forget + V-ing: quên đã làm · forget + to V: quên phải làm'], ['try', 'try + V-ing: thử làm xem sao · try + to V: cố gắng làm'], ['regret', 'regret + V-ing: hối tiếc đã làm · regret + to V: lấy làm tiếc phải (thông báo)']]]],
   'paired': [['Công thức', [['1', 'Both A and B + V (số nhiều): Both Lan and Nam are here.'], ['2', 'Not only A but (also) B: She is not only smart but also kind.'], ['3', 'Either A or B + V (chia theo B): Either you or I am wrong.'], ['4', 'Neither A nor B + V (chia theo B): Neither the food nor the drinks were cheap.'], ['!', 'A và B phải cùng loại từ: cùng danh từ, cùng tính từ hoặc cùng động từ.']]]],
@@ -19372,7 +19452,7 @@ const GX_EXTRA_FX = {
   'howto-opinion': [['Nêu ý kiến', [['+', 'In my opinion, + mệnh đề. · I think / I believe (that) + mệnh đề.'], ['+', 'Personally, I feel that + mệnh đề.']]],
     ['Đồng ý và phản đối', [['+', 'I (completely) agree with you / with + N.'], ['−', 'I see what you mean, but + mệnh đề. · I\'m not so sure about that.']]],
     ['Hỏi ý kiến', [['?', 'What do you think about + N / V-ing? · How do you feel about + N?']]]],
-  'wish': [['Ba loại câu ước', [['1', 'Hiện tại: S + wish + S + V2 / were: I wish I had more time.'], ['2', 'Quá khứ: S + wish + S + had + V3: I wish I had studied harder.'], ['3', 'Tương lai / mong thay đổi: S + wish + S + would + V: I wish it would stop raining.'], ['!', 'If only + mệnh đề: giống wish, nghĩa mạnh hơn (giá mà).']]]]
+  'wish': [['Ba loại câu ước', [['1', 'Hiện tại: I/You/We/They + wish + chủ ngữ + V2 / were: I wish I had more time. · He/She/It + wishes + chủ ngữ + V2 / were: She wishes she had more time.'], ['2', 'Quá khứ: I/You/We/They + wish + chủ ngữ + had + V3: I wish I had studied harder. · He/She/It + wishes + chủ ngữ + had + V3: He wishes he had studied harder.'], ['3', 'Tương lai / mong thay đổi: I/You/We/They + wish + chủ ngữ + would + V: I wish it would stop raining. · He/She/It + wishes + chủ ngữ + would + V: She wishes he would call.'], ['!', 'If only + mệnh đề: giống wish, nghĩa mạnh hơn (giá mà).']]]]
 };
 
 /* ---------- một bài học: 7 bước ---------- */
@@ -19422,7 +19502,7 @@ function gxLesson(id) {
   else { s1.push(grEl('p', 'gx-concept', t.intro)); }
   grRoot.appendChild(gxStep(1, 'Học khái niệm', s1, 'gx|' + id + '|1', true));
   // Bước 2: công thức
-  const s2 = [];
+  const s2 = [fxSubjNote()];
   if (it.k === 'tn') s2.push(tnFxBox([['+', 'Khẳng định', t.formula.pos], ['−', 'Phủ định', t.formula.neg], ['?', 'Câu hỏi', t.formula.q]]));
   else {
     (GX_EXTRA_FX[id] || []).forEach(([nm, rows]) => { s2.push(grEl('div', 'ex-sec-name', nm)); s2.push(grFormula({ fx: rows })); });
@@ -53058,7 +53138,9 @@ const EX_SIT = [{"lv": 1, "icon": "👋", "title": "Làm quen với bạn mới"
     });
     (typeof GR_LESSONS !== 'undefined' ? GR_LESSONS : []).forEach(t => {
       if (t.lv !== L.n || !EX_DATA[t.id]) return;
-      const secs = (t.sections || []).filter(s => s.formula || s.fx).slice(0, 3);
+      // v127: lấy đủ công thức như Bước 2 trong tab Ngữ pháp (khối công thức riêng + mọi mục có công thức)
+      const extra = (typeof GX_EXTRA_FX !== 'undefined' && GX_EXTRA_FX[t.id] || []).map(([name, rows]) => ({ name, fx: rows }));
+      const secs = extra.concat((t.sections || []).filter(s => s.formula || s.fx));
       EX_LESSONS.push({
         id: t.id, lv: L.n, title: t.title, en: t.en, tab: 'page-grammar', kindVi: 'Ngữ pháp',
         secs: secs, note: (t.tips && t.tips[0]) || '', items: EX_DATA[t.id]
@@ -53392,10 +53474,11 @@ const EX_SIT = [{"lv": 1, "icon": "👋", "title": "Làm quen với bạn mới"
     /* rule recap, taken straight from the lesson it belongs to */
     const rc = E('div', 'tense-card ex-recap');
     rc.appendChild(E('h3', null, 'Nhắc lại cấu trúc'));
+    if (typeof fxSubjNote === 'function') rc.appendChild(fxSubjNote());
     if (l.fx && l.fx.length) {
       const box = E('div', 'tn-formula');
       l.fx.forEach(([sym, txt]) => {
-        String(txt).split(/\s+·\s+/).filter(Boolean).forEach((part, i) => {
+        (typeof fxParts === 'function' ? fxParts(txt) : String(txt).split(/\s+·\s+/)).filter(Boolean).forEach((part, i) => {
           const r = E('div', 'tn-frow' + (i ? ' tn-frow-sub' : ''));
           const s = E('span', 'tn-sym' + (i ? ' tn-sym-ghost' : ''), i ? '·' : sym);
           if (!i) s.title = { '+': 'Khẳng định', '−': 'Phủ định', '?': 'Câu hỏi' }[sym] || '';
@@ -53426,7 +53509,8 @@ const EX_SIT = [{"lv": 1, "icon": "👋", "title": "Làm quen với bạn mới"
       const tab = document.querySelector('nav.tabbar button[data-page="page-grammar"]');
       if (tab) tab.click();
       try {
-        if (l.kindVi === 'Các thì' && typeof renderTenseTopic === 'function') renderTenseTopic(l.id);
+        if (typeof gxLesson === 'function' && typeof gxFind === 'function' && gxFind(l.id)) gxLesson(l.id);
+        else if (l.kindVi === 'Các thì' && typeof renderTenseTopic === 'function') renderTenseTopic(l.id);
         else if (typeof renderGrammarTopic === 'function') renderGrammarTopic(l.id);
       } catch (e) {}
       exTop();
@@ -54198,7 +54282,7 @@ const QB_DATA = {"groups": [["be", "🟦", "Động từ to be", "Be + chủ ng�
       order.forEach(wi => {
         const t = E('button', 'qb-tile' + (picked.includes(wi) ? ' used' : ''), words[wi]);
         t.disabled = picked.includes(wi) || !!st.round.res;
-        t.addEventListener('click', () => { picked.push(wi); draw(); hear(words[wi], 0.9); });
+        t.addEventListener('click', () => { picked.push(wi); draw(); });   // v127: chạm từ không phát âm
         bank.appendChild(t);
       });
       ck.disabled = picked.length !== words.length || !!st.round.res;
