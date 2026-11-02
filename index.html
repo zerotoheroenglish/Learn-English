@@ -2149,6 +2149,72 @@
   .sd-grp-new{ display:flex; gap:8px; }
   .sd-grp-new input{ flex:1; min-width:0; padding:8px 10px; border-radius:10px; border:1px solid var(--paper-line); background:var(--card); color:var(--ink); font:500 14px var(--font-body); }
   .sd-grp-b{ font-size:16px; }
+  /* v117 tab Dịch */
+  .tr-ctx{ margin:10px 0 2px; align-items:center; }
+  .tr-ctx-l{ font:700 12.5px var(--font-body); color:var(--ink-soft); margin-right:2px; }
+  .tr-keep{ display:flex; align-items:center; gap:6px; font-size:12.5px; color:var(--ink); flex-basis:100%; margin-top:4px; }
+  .tr-plabel{ font:800 11.5px/1.4 var(--font-body); letter-spacing:.03em; color:var(--rust); text-transform:uppercase; margin-bottom:6px; }
+  .fx-plabel{ margin:0 8px 0 0; }
+  .tr-use{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin:10px 0 0; padding:8px 10px; border-radius:12px; background:var(--card); border:1px solid var(--paper-line); }
+  .tr-use[hidden]{ display:none; }
+  .tr-use-l{ font:700 12.5px var(--font-body); color:var(--ink-soft); margin-right:4px; }
+  .tr-use button{ border:1px solid var(--paper-line); background:var(--paper); color:var(--ink); border-radius:999px; padding:6px 12px; font:700 13px var(--font-body); cursor:pointer; }
+  .tr-use button.active{ background:var(--rust); border-color:var(--rust); color:var(--on-accent, #fff); }
+  .tr-x{ margin-top:12px; padding:12px 14px; }
+  .tr-x-h{ font:800 13.5px var(--font-display); color:var(--ink); margin-bottom:8px; }
+  .tr-x-sub{ font-size:12px; color:var(--ink-soft); line-height:1.45; margin:6px 0; }
+  .tr-fix{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; font-size:13.5px; padding:4px 0; }
+  .tr-fix s{ color:var(--mark); } .tr-fix b{ color:var(--moss); }
+  .tr-fix.off s{ color:var(--ink); text-decoration:none; } .tr-fix.off b{ color:var(--ink-soft); text-decoration:line-through; }
+  .tr-fix .fx-undo{ margin-left:auto; }
+  .tr-terms{ display:flex; flex-direction:column; gap:6px; }
+  .tr-term{ display:grid; grid-template-columns:minmax(90px, 30%) 1fr auto auto; gap:4px 10px; align-items:center; padding:6px 8px; border-radius:10px; background:var(--paper); font-size:13.5px; }
+  .tr-term b{ color:var(--rust); }
+  .tr-term em{ grid-column:1 / -1; font-style:normal; font-size:12px; color:var(--ink-soft); }
+  .tr-term{ grid-template-columns:minmax(90px, 30%) 1fr auto auto; }
+  .tr-term > button{ grid-row:1; }
+  .tr-term em{ grid-row:2; }
+  .tr-icon.sm{ width:30px; height:30px; font-size:14px; }
+  .tr-icon.on{ color:#E0A800; }
+  .tr-note{ display:flex; gap:8px; font-size:13px; line-height:1.5; padding:4px 0; color:var(--ink); }
+  .tr-acts{ display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+  .tr-acts .btn-ghost{ flex:1 1 180px; }
+  .tr-acts .btn-ghost.on{ color:#B27A00; border-color:#E0A800; }
+  .tr-al{ display:flex; flex-direction:column; border:1px solid var(--paper-line); border-radius:12px; overflow:hidden; background:var(--card); }
+  .tr-al-row{ display:grid; grid-template-columns:1fr 1fr auto; gap:10px; padding:10px 12px; border-top:1px solid var(--paper-line); font-size:14px; line-height:1.5; align-items:start; }
+  .tr-al-row:first-child{ border-top:0; }
+  .tr-al-head{ background:var(--paper); font:800 11.5px var(--font-body); text-transform:uppercase; color:var(--ink-soft); }
+  .tr-al-a{ color:var(--ink); font-weight:600; } .tr-al-b{ color:var(--ink); }
+  .tr-al-acts{ display:flex; gap:4px; }
+  @media (max-width:560px){ .tr-al-row{ grid-template-columns:1fr; gap:4px; } .tr-al-head{ display:none; } .tr-al-b{ color:var(--ink-soft); } }
+  .tr-align{ margin-top:10px; }
+  .tr-wbox summary{ cursor:pointer; font:700 13px var(--font-body); }
+  .tr-wrow{ display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+  .tr-w{ border:1px solid var(--paper-line); background:var(--paper); color:var(--ink); border-radius:8px; padding:4px 9px; font:600 13.5px var(--font-body); cursor:pointer; }
+  .tr-w.on{ border-color:var(--rust); background:var(--rust-light); color:var(--rust); }
+  .tr-winfo{ margin-top:10px; display:flex; flex-direction:column; gap:6px; }
+  .tr-winfo:empty{ display:none; }
+  .tr-wi-top{ display:flex; align-items:center; gap:8px; font-size:16px; }
+  .tr-wi-ipa{ font:500 13px var(--font-mono); color:var(--ink-soft); }
+  .tr-wi-m{ font-size:14px; color:var(--ink); }
+  .tr-saved{ margin-top:18px; }
+  .tr-stabs{ margin-bottom:10px; }
+  .tr-slist{ display:flex; flex-direction:column; gap:6px; }
+  .tr-sitem{ display:flex; flex-direction:column; gap:3px; text-align:left; padding:10px 12px; border-radius:12px; border:1px solid var(--paper-line); background:var(--card); color:var(--ink); cursor:pointer; font:inherit; }
+  .tr-sitem:hover{ border-color:var(--rust); }
+  .tr-favitem{ flex-direction:row; align-items:center; gap:8px; cursor:default; }
+  .tr-s-txt{ flex:1; display:flex; flex-direction:column; gap:3px; text-align:left; background:none; border:0; padding:0; color:inherit; font:inherit; cursor:pointer; min-width:0; }
+  .tr-s-acts{ display:flex; gap:4px; flex:none; }
+  .tr-s-meta{ font:700 11px var(--font-mono); color:var(--ink-soft); }
+  .tr-s-a{ font-size:14px; font-weight:600; overflow-wrap:anywhere; }
+  .tr-s-b{ font-size:13px; color:var(--ink-soft); overflow-wrap:anywhere; }
+  .tr-empty{ font-size:13px; color:var(--ink-soft); padding:10px 0; }
+  .tr-clearall{ align-self:flex-start; margin-top:4px; }
+  .tr-gsearch input, .tr-gadd input{ width:100%; padding:9px 12px; border-radius:10px; border:1px solid var(--paper-line); background:var(--card); color:var(--ink); font:500 14px var(--font-body); box-sizing:border-box; }
+  .tr-gadd{ display:flex; flex-direction:column; gap:6px; margin-top:12px; padding:12px; border-radius:12px; background:var(--paper); }
+  .tr-toast{ position:fixed; left:50%; bottom:96px; transform:translateX(-50%) translateY(20px); background:var(--ink); color:var(--paper); padding:10px 16px; border-radius:12px; font:600 13px var(--font-body); opacity:0; pointer-events:none; transition:.2s; z-index:999; max-width:90vw; text-align:center; }
+  .tr-toast.on{ opacity:1; transform:translateX(-50%) translateY(0); }
+
   .sd-create-est{ font-size:12.5px; color:var(--rust); margin:6px 0; line-height:1.45; }
   .sd-quiz-n{ font:700 12px var(--font-body); color:var(--ink-soft); margin-bottom:8px; }
   .sd-quiz-q{ font:600 20px/1.45 var(--font-display); color:var(--ink); margin-bottom:10px; }
@@ -3675,7 +3741,7 @@
   <div class="hw-deco" aria-hidden="true"><i class="hw-witch"></i><i class="hw-spider"></i><i class="hw-ghost"></i><i class="hw-caul"></i><i class="hw-candy"></i><i class="hw-cat"></i><i class="hw-skel"></i></div>
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v116</span>
+      <span class="hero-badge">EN ⇄ VI · v117</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice hero-season" id="season-btn" aria-label="Đổi giao diện theo mùa" title="Đổi giao diện theo mùa">🎃</button>
@@ -3693,18 +3759,20 @@
   <!-- PAGE 1: TRANSLATOR -->
   <section class="page active" id="page-check">
     <div class="section-title">Dịch song ngữ</div>
-    <div class="section-sub">Gõ tiếng Anh hoặc tiếng Việt, bấm ⇄ để đổi chiều dịch. App tự sửa lỗi chính tả và ngữ pháp trước khi dịch</div>
+    <div class="section-sub">Gõ tiếng Anh hoặc tiếng Việt, bấm ⇄ để đổi chiều dịch. App dịch nguyên văn câu bạn nhập, gợi ý sửa lỗi riêng để bạn chọn dịch câu gốc hay câu đã sửa.</div>
     <div class="tr-langbar">
       <span class="tr-lang" id="tr-src-label">Tiếng Anh</span>
       <button class="tr-swap" id="tr-swap-btn" aria-label="Đảo chiều dịch">⇄</button>
       <span class="tr-lang" id="tr-tgt-label">Tiếng Việt</span>
     </div>
+    <div class="tr-ctx colloc-chips" id="tr-ctx" role="group" aria-label="Ngữ cảnh dịch"></div>
 
     <div class="input-card tr-pane">
+      <div class="tr-plabel">① Bản gốc · câu bạn nhập</div>
       <textarea id="tr-input" placeholder="Nhập văn bản cần dịch..."></textarea>
       <div class="tr-tools">
         <span class="tr-count" id="tr-count">0 / 2000</span>
-        <button class="fx-chip" id="fx-toggle" aria-pressed="true" title="Tự sửa lỗi chính tả và ngữ pháp trước khi dịch">✨ Tự sửa lỗi: Bật</button>
+        <button class="fx-chip" id="fx-toggle" aria-pressed="true" title="Kiểm tra lỗi chính tả và ngữ pháp, gợi ý câu đã sửa (không tự thay câu của bạn)">✨ Kiểm tra lỗi: Bật</button>
         <span class="tr-tool-btns">
           <button class="tr-icon" id="tr-src-speak" aria-label="Nghe văn bản gốc">🔊</button>
           <button class="tr-icon" id="tr-clear" aria-label="Xoá">✕</button>
@@ -3715,12 +3783,14 @@
     <div class="fx-note" id="fx-note" hidden></div>
     <div class="input-card fx-card" id="fx-card" hidden>
       <div class="fx-head">
+        <span class="tr-plabel fx-plabel">② Đề xuất sửa</span>
         <span class="fx-title" id="fx-title">✨ Đã sửa lỗi</span>
         <span class="fx-src" id="fx-src"></span>
       </div>
       <div class="fx-text" id="fx-text"></div>
       <div class="fx-actions">
-        <button class="btn-ghost fx-apply" id="fx-apply">✓ Dùng câu đã sửa</button>
+        <button class="btn-ghost fx-apply" id="fx-use-fixed">⇢ Dịch câu đã sửa</button>
+        <button class="btn-ghost fx-apply" id="fx-apply">↪ Thay câu gốc bằng câu đã sửa</button>
         <button class="tr-icon" id="fx-speak" aria-label="Nghe câu đã sửa">🔊</button>
       </div>
       <details class="fx-more" id="fx-more">
@@ -3739,7 +3809,13 @@
       </div>
     </div>
 
+    <div class="tr-use" id="tr-use" hidden role="group" aria-label="Chọn câu để dịch">
+      <span class="tr-use-l">Dịch câu nào?</span>
+      <button data-use="orig" class="active">Câu gốc (nguyên văn)</button>
+      <button data-use="fixed">Câu đã sửa</button>
+    </div>
     <div class="input-card tr-pane tr-out">
+      <div class="tr-plabel" id="tr-out-label">③ Bản dịch</div>
       <div class="tr-output" id="tr-output"><span class="tr-placeholder">Bản dịch</span></div>
       <div class="tr-tools">
         <span class="tr-status" id="tr-status"></span>
@@ -3751,7 +3827,9 @@
     </div>
 
     <button class="btn-primary" id="tr-btn" style="width:100%; margin-top:12px;">Dịch</button>
-    <p class="pron-note" style="text-align:center;" id="tr-hint">Bấm Dịch để dịch · App tự sửa lỗi chính tả và ngữ pháp trước khi dịch · Cần kết nối mạng</p>
+    <p class="pron-note" style="text-align:center;" id="tr-hint">Bấm Dịch để dịch · App dịch đúng câu bạn nhập; câu đã sửa chỉ được dịch khi bạn chọn · Cần kết nối mạng</p>
+    <div id="tr-extra"></div>
+    <div class="tr-saved" id="tr-saved"></div>
   </section>
 
   <!-- PAGE: PARAGRAPH TRANSLATION -->
@@ -13552,7 +13630,7 @@ let claudeSampleReady = false;     // resolved to a usable function
 claudeSamplePromise.then(fn => {
   claudeSampleReady = !!fn;
   const hint = document.getElementById('tr-hint');
-  if (hint && !fn) hint.textContent = 'Tự sửa lỗi rồi dịch khi bạn ngừng gõ · Cần kết nối mạng';
+  if (hint && !fn) hint.textContent = 'Tự dịch khi bạn ngừng gõ · Dịch nguyên văn câu bạn nhập, câu đã sửa chỉ dịch khi bạn chọn · Cần kết nối mạng';
 });
 
 async function askClaude(prompt, opts) {
@@ -13866,14 +13944,14 @@ async function fxNatural(src, viText, myId) {
 document.getElementById('fx-nat-use').addEventListener('click', () => {
   const t = document.getElementById('fx-nat-t').textContent;
   if (!t) return;
-  trInput.value = t; updateCount(); fxState = null; trLastText = ''; fxNatHide(); runTranslate();
+  trInput.value = t; updateCount(); fxState = null; trLastText = ''; trUse = 'orig'; fxNatHide(); runTranslate();
 });
 document.getElementById('fx-nat-speak').addEventListener('click', () => { const t = document.getElementById('fx-nat-t').textContent; if (t) speak(t, 0.9, 'en'); });
 
 async function runTranslate() {
   const text = trInput.value.trim();
   if (fxNatBox && trLastText !== '' && !text) fxNatHide();
-  if (!text) { setOutput('Bản dịch', true); trStatus.textContent = ''; trLastText = ''; fxState = null; fxRender(); return; }
+  if (!text) { setOutput('Bản dịch', true); trStatus.textContent = ''; trLastText = ''; fxState = null; fxRender(); trLast = null; trRenderUse(); trRenderExtra(); return; }
   const myId = ++trRequestId;
   // 1) auto-correct spelling & grammar first, then translate the corrected text
   let src = text;
@@ -13885,8 +13963,10 @@ async function runTranslate() {
       fxState = st;
     }
     fxRender();
-    src = fxApply(fxState);
+    // v117: KHÔNG tự đưa câu đã sửa vào bộ dịch. Mặc định dịch nguyên văn; chỉ dịch câu đã sửa khi người học chọn
+    if (trUse === 'fixed' && fxState && fxState.items.some(it => it.on)) src = fxApply(fxState);
   } else { fxRender(); }
+  trRenderUse();
   if (src === trLastText) { if (trStatus.textContent === 'Đang kiểm tra lỗi...') trStatus.textContent = ''; return; }
   trLastText = src;
   fxNatHide();
@@ -13898,6 +13978,7 @@ async function runTranslate() {
     if (myId !== trRequestId) return; // a newer request superseded this one
     setOutput(result, false);
     trStatus.textContent = '';
+    trAfter(src, result);
     fxNatural(src, result, myId);
   } catch (e) {
     if (myId !== trRequestId) return;
@@ -13916,6 +13997,7 @@ function updateCount() {
 
 trInput.addEventListener('input', () => {
   updateCount();
+  trUse = 'orig';
   clearTimeout(trTimer);
   if (!claudeSampleReady) trTimer = setTimeout(runTranslate, fxOn ? 1100 : 800);
 });
@@ -13948,6 +14030,7 @@ document.getElementById('tr-clear').addEventListener('click', () => {
   fxState = null; fxRender(); fxNatHide();
   setOutput('Bản dịch', true);
   trStatus.textContent = '';
+  trUse = 'orig'; trLast = null; trRenderUse(); trRenderExtra();
   trInput.focus();
 });
 
@@ -14712,7 +14795,7 @@ const fxNote = document.getElementById('fx-note');
 const fxToggle = document.getElementById('fx-toggle');
 const fxShow = s => (/\S/.test(s) ? s.trim() : s.replace(/[ \t]/g, '␣').replace(/\n/g, '↵'));
 function fxRender() {
-  fxToggle.textContent = fxOn ? '✨ Tự sửa lỗi: Bật' : '✨ Tự sửa lỗi: Tắt';
+  fxToggle.textContent = fxOn ? '✨ Kiểm tra lỗi: Bật' : '✨ Kiểm tra lỗi: Tắt';
   fxToggle.setAttribute('aria-pressed', fxOn ? 'true' : 'false');
   fxToggle.classList.toggle('off', !fxOn);
   const st = fxOn && fxState && fxState.text === trInput.value.trim() && fxState.lang === trSrc ? fxState : null;
@@ -14727,7 +14810,7 @@ function fxRender() {
   fxNote.className = 'fx-note';
   if (extra) { fxNote.textContent = extra; fxNote.hidden = false; }
   const on = st.items.filter(it => it.on).length, total = st.items.length;
-  document.getElementById('fx-title').textContent = on ? `✨ Đã sửa ${on} lỗi${total > on ? ` · ${total - on} chưa sửa` : ''}` : `💡 ${total} gợi ý sửa lỗi`;
+  document.getElementById('fx-title').textContent = on ? `✨ Gợi ý sửa ${on} lỗi${total > on ? ` · ${total - on} giữ nguyên` : ''}` : `💡 ${total} gợi ý sửa lỗi`;
   document.getElementById('fx-src').textContent = (st.source === 'lt' ? 'LanguageTool' : st.source === 'google' ? 'Google' : 'Cơ bản') + (st.items.some(it => it.rule) ? ' + Mẹo' : '');
   // corrected sentence with changes highlighted
   const box = document.getElementById('fx-text');
@@ -14758,7 +14841,7 @@ function fxRender() {
     if (!it.rep) ch.appendChild(document.createTextNode(' (bỏ)'));
     top.appendChild(ch);
     const tg = lsEl('button', 'fx-undo', it.on ? '↺ Giữ nguyên' : '✓ Sửa');
-    tg.addEventListener('click', () => { it.on = !it.on; it.name = false; fxRender(); trLastText = ''; runTranslate(); });
+    tg.addEventListener('click', () => { it.on = !it.on; it.name = false; fxRender(); trRenderUse(); if (trUse === 'fixed') { trLastText = ''; runTranslate(); } });
     top.appendChild(tg);
     row.appendChild(top);
     const vi = fxMsgVi(it);
@@ -14769,7 +14852,7 @@ function fxRender() {
       alts.appendChild(lsEl('span', 'fx-alts-l', 'Hoặc:'));
       it.alts.forEach(a => {
         const b = lsEl('button', 'fx-alt', a);
-        b.addEventListener('click', () => { it.alts = [it.rep, ...it.alts.filter(x => x !== a)]; it.rep = a; it.on = true; it.name = false; fxRender(); trLastText = ''; runTranslate(); });
+        b.addEventListener('click', () => { it.alts = [it.rep, ...it.alts.filter(x => x !== a)]; it.rep = a; it.on = true; it.name = false; fxRender(); trRenderUse(); if (trUse === 'fixed') { trLastText = ''; runTranslate(); } });
         alts.appendChild(b);
       });
       row.appendChild(alts);
@@ -14777,6 +14860,7 @@ function fxRender() {
     list.appendChild(row);
   });
   document.getElementById('fx-apply').hidden = !on;
+  document.getElementById('fx-use-fixed').hidden = !on || trUse === 'fixed';
   document.getElementById('fx-more-sum').textContent = `Giải thích từng lỗi (${total})`;
   fxCard.hidden = false;
 }
@@ -14794,6 +14878,7 @@ document.getElementById('fx-apply').addEventListener('click', () => {
   updateCount();
   fxState = null;
   trLastText = '';
+  trUse = 'orig';
   runTranslate();
 });
 document.getElementById('fx-speak').addEventListener('click', () => {
@@ -14802,6 +14887,414 @@ document.getElementById('fx-speak').addEventListener('click', () => {
 const fxMore = document.getElementById('fx-more');
 try { fxMore.open = localStorage.getItem(FX_KEY + '-open') === '1'; } catch (e) {}
 fxMore.addEventListener('toggle', () => { try { localStorage.setItem(FX_KEY + '-open', fxMore.open ? '1' : '0'); } catch (e) {} });
+/* ============================================================
+   v117 · Tab Dịch: bản gốc / đề xuất sửa / bản dịch tách riêng · người học chọn dịch câu nào
+   · ngữ cảnh (chung, giao tiếp, công việc, email, chuyên ngành 3D) · từ điển thuật ngữ 3D
+   · đối chiếu từng câu · lịch sử, yêu thích, sổ từ · lưu sang tab Từ vựng và Shadowing
+============================================================ */
+const TRX = { ctx: 'hoc-tieng-anh-tr-ctx', hist: 'hoc-tieng-anh-tr-hist', fav: 'hoc-tieng-anh-tr-fav', words: 'hoc-tieng-anh-tr-words', gloss: 'hoc-tieng-anh-tr-gloss', keep: 'hoc-tieng-anh-tr-keep' };
+const trxLoad = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } };
+const trxSave = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+let trUse = 'orig';                         // dịch câu gốc (mặc định) hay câu đã sửa
+let trCtx = trxLoad(TRX.ctx, 'general');
+let trKeepEn = trxLoad(TRX.keep, true) !== false;   // ngữ cảnh 3D: giữ thuật ngữ tiếng Anh trong bản dịch
+let trHist = trxLoad(TRX.hist, []); if (!Array.isArray(trHist)) trHist = [];
+let trFav = trxLoad(TRX.fav, []); if (!Array.isArray(trFav)) trFav = [];
+let trWords = trxLoad(TRX.words, []); if (!Array.isArray(trWords)) trWords = [];
+let trMyGloss = trxLoad(TRX.gloss, []); if (!Array.isArray(trMyGloss)) trMyGloss = [];
+let trLast = null;                          // { src, out, raw, sl, tl, fixes, offFix:Set }
+const TR_CTX = [['general', '🌐 Chung'], ['talk', '💬 Giao tiếp'], ['work', '💼 Công việc'], ['email', '✉️ Email'], ['3d', '🧊 Chuyên ngành 3D']];
+
+/* ---------- từ điển thuật ngữ 3D: [tiếng Anh, tiếng Việt nên dùng, ghi chú] ---------- */
+const TR_GLOSS = [
+  ['mesh', 'lưới (mesh)', 'Thường giữ nguyên “mesh”.'], ['polygon', 'đa giác (polygon)', 'Viết tắt: poly.'], ['poly count', 'số đa giác', 'Còn viết polycount.'],
+  ['vertex', 'đỉnh (vertex)', 'Số nhiều: vertices.'], ['edge', 'cạnh (edge)', ''], ['face', 'mặt (face)', ''], ['edge loop', 'vòng cạnh (edge loop)', 'Google hay dịch sai thành “vòng lặp cạnh”.'],
+  ['topology', 'topology (cấu trúc lưới)', 'Dân 3D thường giữ nguyên.'], ['retopology', 'retopology (dựng lại lưới)', 'Viết tắt: retopo.'], ['subdivide', 'chia nhỏ lưới (subdivide)', ''],
+  ['bevel', 'vát cạnh (bevel)', 'Google hay dịch thành “góc xiên”.'], ['extrude', 'đùn (extrude)', 'Thường giữ nguyên.'], ['normal', 'pháp tuyến (normal)', 'Không phải “bình thường” hay “tiêu chuẩn”.'],
+  ['normal map', 'normal map', 'Google hay dịch sai thành “bản đồ bình thường”.'], ['flip normals', 'lật normal (pháp tuyến)', ''], ['smoothing group', 'smoothing group (nhóm làm mịn)', ''],
+  ['UV', 'UV', 'Giữ nguyên.'], ['UV unwrap', 'trải UV', 'Google hay dịch thành “mở gói UV”.'], ['unwrap', 'trải (UV)', ''], ['seam', 'đường nối (seam)', 'Không phải “đường may”.'],
+  ['UV island', 'mảnh UV (UV island)', ''], ['texel density', 'mật độ texel', ''], ['UDIM', 'UDIM', 'Giữ nguyên.'], ['texture', 'texture', 'Có thể dịch “kết cấu bề mặt”, nhưng dân 3D thường giữ nguyên.'],
+  ['bake', 'bake (nướng map)', 'Google hay dịch thành “nướng”.'], ['baking', 'bake (nướng map)', ''], ['albedo', 'albedo (màu nền)', ''], ['base color', 'màu nền (base color)', ''],
+  ['roughness', 'độ nhám (roughness)', ''], ['metallic', 'độ kim loại (metallic)', ''], ['specular', 'phản xạ gương (specular)', ''], ['opacity', 'độ trong suốt (opacity)', ''],
+  ['material', 'vật liệu (material)', ''], ['shader', 'shader', 'Giữ nguyên, không phải “đổ bóng”.'], ['shading', 'shading (đổ bóng bề mặt)', ''], ['PBR', 'PBR', 'Physically Based Rendering.'],
+  ['render', 'render (kết xuất)', 'Danh từ hoặc động từ, dân 3D thường giữ nguyên.'], ['rendering', 'render (kết xuất)', ''], ['render farm', 'render farm', ''], ['noise', 'nhiễu (noise)', 'Trong render là “nhiễu”, không phải “tiếng ồn”.'],
+  ['denoiser', 'bộ khử nhiễu', 'Không phải “khử tiếng ồn”.'], ['samples', 'số mẫu (samples)', ''], ['global illumination', 'chiếu sáng toàn cục (GI)', ''], ['HDRI', 'HDRI', 'Giữ nguyên.'],
+  ['key light', 'đèn chính (key light)', ''], ['rim light', 'đèn viền (rim light)', ''], ['fill light', 'đèn phụ (fill light)', ''], ['exposure', 'độ phơi sáng', ''],
+  ['viewport', 'khung nhìn (viewport)', ''], ['scene', 'cảnh (scene)', ''], ['asset', 'asset', 'Không phải “tài sản”.'], ['pivot', 'tâm xoay (pivot)', ''],
+  ['rig', 'rig (bộ khung điều khiển)', 'Google hay dịch sai thành “giàn khoan”.'], ['rigging', 'rigging (dựng khung điều khiển)', ''], ['skinning', 'skin (gắn lưới vào xương)', ''],
+  ['weight painting', 'vẽ trọng số (weight painting)', ''], ['skin weights', 'trọng số skin', 'Không phải “trọng lượng da”.'], ['joint', 'khớp (joint)', ''], ['bone', 'xương (bone)', ''],
+  ['controller', 'bộ điều khiển (controller)', ''], ['keyframe', 'keyframe (khung hình khoá)', ''], ['timeline', 'thanh thời gian (timeline)', ''], ['walk cycle', 'chu kỳ đi bộ (walk cycle)', ''],
+  ['blend shape', 'blend shape (biến dạng hình)', ''], ['LOD', 'LOD (mức chi tiết)', ''], ['draw call', 'draw call', ''], ['frame rate', 'tốc độ khung hình', ''],
+  ['revision', 'lần chỉnh sửa', ''], ['feedback', 'góp ý (feedback)', ''], ['deadline', 'hạn chót (deadline)', ''], ['turnaround', 'thời gian hoàn thành', ''], ['reference', 'ảnh tham khảo (reference)', '']
+];
+// bản dịch máy hay sai với thuật ngữ 3D: [chỉ áp dụng khi câu gốc có từ này, cụm sai trong bản dịch, thay bằng, luôn sửa (true) hay chỉ khi "giữ thuật ngữ tiếng Anh"]
+const TR_FIX3D = [
+  [/normal maps?/i, /bản đồ (bình thường|thông thường|pháp tuyến)/gi, 'normal map', true],
+  [/normals?\b/i, /\b(các )?(tiêu chuẩn|chỉ tiêu|định mức|bình thường)\b/gi, 'normal', true],
+  [/\brig(s|ged|ging)?\b/i, /giàn khoan|giàn giáo|gian lận/gi, 'rig', true],
+  [/\bbak(e|ed|ing)\b/i, /\bnướng\b/gi, 'bake', true],
+  [/\bunwrap/i, /mở (gói|bọc)|bỏ (gói|bọc)|tháo (gói|bọc)/gi, 'trải UV', true],
+  [/\bseams?\b/i, /đường may/gi, 'đường nối (seam)', true],
+  [/\bedge loops?\b/i, /vòng lặp (cạnh|biên)/gi, 'vòng cạnh (edge loop)', true],
+  [/\bnoise\b/i, /tiếng ồn/gi, 'nhiễu', true],
+  [/\bdenois/i, /khử tiếng ồn|giảm tiếng ồn/gi, 'khử nhiễu', true],
+  [/\bskin weights?\b/i, /trọng lượng da/gi, 'trọng số skin', true],
+  [/\bbevel/i, /góc xiên|vát xiên/gi, 'vát cạnh (bevel)', true],
+  [/\bassets?\b/i, /tài sản/gi, 'asset', true],
+  [/\bshaders?\b/i, /bộ đổ bóng/gi, 'shader', true],
+  [/\btextures?\b/i, /kết cấu/gi, 'texture', false],
+  [/\brender/i, /kết xuất|hiển thị/gi, 'render', false],
+  [/\btopology\b/i, /cấu trúc liên kết|tôpô|topo học/gi, 'topology', true],
+  [/\bviewport\b/i, /cổng xem/gi, 'viewport', true],
+  [/\bkeyframes?\b/i, /khung hình chính/gi, 'keyframe', false]
+];
+const trGlossAll = () => [...trMyGloss.map(g => [g[0], g[1], 'Thuật ngữ của bạn', true]), ...TR_GLOSS];
+const trEsc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+function trGlossFind(en, vi) {
+  const out = [], seen = new Set();
+  trGlossAll().forEach(g => {
+    const re = new RegExp('\\b' + trEsc(g[0]).replace(/\\ /g, '\\s+') + '(s|es|ed|ing)?\\b', 'i');
+    if (en && re.test(en) && !seen.has(g[0].toLowerCase())) { seen.add(g[0].toLowerCase()); out.push(g); }
+    else if (vi && g[1] && new RegExp('(^|[^\\p{L}])' + trEsc(g[1].replace(/\s*\(.*\)$/, '')) + '($|[^\\p{L}])', 'iu').test(vi) && !seen.has(g[0].toLowerCase())) { seen.add(g[0].toLowerCase()); out.push(g); }
+  });
+  // cụm dài trước: bỏ "unwrap" nếu đã có "UV unwrap"…
+  return out.filter(g => !out.some(h => h !== g && h[0].length > g[0].length && h[0].toLowerCase().includes(g[0].toLowerCase())));
+}
+// sửa bản dịch Anh → Việt theo từ điển 3D; trả về [bản đã sửa, danh sách thay đổi]
+function trFix3D(src, out, off) {
+  const fixes = [];
+  let res = out;
+  TR_FIX3D.forEach((f, i) => {
+    if (!f[0].test(src) || (!f[3] && !trKeepEn)) return;
+    if (off && off.has(i)) { const m = out.match(f[1]); if (m) fixes.push({ i, from: m[0], to: f[2], off: true }); return; }
+    res = res.replace(f[1], m => { fixes.push({ i, from: m, to: f[2] }); return f[2]; });
+  });
+  return [res, fixes];
+}
+
+/* ---------- ghi chú theo ngữ cảnh (kiểm tra câu tiếng Anh) ---------- */
+const TR_INFORMAL = [[/\b(pls|plz)\b/i, 'please'], [/\bthx\b|\bthanx\b/i, 'thank you / thanks'], [/\bu\b/i, 'you'], [/\bur\b/i, 'your / you’re'], [/\bgonna\b/i, 'going to'], [/\bwanna\b/i, 'want to'], [/\bgotta\b/i, 'have to'], [/\bok\b/i, 'okay / sounds good'], [/\bbtw\b/i, 'by the way']];
+const TR_CONTR = [[/\bdon't\b/i, 'do not'], [/\bcan't\b/i, 'cannot'], [/\bwon't\b/i, 'will not'], [/\bI'm\b/, 'I am'], [/\bit's\b/i, 'it is'], [/\bwe're\b/i, 'we are'], [/\bI'll\b/, 'I will'], [/\bdidn't\b/i, 'did not'], [/\bisn't\b/i, 'is not']];
+function trCtxNotes(en) {
+  const n = [];
+  if (!en || trCtx === 'general') return n;
+  const t = en.replace(/[’]/g, "'");
+  const inf = TR_INFORMAL.filter(([re]) => re.test(t)).map(([re, r]) => `“${t.match(re)[0]}” → ${r}`);
+  if (trCtx === 'email' || trCtx === 'work') {
+    if (inf.length) n.push(['⚠️', 'Từ thân mật / viết tắt, nên thay khi viết cho công việc: ' + inf.join(', ') + '.']);
+    const con = TR_CONTR.filter(([re]) => re.test(t)).map(([re, r]) => `${t.match(re)[0]} → ${r}`);
+    if (trCtx === 'email' && con.length) n.push(['✉️', 'Email trang trọng nên viết đầy đủ: ' + con.slice(0, 4).join(', ') + '.']);
+    const imp = t.split(/(?<=[.!?])\s+/).filter(s => /^(send|give|tell|fix|check|do|make|call|reply|update|finish)\b/i.test(s.trim()));
+    if (imp.length) n.push(['🙏', `Câu mệnh lệnh “${imp[0].trim().slice(0, 40)}…” có thể nghe cộc. Lịch sự hơn: “Could you…, please?” hoặc “Would you mind…?”`]);
+  }
+  if (trCtx === 'email') {
+    if (!/^\s*(dear|hi|hello|good (morning|afternoon|evening))\b/i.test(t)) n.push(['👋', 'Email thường mở đầu bằng lời chào: “Dear Mr Smith,” (trang trọng) hoặc “Hi Anna,” (thân thiện).']);
+    if (!/(regards|sincerely|best wishes|thank you|thanks|cheers|best,?)\s*[,.!]?\s*(\n.*)?$/i.test(t.trim())) n.push(['✍️', 'Nên kết thư: “Best regards,” / “Kind regards,” rồi ký tên. Có thể thêm “Thank you for your help.” trước lời chào kết.']);
+  }
+  if (trCtx === 'talk') {
+    const full = [[/\bI am\b/, "I'm"], [/\bdo not\b/i, "don't"], [/\bit is\b/i, "it's"], [/\bI will\b/, "I'll"], [/\bcannot\b/i, "can't"]].filter(([re]) => re.test(t)).map(([re, r]) => `${t.match(re)[0]} → ${r}`);
+    if (full.length) n.push(['💬', 'Khi nói chuyện, người bản xứ hay dùng dạng rút gọn cho tự nhiên: ' + full.join(', ') + '.']);
+    if (/\b(furthermore|moreover|therefore|hence|regarding)\b/i.test(t)) n.push(['💬', 'Từ hơi trang trọng cho văn nói: furthermore / moreover → also, plus; therefore → so; regarding → about.']);
+  }
+  return n;
+}
+
+/* ---------- lịch sử, yêu thích, sổ từ ---------- */
+function trHistAdd(s, o) {
+  if (!s || !o) return;
+  const e = { s, o, sl: trSrc, tl: trTgt, c: trCtx, t: Date.now() };
+  const top = trHist[0];
+  // đang gõ tiếp câu trước: thay mục mới nhất thay vì thêm mục mới
+  if (top && top.sl === e.sl && (s.startsWith(top.s) || top.s.startsWith(s)) && Date.now() - top.t < 120000) trHist[0] = e; else trHist.unshift(e);
+  trHist = trHist.filter((x, i, a) => a.findIndex(y => y.s === x.s && y.sl === x.sl) === i).slice(0, 40);
+  trxSave(TRX.hist, trHist);
+}
+const trPair = (src, out, sl) => sl === 'en' ? { en: src, vi: out } : { en: out, vi: src };
+function trFavHas(en) { return trFav.some(f => f.en === en); }
+function trFavToggle(p) { const i = trFav.findIndex(f => f.en === p.en); if (i >= 0) trFav.splice(i, 1); else trFav.unshift(Object.assign({ t: Date.now() }, p)); trFav = trFav.slice(0, 200); trxSave(TRX.fav, trFav); return i < 0; }
+// lưu câu sang tab Shadowing: một bài "Câu đã lưu từ tab Dịch" (tối đa 80 câu)
+function trToShadow(p) {
+  let mine = trxLoad('hoc-tieng-anh-shadow-custom', []); if (!Array.isArray(mine)) mine = [];
+  let l = mine.find(x => x.id === 'my-tr-saved');
+  if (!l) { l = { id: 'my-tr-saved', lv: 3, icon: '🌐', title: 'Câu đã lưu từ tab Dịch', vi: 'Bài tự tạo', sum: 'Các câu bạn lưu từ tab Dịch để luyện nói theo.', s: [] }; mine.unshift(l); }
+  if (l.s.some(r => r[0] === p.en)) return 'dup';
+  if (l.s.length >= 80) return 'full';
+  l.s.push([p.en, p.vi || '']);
+  trxSave('hoc-tieng-anh-shadow-custom', mine);
+  try { window.dispatchEvent(new Event('hoc-shadow-mine')); } catch (e) {}
+  return 'ok';
+}
+// lưu từ: có trong tab Từ vựng → thêm vào yêu thích + bắt đầu ôn; không có → sổ từ của tab Dịch
+function trSaveWord(w, vi) {
+  const k = w.toLowerCase();
+  let it = null; try { it = VC_ALL.find(x => x.w.toLowerCase() === k && !x.sense); } catch (e) {}
+  if (it) {
+    try { if (!vcFav.has(vcK(it))) vcFavToggle(it); if (typeof srsTouch === 'function') srsTouch(it); } catch (e) {}
+    return 'vocab';
+  }
+  if (!trWords.some(x => x.w.toLowerCase() === k)) { trWords.unshift({ w, vi: vi || '', t: Date.now() }); trWords = trWords.slice(0, 300); trxSave(TRX.words, trWords); }
+  return 'book';
+}
+
+/* ---------- vẽ phần dưới bản dịch ---------- */
+const trEl = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+function trToast(msg) {
+  let t = document.getElementById('tr-toast');
+  if (!t) { t = trEl('div', 'tr-toast'); t.id = 'tr-toast'; document.body.appendChild(t); }
+  t.textContent = msg; t.classList.add('on'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('on'), 2200);
+}
+function trRenderUse() {
+  const bar = document.getElementById('tr-use');
+  const has = fxOn && fxState && fxState.text === trInput.value.trim() && fxState.lang === trSrc && fxState.items.some(it => it.on);
+  bar.hidden = !has;
+  if (!has && trUse === 'fixed') trUse = 'orig';
+  bar.querySelectorAll('button').forEach(b => { const on = b.dataset.use === trUse; b.classList.toggle('active', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+  const lab = document.getElementById('tr-out-label');
+  if (lab) lab.textContent = '③ Bản dịch' + (has ? (trUse === 'fixed' ? ' · của câu đã sửa' : ' · của câu gốc (nguyên văn)') : '');
+}
+function trRenderExtra() {
+  const box = document.getElementById('tr-extra');
+  box.innerHTML = '';
+  const L = trLast;
+  if (!L || !L.out) return;
+  const en = L.sl === 'en' ? L.src : L.out, vi = L.sl === 'en' ? L.out : L.src;
+  // sửa thuật ngữ 3D
+  if (trCtx === '3d' && L.fixes && L.fixes.length) {
+    const c = trEl('div', 'input-card tr-x tr-fixes');
+    c.appendChild(trEl('div', 'tr-x-h', '🧊 Đã sửa theo từ điển 3D'));
+    L.fixes.forEach(f => {
+      const r = trEl('div', 'tr-fix' + (f.off ? ' off' : ''));
+      r.appendChild(trEl('s', null, f.from)); r.appendChild(document.createTextNode(' → ')); r.appendChild(trEl('b', null, f.to));
+      const u = trEl('button', 'fx-undo', f.off ? '✓ Sửa' : '↺ Giữ bản máy dịch');
+      u.addEventListener('click', () => { if (L.offFix.has(f.i)) L.offFix.delete(f.i); else L.offFix.add(f.i); trApplyOut(); });
+      r.appendChild(u); c.appendChild(r);
+    });
+    box.appendChild(c);
+  }
+  // thuật ngữ trong câu
+  const terms = trCtx === '3d' || trMyGloss.length ? trGlossFind(en, L.sl === 'vi' ? vi : null).filter(g => trCtx === '3d' || g[3]) : [];
+  if (terms.length) {
+    const c = trEl('div', 'input-card tr-x');
+    c.appendChild(trEl('div', 'tr-x-h', `📘 Thuật ngữ trong câu (${terms.length})`));
+    const tb = trEl('div', 'tr-terms');
+    terms.forEach(g => { const r = trEl('div', 'tr-term'); r.appendChild(trEl('b', null, g[0])); r.appendChild(trEl('span', null, g[1])); if (g[2]) r.appendChild(trEl('em', null, g[2])); const sp = trEl('button', 'tr-icon sm', '🔊'); sp.setAttribute('aria-label', 'Nghe ' + g[0]); sp.addEventListener('click', () => speak(g[0], 0.85, 'en')); r.appendChild(sp); tb.appendChild(r); });
+    c.appendChild(tb);
+    box.appendChild(c);
+  }
+  // ghi chú theo ngữ cảnh
+  const notes = trCtxNotes(en);
+  if (notes.length) {
+    const c = trEl('div', 'input-card tr-x');
+    c.appendChild(trEl('div', 'tr-x-h', '📝 Gợi ý cho ngữ cảnh ' + TR_CTX.find(x => x[0] === trCtx)[1].replace(/^\S+\s/, '').toLowerCase()));
+    notes.forEach(([ic, t]) => { const r = trEl('div', 'tr-note'); r.appendChild(trEl('span', null, ic)); r.appendChild(trEl('span', null, t)); c.appendChild(r); });
+    if (L.sl === 'vi') c.appendChild(trEl('div', 'tr-x-sub', 'Gợi ý dựa trên bản dịch tiếng Anh. Bộ dịch miễn phí không tự đổi giọng văn theo ngữ cảnh, nên app kiểm tra thêm.'));
+    box.appendChild(c);
+  }
+  // hành động: yêu thích, shadowing, đối chiếu, lưu từ
+  const acts = trEl('div', 'tr-acts');
+  const p = { en: en.trim(), vi: vi.trim() };
+  const fv = trEl('button', 'btn-ghost' + (trFavHas(p.en) ? ' on' : ''), trFavHas(p.en) ? '★ Đã lưu yêu thích' : '☆ Lưu câu yêu thích');
+  fv.addEventListener('click', () => { const on = trFavToggle(p); fv.textContent = on ? '★ Đã lưu yêu thích' : '☆ Lưu câu yêu thích'; fv.classList.toggle('on', on); trRenderSaved(); });
+  const sh = trEl('button', 'btn-ghost', '🎙️ Luyện shadowing câu này');
+  sh.addEventListener('click', () => {
+    const sents = p.en.split(/(?<=[.!?…])\s+/).filter(Boolean);
+    let r = 'ok';
+    if (sents.length > 1 && p.en.length > 160) { trToast('Câu dài: hãy dùng “Đối chiếu từng câu” rồi lưu từng câu.'); return; }
+    r = trToShadow(p);
+    trToast(r === 'ok' ? '✓ Đã thêm vào Shadowing › Bài của tôi › “Câu đã lưu từ tab Dịch”' : r === 'dup' ? 'Câu này đã có trong bài shadowing.' : 'Bài đã đủ 80 câu. Hãy xoá bớt trong tab Shadowing.');
+  });
+  const al = trEl('button', 'btn-ghost', '↔ Đối chiếu từng câu');
+  al.addEventListener('click', () => trAlign(al));
+  acts.appendChild(fv); acts.appendChild(sh); acts.appendChild(al);
+  box.appendChild(acts);
+  const alBox = trEl('div', 'tr-align'); alBox.id = 'tr-align'; box.appendChild(alBox);
+  // từ trong câu tiếng Anh: chạm để lưu
+  const ws = [...new Set((en.match(/[A-Za-z][A-Za-z'’-]*/g) || []).map(w => w.replace(/[’]/g, "'")).filter(w => w.length > 2 && !/^(the|and|for|you|are|was|were|but|not|this|that|with|from|have|has|had|will|would|can|could|its|it's|our|your|their|they|them|then|than|there|here|what|when|which|who|how|why|into|onto|about|been|being|also|just|very|some|any)$/i.test(w)))].slice(0, 30);
+  if (ws.length) {
+    const c = trEl('details', 'input-card tr-x tr-wbox');
+    c.appendChild(trEl('summary', null, '📖 Chạm vào từ để xem nghĩa và lưu vào tab Từ vựng'));
+    const row = trEl('div', 'tr-wrow');
+    const info = trEl('div', 'tr-winfo');
+    ws.forEach(w => {
+      const b = trEl('button', 'tr-w', w);
+      b.addEventListener('click', () => {
+        row.querySelectorAll('.tr-w').forEach(x => x.classList.toggle('on', x === b));
+        info.innerHTML = '';
+        let h = {}; try { h = prLookup(w) || {}; } catch (e) {}
+        const top = trEl('div', 'tr-wi-top'); top.appendChild(trEl('b', null, w)); if (h.ipa) top.appendChild(trEl('span', 'tr-wi-ipa', h.ipa));
+        const sp = trEl('button', 'tr-icon sm', '🔊'); sp.addEventListener('click', () => speak(w, 0.8, 'en')); top.appendChild(sp);
+        info.appendChild(top);
+        const mean = trEl('div', 'tr-wi-m', h.vi || 'Đang tra nghĩa…'); info.appendChild(mean);
+        if (!h.vi && typeof fetchMeaningOnline === 'function') fetchMeaningOnline(w).then(m => { mean.textContent = m || 'Chưa tra được nghĩa.'; }).catch(() => { mean.textContent = 'Chưa tra được nghĩa (cần mạng).'; });
+        let inVocab = false; try { inVocab = VC_ALL.some(x => x.w.toLowerCase() === w.toLowerCase() && !x.sense); } catch (e) {}
+        const sv = trEl('button', 'btn-primary', inVocab ? '＋ Thêm vào tab Từ vựng (yêu thích + ôn tập)' : '＋ Lưu vào sổ từ của tab Dịch');
+        sv.addEventListener('click', () => { const r = trSaveWord(w, mean.textContent.replace(/^Đang tra nghĩa…$/, '')); sv.disabled = true; sv.textContent = r === 'vocab' ? '✓ Đã thêm vào Từ vựng › Yêu thích, có trong lịch ôn' : '✓ Đã lưu vào sổ từ (xem ở mục “Sổ từ” bên dưới)'; trRenderSaved(); });
+        info.appendChild(sv);
+      });
+      row.appendChild(b);
+    });
+    c.appendChild(row); c.appendChild(info);
+    box.appendChild(c);
+  }
+}
+// đối chiếu từng câu: dịch riêng từng câu (tối đa 15 câu)
+async function trAlign(btn) {
+  const box = document.getElementById('tr-align'); if (!box || !trLast) return;
+  if (box.dataset.open) { box.innerHTML = ''; delete box.dataset.open; btn.textContent = '↔ Đối chiếu từng câu'; return; }
+  box.dataset.open = '1'; btn.textContent = '✕ Đóng đối chiếu';
+  const L = trLast;
+  const sents = L.src.split(/(?<=[.!?…])\s+|\n+/).map(s => s.trim()).filter(Boolean).slice(0, 15);
+  box.innerHTML = '';
+  box.appendChild(trEl('div', 'tr-x-sub', 'Mỗi câu được dịch riêng nên có thể hơi khác bản dịch cả đoạn ở trên.'));
+  const tbl = trEl('div', 'tr-al');
+  const head = trEl('div', 'tr-al-row tr-al-head'); head.appendChild(trEl('span', null, LANG_NAMES[L.sl])); head.appendChild(trEl('span', null, LANG_NAMES[L.tl])); head.appendChild(trEl('span')); tbl.appendChild(head);
+  box.appendChild(tbl);
+  for (const s of sents) {
+    const row = trEl('div', 'tr-al-row');
+    const a = trEl('div', 'tr-al-a', s), b = trEl('div', 'tr-al-b', '…');
+    const acts = trEl('div', 'tr-al-acts');
+    row.appendChild(a); row.appendChild(b); row.appendChild(acts);
+    tbl.appendChild(row);
+    let out = '';
+    try { out = await translateText(s, L.sl, L.tl); if (trCtx === '3d' && L.sl === 'en') out = trFix3D(s, out, L.offFix)[0]; } catch (e) { out = ''; }
+    if (!box.dataset.open) return;
+    b.textContent = out || 'Không dịch được';
+    const p = trPair(s, out, L.sl);
+    const sp = trEl('button', 'tr-icon sm', '🔊'); sp.setAttribute('aria-label', 'Nghe câu tiếng Anh'); sp.addEventListener('click', () => speak(p.en, 0.9, 'en'));
+    const fv = trEl('button', 'tr-icon sm' + (trFavHas(p.en) ? ' on' : ''), trFavHas(p.en) ? '★' : '☆'); fv.setAttribute('aria-label', 'Lưu yêu thích');
+    fv.addEventListener('click', () => { const on = trFavToggle(p); fv.textContent = on ? '★' : '☆'; fv.classList.toggle('on', on); trRenderSaved(); });
+    const sh = trEl('button', 'tr-icon sm', '🎙️'); sh.setAttribute('aria-label', 'Thêm vào Shadowing');
+    sh.addEventListener('click', () => { const r = trToShadow(p); trToast(r === 'ok' ? '✓ Đã thêm vào bài shadowing “Câu đã lưu từ tab Dịch”' : r === 'dup' ? 'Câu này đã có trong bài shadowing.' : 'Bài đã đủ 80 câu.'); });
+    if (out) { acts.appendChild(sp); acts.appendChild(fv); acts.appendChild(sh); }
+  }
+}
+function trApplyOut() {
+  const L = trLast; if (!L) return;
+  let out = L.raw, fixes = [];
+  if (trCtx === '3d' && L.sl === 'en') [out, fixes] = trFix3D(L.src, L.raw, L.offFix);
+  L.out = out; L.fixes = fixes;
+  setOutput(out, false);
+  trRenderExtra();
+}
+// gọi sau mỗi lần dịch xong
+function trAfter(src, raw) {
+  trLast = { src, raw, out: raw, sl: trSrc, tl: trTgt, fixes: [], offFix: (trLast && trLast.src === src && trLast.offFix) || new Set() };
+  trApplyOut();
+  trHistAdd(src, trLast.out);
+  trRenderSaved();
+}
+
+/* ---------- khu vực lịch sử · yêu thích · sổ từ · từ điển 3D ---------- */
+let trSavedTab = 'hist', trGlossQ = '';
+function trRenderSaved() {
+  const box = document.getElementById('tr-saved'); if (!box) return;
+  box.innerHTML = '';
+  const tabs = trEl('div', 'colloc-chips tr-stabs');
+  [['hist', `🕘 Lịch sử · ${trHist.length}`], ['fav', `★ Yêu thích · ${trFav.length}`], ['words', `📖 Sổ từ · ${trWords.length}`], ['gloss', `🧊 Từ điển 3D · ${TR_GLOSS.length + trMyGloss.length}`]].forEach(([k, t]) => {
+    const b = trEl('button', 'colloc-chip' + (trSavedTab === k ? ' active' : ''), t);
+    b.addEventListener('click', () => { trSavedTab = k; trRenderSaved(); });
+    tabs.appendChild(b);
+  });
+  box.appendChild(tabs);
+  const list = trEl('div', 'tr-slist');
+  const load = (s, sl) => {
+    if (sl !== trSrc) trSwap.click();
+    trInput.value = s; updateCount(); trUse = 'orig'; trLastText = ''; runTranslate();
+    try { document.getElementById('page-check').scrollIntoView({ block: 'start', behavior: 'smooth' }); } catch (e) {}
+  };
+  const clearBtn = (label, fn) => { const c = trEl('button', 'sd-link tr-clearall', label); c.addEventListener('click', () => { if (!c.dataset.sure) { c.dataset.sure = '1'; c.textContent = 'Bấm lần nữa để xoá'; return; } fn(); trRenderSaved(); }); return c; };
+  if (trSavedTab === 'hist') {
+    if (!trHist.length) list.appendChild(trEl('div', 'tr-empty', 'Chưa có lượt dịch nào. Các câu bạn dịch sẽ được lưu ở đây (tối đa 40, chỉ trên máy này).'));
+    trHist.forEach(h => {
+      const r = trEl('button', 'tr-sitem');
+      r.appendChild(trEl('span', 'tr-s-meta', `${h.sl === 'en' ? 'EN → VI' : 'VI → EN'}${h.c && h.c !== 'general' ? ' · ' + TR_CTX.find(x => x[0] === h.c)[1] : ''}`));
+      r.appendChild(trEl('span', 'tr-s-a', h.s.length > 140 ? h.s.slice(0, 138) + '…' : h.s));
+      r.appendChild(trEl('span', 'tr-s-b', h.o.length > 140 ? h.o.slice(0, 138) + '…' : h.o));
+      r.addEventListener('click', () => { if (h.c) { trCtx = h.c; trxSave(TRX.ctx, trCtx); trRenderCtx(); } load(h.s, h.sl); });
+      list.appendChild(r);
+    });
+    if (trHist.length) list.appendChild(clearBtn('Xoá lịch sử', () => { trHist = []; trxSave(TRX.hist, trHist); }));
+  } else if (trSavedTab === 'fav') {
+    if (!trFav.length) list.appendChild(trEl('div', 'tr-empty', 'Chưa có câu yêu thích. Bấm “☆ Lưu câu yêu thích” dưới bản dịch, hoặc ☆ trong phần đối chiếu từng câu.'));
+    trFav.forEach(f => {
+      const r = trEl('div', 'tr-sitem tr-favitem');
+      const tx = trEl('button', 'tr-s-txt'); tx.appendChild(trEl('span', 'tr-s-a', f.en)); tx.appendChild(trEl('span', 'tr-s-b', f.vi)); tx.addEventListener('click', () => load(f.en, 'en'));
+      r.appendChild(tx);
+      const acts = trEl('div', 'tr-s-acts');
+      const sp = trEl('button', 'tr-icon sm', '🔊'); sp.addEventListener('click', () => speak(f.en, 0.9, 'en'));
+      const sh = trEl('button', 'tr-icon sm', '🎙️'); sh.title = 'Thêm vào Shadowing'; sh.addEventListener('click', () => { const x = trToShadow(f); trToast(x === 'ok' ? '✓ Đã thêm vào Shadowing' : x === 'dup' ? 'Câu đã có trong bài shadowing.' : 'Bài đã đủ 80 câu.'); });
+      const del = trEl('button', 'tr-icon sm', '🗑'); del.title = 'Bỏ khỏi yêu thích'; del.addEventListener('click', () => { trFavToggle(f); trRenderSaved(); });
+      acts.appendChild(sp); acts.appendChild(sh); acts.appendChild(del); r.appendChild(acts);
+      list.appendChild(r);
+    });
+  } else if (trSavedTab === 'words') {
+    list.appendChild(trEl('div', 'tr-x-sub', 'Từ có trong tab Từ vựng được thêm thẳng vào đó (mục Yêu thích + lịch ôn). Từ chưa có trong bộ 11.000 từ được giữ ở sổ này.'));
+    if (!trWords.length) list.appendChild(trEl('div', 'tr-empty', 'Sổ từ đang trống. Dưới bản dịch, mở “📖 Chạm vào từ…” để lưu từ.'));
+    trWords.forEach(x => {
+      const r = trEl('div', 'tr-sitem tr-favitem');
+      const tx = trEl('div', 'tr-s-txt'); tx.appendChild(trEl('span', 'tr-s-a', x.w)); tx.appendChild(trEl('span', 'tr-s-b', x.vi || '')); r.appendChild(tx);
+      const acts = trEl('div', 'tr-s-acts');
+      const sp = trEl('button', 'tr-icon sm', '🔊'); sp.addEventListener('click', () => speak(x.w, 0.8, 'en'));
+      const del = trEl('button', 'tr-icon sm', '🗑'); del.addEventListener('click', () => { trWords = trWords.filter(y => y !== x); trxSave(TRX.words, trWords); trRenderSaved(); });
+      acts.appendChild(sp); acts.appendChild(del); r.appendChild(acts);
+      list.appendChild(r);
+    });
+  } else {
+    const sr = trEl('div', 'tr-gsearch');
+    const q = trEl('input'); q.type = 'text'; q.placeholder = 'Tìm thuật ngữ (render, trải UV…)'; q.value = trGlossQ;
+    q.addEventListener('input', () => { trGlossQ = q.value; drawG(); });
+    sr.appendChild(q); list.appendChild(sr);
+    const gl = trEl('div', 'tr-terms'); list.appendChild(gl);
+    const drawG = () => {
+      gl.innerHTML = '';
+      const f = trGlossQ.trim().toLowerCase();
+      trGlossAll().filter(g => !f || (g[0] + ' ' + g[1]).toLowerCase().includes(f)).forEach(g => {
+        const r = trEl('div', 'tr-term'); r.appendChild(trEl('b', null, g[0])); r.appendChild(trEl('span', null, g[1])); if (g[2]) r.appendChild(trEl('em', null, g[2]));
+        const sp = trEl('button', 'tr-icon sm', '🔊'); sp.addEventListener('click', () => speak(g[0], 0.85, 'en')); r.appendChild(sp);
+        if (g[3]) { const del = trEl('button', 'tr-icon sm', '🗑'); del.addEventListener('click', () => { trMyGloss = trMyGloss.filter(x => x[0] !== g[0]); trxSave(TRX.gloss, trMyGloss); trRenderSaved(); }); r.appendChild(del); }
+        gl.appendChild(r);
+      });
+    };
+    drawG();
+    const add = trEl('div', 'tr-gadd');
+    add.appendChild(trEl('div', 'tr-x-h', '＋ Thêm thuật ngữ của bạn'));
+    const a = trEl('input'); a.placeholder = 'Tiếng Anh (vd. hard surface)';
+    const b = trEl('input'); b.placeholder = 'Tiếng Việt bạn muốn dùng';
+    const go = trEl('button', 'btn-primary', 'Thêm');
+    go.addEventListener('click', () => { const en = a.value.trim(), vi = b.value.trim(); if (!en || !vi) { (en ? b : a).focus(); return; } trMyGloss = [[en, vi], ...trMyGloss.filter(x => x[0].toLowerCase() !== en.toLowerCase())].slice(0, 200); trxSave(TRX.gloss, trMyGloss); trRenderSaved(); trToast('✓ Đã thêm vào từ điển. Thuật ngữ sẽ hiện dưới bản dịch khi câu có từ này.'); });
+    add.appendChild(a); add.appendChild(b); add.appendChild(go);
+    list.appendChild(add);
+  }
+  box.appendChild(list);
+}
+
+/* ---------- chọn ngữ cảnh ---------- */
+function trRenderCtx() {
+  const box = document.getElementById('tr-ctx'); if (!box) return;
+  box.innerHTML = '';
+  box.appendChild(trEl('span', 'tr-ctx-l', 'Ngữ cảnh:'));
+  TR_CTX.forEach(([k, t]) => {
+    const b = trEl('button', 'colloc-chip' + (trCtx === k ? ' active' : ''), t);
+    b.setAttribute('aria-pressed', trCtx === k ? 'true' : 'false');
+    b.addEventListener('click', () => { trCtx = k; trxSave(TRX.ctx, k); trRenderCtx(); if (trLast) trApplyOut(); });
+    box.appendChild(b);
+  });
+  if (trCtx === '3d') {
+    const kb = trEl('label', 'tr-keep');
+    const cb = trEl('input'); cb.type = 'checkbox'; cb.checked = trKeepEn;
+    cb.addEventListener('change', () => { trKeepEn = cb.checked; trxSave(TRX.keep, trKeepEn); if (trLast) trApplyOut(); });
+    kb.appendChild(cb); kb.appendChild(document.createTextNode(' Giữ thuật ngữ tiếng Anh (texture, render…)'));
+    box.appendChild(kb);
+  }
+}
+(function trInit() {
+  const bar = document.getElementById('tr-use');
+  bar.querySelectorAll('button').forEach(b => b.addEventListener('click', () => { trUse = b.dataset.use; trRenderUse(); trLastText = ''; runTranslate(); }));
+  document.getElementById('fx-use-fixed').addEventListener('click', () => { trUse = 'fixed'; trRenderUse(); trLastText = ''; runTranslate(); });
+  trRenderCtx();
+  trRenderSaved();
+})();
+
 fxRender();
 
 /* ============================================================
@@ -47104,6 +47597,7 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
   const grpOf = id => groups.find(g => 'g:' + g.id === id);
   const inCat = l => view.cat === 'all' || (view.cat === 'fav' ? fav.has(l.id) : grpOf(view.cat) ? grpOf(view.cat).ids.includes(l.id) : l.cat === view.cat);
   let fav = new Set(load(K.fav, [])), mine = load(K.mine, []); if (!Array.isArray(mine)) mine = [];
+  window.addEventListener('hoc-shadow-mine', () => { const m = load(K.mine, []); if (Array.isArray(m)) mine = m; });
   const set = Object.assign({ speed: 1, txt: true, ipa: true, vi: true, lk: true, list: true, auto: true, step: 1, s3txt: true, st: false, guide: false }, load(K.set, {}));
   // bài đã "hoàn thành" ở bản cũ (3 bước) vẫn được tính là hoàn thành
   load(K.oldDone, []).forEach(id => { if (!prog[id]) prog[id] = { b: {}, cur: 0, t: Date.now() - 864e5 }; prog[id].done = true; });
