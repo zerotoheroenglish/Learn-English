@@ -1966,6 +1966,7 @@
   .sd-side{ padding:12px; }
   .sd-sidecol{ display:flex; flex-direction:column; gap:12px; }
   .sd-layout.yt{ flex-direction:column; }
+  .sd-layout.solo{ display:block !important; max-width:760px; margin:0 auto; }
   @media (max-width:899px){ .sd-layout.yt .sd-sidecol{ display:contents; } .sd-layout.yt .sd-yt{ order:-1; } .sd-layout.yt .sd-main{ order:0; } .sd-layout.yt .sd-side{ order:1; } }
   .sd-yt-frame{ position:relative; width:100%; aspect-ratio:16/9; background:#000; border-radius:14px; overflow:hidden; }
   .sd-yt-frame iframe, .sd-yt-frame > div{ position:absolute; inset:0; width:100%; height:100%; border:0; }
@@ -3769,7 +3770,7 @@
   <div class="hw-deco" aria-hidden="true"><i class="hw-witch"></i><i class="hw-spider"></i><i class="hw-ghost"></i><i class="hw-caul"></i><i class="hw-candy"></i><i class="hw-cat"></i><i class="hw-skel"></i></div>
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v123</span>
+      <span class="hero-badge">EN ⇄ VI · v124</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice hero-season" id="season-btn" aria-label="Đổi giao diện theo mùa" title="Đổi giao diện theo mùa">🎃</button>
@@ -48630,20 +48631,25 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
       root.appendChild(info);
     }
     const modes = E('div', 'ls-modes sd-modes');
-    [['shadow', '🎙️ Shadowing'], ['dict', '⌨️ Chính tả'], ['listen', '🎧 Nghe cả bài'], ...(l.s.length >= 3 ? [['quiz', '🧩 Quiz'], ['tf', '✅ Đúng/Sai']] : [])].forEach(([m, label]) => {
+    [['shadow', '🎙️ Shadowing'], ['dict', '⌨️ Chính tả'], ['listen', '🎧 Nghe cả bài'], ...(l.s.length >= 3 ? [['quiz', '🧩 Quiz'], ['tf', '✅ True/False']] : [])].forEach(([m, label]) => {
       const b = E('button', 'ls-mode' + (view.mode === m ? ' active' : ''), label);
       b.addEventListener('click', () => { stopAll(); if (m === 'quiz') quiz = null; if (m === 'tf') tfState = null; view.mode = m; renderLesson(); });
       modes.appendChild(b);
     });
     if (!l.s.length) { root.appendChild(freeView(l)); return; }
     root.appendChild(modes);
-    const grid = E('div', 'sd-layout' + (l.yt ? ' yt' : ''));
-    const col = E('aside', 'sd-sidecol');
-    if (l.yt) col.appendChild(ytBox(l)); else ytDestroy();
-    const side = E('div', 'tense-card sd-side'); side.id = 'sd-side';
-    col.appendChild(side);
+    // v124: Quiz và True/False không hiện video + phụ đề (tránh lộ đáp án), câu được đọc bằng giọng máy
+    const solo = view.mode === 'quiz' || view.mode === 'tf';
+    const grid = E('div', 'sd-layout' + (solo ? ' solo' : l.yt ? ' yt' : ''));
     const main = E('div', 'sd-main'); main.id = 'sd-main';
-    grid.appendChild(col); grid.appendChild(main);
+    if (solo) { ytDestroy(); grid.appendChild(main); }
+    else {
+      const col = E('aside', 'sd-sidecol');
+      if (l.yt) col.appendChild(ytBox(l)); else ytDestroy();
+      const side = E('div', 'tense-card sd-side'); side.id = 'sd-side';
+      col.appendChild(side);
+      grid.appendChild(col); grid.appendChild(main);
+    }
     root.appendChild(grid);
     renderSide();
     renderMain();
@@ -48752,7 +48758,7 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     if (l.cat === 'bbc') { const tb = E('div', 'tense-card sd-tf sd-free-tf'); wrap.appendChild(tb); const rd = () => renderTF(tb, l, rd); rd(); }
     const add = E('div', 'tense-card sd-free-add');
     add.appendChild(E('div', 'vc-q-label', 'Muốn luyện từng câu và được chấm điểm?'));
-    add.appendChild(E('p', 'sd-create-p', 'Dán bản chép lời có mốc thời gian của video này (trên YouTube: bấm "…thêm" dưới video → "Hiện bản chép lời" → bôi đen toàn bộ rồi sao chép). App sẽ chia thành từng câu, mỗi câu phát đúng đoạn video thật; chạm vào câu nào trong danh sách là phát lại đúng đoạn đó, và có Quiz cùng bài Đúng/Sai nghe theo câu.'));
+    add.appendChild(E('p', 'sd-create-p', 'Dán bản chép lời có mốc thời gian của video này (trên YouTube: bấm "…thêm" dưới video → "Hiện bản chép lời" → bôi đen toàn bộ rồi sao chép). App sẽ chia thành từng câu, mỗi câu phát đúng đoạn video thật; chạm vào câu nào trong danh sách là phát lại đúng đoạn đó, và có Quiz cùng bài True/False nghe theo câu.'));
     const ta = E('textarea', 'sd-create-text'); ta.rows = 6; ta.placeholder = '0:00\nHello and welcome to…\n0:04\nToday we are talking about…';
     const msg = E('div', 'sd-create-msg');
     const go = E('button', 'btn-primary', 'Tạo câu từ bản chép lời');
@@ -49337,9 +49343,9 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     if (!tfState || tfState.l !== l.id) tfState = buildTF(l);
     const Q = tfState;
     box.innerHTML = '';
-    box.appendChild(E('div', 'vc-q-label', '✅❌ Bài tập Đúng / Sai'));
+    box.appendChild(E('div', 'vc-q-label', '✅❌ True or False'));
     if (!Q.qs.length) {
-      box.appendChild(E('p', 'sd-create-p', l.cat === 'bbc' ? 'Video này chưa có câu Đúng/Sai soạn sẵn. Dán bản chép lời có mốc thời gian ở ô bên dưới: app sẽ tạo bài “nghe rồi chọn Đúng/Sai” từ chính các câu trong video.' : 'Bài này chưa đủ câu để tạo bài Đúng/Sai.'));
+      box.appendChild(E('p', 'sd-create-p', l.cat === 'bbc' ? 'Video này chưa có câu True/False soạn sẵn. Dán bản chép lời có mốc thời gian ở ô bên dưới: app sẽ tạo bài “nghe rồi chọn True/False” từ chính các câu trong video.' : 'Bài này chưa đủ câu để tạo bài True/False.'));
       return;
     }
     if (Q.k >= Q.qs.length) {
@@ -49357,7 +49363,7 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     box.appendChild(E('div', 'sd-tf-s', q.text));
     if (q.kind === 'mean') box.appendChild(E('div', 'sd-tf-vi', '→ ' + q.vi));
     const row = E('div', 'sd-tf-btns');
-    [[true, '✓ Đúng'], [false, '✗ Sai']].forEach(([v, t]) => {
+    [[true, '✓ True'], [false, '✗ False']].forEach(([v, t]) => {
       const b = E('button', 'sd-tf-b' + (Q.picked != null ? (v === q.ok ? ' ok' : Q.picked === v ? ' bad' : '') : ''), t);
       b.disabled = Q.picked != null;
       b.addEventListener('click', () => { if (Q.picked != null) return; Q.picked = v; if (v === q.ok) Q.score++; onRedraw(); if (q.kind !== 'topic') { stopAll(); hear(l, q.i, rateOf()); } });
@@ -49367,8 +49373,8 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     if (Q.picked != null) {
       const ok = Q.picked === q.ok;
       const fb = E('div', 'sd-result ' + (ok ? 'ok' : 'bad'));
-      fb.appendChild(E('b', null, ok ? 'Chính xác! ' : 'Chưa đúng. '));
-      fb.appendChild(E('span', null, `Đáp án: ${q.ok ? 'Đúng' : 'Sai'}. ${q.why.replace(/^(Đúng|Sai)[:.]\s*/, '')}`));
+      fb.appendChild(E('b', null, ok ? 'Correct! ' : 'Not quite. '));
+      fb.appendChild(E('span', null, `Answer: ${q.ok ? 'True' : 'False'}. ${q.why.replace(/^(Đúng|Sai)[:.]\s*/, '')}`));
       box.appendChild(fb);
       const nx = E('button', 'btn-primary sd-next', Q.k < Q.qs.length - 1 ? 'Câu tiếp →' : 'Xem kết quả');
       nx.addEventListener('click', () => { Q.k++; Q.picked = null; onRedraw(); });
