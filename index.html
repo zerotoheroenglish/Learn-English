@@ -2152,6 +2152,8 @@
   /* v117 tab Dịch */
   .tr-ctx{ margin:10px 0 2px; align-items:center; }
   .tr-ctx-l{ font:700 12.5px var(--font-body); color:var(--ink-soft); margin-right:2px; }
+  .tr-ctx-what{ flex-basis:100%; font-size:12px; color:var(--ink-soft); line-height:1.45; margin-top:2px; }
+  .tr-rw-t{ font:600 15px/1.5 var(--font-body); color:var(--ink); padding:8px 10px; border-radius:10px; background:var(--paper); }
   .tr-keep{ display:flex; align-items:center; gap:6px; font-size:12.5px; color:var(--ink); flex-basis:100%; margin-top:4px; }
   .tr-plabel{ font:800 11.5px/1.4 var(--font-body); letter-spacing:.03em; color:var(--rust); text-transform:uppercase; margin-bottom:6px; }
   .fx-plabel{ margin:0 8px 0 0; }
@@ -3741,7 +3743,7 @@
   <div class="hw-deco" aria-hidden="true"><i class="hw-witch"></i><i class="hw-spider"></i><i class="hw-ghost"></i><i class="hw-caul"></i><i class="hw-candy"></i><i class="hw-cat"></i><i class="hw-skel"></i></div>
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v117</span>
+      <span class="hero-badge">EN ⇄ VI · v118</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice hero-season" id="season-btn" aria-label="Đổi giao diện theo mùa" title="Đổi giao diện theo mùa">🎃</button>
@@ -14009,6 +14011,8 @@ trBtn.addEventListener('click', () => {
 });
 
 trSwap.addEventListener('click', () => {
+  trUse = 'orig';   // v118: đổi chiều thì luôn quay về dịch câu gốc
+  fxState = null;
   [trSrc, trTgt] = [trTgt, trSrc];
   trSrcLabel.textContent = LANG_NAMES[trSrc];
   trTgtLabel.textContent = LANG_NAMES[trTgt];
@@ -14999,6 +15003,28 @@ function trCtxNotes(en) {
   return n;
 }
 
+// bản tiếng Anh điều chỉnh theo văn phong (theo quy tắc, không dùng AI): công việc/email → đầy đủ, trang trọng; giao tiếp → rút gọn
+const TR_EXPAND = [["don't", 'do not'], ["doesn't", 'does not'], ["didn't", 'did not'], ["can't", 'cannot'], ["won't", 'will not'], ["isn't", 'is not'], ["aren't", 'are not'], ["wasn't", 'was not'],
+  ["weren't", 'were not'], ["haven't", 'have not'], ["hasn't", 'has not'], ["couldn't", 'could not'], ["wouldn't", 'would not'], ["shouldn't", 'should not'], ["I'm", 'I am'], ["I'll", 'I will'],
+  ["I've", 'I have'], ["we're", 'we are'], ["they're", 'they are'], ["you're", 'you are'], ["we'll", 'we will'], ["we've", 'we have'], ["let's", 'let us']];
+const TR_FORMAL = [[/\b(pls|plz)\b/gi, 'please'], [/\b(thx|thanx)\b/gi, 'thank you'], [/\bu\b/g, 'you'], [/\bgonna\b/gi, 'going to'], [/\bwanna\b/gi, 'want to'], [/\bgotta\b/gi, 'have to'],
+  [/\basap\b/gi, 'as soon as possible'], [/\bbtw\b/gi, 'by the way'], [/\bok\b/gi, 'okay'], [/\byeah\b/gi, 'yes'], [/\bcuz\b/gi, 'because']];
+const trCaseLike = (m, r) => /^[A-Z]/.test(m) ? r[0].toUpperCase() + r.slice(1) : r;
+function trCtxRewrite(en) {
+  if (!en || !/^(talk|work|email)$/.test(trCtx)) return '';
+  let t = en.replace(/[’]/g, "'");
+  if (trCtx === 'talk') {
+    TR_EXPAND.forEach(([c, f]) => { if (c === "let's") return; t = t.replace(new RegExp('\\b' + f.replace(' ', '\\s+') + '\\b', 'gi'), m => trCaseLike(m, c)); });
+    t = t.replace(/\bit is\b/gi, m => trCaseLike(m, "it's")).replace(/\bthat is\b/gi, m => trCaseLike(m, "that's"));
+  } else {
+    TR_EXPAND.forEach(([c, f]) => { t = t.replace(new RegExp("\\b" + c.replace("'", "'") + "\\b", 'gi'), m => trCaseLike(m, f)); });
+    t = t.replace(/\b(it|that|there)'s\s+(been|got)\b/gi, (m, a, b) => trCaseLike(a, a.toLowerCase()) + ' has ' + b).replace(/\b(it|that|there)'s\b/gi, (m, a) => a + ' is');
+    TR_FORMAL.forEach(([re, r]) => { t = t.replace(re, m => trCaseLike(m, r)); });
+    t = t.replace(/^(\s*)(hey|yo)\b/i, (m, sp) => sp + 'Hello');
+  }
+  return t !== en.replace(/[’]/g, "'") ? t : '';
+}
+
 /* ---------- lịch sử, yêu thích, sổ từ ---------- */
 function trHistAdd(s, o) {
   if (!s || !o) return;
@@ -15090,6 +15116,20 @@ function trRenderExtra() {
     if (L.sl === 'vi') c.appendChild(trEl('div', 'tr-x-sub', 'Gợi ý dựa trên bản dịch tiếng Anh. Bộ dịch miễn phí không tự đổi giọng văn theo ngữ cảnh, nên app kiểm tra thêm.'));
     box.appendChild(c);
   }
+  const rw = trCtxRewrite(en);
+  if (rw) {
+    const c = trEl('div', 'input-card tr-x tr-rw');
+    c.appendChild(trEl('div', 'tr-x-h', '✍️ Bản tiếng Anh theo văn phong ' + TR_CTX.find(x => x[0] === trCtx)[1].replace(/^\S+\s/, '').toLowerCase()));
+    c.appendChild(trEl('div', 'tr-rw-t', rw));
+    c.appendChild(trEl('div', 'tr-x-sub', 'App đổi theo quy tắc (dạng rút gọn, từ viết tắt thân mật…), không viết lại cả câu. Hãy đọc lại trước khi dùng.'));
+    const a = trEl('div', 'tr-acts');
+    const sp = trEl('button', 'btn-ghost', '🔊 Nghe'); sp.addEventListener('click', () => speak(rw, 0.9, 'en'));
+    const cp = trEl('button', 'btn-ghost', '⧉ Sao chép'); cp.addEventListener('click', async () => { try { await navigator.clipboard.writeText(rw); trToast('Đã sao chép'); } catch (e) { trToast('Không sao chép được'); } });
+    a.appendChild(sp); a.appendChild(cp);
+    if (L.sl === 'en') { const use = trEl('button', 'btn-ghost', '↪ Dùng làm câu gốc'); use.addEventListener('click', () => { trInput.value = rw; updateCount(); trUse = 'orig'; fxState = null; trLastText = ''; runTranslate(); }); a.appendChild(use); }
+    c.appendChild(a);
+    box.appendChild(c);
+  }
   // hành động: yêu thích, shadowing, đối chiếu, lưu từ
   const acts = trEl('div', 'tr-acts');
   const p = { en: en.trim(), vi: vi.trim() };
@@ -15175,6 +15215,9 @@ function trApplyOut() {
   L.out = out; L.fixes = fixes;
   setOutput(out, false);
   trRenderExtra();
+  // v118: cập nhật mục lịch sử của câu này theo bản dịch và ngữ cảnh mới
+  const h = trHist.find(x => x.s === L.src && x.sl === L.sl);
+  if (h && (h.o !== out || h.c !== trCtx)) { h.o = out; h.c = trCtx; trxSave(TRX.hist, trHist); trRenderSaved(); }
 }
 // gọi sau mỗi lần dịch xong
 function trAfter(src, raw) {
@@ -15272,13 +15315,17 @@ function trRenderSaved() {
 function trRenderCtx() {
   const box = document.getElementById('tr-ctx'); if (!box) return;
   box.innerHTML = '';
-  box.appendChild(trEl('span', 'tr-ctx-l', 'Ngữ cảnh:'));
+  box.appendChild(trEl('span', 'tr-ctx-l', 'Gợi ý theo ngữ cảnh:'));
   TR_CTX.forEach(([k, t]) => {
     const b = trEl('button', 'colloc-chip' + (trCtx === k ? ' active' : ''), t);
     b.setAttribute('aria-pressed', trCtx === k ? 'true' : 'false');
     b.addEventListener('click', () => { trCtx = k; trxSave(TRX.ctx, k); trRenderCtx(); if (trLast) trApplyOut(); });
     box.appendChild(b);
   });
+  const what = { general: 'Dịch thông thường, không thêm gợi ý.', talk: 'Bản dịch máy giữ nguyên; app gợi ý cách nói tự nhiên và tạo bản tiếng Anh theo văn nói (dạng rút gọn).',
+    work: 'Bản dịch máy giữ nguyên; app gợi ý cách diễn đạt chuyên nghiệp và tạo bản tiếng Anh trang trọng hơn.', email: 'Bản dịch máy giữ nguyên; app kiểm tra lời chào, lời kết, văn phong và tạo bản tiếng Anh trang trọng.',
+    '3d': 'Sửa thuật ngữ 3D trong bản dịch theo từ điển, hiện giải thích từng thuật ngữ.' }[trCtx];
+  box.appendChild(trEl('div', 'tr-ctx-what', 'ⓘ ' + what + (trCtx !== 'general' && trCtx !== '3d' ? ' Bộ dịch miễn phí chưa nhận yêu cầu về văn phong, nên phần điều chỉnh do app làm theo quy tắc.' : '')));
   if (trCtx === '3d') {
     const kb = trEl('label', 'tr-keep');
     const cb = trEl('input'); cb.type = 'checkbox'; cb.checked = trKeepEn;
