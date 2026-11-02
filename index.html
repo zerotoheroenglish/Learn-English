@@ -1942,9 +1942,20 @@
   .sd-top-t b{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0; }
   .sd-fav{ background:none; border:none; font-size:22px; color:var(--ink-soft); cursor:pointer; padding:2px 4px; line-height:1; }
   .sd-fav.on{ color:#F5B700; }
-  .sd-modes{ margin:12px 0; display:grid !important; grid-template-columns:repeat(4, minmax(0,1fr)); }
+  .sd-modes{ margin:12px 0; display:grid !important; grid-template-columns:repeat(5, minmax(0,1fr)); }
   .sd-modes .ls-mode{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; padding-left:4px; padding-right:4px; }
-  @media (max-width:520px){ .sd-modes{ grid-template-columns:repeat(2, minmax(0,1fr)); } .sd-modes .ls-mode{ font-size:12.5px; } }
+  @media (max-width:520px){ .sd-modes{ grid-template-columns:repeat(3, minmax(0,1fr)); } .sd-modes .ls-mode{ font-size:12px; } }
+  .sd-tf{ padding:16px 18px; display:flex; flex-direction:column; gap:10px; }
+  .sd-free-tf{ margin-top:12px; }
+  .sd-tf .ls-slow{ align-self:flex-start; }
+  .sd-tf-s{ font:600 18px/1.5 var(--font-display); color:var(--ink); padding:10px 12px; border-radius:12px; background:var(--paper); border:1px solid var(--paper-line); }
+  .sd-tf-vi{ font-size:15px; color:var(--ink); padding:0 12px; }
+  .sd-tf-btns{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .sd-tf-b{ padding:12px; border-radius:12px; border:1.5px solid var(--paper-line); background:var(--card); color:var(--ink); font:800 15px var(--font-body); cursor:pointer; }
+  .sd-tf-b:hover:not(:disabled){ border-color:var(--rust); }
+  .sd-tf-b.ok{ border-color:var(--moss); background:var(--moss-light); color:var(--moss); }
+  .sd-tf-b.bad{ border-color:var(--mark); color:var(--mark); }
+  .sd-tf-note{ font-size:11.5px; color:var(--ink-soft); }
   .sd-layout{ display:flex; flex-direction:column-reverse; gap:14px; }
   @media (min-width:900px){
     .sd-layout{ display:grid; grid-template-columns:minmax(300px, 400px) 1fr; align-items:start; }
@@ -3758,7 +3769,7 @@
   <div class="hw-deco" aria-hidden="true"><i class="hw-witch"></i><i class="hw-spider"></i><i class="hw-ghost"></i><i class="hw-caul"></i><i class="hw-candy"></i><i class="hw-cat"></i><i class="hw-skel"></i></div>
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v119</span>
+      <span class="hero-badge">EN ⇄ VI · v122</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice hero-season" id="season-btn" aria-label="Đổi giao diện theo mùa" title="Đổi giao diện theo mùa">🎃</button>
@@ -19264,6 +19275,12 @@ function renderGrammarHome(keepScroll) {
   grRoot.appendChild(gxSymbolsBox(false));
   if (keepScroll) window.scrollTo(0, y);
 }
+// v120: số thứ tự của bài = vị trí trên trang (theo nhóm, từ trên xuống) trong chặng
+function gxNum(x) {
+  const order = GX_CATS.flatMap(c => GX_ALL.filter(y => y.track === x.track && y.cat === c[0]));
+  const k = order.indexOf(x);
+  return k >= 0 ? k + 1 : GX_ALL.filter(y => y.track === x.track).indexOf(x) + 1;
+}
 function gxRenderList() {
   const box = document.getElementById('gx-list'); if (!box) return;
   box.innerHTML = '';
@@ -19276,7 +19293,7 @@ function gxRenderList() {
     box.appendChild(grEl('div', 'vc-count', `${res.length} bài` + (q ? ` khớp “${gxUI.q.trim()}”` : '')));
     if (!res.length) { box.appendChild(grEl('div', 'empty-state', gxUI.fav ? 'Chưa có bài yêu thích. Bấm ☆ trên một bài để lưu.' : 'Không có bài phù hợp.')); return; }
     const grid = grEl('div', 'gr-grid');
-    res.forEach(x => { const c = gxCard(x, GX_ALL.filter(y => y.track === x.track).indexOf(x) + 1); c.querySelector('.gr-t-en').textContent = `${x.track} · ${x.en}`; grid.appendChild(c); });
+    res.forEach(x => { const c = gxCard(x, gxNum(x)); c.querySelector('.gr-t-en').textContent = `${x.track} · ${x.en}`; grid.appendChild(c); });
     box.appendChild(grid);
     return;
   }
@@ -19295,7 +19312,7 @@ function gxRenderList() {
     h.title = sub;
     box.appendChild(h);
     const grid = grEl('div', 'gr-grid');
-    part.forEach(x => grid.appendChild(gxCard(x, all.indexOf(x) + 1)));
+    part.forEach(x => grid.appendChild(gxCard(x, gxNum(x))));
     box.appendChild(grid);
   });
   const ti = GX_TRACKS.indexOf(tr);
@@ -19377,7 +19394,7 @@ function gxLesson(id) {
   grRoot.appendChild(back);
   const head = grEl('div', 'gr-head');
   const cat = GX_CATS.find(c => c[0] === it.cat);
-  head.appendChild(grEl('div', 'gr-en', `${it.track} · Bài ${pos + 1}/${tlist.length} · ${cat ? cat[1] + ' ' + cat[2] : ''}${it.k === 'tn' && !GX_TWELVE.has(id) && it.cat === 'tense' ? ' · mở rộng về thì' : ''} · ${it.en}`));
+  head.appendChild(grEl('div', 'gr-en', `${it.track} · Bài ${gxNum(it)}/${tlist.length} · ${cat ? cat[1] + ' ' + cat[2] : ''}${it.k === 'tn' && !GX_TWELVE.has(id) && it.cat === 'tense' ? ' · mở rộng về thì' : ''} · ${it.en}`));
   const ht = grEl('div', 'gx-title-row');
   ht.appendChild(grEl('h2', 'gr-title', it.title));
   const fv = grEl('button', 'gx-fav big' + (gxFav.has(id) ? ' on' : ''), gxFav.has(id) ? '★' : '☆');
@@ -19558,7 +19575,7 @@ function gxLevelTest(key) {
     sc.box.appendChild(grEl('div', 'gx-score-msg', sc.pct >= 80 ? `Bạn nắm khá chắc cấp ${key}.` : 'Xem lại các bài bên dưới rồi làm lại bài kiểm tra cuối bài của từng bài nhé.'));
     if (weak.length) {
       box.appendChild(grEl('div', 'vc-done-sub', 'Bài cần xem lại:'));
-      const g = grEl('div', 'gr-grid'); weak.forEach(id => { const x = gxFind(id); g.appendChild(gxCard(x, GX_ALL.filter(y => y.track === x.track).indexOf(x) + 1)); }); box.appendChild(g);
+      const g = grEl('div', 'gr-grid'); weak.forEach(id => { const x = gxFind(id); g.appendChild(gxCard(x, gxNum(x))); }); box.appendChild(g);
       weak.forEach(id => { const rr = gxRec(id); rr.wrong = Array.from(new Set([...by[id].wrong, ...(rr.wrong || [])])).slice(0, 12); }); gxSave();
     }
     const hb = grEl('button', 'btn-ghost', 'Về trang Ngữ pháp'); hb.addEventListener('click', () => { renderGrammarHome(); grScrollTop(); }); box.appendChild(hb);
@@ -48573,8 +48590,8 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     view.lesson = l; view.page = 'lesson';
     const p = P(l);
     view.idx = p && p.cur < l.s.length ? p.cur : 0;
-    if (view.mode === 'listen' || view.mode === 'quiz') view.mode = 'shadow';
-    quiz = null;
+    if (view.mode === 'listen' || view.mode === 'quiz' || view.mode === 'tf') view.mode = 'shadow';
+    quiz = null; tfState = null;
     renderLesson();
     irrTopSafe();
     if (set.auto && view.mode === 'shadow' && set.step !== 4 && l.s.length) setTimeout(() => playCur(), l.yt ? 1500 : 250);
@@ -48613,9 +48630,9 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
       root.appendChild(info);
     }
     const modes = E('div', 'ls-modes sd-modes');
-    [['shadow', '🎙️ Shadowing'], ['dict', '⌨️ Chính tả'], ['listen', '🎧 Nghe cả bài'], ...(l.s.length >= 3 ? [['quiz', '🧩 Quiz']] : [])].forEach(([m, label]) => {
+    [['shadow', '🎙️ Shadowing'], ['dict', '⌨️ Chính tả'], ['listen', '🎧 Nghe cả bài'], ...(l.s.length >= 3 ? [['quiz', '🧩 Quiz'], ['tf', '✅ Đúng/Sai']] : [])].forEach(([m, label]) => {
       const b = E('button', 'ls-mode' + (view.mode === m ? ' active' : ''), label);
-      b.addEventListener('click', () => { stopAll(); if (m === 'quiz') quiz = null; view.mode = m; renderLesson(); });
+      b.addEventListener('click', () => { stopAll(); if (m === 'quiz') quiz = null; if (m === 'tf') tfState = null; view.mode = m; renderLesson(); });
       modes.appendChild(b);
     });
     if (!l.s.length) { root.appendChild(freeView(l)); return; }
@@ -48732,9 +48749,10 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     recW.appendChild(rec); recW.appendChild(recOut);
     tools.appendChild(recW);
     wrap.appendChild(tools);
+    if (l.cat === 'bbc') { const tb = E('div', 'tense-card sd-tf sd-free-tf'); wrap.appendChild(tb); const rd = () => renderTF(tb, l, rd); rd(); }
     const add = E('div', 'tense-card sd-free-add');
     add.appendChild(E('div', 'vc-q-label', 'Muốn luyện từng câu và được chấm điểm?'));
-    add.appendChild(E('p', 'sd-create-p', 'Dán bản chép lời có mốc thời gian của video này (trên YouTube: bấm "…thêm" dưới video → "Hiện bản chép lời" → bôi đen toàn bộ rồi sao chép). App sẽ chia thành từng câu, mỗi câu phát đúng đoạn video thật; chạm vào câu nào trong danh sách là phát lại đúng đoạn đó, và có Quiz sau khi xem.'));
+    add.appendChild(E('p', 'sd-create-p', 'Dán bản chép lời có mốc thời gian của video này (trên YouTube: bấm "…thêm" dưới video → "Hiện bản chép lời" → bôi đen toàn bộ rồi sao chép). App sẽ chia thành từng câu, mỗi câu phát đúng đoạn video thật; chạm vào câu nào trong danh sách là phát lại đúng đoạn đó, và có Quiz cùng bài Đúng/Sai nghe theo câu.'));
     const ta = E('textarea', 'sd-create-text'); ta.rows = 6; ta.placeholder = '0:00\nHello and welcome to…\n0:04\nToday we are talking about…';
     const msg = E('div', 'sd-create-msg');
     const go = E('button', 'btn-primary', 'Tạo câu từ bản chép lời');
@@ -49125,6 +49143,7 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     if (!main) return;
     if (view.mode === 'listen') { ovr = null; return renderListen(main); }
     if (view.mode === 'quiz') { ovr = null; return renderQuiz(main); }
+    if (view.mode === 'tf') { ovr = null; main.innerHTML = ''; const tb = E('div', 'tense-card sd-box sd-tf'); main.appendChild(tb); const rd = () => renderTF(tb, view.lesson, rd); rd(); return; }
     const l = view.lesson, i = view.idx, r = l.s[i];
     const step = view.mode === 'shadow' ? (set.step || 1) : 0;
     const mk = view.mode + step;
@@ -49219,6 +49238,121 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
   }
 
   /* ----- quiz sau khi học / xem video: nghe chọn từ còn thiếu + chọn câu đúng nghĩa ----- */
+  /* ---------- v122: bài tập Đúng / Sai ----------
+     1) Theo chủ đề của video BBC (soạn riêng về điểm ngữ pháp / phát âm / thành ngữ mà tiêu đề video nêu, không trích lời video)
+     2) Nghe & so khớp: app phát từng câu (đoạn video thật nếu có bản chép lời), câu chữ hiện ra có thể đã bị đổi một chỗ
+     3) Đúng nghĩa: câu tiếng Anh và câu dịch có khớp không (bài có bản dịch) */
+  const BBC_TF = {
+    '2hnJy9H8J3Y': [['We say “come back” when we return to the place where we are now (the speaker’s place).', 1, 'Đúng: come back = quay lại nơi người nói đang ở.'], ['“Go back” means returning to a place where the speaker is NOT now.', 1, 'Đúng: go back = quay về một nơi khác, không phải chỗ người nói đang đứng.'], ['At work, you say to a colleague: “Go back soon!” when you want them to return to the office.', 0, 'Sai: muốn người kia quay lại chỗ mình thì dùng “Come back soon!”.'], ['“I want to go back to Vietnam one day” is correct if I am living abroad now.', 1, 'Đúng: bạn đang ở nước ngoài, Việt Nam là nơi khác → go back.']],
+    'tFirN40-6mY': [['“You mustn’t smoke here” means smoking is not allowed.', 1, 'Đúng: mustn’t = cấm, không được phép.'], ['“You don’t have to come” means you are not allowed to come.', 0, 'Sai: don’t have to = không bắt buộc, đến cũng được không đến cũng được.'], ['“Mustn’t” and “don’t have to” have the same meaning.', 0, 'Sai: mustn’t là cấm; don’t have to là không cần thiết.'], ['“You don’t have to wear a tie, but you can if you like” is a natural sentence.', 1, 'Đúng: không bắt buộc nhưng vẫn có thể làm.']],
+    'k-yvS6WYxkM': [['“I’ve just finished” means I finished a very short time ago.', 1, 'Đúng: just = vừa mới.'], ['In “It’s just a game”, “just” means “only”.', 1, 'Đúng: just = chỉ là.'], ['“This bag is just right” means the bag is a little too big.', 0, 'Sai: just right = vừa khít, vừa đúng.'], ['“Just” can never be used with the present perfect.', 0, 'Sai: “I have just eaten” là cách dùng rất phổ biến.']],
+    'uldbn_Prt8s': [['Before a vowel sound, “the” is often pronounced /ðiː/ or /ði/, as in “the apple”.', 1, 'Đúng: trước nguyên âm, the thường đọc /ði/.'], ['We use “the” when the listener knows which thing we mean.', 1, 'Đúng: “the” dùng cho thứ cả hai bên đều biết.'], ['We must say “the” before names of most countries, e.g. “the Vietnam”.', 0, 'Sai: đa số tên nước không có “the” (Vietnam, France); ngoại lệ: the UK, the USA.'], ['“The sun” and “the moon” use “the” because there is only one.', 1, 'Đúng: vật duy nhất dùng “the”.']],
+    'xFsYrTIndhI': [['We use the present simple for habits and routines: “I get up at six.”', 1, 'Đúng.'], ['“I am knowing the answer” is correct English.', 0, 'Sai: know là động từ trạng thái, không dùng tiếp diễn → “I know the answer.”'], ['The present continuous can describe something happening around now: “I’m reading a great book this week.”', 1, 'Đúng: việc đang diễn ra trong khoảng thời gian hiện tại.'], ['“Water boils at 100°C” should be in the present continuous.', 0, 'Sai: sự thật hiển nhiên dùng hiện tại đơn.']],
+    'jwmKjgwlMk8': [['“I have seen that film yesterday” is correct.', 0, 'Sai: có mốc quá khứ cụ thể (yesterday) → past simple: “I saw that film yesterday.”'], ['We use the present perfect for experiences without saying when: “I have been to Japan.”', 1, 'Đúng.'], ['The past simple is used for finished actions at a specific time in the past.', 1, 'Đúng.'], ['“She has lived here since 2015” means she does not live here now.', 0, 'Sai: present perfect + since → cô ấy vẫn đang sống ở đây.']],
+    '3dA7P5arkyc': [['“I used to play football” means I played football regularly in the past, but not now.', 1, 'Đúng.'], ['“Used to” is correct for habits in the present: “I use to drink coffee every day.”', 0, 'Sai: thói quen hiện tại dùng hiện tại đơn (I drink coffee every day).'], ['The question form is “Did you use to…?”', 1, 'Đúng: sau did dùng “use to” (không có d).'], ['“I’m used to getting up early” has the same meaning as “I used to get up early.”', 0, 'Sai: be used to + V-ing = đã quen với; used to + V = từng làm (giờ không còn).']],
+    'V2quIYo41Ig': [['“Would” can describe repeated actions in the past: “Every summer we would go to the beach.”', 1, 'Đúng.'], ['“Would” can also describe past states: “I would have long hair.”', 0, 'Sai: trạng thái trong quá khứ dùng used to: “I used to have long hair.”'], ['“Used to” can describe both past habits and past states.', 1, 'Đúng.'], ['“We would live in Hue when I was a child” is the most natural way to say this.', 0, 'Sai: live là trạng thái → “We used to live in Hue.”']],
+    'ZXN3wROCpfs': [['“It may rain later” means rain is possible.', 1, 'Đúng: may = có thể (khả năng).'], ['“Might” usually shows a weaker possibility than “will”.', 1, 'Đúng.'], ['“She could be at home” means she is definitely at home.', 0, 'Sai: could ở đây = có thể, không chắc chắn.'], ['After may, might and could we use “to”: “It might to snow.”', 0, 'Sai: sau động từ khuyết thiếu dùng động từ nguyên mẫu không to: “It might snow.”']],
+    'foyWhOHhTT0': [['“You’re a teacher, aren’t you?” is a correct question tag.', 1, 'Đúng: câu khẳng định → đuôi phủ định.'], ['After a negative sentence, we use a negative tag: “She doesn’t like tea, doesn’t she?”', 0, 'Sai: câu phủ định → đuôi khẳng định: “…, does she?”'], ['The tag for “I am late” is usually “aren’t I?”', 1, 'Đúng: I am → aren’t I?'], ['A falling intonation on the tag usually means you are just checking something you believe is true.', 1, 'Đúng: xuống giọng = muốn xác nhận; lên giọng = hỏi thật.']],
+    '3OuqzHxlrHc': [['The second conditional talks about unreal or unlikely situations: “If I had a million dollars, I would travel the world.”', 1, 'Đúng.'], ['The form is “If + present simple, will + verb.”', 0, 'Sai: đó là câu điều kiện loại 1. Loại 2: If + past simple, would + V.'], ['“If I were you, I would apologise” is a correct and common sentence.', 1, 'Đúng: “were” dùng cho mọi ngôi trong câu điều kiện loại 2.'], ['“If I would have time, I would help you” is correct.', 0, 'Sai: không dùng would ở mệnh đề if → “If I had time, …”']],
+    'KwDJnXt3ZVQ': [['The schwa /ə/ is the most common vowel sound in English.', 1, 'Đúng.'], ['The schwa usually appears in stressed syllables.', 0, 'Sai: schwa xuất hiện ở âm tiết không nhấn.'], ['In “banana”, the first and last vowels are usually pronounced as a schwa.', 1, 'Đúng: /bəˈnɑːnə/.'], ['Weak forms like “to” /tə/ and “of” /əv/ contain a schwa.', 1, 'Đúng.']],
+    'psI7E_J1zPo': [['In fast speech, “was” is often pronounced /wəz/.', 1, 'Đúng: dạng yếu của was.'], ['“Were” in “They were tired” is usually stressed and pronounced strongly.', 0, 'Sai: thường đọc yếu /wə/ (Anh-Anh).'], ['At the end of a sentence, as in “Yes, I was”, the strong form /wɒz/ is used.', 1, 'Đúng: cuối câu dùng dạng mạnh.'], ['Weak forms make English sound more natural and fluent.', 1, 'Đúng.']],
+    'hbu6X_TYqMQ': [['In “I can swim”, “can” is often pronounced /kən/.', 1, 'Đúng: dạng yếu.'], ['“Can’t” is often pronounced with a weak vowel, like /kən/.', 0, 'Sai: can’t giữ nguyên âm mạnh (/kɑːnt/ Anh, /kænt/ Mỹ) để người nghe phân biệt với can.'], ['In short answers like “Yes, I can”, “can” is pronounced strongly.', 1, 'Đúng.'], ['Listening for the vowel sound helps you hear the difference between “can” and “can’t”.', 1, 'Đúng.']],
+    'IC-mO3QcAOY': [['“Have to” is often pronounced /ˈhæftə/.', 1, 'Đúng: /v/ biến thành /f/ trước /t/.'], ['In “have to”, the “v” is clearly pronounced as /v/ in fast speech.', 0, 'Sai: thường nghe như /f/: “hafta”.'], ['“Has to” is often pronounced /ˈhæstə/.', 1, 'Đúng.'], ['“Have to” and “have got” are pronounced the same way.', 0, 'Sai: hai cụm khác nhau hoàn toàn.']],
+    'c1l4HRaCMdw': [['Elision means a sound is left out in connected speech.', 1, 'Đúng: elision = nuốt âm.'], ['In “next week”, the /t/ is often not pronounced.', 1, 'Đúng: /t/ giữa hai phụ âm hay bị nuốt.'], ['/t/ is often dropped between two consonant sounds.', 1, 'Đúng.'], ['In “first of all”, the /t/ is usually dropped because the next word starts with a vowel.', 0, 'Sai: trước nguyên âm, /t/ nối sang từ sau (firs-tof-all), không bị nuốt.']],
+    'i_ohrkQmzdQ': [['Assimilation means a sound changes to become more like the sound next to it.', 1, 'Đúng: assimilation = đồng hoá.'], ['In fast speech, “that place” can sound like “thap place”.', 1, 'Đúng: /t/ trước /p/ có thể thành /p/.'], ['Assimilation happens only in careful, slow speech.', 0, 'Sai: đồng hoá xảy ra khi nói nhanh, tự nhiên.'], ['“Good boy” can sound like “goob boy” in fast speech.', 1, 'Đúng: /d/ trước /b/ có thể thành /b/.']],
+    'lc2eOCVJMuQ': [['/t/ before /k/ can change to /k/, so “that cat” may sound like “thak cat”.', 1, 'Đúng.'], ['This change only happens inside one word, never between two words.', 0, 'Sai: thường xảy ra ở ranh giới hai từ.'], ['“Get cold” can sound like “geck cold” in fast speech.', 1, 'Đúng.'], ['These changes are common in natural, connected speech.', 1, 'Đúng.']],
+    'DzCvN1dJP1Y': [['/t/ + /j/ often becomes /tʃ/, so “meet you” sounds like “mee-chu”.', 1, 'Đúng.'], ['/d/ + /j/ often becomes /dʒ/, so “did you” sounds like “di-ju”.', 1, 'Đúng.'], ['“Don’t you” is usually pronounced with a clear /t/ and a clear /j/ in fast speech.', 0, 'Sai: thường thành /tʃ/: “don-chu”.'], ['This kind of sound change is called assimilation.', 1, 'Đúng.']],
+    'JAUAzf8zBog': [['In British English, if you “have a pop at” someone, you criticise them.', 1, 'Đúng: have a pop at sb = chỉ trích, chê bai ai.'], ['“Have a pop” is a very formal expression for business letters.', 0, 'Sai: đây là cách nói thân mật.'], ['“My boss had a pop at me for being late” means the boss praised me.', 0, 'Sai: sếp chỉ trích tôi vì đến muộn.']],
+    'Q67ix5L4rQU': [['If you have a good nose for something, you are naturally good at finding it.', 1, 'Đúng: have a good nose for = có khiếu phát hiện.'], ['“She has a good nose for news” means she is good at finding interesting stories.', 1, 'Đúng.'], ['This expression is only about having a good sense of smell.', 0, 'Sai: thường dùng nghĩa bóng, chỉ khả năng phát hiện.']],
+    'pSqGi9Ljk7g': [['“One step at a time” means doing something slowly and carefully, in small stages.', 1, 'Đúng.'], ['You might say it to someone who feels overwhelmed by a big task.', 1, 'Đúng: lời khuyên làm từng bước một.'], ['“One step at a time” means doing everything as fast as possible.', 0, 'Sai: nghĩa ngược lại.']],
+    '3OHaShkdCNY': [['If something is “Greek to me”, I cannot understand it at all.', 1, 'Đúng: it’s all Greek to me = tôi chẳng hiểu gì cả.'], ['This expression comes from Shakespeare’s play “Julius Caesar”.', 1, 'Đúng.'], ['You can only use it when talking about the Greek language.', 0, 'Sai: dùng cho bất cứ thứ gì khó hiểu (luật, công thức…).']],
+    'BVxXhEqDcPc': [['A “tower of strength” is a person who gives you a lot of support in a difficult time.', 1, 'Đúng.'], ['Calling someone “a tower of strength” is an insult.', 0, 'Sai: đây là lời khen.'], ['“My sister was a tower of strength when I was ill” is a natural sentence.', 1, 'Đúng.']]
+  };
+  K.tf = 'hoc-tieng-anh-shadow-tf';
+  const tfBest = load(K.tf, {}) || {};
+  // tạo câu sai từ câu đúng: đổi một từ mang nghĩa, đổi số, hoặc đổi khẳng định ↔ phủ định
+  const TF_NEG = [[/\bis\b/, 'isn’t'], [/\bare\b/, 'aren’t'], [/\bwas\b/, 'wasn’t'], [/\bcan\b/, 'can’t'], [/\bwill\b/, 'won’t'], [/\bdon’t\b|\bdon't\b/, 'do'], [/\bdidn’t\b|\bdidn't\b/, 'did'], [/\bisn’t\b|\bisn't\b/, 'is']];
+  const TF_NUM = { one: 'two', two: 'three', three: 'four', four: 'five', five: 'six', six: 'seven', seven: 'eight', eight: 'nine', nine: 'ten', ten: 'twelve', first: 'second', second: 'third' };
+  function tfAlter(text, pool) {
+    const toks = text.split(/\s+/);
+    // 1) số
+    for (let k = 0; k < toks.length; k++) { const w = clean(toks[k]); if (TF_NUM[w] || /^\d+$/.test(w)) { const nw = TF_NUM[w] || String(+w + (+w > 10 ? 10 : 1)); const t2 = toks.slice(); t2[k] = toks[k].replace(new RegExp(w, 'i'), nw); return { t: t2.join(' '), from: w, to: nw }; } }
+    // 2) đổi một từ mang nghĩa bằng từ khác trong bài
+    const cand = toks.map((t, k) => [t, k]).filter(([t]) => isContent(t) && clean(t).length >= 4 && !/[’']/.test(clean(t)));
+    if (cand.length && pool.length) {
+      const [t, k] = cand[Math.floor(Math.random() * cand.length)];
+      const w = clean(t), alt = lsShuffle(pool.filter(x => x !== w && x.length >= 4))[0];
+      if (alt) { const t2 = toks.slice(); t2[k] = t.replace(new RegExp(w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i'), m => /^[A-Z]/.test(m) ? alt[0].toUpperCase() + alt.slice(1) : alt); return { t: t2.join(' '), from: w, to: alt }; }
+    }
+    // 3) khẳng định ↔ phủ định
+    for (const [re, rep] of TF_NEG) if (re.test(text)) { const m = text.match(re)[0]; return { t: text.replace(re, rep), from: m, to: rep }; }
+    return null;
+  }
+  function buildTF(l) {
+    const qs = [];
+    if (l.cat === 'bbc' && BBC_TF[l.yt]) BBC_TF[l.yt].forEach(([t, ok, why]) => qs.push({ kind: 'topic', text: t, ok: !!ok, why }));
+    if (l.s.length >= 3) {
+      const pool = [...new Set(l.s.flatMap(r => r[0].split(/\s+/).filter(isContent).map(clean)))];
+      const idx = lsShuffle(l.s.map((_, i) => i).filter(i => nWords(l.s[i][0]) >= 4)).slice(0, 8);
+      idx.forEach((i, n) => {
+        const r = l.s[i];
+        if (n % 3 === 2 && r[1] && l.s.length >= 4) {
+          const same = Math.random() < 0.5, other = lsShuffle(l.s.filter((x, j) => j !== i && x[1]))[0];
+          if (same || !other) qs.push({ kind: 'mean', i, text: r[0], vi: r[1], ok: true, why: 'Câu dịch đúng nghĩa.' });
+          else qs.push({ kind: 'mean', i, text: r[0], vi: other[1], ok: false, why: 'Nghĩa đúng: ' + r[1] });
+          return;
+        }
+        const alt = Math.random() < 0.5 ? null : tfAlter(r[0], pool);
+        if (alt) qs.push({ kind: 'hear', i, text: alt.t, ok: false, why: `Câu bạn nghe: “${r[0]}” · “${alt.from}” đã bị đổi thành “${alt.to}”.` });
+        else qs.push({ kind: 'hear', i, text: r[0], ok: true, why: 'Câu chữ giống hệt câu bạn nghe.' });
+      });
+    }
+    return { l: l.id, k: 0, score: 0, picked: null, qs: l.cat === 'bbc' && BBC_TF[l.yt] ? qs : lsShuffle(qs) };
+  }
+  let tfState = null;
+  function renderTF(box, l, onRedraw) {
+    if (!tfState || tfState.l !== l.id) tfState = buildTF(l);
+    const Q = tfState;
+    box.innerHTML = '';
+    box.appendChild(E('div', 'vc-q-label', '✅❌ Bài tập Đúng / Sai'));
+    if (!Q.qs.length) {
+      box.appendChild(E('p', 'sd-create-p', l.cat === 'bbc' ? 'Video này chưa có câu Đúng/Sai soạn sẵn. Dán bản chép lời có mốc thời gian ở ô bên dưới: app sẽ tạo bài “nghe rồi chọn Đúng/Sai” từ chính các câu trong video.' : 'Bài này chưa đủ câu để tạo bài Đúng/Sai.'));
+      return;
+    }
+    if (Q.k >= Q.qs.length) {
+      const p = Math.round(Q.score / Q.qs.length * 100);
+      if (!Q.saved) { Q.saved = true; if (tfBest[l.id] == null || p > tfBest[l.id]) { tfBest[l.id] = p; save(K.tf, tfBest); } }
+      box.appendChild(E('div', 'sd-result ' + cls(p), `Bạn đúng ${Q.score}/${Q.qs.length} câu (${p}%). Tốt nhất: ${tfBest[l.id]}%.`));
+      const again = E('button', 'btn-primary', '🔄 Làm bộ câu mới'); again.addEventListener('click', () => { tfState = buildTF(l); onRedraw(); });
+      box.appendChild(again);
+      return;
+    }
+    const q = Q.qs[Q.k];
+    const top = E('div', 'sd-quiz-n', `Câu ${Q.k + 1}/${Q.qs.length} · ` + (q.kind === 'topic' ? 'Kiến thức về chủ đề của video' : q.kind === 'hear' ? 'Nghe câu, rồi cho biết câu chữ dưới đây có giống hệt không' : 'Câu dịch có đúng nghĩa không?'));
+    box.appendChild(top);
+    if (q.kind === 'hear') { const hb = E('button', 'ls-slow', '🔊 Nghe câu'); hb.addEventListener('click', () => { stopAll(); hear(l, q.i, rateOf()); }); box.appendChild(hb); if (!q.played) { q.played = true; setTimeout(() => { stopAll(); hear(l, q.i, rateOf()); }, 300); } }
+    box.appendChild(E('div', 'sd-tf-s', q.text));
+    if (q.kind === 'mean') box.appendChild(E('div', 'sd-tf-vi', '→ ' + q.vi));
+    const row = E('div', 'sd-tf-btns');
+    [[true, '✓ Đúng'], [false, '✗ Sai']].forEach(([v, t]) => {
+      const b = E('button', 'sd-tf-b' + (Q.picked != null ? (v === q.ok ? ' ok' : Q.picked === v ? ' bad' : '') : ''), t);
+      b.disabled = Q.picked != null;
+      b.addEventListener('click', () => { if (Q.picked != null) return; Q.picked = v; if (v === q.ok) Q.score++; onRedraw(); if (q.kind !== 'topic') { stopAll(); hear(l, q.i, rateOf()); } });
+      row.appendChild(b);
+    });
+    box.appendChild(row);
+    if (Q.picked != null) {
+      const ok = Q.picked === q.ok;
+      const fb = E('div', 'sd-result ' + (ok ? 'ok' : 'bad'));
+      fb.appendChild(E('b', null, ok ? 'Chính xác! ' : 'Chưa đúng. '));
+      fb.appendChild(E('span', null, `Đáp án: ${q.ok ? 'Đúng' : 'Sai'}. ${q.why.replace(/^(Đúng|Sai)[:.]\s*/, '')}`));
+      box.appendChild(fb);
+      const nx = E('button', 'btn-primary sd-next', Q.k < Q.qs.length - 1 ? 'Câu tiếp →' : 'Xem kết quả');
+      nx.addEventListener('click', () => { Q.k++; Q.picked = null; onRedraw(); });
+      box.appendChild(nx);
+    }
+    if (q.kind === 'topic') box.appendChild(E('div', 'sd-tf-note', 'Câu hỏi do app soạn về điểm kiến thức mà tiêu đề video nêu, không trích từ lời trong video.'));
+  }
   function buildQuiz(l) {
     const okW = t => { const w = clean(t); return w && w.length >= 3 && isContent(t) && !/'/.test(w) && !/^\d/.test(w); };
     const uniq = [...new Set(l.s.flatMap(r => r[0].split(/\s+/).filter(okW).map(clean)))];
