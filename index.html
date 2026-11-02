@@ -1995,7 +1995,7 @@
   .sd-tab{ background:none; border:none; border-bottom:2.5px solid transparent; padding:8px 10px; font:700 13px/1.3 var(--font-body); color:var(--ink-soft); cursor:pointer; margin-bottom:-1px; }
   .sd-tab.on{ color:var(--ink); border-bottom-color:var(--rust); }
   .sd-prog{ padding:2px 2px 10px; }
-  .sd-prog-r{ display:flex; align-items:center; gap:10px; font-size:12.5px; color:var(--ink-soft); margin-top:6px; }
+  .sd-prog-r{ display:flex; align-items:center; gap:10px; font-size:12.5px; color:var(--ink-soft); margin-top:6px; flex-wrap:wrap; }
   .sd-prog-r b{ margin-left:auto; color:var(--ink); }
   .sd-prog-n{ font:700 13px var(--font-mono); color:var(--ink); }
   .sd-acc{ margin-left:auto; font:700 11px/1.6 var(--font-mono); padding:0 8px; border-radius:8px; color:var(--moss); background:var(--moss-light); }
@@ -3769,7 +3769,7 @@
   <div class="hw-deco" aria-hidden="true"><i class="hw-witch"></i><i class="hw-spider"></i><i class="hw-ghost"></i><i class="hw-caul"></i><i class="hw-candy"></i><i class="hw-cat"></i><i class="hw-skel"></i></div>
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v122</span>
+      <span class="hero-badge">EN ⇄ VI · v123</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice hero-season" id="season-btn" aria-label="Đổi giao diện theo mùa" title="Đổi giao diện theo mùa">🎃</button>
@@ -48119,7 +48119,7 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     const auto = [];
     l.s.forEach(r => r[0].split(/\s+/).forEach((t, k) => {
       const w = clean(t);
-      if (!w || w.length < 4 || FUNC.has(w) || seen.has(w) || /\d/.test(w) || (k > 0 && /^[A-Z]/.test(t.replace(/^[^A-Za-z]+/, '')))) return;
+      if (!w || w.length < 4 || FUNC.has(w) || seen.has(w) || /\d/.test(w) || /[./@]/.test(t.replace(/[.,!?;:]+$/, '')) || (k > 0 && /^[A-Z]/.test(t.replace(/^[^A-Za-z]+/, '')))) return;
       seen.add(w); auto.push([w, hardScore(w)]);
     }));
     auto.sort((a, b) => b[1] - a[1]);
@@ -48540,7 +48540,7 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
       const id = typeof lsYtId === 'function' ? lsYtId(url.value) : '';
       if (!id) { msg.textContent = 'Link YouTube chưa đúng. Hãy dán link dạng youtube.com/watch?v=… hoặc youtu.be/…'; return; }
       let r = { s: [], tm: null };
-      if (ta.value.trim()) { r = ytParse(ta.value); if (!r) { msg.textContent = 'Bản chép lời cần có mốc thời gian (dạng 0:05). Có thể để trống ô này.'; return; } }
+      if (ta.value.trim()) { r = ytParse(ta.value); if (!r) { msg.textContent = 'Bản chép lời cần có mốc thời gian (dạng 0:05). Có thể để trống ô này.'; return; } if (subsLooksVi(r)) { msg.textContent = SUBS_VI_MSG; return; } }
       const l = { id: 'yt-' + Date.now().toString(36), lv: +lv.value || (r.s.length ? guessLevel(r.s.map(x => x[0])) : 3), icon: '📺', yt: id, title: ti.value.trim() || 'Video YouTube', vi: 'Video YouTube', sum: '', s: r.s, tm: r.tm };
       mine.unshift(l); save(K.mine, mine);
       if (!ti.value.trim()) ytTitle(l);
@@ -48759,6 +48759,7 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     go.addEventListener('click', () => {
       const r = ytParse(ta.value);
       if (!r) { msg.textContent = 'Chưa thấy mốc thời gian (dạng 0:05). Hãy sao chép bản chép lời kèm mốc thời gian.'; return; }
+      if (subsLooksVi(r)) { msg.textContent = SUBS_VI_MSG; return; }
       const m = mine.find(x => x.id === l.id);
       if (m) { m.s = r.s; m.tm = r.tm; save(K.mine, mine); }
       if (l.cat === 'bbc') { bbcStore[l.yt] = { s: r.s, tm: r.tm }; save(K.bbc, bbcStore); }
@@ -48769,6 +48770,19 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     wrap.appendChild(add);
     return wrap;
   }
+  // v123: xoá bản chép lời của video (BBC hoặc video tự thêm) cùng tiến độ luyện theo câu, quay về luyện theo đoạn để dán lại
+  function removeTranscript(l) {
+    stopAll();
+    if (l.cat === 'bbc') { delete bbcStore[l.yt]; save(K.bbc, bbcStore); }
+    const m = mine.find(x => x.id === l.id); if (m) { m.s = []; m.tm = null; save(K.mine, mine); }
+    delete prog[l.id]; saveProg();
+    l.s = []; l.tm = null; tfState = null; quiz = null; last = null;
+    view.idx = 0; view.mode = 'shadow';
+    renderLesson(); irrTopSafe();
+  }
+  // bản chép lời có vẻ là tiếng Việt (ví dụ YouTube đang dịch tự động) → báo để chọn lại English
+  const subsLooksVi = r => { const t = r.s.map(x => x[0]).join(' '); const n = (t.match(/[ăâđêôơưạảấầẩẫậắằẳẵặẹẻẽếềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹáàãéèíìóòõúùý]/gi) || []).length; return n > Math.max(8, t.length * 0.03); };
+  const SUBS_VI_MSG = 'Bản chép lời này có vẻ là tiếng Việt. Trên YouTube, ở khung “Bản chép lời” hãy chọn ngôn ngữ English (không chọn bản dịch tự động) rồi sao chép lại.';
   function ytParse(raw) {
     if (typeof lsParseTimed !== 'function') return null;
     const segs = lsParseTimed(raw || '');
@@ -48837,6 +48851,15 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
       delete prog[l.id]; saveProg(); view.idx = 0; renderLesson();
     });
     if (!l.map) r1.appendChild(reset);
+    if (l.yt && (l.cat === 'bbc' || l.cat === 'mine')) {
+      const del = E('button', 'sd-link sd-del-subs', '🗑 Xoá phụ đề');
+      del.title = 'Xoá bản chép lời đã dán (khi dán nhầm hoặc sai ngôn ngữ) để dán lại';
+      del.addEventListener('click', () => {
+        if (!del.dataset.sure) { del.dataset.sure = '1'; del.textContent = 'Bấm lần nữa để xoá phụ đề'; setTimeout(() => { if (del.isConnected) { delete del.dataset.sure; del.textContent = '🗑 Xoá phụ đề'; } }, 3000); return; }
+        removeTranscript(l);
+      });
+      r1.appendChild(del);
+    }
     const tg = E('label', 'sd-switch');
     const cb = E('input'); cb.type = 'checkbox'; cb.checked = set.list;
     cb.addEventListener('change', () => { set.list = cb.checked; saveSet(); renderSide(); });
