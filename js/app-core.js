@@ -5346,12 +5346,12 @@ const GX_ST = { new: ['Chưa học', 'Chưa mở bài'], learning: ['Đang học
 // ghi kết quả kiểm tra (cuối bài / ôn tập): pct 0–100, wrong = danh sách mã câu sai
 function gxResult(id, pct, wrong) {
   const r = gxRec(id), d = gxToday();
+  if (r.st) srSeed(r, GX_GAP[Math.max(0, r.st - 1)], false, r.t);   // v132: chuyển bài đã ôn sang FSRS
   r.n = (r.n || 0) + 1; r.last = pct; r.best = Math.max(r.best || 0, pct); r.t = d; if (!r.op) r.op = d;
   r.wrong = Array.from(new Set([...(wrong || []), ...((r.wrong || []).filter(q => !(wrong || []).includes(q)))])).slice(0, 12);
   if (pct >= 80) {
-    if (!r.st || r.due == null || r.due <= d) r.st = Math.min((r.st || 0) + 1, GX_GAP.length);
-    r.due = d + GX_GAP[Math.max(0, r.st - 1)];
-  } else { r.st = 0; r.due = d + 1; }
+    if (!r.st || r.due == null || r.due <= d) { r.st = Math.min((r.st || 0) + 1, GX_GAP.length); r.due = d + srApply(r, pct >= 95 ? 4 : 3, d); }
+  } else { srApply(r, pct >= 60 ? 2 : 1, d); r.st = 0; r.due = d + 1; }
   delete r.self;
   gxSave();
 }
@@ -5877,6 +5877,10 @@ function gxLesson(id) {
   tbox.appendChild(tstart);
   grRoot.appendChild(gxStep(7, 'Kiểm tra cuối bài', [tbox], 'gx|' + id + '|7', true));
   const pr = tnPracticeBtn(id, 'Luyện thêm: bài tập dịch 5 cấp của bài này →'); if (pr) grRoot.appendChild(pr);
+  // v131: luyện nói với cấu trúc của bài (tab Nói chuyện)
+  const talkBox = grEl('div', 'gx-talk-slot'); grRoot.appendChild(talkBox);
+  const fillTalk = () => { if (typeof window.talkSlot === 'function' && talkBox.isConnected) window.talkSlot(talkBox, id); };
+  if (window.talkSlot) fillTalk(); else if (window.appLoadTab) window.appLoadTab('page-talk').then(fillTalk, () => {});
   // điều hướng
   const nav = grEl('div', 'gr-nav');
   const prev = tlist[pos - 1] || GX_ALL[GX_ALL.indexOf(it) - 1], next = tlist[pos + 1] || GX_ALL[GX_ALL.indexOf(it) + 1];
@@ -7074,6 +7078,46 @@ function vcSet(it, on) {
   try { localStorage.setItem(VC_KEY, JSON.stringify([...vcLearned])); } catch (e) {}
   if (on) srsTouch(it);   // v108: ✓ chỉ đưa từ vào trạng thái “đang học”, không phải “thành thạo”
 }
+/* ---------- v132: thuật toán ôn tập giãn cách FSRS (mã nguồn mở, Anki cũng dùng), tham số mặc định FSRS-4.5 ----------
+   Mỗi thẻ có S = độ bền trí nhớ (số ngày còn nhớ được 90%) và D = độ khó riêng (1–10).
+   Từ khó với bạn quay lại sớm hơn, từ dễ giãn dần tới tối đa 1 năm. Mức chấm: 1 Quên · 2 Khó · 3 Nhớ · 4 Dễ */
+const SRW = [0.4872, 1.4003, 3.7145, 13.8206, 5.1618, 1.2298, 0.8975, 0.031, 1.6474, 0.1367, 1.0461, 2.1072, 0.0793, 0.3246, 1.587, 0.2272, 2.8755];
+const SR_FACTOR = 19 / 81, SR_DECAY = -0.5, SR_MAX = 365;
+function srClampD(d) { return Math.min(10, Math.max(1, d)); }
+function srInitD(g) { return srClampD(SRW[4] - (g - 3) * SRW[5]); }
+function srRecall(t, S) { return Math.pow(1 + SR_FACTOR * t / Math.max(S, 0.1), SR_DECAY); }   // khả năng còn nhớ sau t ngày
+function srIvl(S) { return Math.min(SR_MAX, Math.max(1, Math.round(S))); }                      // giữ tỉ lệ nhớ 90% → khoảng cách = S
+// trạng thái mới của một thẻ sau khi chấm g (không thay đổi thẻ gốc). rec: { S, D, lr } · today: số ngày
+function srPlan(rec, g, today) {
+  rec = rec || {};
+  let S = rec.S, D = rec.D;
+  if (!S || !D) {                                   // lần đầu (hoặc thẻ cũ chưa có S, D)
+    S = SRW[g - 1]; D = srInitD(g);
+    return { S, D, ivl: g === 1 ? 1 : srIvl(S) };
+  }
+  const t = Math.max(0, today - (rec.lr != null ? rec.lr : today));
+  const R = srRecall(t, S);
+  const D2 = srClampD(SRW[7] * srInitD(4) + (1 - SRW[7]) * (D - SRW[6] * (g - 3)));
+  if (t === 0 && g > 1) return { S, D: D2, ivl: srIvl(S) };          // ôn lại trong cùng ngày: không tính là nhớ lâu hơn
+  let S2;
+  if (g === 1) S2 = Math.min(S, SRW[11] * Math.pow(D2, -SRW[12]) * (Math.pow(S + 1, SRW[13]) - 1) * Math.exp(SRW[14] * (1 - R)));
+  else S2 = S * (Math.exp(SRW[8]) * (11 - D2) * Math.pow(S, -SRW[9]) * (Math.exp(SRW[10] * (1 - R)) - 1) * (g === 2 ? SRW[15] : 1) * (g === 4 ? SRW[16] : 1) + 1);
+  S2 = Math.max(0.1, Math.min(S2, 3650));
+  return { S: S2, D: D2, ivl: g === 1 ? 1 : srIvl(S2) };
+}
+// ghi kết quả vào thẻ: trả về số ngày tới lần ôn sau
+function srApply(rec, g, today) {
+  const p = srPlan(rec, g, today);
+  rec.S = Math.round(p.S * 100) / 100; rec.D = Math.round(p.D * 100) / 100; rec.lr = today;
+  return p.ivl;
+}
+// thẻ cũ (theo bậc cố định) → ước lượng S từ khoảng cách đang có, để không mất tiến độ
+function srSeed(rec, gap, hard, lr) {
+  if (rec.S && rec.D) return;
+  rec.S = Math.max(1, gap || 1); rec.D = hard ? 6.5 : 5;
+  if (rec.lr == null && lr) rec.lr = lr;
+}
+const srFmt = n => n <= 1 ? '1 ngày' : n < 30 ? n + ' ngày' : n < 365 ? Math.round(n / 30) + ' tháng' : '1 năm';
 /* ---------- v108: theo dõi mọi từ đã bắt đầu học + ôn tập giãn cách 1 → 2 → 4 → 7 → 15 → 30 → 60 ngày ---------- */
 const VR_KEY = 'hoc-tieng-anh-vocab-review';            // dữ liệu ôn tập bản cũ (v104–v107), chỉ đọc để chuyển sang
 const SRS_KEY = 'hoc-tieng-anh-vocab-srs', VLOG_KEY = 'hoc-tieng-anh-vocab-log', VGOAL_KEY = 'hoc-tieng-anh-vocab-goal';
@@ -7117,13 +7161,17 @@ function srsTouch(it) {
 function srsGrade(it, g) {
   const r = srsTouch(it), d = vrToday();
   const again = r.t === d;                     // đã ôn hôm nay rồi: chỉ ghi nhận, không tăng mức thêm
+  // v132: hạn ôn tính theo FSRS (độ khó riêng của từng từ); r.s vẫn là bậc để xét trạng thái
+  if (r.n || r.w) srSeed(r, r.t ? Math.max(1, r.due - r.t) : VR_GAP[Math.min(Math.max(r.s - 1, 0), 6)], r.w > r.n, r.t || undefined);
+  const counts = g === 0 || !again || r.due <= d;
+  const ivl = counts ? srApply(r, g + 1, d) : 0;
   if (g === 0) { r.s = 0; r.due = d + 1; r.w++; r.lw = 1; }
   else {
     r.n++; r.lw = 0;
     if (r.lc !== d) { r.cd++; r.lc = d; }
-    if (!again || r.due <= d) {
-      if (g === 1) r.due = d + Math.max(1, Math.floor(VR_GAP[Math.min(r.s, 6)] / 2));
-      else { r.s = Math.min(r.s + (g === 3 ? 2 : 1), 7); r.due = d + VR_GAP[Math.min(r.s - 1, 6)]; }
+    if (counts) {
+      if (g !== 1) r.s = Math.min(r.s + (g === 3 ? 2 : 1), 7);
+      r.due = d + ivl;
     }
   }
   r.t = d; srsSave(); vlogAdd(1, g > 0 ? 1 : 0, 0);
@@ -9541,15 +9589,17 @@ function irrStatus(v) {
 const irrDue = () => IRREGULAR_VERBS.filter(v => irrStatus(v) === 'review');
 function irrSeen(v) { if (!irrSrs[v.v1]) { irrSrs[v.v1] = { b: 0, n: 0, w: 0, due: irrToday(), last: irrToday() }; irrSrsSave(); } }
 // chấm một lần trả lời: đúng → lên một bậc và hẹn ôn sau 1, 3, 7, 14, 30 ngày; sai → về bậc thấp, ôn ngay
-function irrGrade(v, ok, kind, val) {
+function irrGrade(v, ok, kind, val, grade) {
   const r = irrSrs[v.v1] || (irrSrs[v.v1] = { b: 0, n: 0, w: 0, due: irrToday(), last: irrToday() });
   const t = irrToday();
+  // v132: FSRS cho hạn ôn; thẻ cũ được ước lượng từ bậc đang có
+  if (r.n || r.b) srSeed(r, IRR_INT[Math.max(0, (r.b || 1) - 1)], (r.w || 0) * 2 > (r.n || 0), r.last);
   r.n = (r.n || 0) + 1; r.last = t;
   if (ok) {
     // chỉ lên bậc khi đã đến hạn (học dồn trong một ngày không làm bậc tăng vọt)
-    if (r.bad || r.b < 2 || r.due <= t) { r.b = Math.min(5, (r.b || 0) + 1); r.due = t + IRR_INT[r.b - 1]; }
+    if (r.bad || r.b < 2 || r.due <= t) { r.b = Math.min(5, (r.b || 0) + 1); r.due = t + srApply(r, grade || 3, t); }
     r.bad = false;
-  } else { r.w = (r.w || 0) + 1; r.b = r.b >= 2 ? 1 : 0; r.due = t; r.bad = true; }
+  } else { r.w = (r.w || 0) + 1; r.b = r.b >= 2 ? 1 : 0; srApply(r, 1, t); r.due = t; r.bad = true; }
   if (kind === 'wr' && val != null) r.wr = Math.max(r.wr || 0, val);
   if (r.b >= 2) irrDone.add(v.v1); else irrDone.delete(v.v1);
   try { localStorage.setItem(IRR_DONE_KEY, JSON.stringify([...irrDone])); } catch (e) {}
