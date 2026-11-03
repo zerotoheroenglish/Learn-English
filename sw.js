@@ -1,7 +1,7 @@
 // Offline support: keep the app shell cached; translation/IPA requests always go to the network.
-const CACHE = 'hoc-tieng-anh-v129';
+const CACHE = 'hoc-tieng-anh-v130';
 const PREFIX = 'hoc-tieng-anh-';
-const SHELL = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
+const SHELL = ["./","./index.html","./manifest.json","./icon-192.png","./icon-512.png","./apple-touch-icon.png","./app.css?h=d71b7a5009","./js/data-core.js?h=5c068bf2d4","./js/data-vocab.js?h=46c7446636","./js/app-core.js?h=522eea0895","./js/app-sync.js?h=c14cfd4c3d","./js/app-feedback.js?h=f1bd3f9e55","./js/tab-shadowing.js?h=86db87861d","./js/data-exercises.js?h=f9a63d9a98","./js/app-exercises.js?h=35cdc9deb3","./js/tab-questions.js?h=73a9b435af","./js/tab-para.js?h=8bd3ce0862"];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
