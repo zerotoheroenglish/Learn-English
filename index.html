@@ -108,7 +108,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="app.css?h=d71b7a5009">
+<link rel="stylesheet" href="app.css?h=024559c76b">
 </head>
 <body>
 
@@ -117,7 +117,7 @@
   <div class="hw-deco" aria-hidden="true"><i class="hw-witch"></i><i class="hw-spider"></i><i class="hw-ghost"></i><i class="hw-caul"></i><i class="hw-candy"></i><i class="hw-cat"></i><i class="hw-skel"></i></div>
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v130</span>
+      <span class="hero-badge">EN ⇄ VI · v132</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice hero-season" id="season-btn" aria-label="Đổi giao diện theo mùa" title="Đổi giao diện theo mùa">🎃</button>
@@ -127,6 +127,7 @@
     <h1>Học <span class="hero-hl">Tiếng Anh</span></h1>
     <p class="sub">Dịch, luyện phát âm và ôn ngữ pháp mỗi ngày, ngay trên điện thoại.</p>
     <div class="hero-stats" id="hero-stats"></div>
+    <button class="hero-review" id="review-btn" type="button" hidden></button>
   </div>
 </header>
 
@@ -220,6 +221,20 @@
     <div class="section-title">Luyện đặt câu hỏi</div>
     <div class="section-sub">Question Builder: sắp xếp từ, đổi câu khẳng định, dịch câu hỏi từ tiếng Việt và tìm lỗi sai. Mỗi câu có giải thích ngắn bằng tiếng Việt.</div>
     <div id="qb-root"></div>
+  </section>
+
+  <!-- PAGE: SPEAKING PARTNER -->
+  <section class="page" id="page-talk">
+    <div class="section-title">Nói chuyện</div>
+    <div class="section-sub">Speaking Partner: nhập vai theo tình huống hoặc trò chuyện tự do với AI. Trả lời bằng giọng nói, app chấm cấu trúc và ngữ pháp sau mỗi câu.</div>
+    <div id="talk-root"></div>
+  </section>
+
+  <!-- PAGE: ÔN TẬP HÔM NAY (mở từ nút ở đầu trang) -->
+  <section class="page" id="page-review">
+    <div class="section-title">Ôn tập hôm nay</div>
+    <div class="section-sub">Ôn tập giãn cách: từ vựng, ngữ pháp, động từ bất quy tắc và sổ từ của bạn, mỗi thứ quay lại đúng lúc bạn sắp quên.</div>
+    <div id="rv-root"></div>
   </section>
 
   <!-- PAGE 2: PRONUNCIATION -->
@@ -477,6 +492,7 @@
         <li><b>Máy chủ trung gian:</b> allorigins.win, codetabs.com: chỉ dùng khi trình duyệt chặn kết nối thẳng tới các dịch vụ trên.</li>
         <li><b>Video:</b> YouTube (Google) phát video, nên YouTube có thể ghi nhận việc xem theo chính sách của họ.</li>
         <li><b>Chấm phát âm:</b> nhận dạng giọng nói có sẵn của trình duyệt (Google trên Chrome, Apple trên Safari). Bản ghi âm ở “Ghi âm & nghe lại” và tab Shadowing chỉ phát trên máy, không lưu và không gửi đi.</li>
+        <li><b>Nói chuyện (Speaking Partner):</b> phần Nhập vai chấm câu trên máy và qua LanguageTool. Phần “Trò chuyện tự do với AI” chỉ chạy khi bạn tự dán khoá Gemini của mình: câu bạn nói được gửi tới Google Gemini theo điều khoản của Google (bản miễn phí có thể được Google dùng để cải thiện dịch vụ). Khoá chỉ lưu trên máy bạn, không đồng bộ và không có trong file sao lưu.</li>
         <li><b>Đăng nhập, đồng bộ, góp ý:</b> Firebase (Google).</li>
         <li><b>Phông chữ:</b> Google Fonts.</li>
       </ul>
@@ -567,12 +583,16 @@
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4A1.5 1.5 0 0 1 4 14.5z"/><path d="M9.8 7.6a2.3 2.3 0 1 1 3 2.2c-.6.2-.8.6-.8 1.2"/><path d="M12 13.3h.01"/></svg></span>
     Câu hỏi
   </button>
+  <button data-page="page-talk">
+    <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.5A2.5 2.5 0 0 1 5.5 4h7A2.5 2.5 0 0 1 15 6.5v4a2.5 2.5 0 0 1-2.5 2.5H8l-3.5 3v-3A1.5 1.5 0 0 1 3 11.5z"/><path d="M17.5 9h1A2.5 2.5 0 0 1 21 11.5v4A1.5 1.5 0 0 1 19.5 17v3l-3.5-3h-3.5a2.5 2.5 0 0 1-2.4-1.8"/></svg></span>
+    Nói chuyện
+  </button>
 </nav>
 
 <script>
 /* Nạp theo tab: mã của tab chỉ được tải khi bạn mở tab đó (và được tải sẵn lúc trình duyệt rảnh, sau khi app đã mở xong) */
 (function () {
-  var LAZY = {"page-shadow":"js/tab-shadowing.js?h=86db87861d","page-qb":"js/tab-questions.js?h=73a9b435af","page-para":"js/tab-para.js?h=8bd3ce0862"}, state = {};
+  var LAZY = {"page-shadow":"js/tab-shadowing.js?h=86db87861d","page-qb":"js/tab-questions.js?h=73a9b435af","page-talk":"js/tab-talk.js?h=48db51504e","page-para":"js/tab-para.js?h=8bd3ce0862"}, state = {};
   function load(page) {
     if (!LAZY[page]) return Promise.resolve();
     if (state[page]) return state[page];
@@ -604,9 +624,9 @@
 </script>
 <script src="js/data-core.js?h=5c068bf2d4"></script>
 <script src="js/data-vocab.js?h=46c7446636"></script>
-<script src="js/app-core.js?h=522eea0895"></script>
+<script src="js/app-core.js?h=d1ab3286b1"></script>
 
-<script src="js/app-sync.js?h=c14cfd4c3d"></script>
+<script src="js/app-sync.js?h=99e0191119"></script>
 
 <script src="js/app-feedback.js?h=f1bd3f9e55"></script>
 
@@ -640,6 +660,8 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
 }
 </script>
 <!-- tab-questions: nạp khi mở tab -->
+<!-- tab-talk: nạp khi mở tab -->
+<script src="js/app-review.js?h=2ce1bd0c52"></script>
 <script>
 /* ============================================================
    PHÍM TẮT (bàn phím máy tính) — v84
@@ -655,7 +677,7 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
 
   const HELP = [
     ['Chung', [
-      ['1 – 9', 'Chuyển tab (1 Dịch · 2 Phát âm · 3 Từ vựng · 4 Shadowing · 5 Ngữ pháp · 6 Bất quy tắc · 7 Bài tập · 8 Luyện dịch · 9 Câu hỏi)'],
+      ['1 – 9, 0', 'Chuyển tab (1 Dịch · 2 Phát âm · 3 Từ vựng · 4 Shadowing · 5 Ngữ pháp · 6 Bất quy tắc · 7 Bài tập · 8 Luyện dịch · 9 Câu hỏi · 0 Nói chuyện)'],
       ['/', 'Đưa con trỏ vào ô tìm kiếm / ô nhập của tab'],
       ['Esc', 'Thoát ô nhập · đóng bảng · quay lại trang trước'],
       ['T', 'Cuộn lên đầu trang'],
@@ -759,7 +781,7 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
     if (e.key === '?') { help(); e.preventDefault(); return; }
     const p = page();
     if (p && (p.id === 'page-vocab' || p.id === 'page-irregular') && vocab(e)) { e.preventDefault(); return; }
-    if (/^[1-9]$/.test(e.key)) { const b = TABS[+e.key - 1]; if (b) { b.click(); window.scrollTo({ top: 0 }); e.preventDefault(); } return; }
+    if (/^[0-9]$/.test(e.key)) { const b = TABS[e.key === '0' ? 9 : +e.key - 1]; if (b) { b.click(); window.scrollTo({ top: 0 }); e.preventDefault(); } return; }
     if (e.key === '/') {
       const inp = q('input[type="text"], input[type="search"], input:not([type]), textarea');
       if (inp) { inp.focus(); e.preventDefault(); }
@@ -802,7 +824,7 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
   const HS = window.HS || {}, P = 'hoc-tieng-anh-', BK = P + 'backup-at', SEEN = P + 'backup-nag';
   const $ = id => document.getElementById(id);
   const box = $('hs-box'); if (!box) return;
-  const DEVICE = new Set([P + 'voice', P + 'sync-meta', P + 'sync-uid', P + 'sync-base', P + 'autofix-open', BK, SEEN]);
+  const DEVICE = new Set([P + 'voice', P + 'sync-meta', P + 'sync-uid', P + 'sync-base', P + 'autofix-open', BK, SEEN, P + 'talk-key', P + 'talk-model', P + 'talk-models']);
   const kb = n => n < 1024 * 1024 ? Math.max(1, Math.round(n / 1024)) + ' KB' : (n / 1048576).toFixed(1) + ' MB';
   const keys = () => { const o = []; for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.startsWith(P)) o.push(k); } return o; };
   const lsBytes = () => keys().reduce((s, k) => s + (k.length + (localStorage.getItem(k) || '').length) * 2, 0);
