@@ -6,6 +6,97 @@
 <title>Học Tiếng Anh</title>
 <meta name="theme-color" content="#14213D">
 <script>(function(){var c="auto";try{c=localStorage.getItem("hoc-tieng-anh-season2")||"";if(!c){c=localStorage.getItem("hoc-tieng-anh-season")==="off"?"off":"auto";}}catch(e){}var m=new Date().getMonth()+1,d=new Date().getDate();var a=m===10?"halloween":(m===11||m===12||(m===1&&d<=6))?"christmas":"";var v=c==="auto"?a:(c==="off"?"":c);if(v){document.documentElement.setAttribute("data-season",v);}var t=document.querySelector('meta[name="theme-color"]');if(t)t.setAttribute("content",v==="halloween"?"#1B1029":v==="christmas"?"#0B1E3A":"#14213D");window.__seasonAuto=a;})();</script>
+<script>
+/* v128 — LƯU TRỮ BỀN HƠN
+   localStorage vẫn là nơi app đọc/ghi (đọc ngay, không phải chờ). Mỗi lần ghi, dữ liệu được chép thêm sang IndexedDB.
+   Nếu localStorage bị trống mà IndexedDB vẫn còn (trình duyệt dọn bớt, đầy bộ nhớ…), app tự chép lại rồi tải lại trang.
+   Lưu ý: "Xoá dữ liệu trang web" trong cài đặt trình duyệt xoá cả hai — khi đó cần file sao lưu hoặc đăng nhập. */
+(function () {
+  var P = 'hoc-tieng-anh-', DBN = 'hoc-tieng-anh-db', ST = 'kv';
+  var HS = window.HS = { ready: false, idb: false, count: 0, quotaHit: false, restored: false };
+  var proto = Storage.prototype, nSet = proto.setItem, nRemove = proto.removeItem, nGet = proto.getItem;
+  HS.nativeSet = function (k, v) { nSet.call(localStorage, k, v); };
+  var db = null, queue = {}, timer = null;
+  function isLS(s) { try { return s === window.localStorage; } catch (e) { return false; } }
+  function mine(k) { return typeof k === 'string' && k.indexOf(P) === 0; }
+  function flush() {
+    timer = null;
+    if (!db) return;                         // chưa mở xong: giữ hàng đợi, ghi sau
+    var q = queue; queue = {};
+    try {
+      var tx = db.transaction(ST, 'readwrite'), os = tx.objectStore(ST);
+      Object.keys(q).forEach(function (k) { if (q[k] === null) os.delete(k); else os.put(q[k], k); });
+      tx.oncomplete = function () { HS.lastMirror = Date.now(); };
+    } catch (e) {}
+  }
+  var touched = {};                          // khoá đã ghi/xoá trong lần mở app này
+  function mark(k, v) { queue[k] = v; touched[k] = 1; if (!timer) timer = setTimeout(flush, 400); }
+  proto.setItem = function (k, v) {
+    try { nSet.call(this, k, v); }
+    catch (e) {
+      if (isLS(this) && e && (e.name === 'QuotaExceededError' || e.code === 22 || e.code === 1014)) {
+        HS.quotaHit = true; if (mine(k)) mark(k, String(v));           // vẫn giữ trong IndexedDB
+        try { window.dispatchEvent(new CustomEvent('hs-quota', { detail: k })); } catch (x) {}
+      }
+      throw e;
+    }
+    if (isLS(this) && mine(k)) mark(k, String(v));
+  };
+  proto.removeItem = function (k) {
+    nRemove.call(this, k);
+    if (isLS(this) && mine(k)) mark(k, null);
+  };
+  HS.localKeys = function () {
+    var out = [];
+    try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (mine(k)) out.push(k); } } catch (e) {}
+    return out;
+  };
+  HS.idbAll = function () {
+    return new Promise(function (res) {
+      if (!db) return res({});
+      try {
+        var out = {}, tx = db.transaction(ST, 'readonly'), cur = tx.objectStore(ST).openCursor();
+        cur.onsuccess = function () { var c = cur.result; if (c) { out[c.key] = c.value; c.continue(); } else res(out); };
+        cur.onerror = function () { res({}); };
+      } catch (e) { res({}); }
+    });
+  };
+  HS.mirrorAll = function () { HS.localKeys().forEach(function (k) { mark(k, nGet.call(localStorage, k)); }); };
+  if (!window.indexedDB) return;
+  var rq;
+  try { rq = indexedDB.open(DBN, 1); } catch (e) { return; }
+  rq.onupgradeneeded = function () { try { rq.result.createObjectStore(ST); } catch (e) {} };
+  rq.onerror = function () {};
+  rq.onsuccess = function () {
+    db = rq.result; HS.idb = true;
+    HS.idbAll().then(function (all) {
+      var ik = Object.keys(all).filter(mine), lk = HS.localKeys();
+      HS.count = ik.length;
+      // khoá có trong bản dự phòng nhưng mất ở localStorage (mà lần này app không tự xoá) = dữ liệu bị mất
+      var lost = ik.filter(function (k) { return lk.indexOf(k) < 0 && !(k in touched); });
+      var guard = 0; try { guard = +sessionStorage.getItem('hta-idb-restore') || 0; } catch (e) {}
+      if (lost.length >= 3 && lost.length >= ik.length * 0.3 && Date.now() - guard > 60000) {
+        // chép lại toàn bộ bản dự phòng (giá trị mặc định app vừa ghi lúc khởi động bị thay bằng tiến độ thật), rồi tải lại
+        var ok = 0;
+        ik.forEach(function (k) { try { nSet.call(localStorage, k, all[k]); ok++; } catch (e) {} });
+        HS.restored = true;
+        try { sessionStorage.setItem('hta-idb-restore', String(Date.now())); sessionStorage.setItem('hta-idb-restored', String(ok)); } catch (e) {}
+        if (ok) { location.reload(); return; }
+      }
+      // đồng bộ bản dự phòng với những gì đang có trên máy
+      HS.mirrorAll();
+      ik.forEach(function (k) { if (lk.indexOf(k) < 0 && !(k in touched)) mark(k, null); });
+      flush();
+      HS.count = lk.length; HS.ready = true;
+      try { window.dispatchEvent(new Event('hs-ready')); } catch (e) {}
+    });
+  };
+  // xin trình duyệt giữ dữ liệu lâu dài (không tự xoá khi máy thiếu dung lượng)
+  try { if (navigator.storage && navigator.storage.persist) navigator.storage.persisted().then(function (p) { HS.persisted = p; if (!p) return navigator.storage.persist().then(function (g) { HS.persisted = g; }); }).catch(function () {}); } catch (e) {}
+  window.addEventListener('pagehide', flush);
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') flush(); });
+})();
+</script>
 <meta name="description" content="Dịch song ngữ Anh ⇄ Việt, phát âm, các thì, động từ bất quy tắc, bài tập dịch và shadowing.">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -2564,6 +2655,13 @@
     display:flex; align-items:center; gap:10px; max-width:calc(100% - 32px); padding:10px 10px 10px 16px; border-radius:999px;
     background:var(--hero); color:var(--hero-ink); box-shadow:0 10px 30px rgba(0,0,0,0.3); font-size:13.5px; }
   .sync-bar[hidden]{ display:none; }
+  .hs-box{ margin:16px 0 4px; padding:12px; border-radius:14px; background:var(--paper); border:1px solid var(--line, rgba(127,127,127,.2)); }
+  .hs-h{ font-weight:700; margin-bottom:8px; }
+  .hs-meter{ height:8px; border-radius:99px; background:rgba(127,127,127,.18); overflow:hidden; margin-bottom:8px; }
+  .hs-meter span{ display:block; height:100%; background:var(--rust); border-radius:99px; }
+  .hs-meter span.hot{ background:#d64545; }
+  .hs-lines{ font-size:13px; line-height:1.5; display:grid; gap:3px; margin-bottom:10px; }
+  .hs-bar-msg{ max-width:min(92vw,520px); }
   .sync-bar button{ padding:7px 14px; border-radius:999px; background:var(--rust); color:var(--on-accent); font-size:13px; }
 
   /* ---- feedback ---- */
@@ -3398,6 +3496,25 @@
   :root[data-season="christmas"] #page-exercise .section-title::after{ background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3MCA4MCI+PHBhdGggZD0iTTM1IDQgYTEyIDEyIDAgMCAxIDEyIDEyIGExMiAxMiAwIDAgMSAtNCA5IGgxNCBhNyA3IDAgMCAxIDAgMTQgaC0xMCBsOCAyNiBhNyA3IDAgMCAxIC0xMyA1IGwtNyAtMTYgbC03IDE2IGE3IDcgMCAwIDEgLTEzIC01IGw4IC0yNiBoLTEwIGE3IDcgMCAwIDEgMCAtMTQgaDE0IGExMiAxMiAwIDAgMSAtNCAtOSBhMTIgMTIgMCAwIDEgMTIgLTEyWiIgZmlsbD0iI0M0NkEyQiIvPjxjaXJjbGUgY3g9IjMwIiBjeT0iMTQiIHI9IjIiIGZpbGw9IiMzQjFGMEUiLz48Y2lyY2xlIGN4PSI0MCIgY3k9IjE0IiByPSIyIiBmaWxsPSIjM0IxRjBFIi8+PHBhdGggZD0iTTMwIDIwIFEzNSAyNCA0MCAyMCIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxjaXJjbGUgY3g9IjM1IiBjeT0iMzMiIHI9IjIuNSIgZmlsbD0iI0UwMzEzMSIvPjxjaXJjbGUgY3g9IjM1IiBjeT0iNDIiIHI9IjIuNSIgZmlsbD0iIzJGOUU0NCIvPjxwYXRoIGQ9Ik0xNiAzMiBoNCBNNTAgMzIgaDQiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L3N2Zz4="); }
   :root[data-season="christmas"] #page-para .section-title::after{ background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MCA2MCI+PGcgc3Ryb2tlPSIjNzRDMEZDIiBzdHJva2Utd2lkdGg9IjMuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIj48cGF0aCBkPSJNMzAgNCBWNTYgTTcuNSAxNyBMNTIuNSA0MyBNNy41IDQzIEw1Mi41IDE3Ii8+PHBhdGggZD0iTTI0IDkgTDMwIDE0IEwzNiA5IE0yNCA1MSBMMzAgNDYgTDM2IDUxIE0xMCAyMyBMMTcgMjEgTDE1IDE0IE01MCAzNyBMNDMgMzkgTDQ1IDQ2IE0xMCAzNyBMMTcgMzkgTDE1IDQ2IE01MCAyMyBMNDMgMjEgTDQ1IDE0Ii8+PC9nPjwvc3ZnPg=="); }
   @media (prefers-reduced-motion: reduce){ .xm-deco i{ animation:none !important; } }
+  /* v129 — hiệu năng */
+  /* tuyết: trước đây đổi background-position mỗi khung hình (phải vẽ lại liên tục); giờ trượt cả lớp bằng transform, card đồ hoạ tự làm */
+  :root[data-season="christmas"] .xm-deco .xm-snow{ inset:auto; left:0; right:0; top:-260px; height:calc(100% + 260px); will-change:transform; }
+  :root[data-season="christmas"] .xm-deco .xm-snow.a{ background-size:200px 200px !important; animation:xmSnowT 14s linear infinite; }
+  :root[data-season="christmas"] .xm-deco .xm-snow.b{ background-size:260px 260px !important; animation:xmSnowT2 20s linear infinite; }
+  @keyframes xmSnowT{ from{ transform:translate3d(0,0,0); } to{ transform:translate3d(0,200px,0); } }
+  @keyframes xmSnowT2{ from{ transform:translate3d(0,0,0); } to{ transform:translate3d(0,260px,0); } }
+  /* đầu trang đã cuộn khuất, hoặc máy cấu hình yếu / tiết kiệm dữ liệu: dừng mọi hoạt ảnh trang trí */
+  html.deco-off .xm-deco i, html.deco-off .hw-deco i,
+  html.deco-off header.hero::before, html.deco-off header.hero::after, html.deco-off header.hero h1::after{ animation-play-state:paused !important; }
+  html.deco-still .xm-deco i, html.deco-still .hw-deco i,
+  html.deco-still header.hero::before, html.deco-still header.hero::after, html.deco-still header.hero h1::after{ animation:none !important; }
+  /* danh sách dài: thẻ nằm ngoài màn hình không phải tính bố cục và vẽ cho tới khi cuộn tới */
+  #page-shadow .sd-card{ content-visibility:auto; contain-intrinsic-size:auto 197px; }
+  #page-vocab .vc-topic{ content-visibility:auto; contain-intrinsic-size:auto 140px; }
+  /* khung video chờ: ảnh xem trước thay cho khung đen trong lúc trình phát YouTube được nạp */
+  .yt-wait{ background:#000 center / cover no-repeat; }
+  .yt-wait::after{ content:"▶"; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:56px; height:40px; border-radius:12px; background:rgba(0,0,0,.6); color:#fff; font-size:20px; display:grid; place-items:center; }
+
   /* Ôn tập từ vựng (v104) */
   .vr-chip{ position:relative; font-weight:700; }
   .vr-dot{ display:inline-block; min-width:18px; margin-left:6px; padding:0 5px; border-radius:9px; background:var(--rust); color:var(--on-accent); font:700 11px/18px var(--font-mono); text-align:center; }
@@ -3778,7 +3895,7 @@
   <div class="hw-deco" aria-hidden="true"><i class="hw-witch"></i><i class="hw-spider"></i><i class="hw-ghost"></i><i class="hw-caul"></i><i class="hw-candy"></i><i class="hw-cat"></i><i class="hw-skel"></i></div>
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v127</span>
+      <span class="hero-badge">EN ⇄ VI · v129</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice hero-season" id="season-btn" aria-label="Đổi giao diện theo mùa" title="Đổi giao diện theo mùa">🎃</button>
@@ -4056,7 +4173,7 @@
   <div class="vsheet-backdrop" data-close></div>
   <div class="vsheet-panel" role="dialog" aria-modal="true" aria-label="Tài khoản và đồng bộ">
     <div class="vsheet-head">
-      <div class="vsheet-title">Tài khoản & đồng bộ</div>
+      <div class="vsheet-title">Tài khoản, đồng bộ & sao lưu</div>
       <button class="vsheet-close" data-close aria-label="Đóng">✕</button>
     </div>
     <div id="acct-out">
@@ -4087,8 +4204,19 @@
       <p class="acct-note">Tiến độ được lưu trong tài khoản của bạn trên Firebase (Google). Chỉ bạn xem được. Đăng xuất thì tiến độ vẫn còn trên máy này.</p>
       <button class="acct-link acct-del" id="acct-del">Xoá tài khoản và dữ liệu đã lưu…</button>
     </div>
-    <p class="acct-note"><button class="acct-link" data-legal="privacy">Xem Điều khoản & Quyền riêng tư</button></p>
+    <div class="hs-box" id="hs-box">
+      <div class="hs-h">💾 Dữ liệu trên máy này</div>
+      <div class="hs-meter"><span id="hs-bar"></span></div>
+      <div class="hs-lines" id="hs-lines"></div>
+      <div class="acct-row">
+        <button class="btn-primary" id="hs-export">⬇️ Tải file sao lưu</button>
+        <button class="btn-ghost" id="hs-import">⬆️ Khôi phục từ file</button>
+      </div>
+      <input type="file" id="hs-file" accept=".json,application/json" hidden>
+      <p class="acct-note" id="hs-note">File sao lưu chứa toàn bộ tiến độ: từ đã thuộc, lịch ôn, bài đã làm, bài nghe tự tạo, từ và câu đã lưu… Hãy giữ file ở iCloud Drive, Google Drive hoặc máy tính. Khi đổi máy hoặc lỡ xoá dữ liệu trình duyệt, bấm "Khôi phục từ file" là có lại.</p>
+    </div>
     <p class="acct-msg" id="acct-msg"></p>
+    <p class="acct-note"><button class="acct-link" data-legal="privacy">Xem Điều khoản & Quyền riêng tư</button></p>
   </div>
 </div>
 <div class="vsheet ipa-sheet" id="ipasheet" hidden>
@@ -4113,7 +4241,7 @@
       <h4>1. Về app</h4>
       <p>“Học Tiếng Anh” là app học tiếng Anh cá nhân, miễn phí, không quảng cáo và không bán dữ liệu. Nội dung học (từ vựng, câu ví dụ, ngữ pháp, cụm từ, mẹo phát âm) do người làm app tự biên soạn, chỉ dùng cho mục đích học tập. App được cung cấp “nguyên trạng”: chúng tôi cố gắng để nội dung chính xác nhưng không bảo đảm tuyệt đối, và không chịu trách nhiệm cho thiệt hại phát sinh từ việc sử dụng app.</p>
       <h4>2. Dữ liệu lưu trên máy bạn</h4>
-      <p>Tiến độ học (từ và cụm từ đã thuộc, bài Shadowing đã học, bài tập dịch đã làm, video đã xem, ghi chú, bài nghe tự tạo, điểm luyện nghe) và các cài đặt (giọng đọc, tốc độ…) được lưu trong bộ nhớ trình duyệt trên chính thiết bị của bạn. Xoá dữ liệu trang web trong trình duyệt sẽ xoá các dữ liệu này.</p>
+      <p>Tiến độ học (từ và cụm từ đã thuộc, bài Shadowing đã học, bài tập dịch đã làm, video đã xem, ghi chú, bài nghe tự tạo, điểm luyện nghe) và các cài đặt (giọng đọc, tốc độ…) được lưu trong bộ nhớ trình duyệt (localStorage, kèm một bản dự phòng trong IndexedDB) trên chính thiết bị của bạn. Xoá dữ liệu trang web trong trình duyệt sẽ xoá các dữ liệu này. Bạn có thể tự tải file sao lưu (.json) trong mục “👤 Tài khoản” để cất ở nơi bạn chọn; file này chỉ nằm ở chỗ bạn lưu, app không gửi đi đâu.</p>
       <h4>3. Khi bạn đăng nhập (không bắt buộc)</h4>
       <p>Nếu bạn đăng nhập bằng Google hoặc email, app lưu email, tên hiển thị và ảnh đại diện (do Google cung cấp) cùng tiến độ học của bạn trên Firebase của Google để đồng bộ giữa các thiết bị. Mỗi người chỉ đọc và ghi được dữ liệu của chính mình. Giọng đọc đã chọn không được đồng bộ. Bạn có thể xoá tài khoản và toàn bộ dữ liệu bất cứ lúc nào trong mục “👤 Tài khoản” → “Xoá tài khoản và dữ liệu”.</p>
       <h4>4. Khi bạn gửi góp ý</h4>
@@ -13547,7 +13675,21 @@ if ('speechSynthesis' in window) {
    - keep online voices alive past Chrome's ~15 s cut-off */
 const TTS = { keep: null, timer: 0, ka: 0, watch: 0, stuck: 0, last: null };
 const TTS_IOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-function ttsVoices() { try { return speechSynthesis.getVoices() || []; } catch (e) { return []; } }
+// v129: nhớ danh sách giọng (một số máy Android trả về danh sách mới rất chậm mỗi lần hỏi); làm mới khi trình duyệt báo đổi
+let TTS_VOICES = null, TTS_VCHECKED = false;
+if ('speechSynthesis' in window) { try { speechSynthesis.addEventListener('voiceschanged', () => { TTS_VOICES = null; TTS_VCHECKED = true; }); } catch (e) {} }
+function ttsVoices() {
+  if (TTS_VOICES && TTS_VOICES.length) return TTS_VOICES;
+  try { const v = speechSynthesis.getVoices() || []; if (v.length) TTS_VOICES = v; return v; } catch (e) { return []; }
+}
+// Chrome / Edge / Android nạp giọng không đồng bộ: lần đọc đầu tiên đợi tối đa 0,7 giây cho có giọng, khỏi đọc bằng giọng sai hoặc im lặng
+function ttsWaitVoices() {
+  return new Promise(res => {
+    const t = setTimeout(done, 700);
+    function done() { clearTimeout(t); TTS_VCHECKED = true; res(); }
+    try { speechSynthesis.addEventListener('voiceschanged', done, { once: true }); } catch (e) { done(); }
+  });
+}
 function ttsFresh(v) {
   if (!v) return null;
   const all = ttsVoices();
@@ -13563,6 +13705,18 @@ function ttsLocal(lang) {
 function ttsPlay(u, retried) {
   const ss = window.speechSynthesis;
   if (!ss) return u;
+  if (!retried && !TTS_IOS && !TTS_VCHECKED && !u.__vw && !ttsVoices().length) {
+    u.__vw = true;
+    ttsWaitVoices().then(() => {
+      if (!u.voice) {
+        const vi = /^vi/i.test(u.lang || '');
+        const v = vi ? ttsVoices().find(x => /^vi/i.test(x.lang || '')) : (pronVoice || ttsLocal(u.lang));
+        if (v) { u.voice = v; u.lang = (v.lang || u.lang || 'en-US').replace('_', '-'); }
+      }
+      ttsPlay(u);
+    });
+    return u;
+  }
   clearTimeout(TTS.timer); clearInterval(TTS.ka); clearTimeout(TTS.watch); clearTimeout(TTS.stuck);
   let busy = false;
   try { busy = !!(ss.speaking || ss.pending); } catch (e) {}
@@ -17736,7 +17890,14 @@ let ipaRec = {};   // ký hiệu → đường dẫn file (đọc từ am-mau/da
 function ipaPlayRec(sym) {
   const src = ipaRec[sym]; if (!src) return false;
   try { speechSynthesis.cancel(); } catch (e) {}
-  try { const a = new Audio(src); a.play().catch(() => { delete ipaRec[sym]; ipaSim(sym); }); return true; } catch (e) { return false; }
+  try {
+    const A = ipaPlayRec.cache || (ipaPlayRec.cache = {});
+    const a = A[src] || (A[src] = new Audio(src));
+    a.preload = 'auto';
+    try { a.pause(); a.currentTime = 0; } catch (e) {}
+    a.play().catch(() => { delete A[src]; delete ipaRec[sym]; ipaSim(sym); });
+    return true;
+  } catch (e) { return false; }
 }
 function ipaSim(sym) {
   ipaUnlock();
@@ -21882,6 +22043,28 @@ function lsYtApi() {
   });
   return lsYt.api;
 }
+/* v129: tạo trình phát YouTube muộn — chờ khung video sắp vào màn hình (hoặc tối đa 1,2 giây) rồi đợi lúc trình duyệt rảnh,
+   để lúc mở bài, chuyển bước, chạm nút không bị khựng vì iframe nặng. Trong lúc chờ hiện ảnh xem trước. */
+function ytHold(holder, id) {
+  try { holder.classList.add('yt-wait'); holder.style.backgroundImage = `url("https://i.ytimg.com/vi/${id}/hqdefault.jpg")`; } catch (e) {}
+}
+function ytWhenNear(el, maxWait) {
+  return new Promise(res => {
+    let done = false, io = null, tm = 0;
+    const go = () => {
+      if (done) return; done = true;
+      clearTimeout(tm); if (io) io.disconnect();
+      const idle = window.requestIdleCallback || (f => setTimeout(f, 60));
+      idle(() => res(), { timeout: 700 });
+    };
+    if (!el || !el.isConnected || !('IntersectionObserver' in window)) return go();
+    el._ytGo = go;                            // cho phép bấm phát sớm hơn
+    io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) go(); }, { rootMargin: '300px' });
+    io.observe(el);
+    tm = setTimeout(go, maxWait || 1200);
+  });
+}
+function ytNow(el) { try { if (el && el._ytGo) el._ytGo(); } catch (e) {} }
 function lsYtStop() {
   clearInterval(lsYt.timer); lsYt.timer = 0; lsYt.pending = null;
   try { if (lsYt.player && lsYt.ready) lsYt.player.pauseVideo(); } catch (e) {}
@@ -21926,7 +22109,8 @@ function lsYtBox(lesson) {
 
   const id = lesson.yt;
   lsYt.id = id; lsYt.ready = false; lsYt.failed = false;
-  lsYtApi().then(() => {
+  ytHold(holder, id); lsYt.holder = holder;
+  lsYtApi().then(() => ytWhenNear(holder)).then(() => {
     if (lsYt.id !== id || !document.body.contains(holder)) return;
     const vars = lesson.free
       ? { playsinline: 1, rel: 0, modestbranding: 1, cc_load_policy: 1, cc_lang_pref: 'en', hl: 'en', iv_load_policy: 3, fs: 0 }
@@ -21951,7 +22135,7 @@ function lsYtBox(lesson) {
 function lsYtPlay(start, end, rate) {
   if (lsYt.failed || !lsYt.id) return false;
   try { window.speechSynthesis && speechSynthesis.cancel(); } catch (e) {}
-  if (!lsYt.player || !lsYt.ready) { lsYt.pending = [start, end, rate]; return true; }
+  if (!lsYt.player || !lsYt.ready) { ytNow(lsYt.holder); lsYt.pending = [start, end, rate]; return true; }
   const pl = lsYt.player;
   clearInterval(lsYt.timer);
   try {
@@ -47051,6 +47235,7 @@ function bcRenderPlayer() {
   root.appendChild(frame);
   const id = item.id;
   lsYt.id = id; lsYt.ready = false; lsYt.failed = false; lsYt.capsSet = false;
+  ytHold(holder, id); lsYt.holder = holder;
   const fail = code => {
     lsYt.failed = true; lsYt.pending = null;
     const old = frame.querySelector('.ls-yt-err'); if (old) old.remove();
@@ -47058,7 +47243,7 @@ function bcRenderPlayer() {
       ? 'Video chỉ phát khi mở app qua địa chỉ web (GitHub Pages). Bản xem trước không phát được.'
       : 'Không phát được video này. Hãy bấm "Mở trên YouTube" hoặc thử video khác.'));
   };
-  lsYtApi().then(() => {
+  lsYtApi().then(() => ytWhenNear(holder)).then(() => {
     if (lsYt.id !== id || !document.body.contains(holder)) return;
     const vars = { playsinline: 1, rel: 0, modestbranding: 1, cc_load_policy: 1, cc_lang_pref: 'en', hl: 'en', iv_load_policy: 3 };
     if (/^https?:$/.test(location.protocol)) vars.origin = location.origin;
@@ -47358,6 +47543,19 @@ vUpdateButton();
   });
 })();
 
+
+/* v129: hoạt ảnh trang trí theo mùa chỉ chạy khi đầu trang đang hiện; máy yếu hoặc bật tiết kiệm dữ liệu thì đứng yên */
+(function () {
+  const root = document.documentElement;
+  try {
+    const c = navigator.connection, mem = navigator.deviceMemory, cores = navigator.hardwareConcurrency;
+    if ((c && c.saveData) || (mem && mem <= 2) || (cores && cores <= 2)) root.classList.add('deco-still');
+  } catch (e) {}
+  const hero = document.querySelector('header.hero');
+  if (hero && 'IntersectionObserver' in window) {
+    new IntersectionObserver(es => es.forEach(e => root.classList.toggle('deco-off', !e.isIntersecting)), { rootMargin: '40px' }).observe(hero);
+  }
+})();
 /* ============================================================
    HERO STATS + TAB BAR NICETIES
 ============================================================ */
@@ -47410,7 +47608,7 @@ const FIREBASE_CONFIG = {
   if (!FIREBASE_CONFIG || !btn) return;
   btn.hidden = false;
   const PREFIX = 'hoc-tieng-anh-', META = PREFIX + 'sync-meta', UIDK = PREFIX + 'sync-uid', BASEK = PREFIX + 'sync-base';
-  const SKIP = new Set([PREFIX + 'voice', META, UIDK, BASEK, PREFIX + 'autofix-open']);   // device-specific / bookkeeping
+  const SKIP = new Set([PREFIX + 'voice', META, UIDK, BASEK, PREFIX + 'autofix-open', PREFIX + 'backup-at', PREFIX + 'backup-nag', PREFIX + 'ipa-cache']);   // v128: cache IPA tự tạo lại được, không cần đẩy lên tài khoản   // device-specific / bookkeeping
   const FB = 'https://www.gstatic.com/firebasejs/10.12.2/';
   const $ = id => document.getElementById(id);
   const sheet = $('asheet'), msg = $('acct-msg');
@@ -47997,9 +48195,12 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     const holder = E('div');
     frame.appendChild(holder);
     box.appendChild(frame);
+    try { if (yt.player && yt.player.destroy) yt.player.destroy(); } catch (e) {}   // v129: không giữ trình phát cũ khi vẽ lại
+    yt.player = null; yt.holder = holder;
     yt.frame = frame; yt.id = l.yt; yt.ready = false; yt.failed = false;
     const free = !l.s.length;
-    (typeof lsYtApi === 'function' ? lsYtApi() : Promise.reject()).then(() => {
+    ytHold(holder, l.yt);
+    (typeof lsYtApi === 'function' ? lsYtApi().then(() => ytWhenNear(holder)) : Promise.reject()).then(() => {
       if (yt.id !== l.yt || !document.body.contains(holder)) return;
       const vars = { playsinline: 1, rel: 0, modestbranding: 1, iv_load_policy: 3, cc_load_policy: free ? 1 : 0, cc_lang_pref: 'en', hl: 'en' };
       if (/^https?:$/.test(location.protocol)) vars.origin = location.origin;
@@ -48034,7 +48235,7 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
         }, 80);
       };
       if (yt.player && yt.ready) begin();
-      else { const t1 = Date.now(); const w = setInterval(() => { if (yt.player && yt.ready) { clearInterval(w); begin(); } else if (yt.failed || Date.now() - t1 > 12000) { clearInterval(w); res(null); } }, 150); }
+      else { ytNow(yt.holder); const t1 = Date.now(); const w = setInterval(() => { if (yt.player && yt.ready) { clearInterval(w); begin(); } else if (yt.failed || Date.now() - t1 > 12000) { clearInterval(w); res(null); } }, 150); }
     });
   }
   // nghe một câu: đoạn video thật nếu có mốc thời gian, không thì giọng máy
@@ -55000,6 +55201,113 @@ const PA_LESSONS = [{"id":"a1-me","lv":1,"icon":"🙋","title":"Giới thiệu b
 
   document.querySelectorAll('nav.tabbar button').forEach(b => b.addEventListener('click', () => { if (b.dataset.page === 'page-para' && !st.cur) renderHome(); }));
   renderHome();
+})();
+</script>
+<script>
+/* v128 — Sao lưu / khôi phục và thông tin bộ nhớ (trong khung Tài khoản & đồng bộ) */
+(() => {
+  const HS = window.HS || {}, P = 'hoc-tieng-anh-', BK = P + 'backup-at', SEEN = P + 'backup-nag';
+  const $ = id => document.getElementById(id);
+  const box = $('hs-box'); if (!box) return;
+  const DEVICE = new Set([P + 'voice', P + 'sync-meta', P + 'sync-uid', P + 'sync-base', P + 'autofix-open', BK, SEEN]);
+  const kb = n => n < 1024 * 1024 ? Math.max(1, Math.round(n / 1024)) + ' KB' : (n / 1048576).toFixed(1) + ' MB';
+  const keys = () => { const o = []; for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.startsWith(P)) o.push(k); } return o; };
+  const lsBytes = () => keys().reduce((s, k) => s + (k.length + (localStorage.getItem(k) || '').length) * 2, 0);
+  const fmtDate = t => new Date(t).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  const LIMIT = 5 * 1024 * 1024;
+  const signedIn = () => { try { return !!localStorage.getItem(P + 'sync-uid'); } catch (e) { return false; } };
+
+  function render() {
+    const used = lsBytes(), pct = Math.min(100, Math.round(used / LIMIT * 100));
+    const bar = $('hs-bar'); bar.style.width = Math.max(2, pct) + '%'; bar.className = pct >= 80 ? 'hot' : '';
+    const last = +localStorage.getItem(BK) || 0;
+    const L = [];
+    L.push(`📦 Tiến độ đang dùng <b>${kb(used)}</b> / khoảng 5 MB của trình duyệt (${pct}%).`);
+    L.push(HS.idb ? `🗂 Bản dự phòng trong IndexedDB: <b>đang bật</b> — nếu bộ nhớ chính bị trống, app tự chép lại.` : `🗂 Trình duyệt này không cho dùng IndexedDB (thường do chế độ ẩn danh).`);
+    if (HS.persisted === true) L.push('🔒 Lưu bền vững: <b>đã bật</b> — trình duyệt sẽ không tự xoá khi máy thiếu dung lượng.');
+    else if (HS.persisted === false) L.push('🔓 Lưu bền vững: <b>chưa được cấp</b> — trình duyệt có thể tự dọn khi máy đầy. Thêm app ra màn hình chính để an toàn hơn.');
+    L.push(signedIn() ? '☁️ Đã đăng nhập: tiến độ còn được lưu trên tài khoản.' : '☁️ Chưa đăng nhập: tiến độ chỉ nằm trên máy này.');
+    L.push(last ? `🕒 Sao lưu gần nhất: <b>${fmtDate(last)}</b>` : '🕒 Bạn <b>chưa tải file sao lưu</b> lần nào.');
+    if (HS.quotaHit || pct >= 80) L.push('⚠️ Bộ nhớ trình duyệt sắp đầy. Hãy tải file sao lưu, rồi xoá bớt bài nghe tự tạo hoặc lịch sử dịch cũ.');
+    $('hs-lines').innerHTML = L.map(x => `<div>${x}</div>`).join('');
+  }
+
+  function snapshot() {
+    const data = {};
+    keys().forEach(k => { if (!DEVICE.has(k)) data[k.slice(P.length)] = localStorage.getItem(k); });
+    return { app: 'hoc-tieng-anh', v: 1, at: new Date().toISOString(), keys: Object.keys(data).length, data };
+  }
+  async function doExport() {
+    const snap = snapshot();
+    const d = new Date(), pad = n => String(n).padStart(2, '0');
+    const name = `hoc-tieng-anh-sao-luu-${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}.json`;
+    const blob = new Blob([JSON.stringify(snap)], { type: 'application/json' });
+    const ios = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    let done = false;
+    if (ios && navigator.canShare) {
+      try {
+        const file = new File([blob], name, { type: 'application/json' });
+        if (navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: 'Sao lưu Học Tiếng Anh' }); done = true; }
+      } catch (e) { if (e && e.name === 'AbortError') return; }
+    }
+    if (!done) {
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+      document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+    }
+    try { localStorage.setItem(BK, String(Date.now())); } catch (e) {}
+    render();
+    say(`Đã tạo file sao lưu (${snap.keys} mục). Hãy cất file vào iCloud Drive / Google Drive.`, true);
+  }
+  function say(t, ok) { const m = $('acct-msg'); if (m) { m.textContent = t; m.className = 'acct-msg' + (ok ? ' ok' : ''); } }
+
+  function doImport(file) {
+    const r = new FileReader();
+    r.onload = () => {
+      let snap = null;
+      try { snap = JSON.parse(r.result); } catch (e) {}
+      if (!snap || snap.app !== 'hoc-tieng-anh' || !snap.data || typeof snap.data !== 'object') return say('File này không phải bản sao lưu của app Học Tiếng Anh.');
+      const ks = Object.keys(snap.data).filter(k => typeof snap.data[k] === 'string' && /^[a-z0-9-]+$/.test(k));
+      if (!ks.length) return say('File sao lưu không có dữ liệu.');
+      const when = snap.at ? fmtDate(Date.parse(snap.at)) : 'không rõ ngày';
+      if (!confirm(`Khôi phục bản sao lưu ngày ${when} (${ks.length} mục)?\n\nTiến độ hiện tại trên máy này sẽ được thay bằng tiến độ trong file.`)) return;
+      // thay toàn bộ: xoá mục cũ (trừ cài đặt riêng của máy), ghi mục trong file
+      const keep = new Set(ks.map(k => P + k));
+      keys().forEach(k => { if (!DEVICE.has(k) && !keep.has(k)) { try { localStorage.removeItem(k); } catch (e) {} } });
+      let ok = 0, fail = 0;
+      ks.forEach(k => { if (DEVICE.has(P + k)) return; try { localStorage.setItem(P + k, snap.data[k]); ok++; } catch (e) { fail++; } });
+      say(fail ? `Đã khôi phục ${ok} mục, ${fail} mục không ghi được (bộ nhớ đầy).` : `Đã khôi phục ${ok} mục. App đang tải lại…`, !fail);
+      if (!fail) setTimeout(() => location.reload(), 900);
+    };
+    r.onerror = () => say('Không đọc được file.');
+    r.readAsText(file);
+  }
+
+  $('hs-export').addEventListener('click', doExport);
+  $('hs-import').addEventListener('click', () => { $('hs-file').value = ''; $('hs-file').click(); });
+  $('hs-file').addEventListener('change', e => { const f = e.target.files && e.target.files[0]; if (f) doImport(f); });
+  const acct = $('acct-btn'); if (acct) acct.addEventListener('click', () => setTimeout(render, 0));
+  window.addEventListener('hs-ready', render);
+  render();
+
+  // thông báo nhỏ, không chặn màn hình
+  const bar = document.createElement('div'); bar.className = 'sync-bar hs-bar-msg'; bar.hidden = true;
+  bar.innerHTML = '<span></span><button>Mở</button>'; document.body.appendChild(bar);
+  const toast = (t, ms) => { bar.querySelector('span').textContent = t; bar.hidden = false; clearTimeout(bar._t); bar._t = setTimeout(() => { bar.hidden = true; }, ms || 9000); };
+  bar.querySelector('button').addEventListener('click', () => { bar.hidden = true; if (acct) acct.click(); });
+  let restored = 0; try { restored = +sessionStorage.getItem('hta-idb-restored') || 0; sessionStorage.removeItem('hta-idb-restored'); } catch (e) {}
+  if (restored) toast(`Đã tự khôi phục ${restored} mục tiến độ từ bản dự phòng trên máy.`);
+  let quotaShown = false;
+  window.addEventListener('hs-quota', () => { if (quotaShown) return; quotaShown = true; render(); toast('⚠️ Bộ nhớ trình duyệt đã đầy — một số tiến độ chưa lưu được. Hãy tải file sao lưu và dọn bớt.', 15000); });
+  // nhắc sao lưu: chưa đăng nhập, đã có tiến độ, hơn 14 ngày chưa sao lưu; nhắc tối đa 1 lần/tuần
+  setTimeout(() => {
+    try {
+      if (signedIn() || keys().length < 8) return;
+      const last = +localStorage.getItem(BK) || 0, nag = +localStorage.getItem(SEEN) || 0, now = Date.now();
+      if (now - last < 14 * 864e5 || now - nag < 7 * 864e5) return;
+      localStorage.setItem(SEEN, String(now));
+      toast('💾 Tiến độ chỉ lưu trên máy này. Tải file sao lưu hoặc đăng nhập để không bị mất.', 12000);
+    } catch (e) {}
+  }, 20000);
 })();
 </script>
 </body>
