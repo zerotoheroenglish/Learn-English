@@ -1,7 +1,7 @@
 // Offline support: keep the app shell cached; translation/IPA requests always go to the network.
-const CACHE = 'hoc-tieng-anh-v132';
+const CACHE = 'hoc-tieng-anh-v134';
 const PREFIX = 'hoc-tieng-anh-';
-const SHELL = ["./","./index.html","./manifest.json","./icon-192.png","./icon-512.png","./apple-touch-icon.png","./app.css?h=024559c76b","./js/data-core.js?h=5c068bf2d4","./js/data-vocab.js?h=46c7446636","./js/app-core.js?h=d1ab3286b1","./js/app-sync.js?h=99e0191119","./js/app-feedback.js?h=f1bd3f9e55","./js/tab-shadowing.js?h=86db87861d","./js/data-exercises.js?h=f9a63d9a98","./js/app-exercises.js?h=35cdc9deb3","./js/tab-questions.js?h=73a9b435af","./js/tab-talk.js?h=48db51504e","./js/app-review.js?h=2ce1bd0c52","./js/tab-para.js?h=8bd3ce0862"];
+const SHELL = ["./","./index.html","./manifest.json","./icon-192.png","./icon-512.png","./apple-touch-icon.png","./app.css?h=d88319febf","./js/data-core.js?h=5c068bf2d4","./js/data-vocab.js?h=46c7446636","./js/app-core.js?h=d1ab3286b1","./js/app-sync.js?h=12ecb20803","./js/app-feedback.js?h=f1bd3f9e55","./js/tab-shadowing.js?h=86db87861d","./js/data-exercises.js?h=f9a63d9a98","./js/app-exercises.js?h=35cdc9deb3","./js/tab-questions.js?h=a4ab4a9112","./js/tab-talk.js?h=48db51504e","./js/app-review.js?h=2ce1bd0c52","./js/tab-para.js?h=8bd3ce0862"];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));

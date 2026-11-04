@@ -19,7 +19,7 @@ const FIREBASE_CONFIG = {
   if (!FIREBASE_CONFIG || !btn) return;
   btn.hidden = false;
   const PREFIX = 'hoc-tieng-anh-', META = PREFIX + 'sync-meta', UIDK = PREFIX + 'sync-uid', BASEK = PREFIX + 'sync-base';
-  const SKIP = new Set([PREFIX + 'voice', META, UIDK, BASEK, PREFIX + 'autofix-open', PREFIX + 'backup-at', PREFIX + 'backup-nag', PREFIX + 'ipa-cache', PREFIX + 'talk-key', PREFIX + 'talk-model', PREFIX + 'talk-models']);   // v128: cache IPA tự tạo lại được, không cần đẩy lên tài khoản   // device-specific / bookkeeping
+  const SKIP = new Set([PREFIX + 'voice', META, UIDK, BASEK, PREFIX + 'autofix-open', PREFIX + 'backup-at', PREFIX + 'backup-nag', PREFIX + 'ipa-cache', PREFIX + 'talk-key', PREFIX + 'talk-model', PREFIX + 'talk-models', PREFIX + 'syncbar-at', PREFIX + 'syncbar-mute']);   // v128: cache IPA tự tạo lại được, không cần đẩy lên tài khoản   // device-specific / bookkeeping
   const FB = 'https://www.gstatic.com/firebasejs/10.12.2/';
   const $ = id => document.getElementById(id);
   const sheet = $('asheet'), msg = $('acct-msg');
@@ -83,6 +83,14 @@ const FIREBASE_CONFIG = {
     return a;
   }
 
+  // v134: so sánh theo NỘI DUNG (bỏ qua thứ tự khoá trong JSON), tránh báo “có tiến độ mới” khi thật ra không có gì đổi
+  function canon(x) {
+    if (x == null) return x;
+    let o; try { o = JSON.parse(x); } catch (e) { return x; }
+    const srt = v => Array.isArray(v) ? v.map(srt) : v && typeof v === 'object' ? Object.keys(v).sort().reduce((a, k) => { a[k] = srt(v[k]); return a; }, {}) : v;
+    return JSON.stringify(srt(o));
+  }
+  const eq = (a, b) => a === b || (a != null && b != null && canon(a) === canon(b));
   async function syncNow(reason) {
     if (!user || !db) return;
     if (syncing) { again = true; return; }
@@ -110,13 +118,13 @@ const FIREBASE_CONFIG = {
           else if (firstHere && lv != null && cv != null && lv !== cv) { v = union(lv, cv); t = now; }
           else if (lv === undefined) { v = cv; t = ct; }
           else if (cv === undefined) { v = lv; t = lt || now; }
-          else if (lv === cv) { v = lv; t = Math.max(lt, ct); }
-          else if (bv !== undefined && lv === bv) { v = cv; t = ct; }                                 // only the cloud changed
-          else if (bv !== undefined && cv === bv) { v = lv; t = lt || now; }                          // only this device changed
+          else if (eq(lv, cv)) { v = lv; t = Math.max(lt, ct); }
+          else if (bv !== undefined && eq(lv, bv)) { v = cv; t = ct; }                                // only the cloud changed
+          else if (bv !== undefined && eq(cv, bv)) { v = lv; t = lt || now; }                         // only this device changed
           else if (lv != null && cv != null) { v = merge3(bv, lv, cv, lt, ct); t = now; }            // both changed
           else if (lt >= ct) { v = lv; t = lt; } else { v = cv; t = ct; }
           out[k] = v; outTs[k] = t;
-          if (v !== (lv === undefined ? null : lv)) changes.push([k, v, t]);
+          if (!eq(v, lv === undefined ? null : lv) && !(v == null && lv == null)) changes.push([k, v, t]);
         });
         if (JSON.stringify(out).length > 900000) throw Object.assign(new Error('too-big'), { code: 'too-big' });
         tx.set(ref, { v: 1, data: out, ts: outTs, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
@@ -137,7 +145,7 @@ const FIREBASE_CONFIG = {
       try { localStorage.setItem(UIDK, uid); if (merged) localStorage.setItem(BASEK, JSON.stringify(merged)); } catch (e) {}
       applying = false;
       lastSync = Date.now(); setStatus('ok');
-      if (changes.length) remoteChanged(reason);
+      if (changes.length) remoteChanged(reason, changes);
     } catch (e) {
       applying = false;
       setStatus('err', e && e.code === 'too-big' ? 'Dữ liệu quá lớn để đồng bộ (bài nghe tự tạo quá dài).'
@@ -150,22 +158,42 @@ const FIREBASE_CONFIG = {
   }
 
   // progress from another device arrived: the screens read storage at start-up, so refresh them
-  function remoteChanged(reason) {
+  // cài đặt giao diện / vị trí đang xem: cập nhật ngầm, không cần báo
+  const QUIET = /^(folded|season2?|autofix|shadow-(ytpos|ytdur|segpos|set|bbc-seen)|yt-seg|ipa-filter|ipa-cache|tr-ctx|tr-keep|qb-lv|qb-g|ex-level|ex-bank|ex-step|ex-v2|grammar-(track|level)|tense-level|irr-(level|cdir)|para-lv|vocab-(front|goal)|sr-set|talk-set|talk-ai|pron-(accent|rate)|backup-(at|nag))$/;
+  const BAR_GAP = 30 * 60000, BAR_MUTE = 3 * 3600000;
+  function remoteChanged(reason, changes) {
+    const real = (changes || []).filter(c => !QUIET.test(c[0]));
+    if (!real.length) return;                                   // chỉ đổi cài đặt giao diện → không báo
     let recent = 0;
     try { recent = +sessionStorage.getItem('hta-sync-reload') || 0; } catch (e) {}
     if ((reason === 'startup' || reason === 'signin') && Date.now() - recent > 15000) {
       try { sessionStorage.setItem('hta-sync-reload', String(Date.now())); } catch (e) {}
       showBar(reason === 'signin' ? 'Đã tải tiến độ từ tài khoản…' : 'Đã cập nhật tiến độ từ máy khác…', false);
       setTimeout(() => location.reload(), 700);
-    } else showBar('Có tiến độ mới từ máy khác', true);
+      return;
+    }
+    // tối đa 1 lần mỗi 30 phút; bấm ✕ thì im lặng 3 giờ. Tiến độ vẫn được lưu, lần mở app sau sẽ thấy.
+    let last = 0, mute = 0;
+    try { last = +localStorage.getItem('hoc-tieng-anh-syncbar-at') || 0; mute = +localStorage.getItem('hoc-tieng-anh-syncbar-mute') || 0; } catch (e) {}
+    const now = Date.now();
+    if (now < mute || now - last < BAR_GAP || !$('sync-bar').hidden) return;
+    try { localStorage.setItem('hoc-tieng-anh-syncbar-at', String(now)); } catch (e) {}
+    showBar('Có tiến độ mới từ máy khác', true);
   }
+  let barTimer = 0;
   function showBar(text, withBtn) {
     $('sync-bar-text').textContent = text;
     $('sync-bar-btn').hidden = !withBtn;
+    $('sync-bar-x').hidden = !withBtn;
     $('sync-bar').hidden = false;
-    if (withBtn) setTimeout(() => { $('sync-bar').hidden = true; }, 15000);
+    clearTimeout(barTimer);
+    if (withBtn) barTimer = setTimeout(() => { $('sync-bar').hidden = true; }, 10000);
   }
   $('sync-bar-btn').addEventListener('click', () => location.reload());
+  $('sync-bar-x').addEventListener('click', () => {
+    $('sync-bar').hidden = true;
+    try { localStorage.setItem('hoc-tieng-anh-syncbar-mute', String(Date.now() + BAR_MUTE)); } catch (e) {}
+  });
 
   function setStatus(st, text) {
     status = st;

@@ -108,7 +108,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="app.css?h=024559c76b">
+<link rel="stylesheet" href="app.css?h=d88319febf">
 </head>
 <body>
 
@@ -117,7 +117,7 @@
   <div class="hw-deco" aria-hidden="true"><i class="hw-witch"></i><i class="hw-spider"></i><i class="hw-ghost"></i><i class="hw-caul"></i><i class="hw-candy"></i><i class="hw-cat"></i><i class="hw-skel"></i></div>
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v132</span>
+      <span class="hero-badge">EN ⇄ VI · v134</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice hero-season" id="season-btn" aria-label="Đổi giao diện theo mùa" title="Đổi giao diện theo mùa">🎃</button>
@@ -520,7 +520,7 @@
     </div>
   </div>
 </div>
-<div class="sync-bar" id="sync-bar" hidden><span id="sync-bar-text"></span><button id="sync-bar-btn">Làm mới</button></div>
+<div class="sync-bar" id="sync-bar" hidden><span id="sync-bar-text"></span><button id="sync-bar-btn">Làm mới</button><button id="sync-bar-x" class="sync-bar-x" aria-label="Đóng, tạm không báo nữa" title="Đóng và tạm không báo trong 3 giờ">✕</button></div>
 
 <div class="vsheet" id="vsheet" hidden>
   <div class="vsheet-backdrop"></div>
@@ -592,7 +592,7 @@
 <script>
 /* Nạp theo tab: mã của tab chỉ được tải khi bạn mở tab đó (và được tải sẵn lúc trình duyệt rảnh, sau khi app đã mở xong) */
 (function () {
-  var LAZY = {"page-shadow":"js/tab-shadowing.js?h=86db87861d","page-qb":"js/tab-questions.js?h=73a9b435af","page-talk":"js/tab-talk.js?h=48db51504e","page-para":"js/tab-para.js?h=8bd3ce0862"}, state = {};
+  var LAZY = {"page-shadow":"js/tab-shadowing.js?h=86db87861d","page-qb":"js/tab-questions.js?h=a4ab4a9112","page-talk":"js/tab-talk.js?h=48db51504e","page-para":"js/tab-para.js?h=8bd3ce0862"}, state = {};
   function load(page) {
     if (!LAZY[page]) return Promise.resolve();
     if (state[page]) return state[page];
@@ -626,7 +626,7 @@
 <script src="js/data-vocab.js?h=46c7446636"></script>
 <script src="js/app-core.js?h=d1ab3286b1"></script>
 
-<script src="js/app-sync.js?h=99e0191119"></script>
+<script src="js/app-sync.js?h=12ecb20803"></script>
 
 <script src="js/app-feedback.js?h=f1bd3f9e55"></script>
 

@@ -2552,6 +2552,8 @@
   .hs-lines{ font-size:13px; line-height:1.5; display:grid; gap:3px; margin-bottom:10px; }
   .hs-bar-msg{ max-width:min(92vw,520px); }
   .sync-bar button{ padding:7px 14px; border-radius:999px; background:var(--rust); color:var(--on-accent); font-size:13px; }
+  .sync-bar .sync-bar-x{ padding:4px 9px; background:transparent; color:inherit; opacity:.7; font-size:14px; }
+  .sync-bar button[hidden]{ display:none; }
 
   /* ---- feedback ---- */
   .fb-foot{ margin:28px 0 8px; padding:16px; border-radius:18px; background:var(--card); border:1px solid var(--paper-line); box-shadow:var(--shadow);
@@ -3417,6 +3419,46 @@
   /* ===== Đặt câu hỏi — Question Builder (v105) ===== */
   #page-qb{ --rust:var(--c-qb); --rust-light:var(--c-qb-l); }
   nav.tabbar button[data-page="page-qb"].active{ background:var(--c-qb-l); color:var(--c-qb); }
+  /* ===== Câu hỏi v133: bộ tạo câu hỏi, chế độ mới ===== */
+  .qb-builder{ border:2px solid var(--rust); }
+  .qb-b-h{ font-family:'Bricolage Grotesque', sans-serif; font-weight:800; font-size:18px; }
+  .qb-b-form{ display:flex; gap:8px; margin-top:8px; }
+  .qb-b-form .qb-input{ flex:1; min-width:0; margin:0; }
+  .qb-b-ex{ margin-top:8px; }
+  .qb-b-ex .colloc-chip{ font-size:12px; }
+  .qb-b-sw{ margin-top:8px; font-size:13px; }
+  .qb-b-out{ margin-top:10px; display:flex; flex-direction:column; gap:10px; }
+  .qb-b-lbl{ font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--rust); }
+  .qb-b-an{ display:flex; flex-wrap:wrap; gap:6px; }
+  .qb-pt{ display:flex; flex-direction:column; padding:6px 10px; border-radius:10px; background:var(--paper); border-left:4px solid var(--hint); }
+  .qb-pt small{ font-size:10px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.03em; } .qb-pt b{ font-size:15px; }
+  .qb-pt.s{ border-color:#1971C2; } .qb-pt.v{ border-color:#E03131; } .qb-pt.a{ border-color:#E8A317; } .qb-pt.c{ border-color:#0B8A5B; }
+  .qb-b-warn{ padding:8px 10px; border-radius:10px; background:#FFF4E5; color:#7A4A00; font-size:13px; }
+  :root[data-theme="dark"] .qb-b-warn{ background:#3A2A10; color:#FFD8A8; }
+  .qb-b-yn, .qb-b-wh{ padding:10px 12px; border-radius:12px; background:var(--paper); }
+  .qb-b-q{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-size:17px; margin:4px 0; }
+  .qb-b-steps{ margin:6px 0 0 18px; font-size:14px; line-height:1.6; color:var(--ink-soft); }
+  .qb-b-row{ display:flex; gap:10px; align-items:flex-start; padding:8px 0; border-top:1px solid var(--paper-line); }
+  .qb-b-tag{ flex:0 0 auto; min-width:74px; text-align:center; font-size:12px; font-weight:700; padding:4px 6px; border-radius:8px; background:var(--rust-light); color:var(--rust); }
+  .qb-b-body{ flex:1; min-width:0; }
+  .qb-b-ans{ font-size:13px; color:var(--ink-soft); }
+  .qb-b-add{ font-size:12px; padding:3px 8px; border-radius:99px; border:1.5px solid var(--paper-line); background:var(--card); color:var(--ink-soft); }
+  .qb-m-new{ background:#E03131 !important; color:#fff !important; }
+  .qb-blank{ display:inline-block; min-width:56px; border-bottom:3px solid var(--rust); color:var(--rust); text-align:center; }
+  .qb-opts{ display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:8px; margin:10px 0; }
+  .qb-opt{ padding:12px; border-radius:12px; border:1.5px solid var(--paper-line); background:var(--card); color:var(--ink); font-size:16px; font-weight:600; }
+  .qb-opt.ok{ border-color:var(--moss); background:var(--moss-light); } .qb-opt.bad{ border-color:var(--mark); }
+  .qb-mic{ width:100%; padding:14px; font-size:16px; margin-top:8px; }
+  .qb-mic.on{ background:var(--mark); }
+  .qb-live{ min-height:22px; margin:8px 2px; font-size:16px; }
+  .qb-live.err{ color:var(--mark); font-size:13px; }
+  .qb-mis summary{ cursor:pointer; font-weight:700; font-size:16px; }
+  .qb-mis-r{ padding:10px 0; border-top:1px solid var(--paper-line); }
+  .qb-mis-t{ font-weight:700; }
+  .qb-mis-bad{ color:var(--mark); text-decoration:line-through; text-decoration-thickness:1px; }
+  .qb-mis-good{ color:var(--moss); font-weight:600; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+  .qb-mis-why{ font-size:13px; color:var(--ink-soft); }
+  .qb-to-sr{ width:100%; margin-top:10px; }
   /* ===== Ôn tập hôm nay (v132) ===== */
   #page-review{ --rust:var(--c-talk); --rust-light:var(--c-talk-l); }
   .hero-review{ margin-top:12px; display:flex; align-items:center; gap:8px; width:100%; max-width:520px; padding:11px 14px; border-radius:14px; background:#FFE066; color:#14213D; font-size:15px; font-weight:600; text-align:left; box-shadow:0 6px 18px -8px rgba(0,0,0,.45); }
