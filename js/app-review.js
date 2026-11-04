@@ -66,10 +66,13 @@
     document.querySelectorAll('nav.tabbar button').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     page.classList.add('active');
+    wantExvi();
     home();
     const m = document.querySelector('main'); window.scrollTo({ top: m ? Math.max(0, m.offsetTop - 8) : 0 });
   }
   window.srOpen = show;
+  // nạp sẵn bản dịch câu ví dụ khi mở trang Ôn tập (bản phát hành)
+  const wantExvi = () => { if (window.appLoadData) window.appLoadData('exvi').catch(() => {}); };
   if (heroBtn) heroBtn.addEventListener('click', show);
 
   /* ---------- nhật ký: ngày → [số thẻ, số thẻ nhớ] ---------- */
@@ -120,7 +123,7 @@
       const cap = Math.min(n, set.max);
       const mins = Math.max(1, Math.round((Math.min(x.v.length + x.i.length + x.m.length, cap) * 8 + Math.min(x.g.length, 4) * 2 * 25) / 60));
       const go = E('button', 'btn-primary rv-go', `▶ Bắt đầu ôn ${cap < n ? cap + ' thẻ' : ''} (khoảng ${mins} phút)`.replace('  ', ' ')); go.type = 'button';
-      go.addEventListener('click', () => start(x));
+      go.addEventListener('click', () => { if (go.disabled) return; go.disabled = true; go.textContent = 'Đang chuẩn bị thẻ…'; start(x); });
       c.appendChild(go);
       if (cap < n) c.appendChild(E('div', 'rv-note', `Mỗi phiên tối đa ${set.max} thẻ. Ôn xong phiên này, bấm lại để ôn tiếp.`));
     } else {
@@ -132,9 +135,10 @@
     const st = streak();
     if (st) c.appendChild(E('div', 'rv-streak', `🔥 Chuỗi ${st} ngày học liên tiếp`));
     root.appendChild(c);
-    root.appendChild(statsBox());
-    root.appendChild(deckBox());
-    root.appendChild(remindBox());
+    const fold = (c, k) => typeof cardFold === 'function' ? cardFold(c, k) : c;
+    root.appendChild(fold(statsBox(), 'rv|stats'));
+    root.appendChild(fold(deckBox(), 'rv|deck'));
+    root.appendChild(fold(remindBox(), 'rv|remind'));
     root.appendChild(howBox());
   }
   function statsBox() {
@@ -261,7 +265,17 @@
 
   /* ============================ PHIÊN ÔN ============================ */
   let S = null;
-  function start(x) {
+  let starting = false;
+  async function start(x) {
+    if (starting) return;                       // chặn bấm hai lần trong lúc đang chuẩn bị
+    starting = true;
+    try { await prep(); } finally { starting = false; }
+    begin(x);
+  }
+  async function prep() {
+    if (window.appLoadData) { try { await Promise.race([window.appLoadData('exvi'), new Promise(r => setTimeout(r, 1500))]); } catch (e) {} }
+  }
+  function begin(x) {
     // trộn xen kẽ các nguồn để não phải “chuyển đổi” (nhớ lâu hơn ôn dồn một loại)
     const cap = set.max;
     const lists = {

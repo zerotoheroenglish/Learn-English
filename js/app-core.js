@@ -5283,11 +5283,10 @@ const GX_CAT_OF = {};
  ['adv', 'inversion-perfect wish inversion mixedcond cleft themore subjunctive relative-advanced whatever emphasis discourse']]
   .forEach(([c, ids]) => ids.split(' ').forEach(id => { GX_CAT_OF[id] = c; }));
 const GX_TWELVE = new Set('present-simple present-continuous present-perfect present-perfect-continuous past-simple past-continuous past-perfect past-perfect-continuous future-simple future-continuous future-perfect future-perfect-continuous'.split(' '));
-// lộ trình theo kiến thức tiên quyết; A2 chia hai phần
+// lộ trình theo kiến thức tiên quyết (v135: A2 là một chặng; trong mỗi nhóm, bài xếp theo thứ tự nên học)
 const GX_TRACKS = [
   { key: 'A1', lv: 1, ids: 'pronouns be-present plural nouns articles demonstratives thereis present-simple frequency present-continuous prepositions conjunctions past-be modal-can howto-greet howto-personal howto-time howto-family' },
-  { key: 'A2.1', lv: 2, ids: 'possessive-s havegot adj-modifier adverb-manner like-ing verb-to-v imperative simple-vs-continuous past-simple regular-ed past-continuous wh-questions questions howmuch-howadj howto-suggest howto-restaurant howto-invite howto-shop' },
-  { key: 'A2.2', lv: 2, ids: 'going-to future-simple present-perfect compare prep-movement modal-more cond-1 too enough ittakes itsadj howto-apologise howto-directions howto-phone howto-hotel' },
+  { key: 'A2', lv: 2, ids: 'possessive-s havegot adj-modifier adverb-manner prep-movement simple-vs-continuous past-simple regular-ed past-continuous going-to future-simple present-perfect imperative like-ing verb-to-v questions wh-questions howmuch-howadj compare modal-more too enough ittakes itsadj cond-1 howto-suggest howto-invite howto-restaurant howto-shop howto-directions howto-hotel howto-phone howto-apologise' },
   { key: 'B1', lv: 3, ids: 'present-perfect-continuous pp-vs-past past-perfect future-continuous future-forms stative time-clauses quantifiers indefinite modal-deduction obligation passive gerund-1 relative-1 cond-2 reported tag so-neither phrasal sothat suchthat makelet asktell usedto hadbetter spend howto-opinion' },
   { key: 'B2', lv: 4, ids: 'past-perfect-continuous future-perfect future-in-past cond-3 relative-2 gerund-2 modal-perfect passive-report participle unless-provided prep-collocation havedone suggest prefer itstime although paired prevent howto-email' },
   { key: 'C1', lv: 5, ids: 'future-perfect-continuous polite-tenses inversion-perfect wish mixedcond inversion cleft themore subjunctive relative-advanced whatever emphasis discourse' }
@@ -5295,8 +5294,7 @@ const GX_TRACKS = [
 const GX_LV_NAME = ['', 'Mới bắt đầu', 'Sơ cấp', 'Trung cấp', 'Trung cao cấp', 'Nâng cao'];
 const GX_TRACK_GOAL = {
   'A1': 'Nền móng: đại từ, to be, danh từ, mạo từ, there is/are, rồi mới tới hiện tại đơn, hiện tại tiếp diễn và giới từ cơ bản.',
-  'A2.1': 'Mở rộng câu đơn: sở hữu, trạng từ, V-ing / to V, câu mệnh lệnh, quá khứ đơn và cách đặt câu hỏi.',
-  'A2.2': 'Nói về tương lai và kinh nghiệm, so sánh, động từ khuyết thiếu, câu điều kiện loại 1 và các mẫu too / enough / it takes.',
+  'A2': 'Mở rộng câu đơn và kể chuyện: sở hữu, trạng từ, quá khứ đơn, tương lai, hiện tại hoàn thành, V-ing / to V, cách đặt câu hỏi, so sánh, động từ khuyết thiếu, too / enough và câu điều kiện loại 1.',
   'B1': 'Nhiều mốc thời gian, bị động, tường thuật, mệnh đề quan hệ, điều kiện loại 2 và các cấu trúc câu thông dụng.',
   'B2': 'Thì hoàn thành phức tạp, điều kiện loại 3, mệnh đề rút gọn, nhờ vả, nhượng bộ và các cặp liên từ.',
   'C1': 'Diễn đạt tinh tế, trang trọng: câu ước, đảo ngữ, điều kiện hỗn hợp, câu chẻ, thức giả định.'
@@ -5313,6 +5311,12 @@ GX_TRACKS.forEach(tr => tr.ids.forEach(id => {
   const src = tn || gr; if (!src) return;
   GX_ALL.push({ k: tn ? 'tn' : 'gr', id, title: tn ? tn.name : gr.title, en: tn ? tn.en : gr.en, lv: tr.lv, track: tr.key, cat: GX_CAT_OF[id] || 'struct', src });
 }));
+// v135: sắp GX_ALL đúng như danh sách hiển thị, để số bài, “Bài tiếp”, “← Trước” và “Học tiếp” cùng một thứ tự
+(() => {
+  const ti = k => GX_TRACKS.findIndex(t => t.key === k), ci = c => { const k = GX_CATS.findIndex(x => x[0] === c); return k < 0 ? 99 : k; };
+  const pos = new Map(GX_ALL.map((x, i) => [x, i]));
+  GX_ALL.sort((a, b) => ti(a.track) - ti(b.track) || ci(a.cat) - ci(b.cat) || pos.get(a) - pos.get(b));
+})();
 const gxFind = id => GX_ALL.find(x => x.id === id);
 // điều hướng & danh sách theo cấp dùng thứ tự lộ trình mới
 mxOf = n => GX_ALL.filter(x => x.lv === n);
@@ -5324,7 +5328,8 @@ const gxToday = () => Math.floor((Date.now() - new Date().getTimezoneOffset() * 
 let gxStore = {}, gxFav = new Set(), gxTrack = 'A1';
 try { const o = JSON.parse(localStorage.getItem(GX_KEY) || 'null'); if (o && typeof o === 'object') gxStore = o; } catch (e) {}
 try { const a = JSON.parse(localStorage.getItem(GX_FAV_KEY) || '[]'); if (Array.isArray(a)) gxFav = new Set(a); } catch (e) {}
-try { const k = localStorage.getItem(GX_TRACK_KEY); if (GX_TRACKS.some(t => t.key === k)) gxTrack = k; else gxTrack = (GX_TRACKS.find(t => t.lv === grLevel) || GX_TRACKS[0]).key; } catch (e) {}
+try { let k = localStorage.getItem(GX_TRACK_KEY); if (/^A2\./.test(k || '')) { k = 'A2'; localStorage.setItem(GX_TRACK_KEY, k); }   // v135: A2.1 / A2.2 → A2
+  if (GX_TRACKS.some(t => t.key === k)) gxTrack = k; else gxTrack = (GX_TRACKS.find(t => t.lv === grLevel) || GX_TRACKS[0]).key; } catch (e) {}
 (() => {   // bài đã tự bấm “đã nắm” ở bản cũ: giữ là “đang học”, cần làm bài kiểm tra để xác nhận
   let ch = false;
   [...tnDone, ...grDone].forEach(id => { if (!gxStore[id]) { gxStore[id] = { op: gxToday(), self: 1 }; ch = true; } });
@@ -5740,7 +5745,7 @@ function gxStep(n, title, nodes, key, openByDefault) {
   const h = grEl('h3', null); h.appendChild(grEl('span', 'gx-step-n', 'Bước ' + n)); h.appendChild(document.createTextNode(' ' + title));
   card.appendChild(h);
   nodes.filter(Boolean).forEach(x => card.appendChild(x));
-  return typeof cardFold === 'function' && !openByDefault ? cardFold(card, key) : card;
+  return typeof cardFold === 'function' ? cardFold(card, key) : card;   // v136: mọi bước đều có nút Close / Open
 }
 function gxExRow(en, vi) {
   const row = grEl('div', 'gr-ex');
@@ -5880,7 +5885,12 @@ function gxLesson(id) {
   // v131: luyện nói với cấu trúc của bài (tab Nói chuyện)
   const talkBox = grEl('div', 'gx-talk-slot'); grRoot.appendChild(talkBox);
   const fillTalk = () => { if (typeof window.talkSlot === 'function' && talkBox.isConnected) window.talkSlot(talkBox, id); };
-  if (window.talkSlot) fillTalk(); else if (window.appLoadTab) window.appLoadTab('page-talk').then(fillTalk, () => {});
+  // v137: chỉ tải tab Nói chuyện khi bạn cuộn tới cuối bài (không tải ngay lúc mở bài)
+  if (window.talkSlot) fillTalk();
+  else if (window.appLoadTab && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(es => { if (es.some(x => x.isIntersecting)) { io.disconnect(); window.appLoadTab('page-talk').then(fillTalk, () => {}); } }, { rootMargin: '200px' });
+    io.observe(talkBox);
+  }
   // điều hướng
   const nav = grEl('div', 'gr-nav');
   const prev = tlist[pos - 1] || GX_ALL[GX_ALL.indexOf(it) - 1], next = tlist[pos + 1] || GX_ALL[GX_ALL.indexOf(it) + 1];
@@ -5953,15 +5963,15 @@ function gxLevelTest(key) {
   });
 }
 
-/* ---------- v119: bài kiểm tra xếp trình độ (30 câu, 5 câu mỗi chặng A1 → C1) ---------- */
+/* ---------- v119: bài kiểm tra xếp trình độ (30 câu A1 → C1: mỗi chặng 5 câu, riêng A2 nhiều bài gấp đôi nên 10 câu) ---------- */
 const GX_PLACE_KEY = 'hoc-tieng-anh-placement';
-const gxPlaceGet = () => { try { const o = JSON.parse(localStorage.getItem(GX_PLACE_KEY) || 'null'); return o && o.track ? o : null; } catch (e) { return null; } };
+const gxPlaceGet = () => { try { const o = JSON.parse(localStorage.getItem(GX_PLACE_KEY) || 'null'); if (o && /^A2\./.test(o.track)) o.track = 'A2'; return o && o.track ? o : null; } catch (e) { return null; } };
 function gxPlacementTest() {
   // mỗi chặng lấy 5 bài ngẫu nhiên (bỏ các bài mẫu câu giao tiếp "howto-"), mỗi bài 1 câu trắc nghiệm; câu dễ trước, khó sau
   const qs = [];
   GX_TRACKS.forEach(t => {
     const ids = lsShuffle(t.ids.filter(id => !/^howto-/.test(id) && (GX_Q[id] || []).length));
-    ids.slice(0, 5).forEach(id => { const q = gxCoreQ(id, Math.floor(Math.random() * Math.min(3, GX_Q[id].length)), 'mc'); if (q) { q.track = t.key; qs.push(q); } });
+    ids.slice(0, t.ids.length > 25 ? 10 : 5).forEach(id => { const q = gxCoreQ(id, Math.floor(Math.random() * Math.min(3, GX_Q[id].length)), 'mc'); if (q) { q.track = t.key; qs.push(q); } });
   });
   grRoot.innerHTML = '';
   const back = grEl('button', 'gr-back', '← Ngữ pháp');
@@ -5978,7 +5988,7 @@ function gxPlacementTest() {
 }
 function gxPlacementResult(res, box, trackOf) {
   const per = GX_TRACKS.map(t => { const r = res.filter(x => trackOf.get(x.id) === t.key); return { key: t.key, lv: t.lv, n: r.length, ok: r.filter(x => x.ok).length }; });
-  // chặng bắt đầu = chặng đầu tiên đúng dưới 4/5 câu
+  // chặng bắt đầu = chặng đầu tiên đúng dưới 80% số câu
   let place = per.find(p => p.n && p.ok / p.n < 0.8);
   const allPass = !place;
   if (!place) place = per[per.length - 1];
@@ -5992,7 +6002,7 @@ function gxPlacementResult(res, box, trackOf) {
   const rec = grEl('div', 'tense-card gx-place-rec');
   rec.appendChild(grEl('div', 'gx-place-k', allPass ? 'Bạn vững hầu hết các chặng' : 'Chặng nên bắt đầu'));
   rec.appendChild(grEl('div', 'gx-place-big', T.key));
-  rec.appendChild(grEl('p', null, allPass ? `Bạn làm tốt cả 6 chặng. Hãy học chặng ${T.key} để hoàn thiện, và dùng “Ôn tập hôm nay” để giữ kiến thức.` : T.key === GX_TRACKS[0].key ? `Hãy bắt đầu từ chặng đầu tiên ${T.key} để xây nền chắc: ${GX_TRACK_GOAL[T.key] || ''}` : `Bạn nắm khá chắc các chặng trước ${T.key}. Bắt đầu từ ${T.key}: ${GX_TRACK_GOAL[T.key] || ''}`));
+  rec.appendChild(grEl('p', null, allPass ? `Bạn làm tốt cả ${GX_TRACKS.length} chặng. Hãy học chặng ${T.key} để hoàn thiện, và dùng “Ôn tập hôm nay” để giữ kiến thức.` : T.key === GX_TRACKS[0].key ? `Hãy bắt đầu từ chặng đầu tiên ${T.key} để xây nền chắc: ${GX_TRACK_GOAL[T.key] || ''}` : `Bạn nắm khá chắc các chặng trước ${T.key}. Bắt đầu từ ${T.key}: ${GX_TRACK_GOAL[T.key] || ''}`));
   const tb = grEl('div', 'gx-place-bars');
   per.forEach(p => {
     const r = grEl('div', 'gx-place-row' + (p.key === T.key ? ' on' : ''));
@@ -7009,7 +7019,7 @@ VOCAB_TOPICS.forEach(t => {
   t.items = [];
   t.groups.forEach((g, gi) => {
     g.topic = t; g.index = gi;
-    g.items = g.words.map(([w, pos, ipa, vi, ex, lv, exvi, sense]) => ({ w, pos, ipa, vi, ex, exvi: exvi || VB_EXVI[w], lv: lv || 3, tid: t.id, gi, sense }));
+    g.items = g.words.map(([w, pos, ipa, vi, ex, lv, exvi, sense]) => ({ w, pos, ipa, vi, ex, exvi: exvi || (typeof VB_EXVI !== 'undefined' ? VB_EXVI[w] : ''), lv: lv || 3, tid: t.id, gi, sense }));
     t.items.push(...g.items);
   });
   // Each topic is split by CEFR level, then each level into lessons of ~20 words (kept in theme order)
@@ -7045,6 +7055,12 @@ VOCAB_TOPICS.forEach(t => {
   t.lessonCount = t.levels.reduce((k, x) => k + x.lessons.length, 0);
   VC_ALL.push(...t.items);
 });
+// v137: bản dịch câu ví dụ (VB_EXVI) nằm ở file riêng, chỉ nạp khi mở tab Từ vựng / Ôn tập → điền vào từ khi nạp xong
+function vcFillExvi() {
+  if (typeof VB_EXVI === 'undefined') return false;
+  VC_ALL.forEach(it => { if (!it.exvi && VB_EXVI[it.w]) it.exvi = VB_EXVI[it.w]; });
+  return true;
+}
 try {
   const sub = document.getElementById('vc-sub');
   if (sub) sub.textContent = VC_ALL.length.toLocaleString('vi-VN') + ' từ không trùng nhau · ' + VOCAB_TOPICS.length +
