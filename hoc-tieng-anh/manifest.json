@@ -1,0 +1,25 @@
+{
+  "name": "Học Tiếng Anh",
+  "short_name": "Học Tiếng Anh",
+  "description": "Dịch song ngữ Anh ⇄ Việt, phát âm, các thì, động từ bất quy tắc, tính/trạng từ và cụm từ đi kèm.",
+  "lang": "vi",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F3F5FA",
+  "theme_color": "#14213D",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
