@@ -664,29 +664,91 @@ const TALK_SCENES = [
     try { localStorage.setItem(K.models, JSON.stringify(names.slice(0, 10))); if (!names.includes(aiModel())) localStorage.setItem(K.model, names[0]); } catch (e) {}
     return names;
   }
-  async function gem(body, retry) {
+  // v138: tắt / giảm "suy nghĩ" của model (Gemini 2.5 và 3 bật mặc định, làm trả lời chậm 3–8 giây).
+  // Mỗi model nhận một kiểu cài đặt khác nhau; kiểu nào bị từ chối (lỗi 400) thì thử kiểu kế tiếp, nhớ lại trong phiên.
+  const THINK = {};
+  function thinkOpts(model) {
+    if (/^gemini-2\.5/.test(model)) return [{ thinkingBudget: 0 }, null];
+    if (/^gemini-([3-9]|\d\d)/.test(model)) return [{ thinkingLevel: 'minimal' }, { thinkingLevel: 'low' }, null];
+    return [null];
+  }
+  // đọc luồng trả lời từng phần (SSE) → gọi onDelta(chữ đã nhận được tới giờ)
+  async function readSSE(res, onDelta) {
+    let all = '', buf = '', raw = '';
+    const eat = line => {
+      line = line.trim(); if (!line.startsWith('data:')) return;
+      const d = line.slice(5).trim(); if (!d || d === '[DONE]') return;
+      let j; try { j = JSON.parse(d); } catch (e) { return; }
+      if (j.error) throw { status: j.error.code || 500, msg: j.error.message || '' };
+      const c = j.candidates && j.candidates[0];
+      const t = c && c.content ? (c.content.parts || []).filter(x => !x.thought).map(x => x.text || '').join('') : '';
+      if (t) { all += t; try { onDelta(all); } catch (e) {} }
+    };
+    if (res.body && res.body.getReader) {
+      const rd = res.body.getReader(), dec = new TextDecoder();
+      for (;;) {
+        const { value, done } = await rd.read();
+        if (done) break;
+        const ch = dec.decode(value, { stream: true }); buf += ch; if (raw.length < 200000) raw += ch;
+        let i; while ((i = buf.indexOf('\n')) >= 0) { eat(buf.slice(0, i)); buf = buf.slice(i + 1); }
+      }
+      eat(buf);
+    } else { raw = await res.text(); raw.split('\n').forEach(eat); }
+    if (!all && raw.trim()) {   // máy chủ trả JSON thường (không theo luồng)
+      try {
+        const j = JSON.parse(raw);
+        all = (Array.isArray(j) ? j : [j]).map(x => { const c = x && x.candidates && x.candidates[0]; return c && c.content ? (c.content.parts || []).filter(q => !q.thought).map(q => q.text || '').join('') : ''; }).join('');
+        if (all) { try { onDelta(all); } catch (e) {} }
+      } catch (e) {}
+    }
+    return all;
+  }
+  async function gem(body, retry, onDelta) {
     const key = aiKey(); if (!key) throw { status: 0, msg: 'Chưa có khoá.' };
     let model = aiModel();
     if (!model) model = (await listModels(key))[0];
-    let res;
-    try {
-      res = await fetch(API + 'models/' + encodeURIComponent(model) + ':generateContent?key=' + encodeURIComponent(key), {
-        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-    } catch (e) { throw { offline: true }; }
-    const j = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      const msg = (j.error && j.error.message) || '';
-      if (retry !== false && res.status === 404) { try { localStorage.removeItem(K.model); } catch (e) {} await listModels(key); return gem(body, false); }
-      if (retry !== false && res.status === 400 && /schema|mime|generation_?config|response/i.test(msg)) {
-        const b2 = JSON.parse(JSON.stringify(body)); if (b2.generationConfig) { delete b2.generationConfig.responseSchema; delete b2.generationConfig.responseMimeType; }
-        return gem(b2, false);
+    const opts = thinkOpts(model);
+    for (;;) {
+      const ti = THINK[model] || 0, tc = opts[Math.min(ti, opts.length - 1)];
+      const b = JSON.parse(JSON.stringify(body));
+      if (tc) { b.generationConfig = b.generationConfig || {}; b.generationConfig.thinkingConfig = tc; }
+      const stream = typeof onDelta === 'function';
+      let res;
+      try {
+        res = await fetch(API + 'models/' + encodeURIComponent(model) + (stream ? ':streamGenerateContent?alt=sse&key=' : ':generateContent?key=') + encodeURIComponent(key), {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(b) });
+      } catch (e) { throw { offline: true }; }
+      if (!res.ok) {
+        const j = await res.json().catch(() => ({}));
+        const msg = (j.error && j.error.message) || '';
+        if (res.status === 400 && tc && /think/i.test(msg) && ti < opts.length - 1) { THINK[model] = ti + 1; continue; }
+        if (retry !== false && res.status === 404) { try { localStorage.removeItem(K.model); } catch (e) {} await listModels(key); return gem(body, false, onDelta); }
+        if (retry !== false && res.status === 400 && /schema|mime|generation_?config|response/i.test(msg)) {
+          const b2 = JSON.parse(JSON.stringify(body)); if (b2.generationConfig) { delete b2.generationConfig.responseSchema; delete b2.generationConfig.responseMimeType; }
+          return gem(b2, false, onDelta);
+        }
+        throw { status: res.status, msg };
       }
-      throw { status: res.status, msg };
+      let txt;
+      if (stream) {
+        try { txt = await readSSE(res, onDelta); } catch (e) { if (e && e.status) throw e; throw { offline: true }; }
+        if (!txt) throw { empty: true, msg: '' };
+        return txt;
+      }
+      const j = await res.json().catch(() => ({}));
+      const c = j.candidates && j.candidates[0];
+      txt = c && c.content && (c.content.parts || []).filter(p => !p.thought).map(p => p.text || '').join('');
+      if (!txt) throw { empty: true, msg: (j.promptFeedback && j.promptFeedback.blockReason) || (c && c.finishReason) || '' };
+      return txt;
     }
-    const c = j.candidates && j.candidates[0];
-    const txt = c && c.content && (c.content.parts || []).map(p => p.text || '').join('');
-    if (!txt) throw { empty: true, msg: (j.promptFeedback && j.promptFeedback.blockReason) || (c && c.finishReason) || '' };
-    return txt;
+  }
+  // lấy phần "reply" đã nhận được trong JSON còn dở dang → hiện chữ dần dần
+  function partReply(s) {
+    const m = String(s).match(/"reply"\s*:\s*"((?:[^"\\]|\\.)*)("?)/);
+    if (!m) return null;
+    const raw = m[1].replace(/\\u[0-9a-fA-F]{0,3}$/, '');
+    let t; try { t = JSON.parse('"' + raw + '"'); } catch (e) { t = raw; }
+    return { t, done: !!m[2] };
   }
   function parseJSON(t) {
     try { return JSON.parse(t); } catch (e) {}
@@ -725,7 +787,8 @@ const TALK_SCENES = [
       'Return only JSON.'
     ].filter(Boolean).join('\n');
   }
-  const SCHEMA = { type: 'OBJECT', properties: { reply: { type: 'STRING' }, reply_vi: { type: 'STRING' }, correction: { type: 'STRING' }, explain_vi: { type: 'STRING' }, better: { type: 'STRING' }, hints: { type: 'ARRAY', items: { type: 'STRING' } } }, required: ['reply', 'reply_vi', 'correction', 'explain_vi', 'better', 'hints'] };
+  const SCHEMA = { type: 'OBJECT', properties: { reply: { type: 'STRING' }, reply_vi: { type: 'STRING' }, correction: { type: 'STRING' }, explain_vi: { type: 'STRING' }, better: { type: 'STRING' }, hints: { type: 'ARRAY', items: { type: 'STRING' } } }, required: ['reply', 'reply_vi', 'correction', 'explain_vi', 'better', 'hints'],
+    propertyOrdering: ['reply', 'reply_vi', 'correction', 'explain_vi', 'better', 'hints'] };   // reply đứng đầu → hiện và đọc được sớm
 
   let A = null;   // phiên trò chuyện AI
   function aiHome(pre) {
@@ -833,10 +896,17 @@ const TALK_SCENES = [
     me.mic.disable(true);
     const wait = E('div', 'tk-b them wait', '…'); me.chat.appendChild(wait);
     wait.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    let out = null, err = null;
+    let out = null, err = null, spoken = '';
+    // v138: chữ hiện dần ngay khi Google gửi tới; câu trả lời đọc lên ngay khi đủ câu, không chờ phần sửa lỗi/gợi ý
+    const onDelta = all => {
+      if (A !== me) return;
+      const p = partReply(all); if (!p || !p.t) return;
+      wait.classList.remove('wait'); wait.textContent = p.t;
+      if (p.done && !spoken && set.auto) { spoken = p.t.trim(); say(spoken); }
+    };
     try {
       const txt = await gem({ systemInstruction: { parts: [{ text: sysPrompt(me.cfg) }] }, contents: me.hist.slice(-24),
-        generationConfig: { temperature: 0.8, maxOutputTokens: 1024, responseMimeType: 'application/json', responseSchema: SCHEMA } });
+        generationConfig: { temperature: 0.8, maxOutputTokens: 1024, responseMimeType: 'application/json', responseSchema: SCHEMA } }, true, onDelta);
       out = parseJSON(txt) || { reply: txt };
     } catch (e) { err = e; }
     if (A !== me) return;
@@ -869,7 +939,7 @@ const TALK_SCENES = [
       myBubble.el.after(fb);
     }
     me.chat.appendChild(bubbleAI(reply, out.reply_vi));
-    if (set.auto) say(reply);
+    if (set.auto && spoken !== reply) say(reply);
     me.hints.innerHTML = '';
     const hs = Array.isArray(out.hints) ? out.hints.filter(x => typeof x === 'string' && x.trim()).slice(0, 3) : [];
     if (hs.length) {
