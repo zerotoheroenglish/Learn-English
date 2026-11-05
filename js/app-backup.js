@@ -3,7 +3,7 @@
   const HS = window.HS || {}, P = 'hoc-tieng-anh-', BK = P + 'backup-at', SEEN = P + 'backup-nag';
   const $ = id => document.getElementById(id);
   const box = $('hs-box'); if (!box) return;
-  const DEVICE = new Set([P + 'voice', P + 'sync-meta', P + 'sync-uid', P + 'sync-base', P + 'autofix-open', BK, SEEN, P + 'talk-key', P + 'talk-model', P + 'talk-models']);
+  const DEVICE = new Set([P + 'voice', P + 'sync-meta', P + 'sync-uid', P + 'sync-base', P + 'autofix-open', BK, SEEN, P + 'talk-key', P + 'talk-model', P + 'talk-models', P + 'talk-prov', P + 'talk-key-groq', P + 'talk-model-groq', P + 'talk-models-groq', P + 'talk-key-openai', P + 'talk-model-openai', P + 'talk-models-openai']);
   const kb = n => n < 1024 * 1024 ? Math.max(1, Math.round(n / 1024)) + ' KB' : (n / 1048576).toFixed(1) + ' MB';
   const keys = () => { const o = []; for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.startsWith(P)) o.push(k); } return o; };
   const lsBytes = () => keys().reduce((s, k) => s + (k.length + (localStorage.getItem(k) || '').length) * 2, 0);

@@ -281,14 +281,14 @@ const TALK_SCENES = [
    NÓI CHUYỆN — AI Speaking Partner (v131)
    1) Nhập vai soạn sẵn: miễn phí, không cần tài khoản. App chấm câu nói theo cấu trúc của lượt
       (đã học ở tab Ngữ pháp) + ngữ pháp (LanguageTool, miễn phí) rồi nhân vật nói tiếp.
-   2) Trò chuyện tự do với Gemini: dùng khoá miễn phí của CHÍNH người học (Google AI Studio).
+   2) Trò chuyện tự do với AI: dùng khoá của CHÍNH người học: Gemini, Groq (miễn phí) hoặc ChatGPT (OpenAI, trả phí). (v140)
       Khoá chỉ lưu trên máy này: không đồng bộ lên tài khoản, không nằm trong file sao lưu.
 ============================================================ */
 (function () {
   const root = document.getElementById('talk-root');
   if (!root) return;
   const E = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
-  const P = 'hoc-tieng-anh-talk', K = { prog: P, set: P + '-set', key: P + '-key', model: P + '-model', models: P + '-models', ai: P + '-ai' };
+  const P = 'hoc-tieng-anh-talk', K = { prog: P, set: P + '-set', key: P + '-key', model: P + '-model', models: P + '-models', ai: P + '-ai', prov: P + '-prov' };
   const load = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } };
   const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
   let prog = load(K.prog, {}); if (!prog || typeof prog !== 'object') prog = {};
@@ -399,7 +399,7 @@ const TALK_SCENES = [
     m1.addEventListener('click', () => { const l = root.querySelector('.tk-list'); if (l) l.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
     const m2 = E('button', 'tk-mode'); m2.type = 'button';
     const hasKey = !!aiKey();
-    m2.innerHTML = '<b>🤖 Trò chuyện tự do với AI</b><span>' + (hasKey ? 'Gemini · đã cài khoá · nói về bất cứ chủ đề nào' : 'Dùng khoá Gemini miễn phí của bạn · cài một lần') + '</span>';
+    m2.innerHTML = '<b>🤖 Trò chuyện tự do với AI</b><span>' + (hasKey ? PROV[prov()].name + ' · đã cài khoá · nói về bất cứ chủ đề nào' : 'Dùng khoá AI của bạn (Gemini, Groq miễn phí hoặc ChatGPT) · cài một lần') + '</span>';
     m2.addEventListener('click', () => { aiHome(); top(); });
     modes.appendChild(m1); modes.appendChild(m2);
     hero.appendChild(modes);
@@ -624,19 +624,69 @@ const TALK_SCENES = [
 
   /* ============================ TRÒ CHUYỆN VỚI GEMINI ============================ */
   const API = 'https://generativelanguage.googleapis.com/v1beta/';
-  const aiKey = () => { try { return localStorage.getItem(K.key) || ''; } catch (e) { return ''; } };
-  const aiModel = () => { try { return localStorage.getItem(K.model) || ''; } catch (e) { return ''; } };
+  // v140: 3 nhà cung cấp AI. Mỗi bên có khoá / model riêng, tất cả chỉ lưu trên máy (không đồng bộ, không sao lưu).
+  const PROV = {
+    gemini: { name: 'Gemini', who: 'Google', sfx: '', tag: 'miễn phí' },
+    groq: { name: 'Groq', who: 'Groq', sfx: '-groq', tag: 'miễn phí · rất nhanh', base: 'https://api.groq.com/openai/v1/' },
+    openai: { name: 'ChatGPT', who: 'OpenAI', sfx: '-openai', tag: 'trả phí theo lượt dùng', base: 'https://api.openai.com/v1/' }
+  };
+  const prov = () => { try { const v = localStorage.getItem(K.prov); return PROV[v] ? v : 'gemini'; } catch (e) { return 'gemini'; } };
+  const kk = (base, pv) => base + PROV[pv || prov()].sfx;
+  const aiKey = pv => { try { return localStorage.getItem(kk(K.key, pv)) || ''; } catch (e) { return ''; } };
+  const aiModel = pv => { try { return localStorage.getItem(kk(K.model, pv)) || ''; } catch (e) { return ''; } };
   const inClaude = () => !!(window.claude && typeof window.claude.use === 'function');
-  function errText(e) {
+  function errText(e, pv) {
     const st = e && e.status, m = (e && e.msg) || '';
+    pv = pv || prov();
+    if (pv !== 'gemini') return errTextOAI(e, pv);
     if (e && e.offline) return 'Không kết nối được tới Google. Kiểm tra mạng rồi thử lại.';
     if (st === 400 && /api key|API_KEY/i.test(m)) return 'Khoá không đúng. Hãy sao chép lại khoá trong Google AI Studio.';
     if (st === 400 && /location|region|country/i.test(m)) return 'Gemini chưa hỗ trợ vị trí của bạn cho bản miễn phí.';
     if (st === 403) return 'Khoá chưa được phép dùng Gemini API (hoặc khoá bị giới hạn theo trang web). Hãy tạo khoá mới trong Google AI Studio.';
     if (st === 429) return 'Đã dùng hết lượt miễn phí tạm thời (Google giới hạn theo phút và theo ngày). Đợi một lát rồi thử lại, trong lúc chờ có thể luyện Nhập vai.';
-    if (st >= 500) return 'Máy chủ Google đang bận. Thử lại sau vài giây.';
+    if (st >= 500) return 'Máy chủ Google đang quá tải (bản miễn phí hay bị vào giờ cao điểm). App đã tự thử lại và đổi model nhưng chưa được. Đợi khoảng một phút rồi bấm Thử lại.';
     if (e && e.empty) return 'AI không trả lời được câu này. Thử nói cách khác.';
     return 'Có lỗi khi gọi Gemini' + (st ? ' (' + st + ')' : '') + (m ? ': ' + m.slice(0, 140) : '.');
+  }
+  function errTextOAI(e, pv) {
+    const st = e && e.status, m = (e && e.msg) || '', P2 = PROV[pv];
+    if (e && e.offline) return 'Không kết nối được tới ' + P2.who + '. Kiểm tra mạng rồi thử lại.';
+    if (e && e.quota) return 'Tài khoản OpenAI chưa nạp tiền hoặc đã hết tiền. Vào platform.openai.com → Billing để nạp (gói ChatGPT Plus không dùng được cho API).';
+    if (st === 401) return 'Khoá không đúng hoặc đã bị xoá. Hãy tạo khoá mới trong trang ' + (pv === 'groq' ? 'console.groq.com/keys' : 'platform.openai.com/api-keys') + '.';
+    if (st === 403) return 'Khoá chưa được phép dùng model này (hoặc ' + P2.who + ' chặn vùng của bạn). Thử chọn model khác hoặc tạo khoá mới.';
+    if (st === 429) return pv === 'groq' ? 'Đã dùng hết lượt miễn phí tạm thời của Groq (giới hạn theo phút và theo ngày). Đợi một lát rồi thử lại.' : 'OpenAI đang giới hạn số lượt gọi của khoá này. Đợi một lát rồi thử lại.';
+    if (st >= 500) return 'Máy chủ ' + P2.who + ' đang quá tải. App đã tự thử lại và đổi model nhưng chưa được. Đợi khoảng một phút rồi bấm Thử lại.';
+    if (e && e.empty) return 'AI không trả lời được câu này. Thử nói cách khác.';
+    return 'Có lỗi khi gọi ' + P2.name + (st ? ' (' + st + ')' : '') + (m ? ': ' + m.slice(0, 140) : '.');
+  }
+  // chọn model phù hợp nhất (rẻ, nhanh, đủ tốt cho hội thoại) trong danh sách model mà khoá OpenAI / Groq dùng được
+  function rankOAI(ids, pv) {
+    if (pv === 'groq') {
+      const W = [[/gpt-oss-120b/, 90], [/kimi-k2/, 85], [/llama-3\.3-70b/, 80], [/llama-4-maverick/, 70], [/llama-4-scout/, 68], [/qwen3/, 60], [/gpt-oss-20b/, 55], [/llama-3\.1-8b/, 40]];
+      return ids.filter(n => !/whisper|guard|tts|playai|orpheus|compound|distil|allam|saba|safeguard|vision|audio/i.test(n))
+        .map(n => ({ n, k: (W.find(w => w[0].test(n)) || [0, 30])[1] })).sort((a, b) => b.k - a.k).map(x => x.n);
+    }
+    return ids.filter(n => /^(gpt-\d|o\d)/.test(n) && !/audio|realtime|tts|transcri|image|search|embed|moderat|instruct|codex|preview|oss|research|computer|dall|whisper|pro\b|-pro/.test(n))
+      .map(n => {
+        const v = parseFloat((n.match(/^gpt-(\d+(?:\.\d+)?)/) || [, '0'])[1]) || 0;
+        if (/^gpt-/.test(n) && v < 4) return null;
+        let k = v * 10 + (/o\b|4o/.test(n) && v === 4 ? 3 : 0);
+        if (/mini/.test(n)) k += 50; else if (/nano/.test(n)) k += 35; else k += 15;
+        if (/^o\d/.test(n)) k -= 40;
+        if (/\d{4}-\d{2}-\d{2}$/.test(n)) k -= 3;
+        if (/chat-latest|latest/.test(n)) k -= 10;
+        return { n, k };
+      }).filter(Boolean).sort((a, b) => b.k - a.k).map(x => x.n);
+  }
+  async function listModelsOAI(key, pv) {
+    let res;
+    try { res = await fetch(PROV[pv].base + 'models', { headers: { Authorization: 'Bearer ' + key } }); } catch (e) { throw { offline: true }; }
+    const j = await res.json().catch(() => ({}));
+    if (!res.ok) throw { status: res.status, msg: (j.error && j.error.message) || '' };
+    const names = rankOAI((j.data || []).map(m => m && m.id).filter(Boolean), pv);
+    if (!names.length) throw { status: 0, msg: 'Khoá này không dùng được model nào để trò chuyện.' };
+    try { localStorage.setItem(kk(K.models, pv), JSON.stringify(names.slice(0, 10))); if (!names.includes(aiModel(pv))) localStorage.setItem(kk(K.model, pv), names[0]); } catch (e) {}
+    return names;
   }
   // chọn model miễn phí phù hợp nhất mà khoá này dùng được (tên model của Google đổi theo thời gian)
   function rankModels(list) {
@@ -654,14 +704,16 @@ const TALK_SCENES = [
         return { n, k };
       }).sort((a, b) => b.k - a.k).map(x => x.n);
   }
-  async function listModels(key) {
+  async function listModels(key, pv) {
+    pv = pv || prov();
+    if (pv !== 'gemini') return listModelsOAI(key, pv);
     let res;
     try { res = await fetch(API + 'models?pageSize=200&key=' + encodeURIComponent(key)); } catch (e) { throw { offline: true }; }
     const j = await res.json().catch(() => ({}));
     if (!res.ok) throw { status: res.status, msg: (j.error && j.error.message) || '' };
     const names = rankModels(j.models || []);
     if (!names.length) throw { status: 0, msg: 'Khoá này không dùng được model Gemini nào để trò chuyện.' };
-    try { localStorage.setItem(K.models, JSON.stringify(names.slice(0, 10))); if (!names.includes(aiModel())) localStorage.setItem(K.model, names[0]); } catch (e) {}
+    try { localStorage.setItem(K.models, JSON.stringify(names.slice(0, 10))); if (!names.includes(aiModel('gemini'))) localStorage.setItem(K.model, names[0]); } catch (e) {}
     return names;
   }
   // v138: tắt / giảm "suy nghĩ" của model (Gemini 2.5 và 3 bật mặc định, làm trả lời chậm 3–8 giây).
@@ -703,9 +755,83 @@ const TALK_SCENES = [
     }
     return all;
   }
-  async function gem(body, retry, onDelta) {
+  // ---- OpenAI / Groq (cùng chuẩn Chat Completions). Nhận body kiểu Gemini rồi đổi sang messages ----
+  const OAI_R = {}, OAI_NOSTREAM = {};
+  function reasonOpts(model, pv) {
+    if (pv === 'openai') { if (/^gpt-5/.test(model)) return ['none', 'minimal', 'low', null]; if (/^o\d/.test(model)) return ['low', null]; return [null]; }
+    if (/gpt-oss/.test(model)) return ['low', null];
+    if (/qwen3/.test(model)) return ['none', null];
+    return [null];
+  }
+  function toMessages(body) {
+    const msgs = [], sys = body.systemInstruction && body.systemInstruction.parts.map(x => x.text).join('\n');
+    const sc = body.generationConfig && body.generationConfig.responseSchema;
+    const shape = sc ? '\nJSON keys, in this order: ' + (sc.propertyOrdering || Object.keys(sc.properties)).map(k => sc.properties[k].type === 'ARRAY' ? `"${k}": [strings]` : `"${k}": string`).join(', ') + '.' : '';
+    if (sys || shape) msgs.push({ role: 'system', content: (sys || 'Return only JSON.') + shape });
+    (body.contents || []).forEach(c => msgs.push({ role: c.role === 'model' ? 'assistant' : 'user', content: (c.parts || []).map(x => x.text || '').join('') }));
+    return msgs;
+  }
+  async function oaiOnce(body, retry, onDelta, force, pv) {
+    const key = aiKey(pv); if (!key) throw { status: 0, msg: 'Chưa có khoá.' };
+    let model = force || aiModel(pv);
+    if (!model) model = (await listModelsOAI(key, pv))[0];
+    const gc = body.generationConfig || {}, json = gc.responseMimeType === 'application/json';
+    const opts = reasonOpts(model, pv), rk = pv + '|' + model;
+    let dropJSON = false;
+    for (;;) {
+      const ri = OAI_R[rk] || 0, re = opts[Math.min(ri, opts.length - 1)];
+      const stream = typeof onDelta === 'function' && !OAI_NOSTREAM[rk];
+      const req = { model, messages: toMessages(body), max_completion_tokens: re ? 2048 : (gc.maxOutputTokens || 1024) };
+      if (!(pv === 'openai' && /^(gpt-5|o\d)/.test(model)) && gc.temperature != null) req.temperature = gc.temperature;
+      if (re) req.reasoning_effort = re;
+      if (json && !dropJSON) req.response_format = { type: 'json_object' };
+      if (stream) req.stream = true;
+      let res;
+      try {
+        res = await fetch(PROV[pv].base + 'chat/completions', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + key }, body: JSON.stringify(req) });
+      } catch (e) { throw { offline: true }; }
+      if (!res.ok) {
+        const j = await res.json().catch(() => ({}));
+        const er = j.error || {}, msg = er.message || '';
+        if (res.status === 400 && re && /reasoning/i.test(msg) && ri < opts.length - 1) { OAI_R[rk] = ri + 1; continue; }
+        if (res.status === 400 && stream && /stream/i.test(msg)) { OAI_NOSTREAM[rk] = true; continue; }
+        if (res.status === 400 && json && !dropJSON && /response_format|json/i.test(msg)) { dropJSON = true; continue; }
+        if (res.status === 400 && /temperature/i.test(msg) && req.temperature != null) { gc.temperature = null; continue; }
+        if (retry !== false && res.status === 404 && !force) { try { localStorage.removeItem(kk(K.model, pv)); } catch (e) {} await listModelsOAI(key, pv); return oaiOnce(body, false, onDelta, null, pv); }
+        throw { status: res.status, msg, quota: er.code === 'insufficient_quota' || er.type === 'insufficient_quota' };
+      }
+      let txt = '';
+      if (stream) {
+        let buf = '';
+        const eat = line => {
+          line = line.trim(); if (!line.startsWith('data:')) return;
+          const d = line.slice(5).trim(); if (!d || d === '[DONE]') return;
+          let j; try { j = JSON.parse(d); } catch (e) { return; }
+          if (j.error) throw { status: j.error.code === 'insufficient_quota' ? 429 : 500, msg: j.error.message || '' };
+          const t = j.choices && j.choices[0] && j.choices[0].delta && j.choices[0].delta.content;
+          if (t) { txt += t; try { onDelta(txt); } catch (e) {} }
+        };
+        try {
+          if (res.body && res.body.getReader) {
+            const rd = res.body.getReader(), dec = new TextDecoder();
+            for (;;) { const { value, done } = await rd.read(); if (done) break; buf += dec.decode(value, { stream: true }); let i; while ((i = buf.indexOf('\n')) >= 0) { eat(buf.slice(0, i)); buf = buf.slice(i + 1); } }
+            eat(buf);
+          } else (await res.text()).split('\n').forEach(eat);
+        } catch (e) { if (e && e.status) throw e; throw { offline: true }; }
+      } else {
+        const j = await res.json().catch(() => ({}));
+        txt = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || '';
+        if (txt && onDelta) { try { onDelta(txt); } catch (e) {} }
+      }
+      if (!txt) throw { empty: true, msg: '' };
+      return txt;
+    }
+  }
+  async function gemOnce(body, retry, onDelta, force) {
+    const pv = prov();
+    if (pv !== 'gemini') return oaiOnce(body, retry, onDelta, force, pv);
     const key = aiKey(); if (!key) throw { status: 0, msg: 'Chưa có khoá.' };
-    let model = aiModel();
+    let model = force || aiModel();
     if (!model) model = (await listModels(key))[0];
     const opts = thinkOpts(model);
     for (;;) {
@@ -722,10 +848,10 @@ const TALK_SCENES = [
         const j = await res.json().catch(() => ({}));
         const msg = (j.error && j.error.message) || '';
         if (res.status === 400 && tc && /think/i.test(msg) && ti < opts.length - 1) { THINK[model] = ti + 1; continue; }
-        if (retry !== false && res.status === 404) { try { localStorage.removeItem(K.model); } catch (e) {} await listModels(key); return gem(body, false, onDelta); }
+        if (retry !== false && res.status === 404 && !force) { try { localStorage.removeItem(K.model); } catch (e) {} await listModels(key); return gemOnce(body, false, onDelta); }
         if (retry !== false && res.status === 400 && /schema|mime|generation_?config|response/i.test(msg)) {
           const b2 = JSON.parse(JSON.stringify(body)); if (b2.generationConfig) { delete b2.generationConfig.responseSchema; delete b2.generationConfig.responseMimeType; }
-          return gem(b2, false, onDelta);
+          return gemOnce(b2, false, onDelta, force);
         }
         throw { status: res.status, msg };
       }
@@ -741,6 +867,30 @@ const TALK_SCENES = [
       if (!txt) throw { empty: true, msg: (j.promptFeedback && j.promptFeedback.blockReason) || (c && c.finishReason) || '' };
       return txt;
     }
+  }
+  // v139: Google báo bận (5xx), hết lượt theo phút (429) hoặc mất mạng giữa chừng → tự thử lại, rồi chuyển sang model khác
+  // (mỗi model miễn phí có hạn mức riêng). Chỉ báo lỗi khi đã thử hết. onRetry(n) để hiện "đang thử lại…".
+  async function gem(body, retry, onDelta, onRetry) {
+    const cur = aiModel();
+    let list = []; try { list = JSON.parse(localStorage.getItem(kk(K.models)) || '[]'); } catch (e) {}
+    const others = list.filter(m => m && m !== cur && !/pro/.test(m)).slice(0, 2);
+    const plan = [null, null].concat(others);          // model đang dùng ×2, rồi tối đa 2 model dự phòng
+    let last;
+    for (let i = 0; i < plan.length; i++) {
+      if (i) { if (onRetry) { try { onRetry(i); } catch (e) {} } await new Promise(r => setTimeout(r, i === 1 ? 900 : 400)); }
+      try {
+        const t = await gemOnce(body, retry, onDelta, plan[i]);
+        if (plan[i]) { try { localStorage.setItem(kk(K.model), plan[i]); } catch (e) {} }   // model dự phòng chạy được → dùng tiếp
+        return t;
+      } catch (e) {
+        last = e;
+        const st = e && e.status;
+        const soft = !(e && e.quota) && ((e && e.offline) || st >= 500 || st === 429 || (e && e.empty && !e.msg));
+        if (!soft) throw e;
+        if (st === 429 && i === 0) i = 1;                 // hết lượt: đổi model ngay, thử lại cùng model vô ích
+      }
+    }
+    throw last;
   }
   // lấy phần "reply" đã nhận được trong JSON còn dở dang → hiện chữ dần dần
   function partReply(s) {
@@ -775,7 +925,9 @@ const TALK_SCENES = [
       `Conversation topic: ${c.topic}.` + (c.scene ? ` Role-play situation: ${c.scene.en}. You play: ${c.scene.role} (${c.scene.who}).` : ''),
       'Rules:',
       `- Reply in 1–3 short sentences of spoken English at level ${lv} (${style}).`,
-      '- End every reply with exactly ONE question that keeps the conversation going. Follow the learner\'s interests.',
+      '- First react naturally to what the learner just said (agree, show interest, or answer their question). Understand their meaning even if their English is broken.',
+      '- Then ask exactly ONE simple, natural follow-up question about what they said, like a real friend would. Move to the topic gradually; never jump to an unrelated or strange question.',
+      '- Keep the conversation logical: remember what was said earlier and never ask something they already answered.',
       '- "reply" must be English only. Never lecture; be friendly.',
       '- Look ONLY at the learner\'s last message (it may come from speech recognition, so ignore punctuation, capital letters and obvious recognition errors).',
       '- If it has grammar or word-choice mistakes: "correction" = the corrected full sentence, "explain_vi" = a short explanation in Vietnamese (max 2 sentences). If it is correct: both empty strings.',
@@ -799,20 +951,44 @@ const TALK_SCENES = [
     const c = E('div', 'tense-card tk-ai');
     c.appendChild(E('h2', 'gr-title', '🤖 Trò chuyện tự do với AI'));
     c.appendChild(E('p', 'tk-hero-s', 'Nói về bất cứ điều gì. AI trả lời ngắn theo trình độ của bạn, sửa từng câu bạn nói, gợi ý cách nói tự nhiên hơn và nhận xét khi kết thúc.'));
-    if (inClaude()) c.appendChild(E('div', 'tk-warn', 'Bản xem trước trong Claude không gọi được Gemini. Hãy mở app trên trang web của bạn để dùng phần này.'));
+    if (inClaude()) c.appendChild(E('div', 'tk-warn', 'Bản xem trước trong Claude không gọi được AI bên ngoài. Hãy mở app trên trang web của bạn để dùng phần này.'));
+    const pv = prov(), PV = PROV[pv];
     const key = aiKey();
+    // chọn nhà cung cấp AI
+    const pc = E('div', 'colloc-chips tk-prov'); pc.appendChild(E('span', 'tk-rate-l', 'AI:'));
+    Object.keys(PROV).forEach(id => {
+      const ch = E('button', 'colloc-chip' + (id === pv ? ' active' : ''), PROV[id].name + (aiKey(id) ? ' ✓' : '')); ch.type = 'button';
+      ch.title = PROV[id].tag;
+      ch.addEventListener('click', () => { if (id === pv) return; try { localStorage.setItem(K.prov, id); } catch (e) {} aiHome(pre); });
+      pc.appendChild(ch);
+    });
+    c.appendChild(pc);
+    c.appendChild(E('div', 'tk-note', {
+      gemini: 'Gemini (Google): miễn phí, chỉ cần tài khoản Google. Giờ cao điểm đôi khi báo bận.',
+      groq: 'Groq: miễn phí, không cần thẻ, trả lời rất nhanh (dùng model mã nguồn mở như GPT-OSS, Llama). Có giới hạn số lượt mỗi phút / mỗi ngày.',
+      openai: 'ChatGPT (OpenAI): ổn định, nhưng phải nạp tiền trước vào tài khoản API (gói ChatGPT Plus không dùng được). Model mini rất rẻ: khoảng 5 USD dùng được nhiều tháng.'
+    }[pv]));
     const setup = E('div', 'tk-setup');
+    const STEPS = {
+      gemini: [['Mở ', 'Google AI Studio → API keys', 'https://aistudio.google.com/apikey', ' và đăng nhập bằng tài khoản Google.'], 'Bấm "Create API key", rồi sao chép khoá (bắt đầu bằng AIza…).'],
+      groq: [['Mở ', 'GroqCloud → API Keys', 'https://console.groq.com/keys', ' và đăng nhập (Google, GitHub hoặc email, không cần thẻ).'], 'Bấm "Create API Key", đặt tên tuỳ ý, rồi sao chép khoá (bắt đầu bằng gsk_…). Khoá chỉ hiện một lần.'],
+      openai: [['Mở ', 'OpenAI Platform → Billing', 'https://platform.openai.com/settings/organization/billing/overview', ', đăng nhập và nạp tiền (tối thiểu khoảng 5 USD). Nên đặt giới hạn chi tiêu ở mục Limits.'],
+        ['Vào ', 'API keys', 'https://platform.openai.com/api-keys', ', bấm "Create new secret key" rồi sao chép khoá (bắt đầu bằng sk-…). Khoá chỉ hiện một lần.']]
+    };
     if (!key) {
-      setup.appendChild(E('div', 'tk-uses-h', 'Cài đặt một lần (miễn phí):'));
+      setup.appendChild(E('div', 'tk-uses-h', 'Cài đặt một lần' + (pv === 'openai' ? ':' : ' (miễn phí):')));
       const ol = E('ol', 'tk-steps');
-      const li1 = E('li'); li1.appendChild(document.createTextNode('Mở ')); const a = E('a', null, 'Google AI Studio → API keys'); a.href = 'https://aistudio.google.com/apikey'; a.target = '_blank'; a.rel = 'noopener'; li1.appendChild(a); li1.appendChild(document.createTextNode(' và đăng nhập bằng tài khoản Google.'));
-      ol.appendChild(li1);
-      ol.appendChild(E('li', null, 'Bấm "Create API key", rồi sao chép khoá (bắt đầu bằng AIza…).'));
+      STEPS[pv].forEach(st => {
+        const li = E('li');
+        if (typeof st === 'string') li.textContent = st;
+        else { li.appendChild(document.createTextNode(st[0])); const a = E('a', null, st[1]); a.href = st[2]; a.target = '_blank'; a.rel = 'noopener'; li.appendChild(a); li.appendChild(document.createTextNode(st[3])); }
+        ol.appendChild(li);
+      });
       ol.appendChild(E('li', null, 'Dán khoá vào ô dưới và bấm "Lưu & kiểm tra".'));
       setup.appendChild(ol);
     }
     const kr = E('form', 'tk-type');
-    const ki = E('input'); ki.type = 'password'; ki.placeholder = key ? 'Khoá đã lưu: ••••' + key.slice(-4) + ' (dán khoá mới để đổi)' : 'Dán khoá Gemini (AIza…)'; ki.autocomplete = 'off'; ki.spellcheck = false;
+    const ki = E('input'); ki.type = 'password'; ki.placeholder = key ? 'Khoá đã lưu: ••••' + key.slice(-4) + ' (dán khoá mới để đổi)' : 'Dán khoá ' + PV.name + ' (' + { gemini: 'AIza…', groq: 'gsk_…', openai: 'sk-…' }[pv] + ')'; ki.autocomplete = 'off'; ki.spellcheck = false;
     const kb = E('button', 'btn-primary', key ? 'Đổi khoá' : 'Lưu & kiểm tra'); kb.type = 'submit';
     kr.appendChild(ki); kr.appendChild(kb);
     const kmsg = E('div', 'tk-note');
@@ -822,8 +998,8 @@ const TALK_SCENES = [
       if (!v) { ki.focus(); return; }
       kb.disabled = true; kmsg.className = 'tk-note'; kmsg.textContent = 'Đang kiểm tra khoá…';
       try {
-        const names = await listModels(v);
-        try { localStorage.setItem(K.key, v); localStorage.setItem(K.model, names[0]); } catch (x) {}
+        const names = await listModels(v, pv);
+        try { localStorage.setItem(kk(K.key, pv), v); localStorage.setItem(kk(K.model, pv), names[0]); } catch (x) {}
         kmsg.className = 'tk-note ok'; kmsg.textContent = '✓ Khoá dùng được. Model: ' + names[0];
         setTimeout(() => aiHome(pre), 700);
       } catch (x) { kmsg.className = 'tk-note err'; kmsg.textContent = errText(x); }
@@ -834,16 +1010,16 @@ const TALK_SCENES = [
       const mr = E('div', 'tk-mrow');
       mr.appendChild(E('span', 'tk-rate-l', 'Model:'));
       const sel = E('select', 'tk-sel');
-      const names = load(K.models, []); const cur = aiModel();
+      const names = load(kk(K.models), []); const cur = aiModel();
       (names.length ? names : [cur]).filter(Boolean).forEach(n => { const o = E('option', null, n); o.value = n; if (n === cur) o.selected = true; sel.appendChild(o); });
-      sel.addEventListener('change', () => { try { localStorage.setItem(K.model, sel.value); } catch (e) {} });
+      sel.addEventListener('change', () => { try { localStorage.setItem(kk(K.model), sel.value); } catch (e) {} });
       mr.appendChild(sel);
       const del = E('button', 'acct-link', 'Xoá khoá khỏi máy này'); del.type = 'button';
-      del.addEventListener('click', () => { if (!confirm('Xoá khoá Gemini khỏi máy này?')) return; try { [K.key, K.model, K.models].forEach(k => localStorage.removeItem(k)); } catch (e) {} aiHome(pre); });
+      del.addEventListener('click', () => { if (!confirm('Xoá khoá ' + PV.name + ' khỏi máy này?')) return; try { [K.key, K.model, K.models].forEach(k => localStorage.removeItem(kk(k))); } catch (e) {} aiHome(pre); });
       mr.appendChild(del);
       setup.appendChild(mr);
     }
-    setup.appendChild(E('div', 'tk-note', '🔒 Khoá chỉ lưu trên máy này, không đồng bộ lên tài khoản và không nằm trong file sao lưu. Nội dung bạn nói được gửi tới Google để AI trả lời; bản miễn phí của Google có thể dùng dữ liệu này để cải thiện dịch vụ, nên đừng nói thông tin riêng tư.'));
+    setup.appendChild(E('div', 'tk-note', '🔒 Khoá chỉ lưu trên máy này, không đồng bộ lên tài khoản và không nằm trong file sao lưu. Nội dung bạn nói được gửi tới ' + PV.who + ' để AI trả lời' + (pv === 'gemini' ? '; bản miễn phí của Google có thể dùng dữ liệu này để cải thiện dịch vụ' : '') + ', nên đừng nói thông tin riêng tư.'));
     c.appendChild(setup);
 
     if (key) {
@@ -906,7 +1082,8 @@ const TALK_SCENES = [
     };
     try {
       const txt = await gem({ systemInstruction: { parts: [{ text: sysPrompt(me.cfg) }] }, contents: me.hist.slice(-24),
-        generationConfig: { temperature: 0.8, maxOutputTokens: 1024, responseMimeType: 'application/json', responseSchema: SCHEMA } }, true, onDelta);
+        generationConfig: { temperature: 0.7, maxOutputTokens: 1024, responseMimeType: 'application/json', responseSchema: SCHEMA } }, true, onDelta,
+        n => { if (A === me && !spoken) { wait.classList.add('wait'); wait.textContent = n >= 2 ? 'Google đang bận, đổi sang model khác…' : 'Đang thử lại…'; } });
       out = parseJSON(txt) || { reply: txt };
     } catch (e) { err = e; }
     if (A !== me) return;
