@@ -408,6 +408,8 @@
   const TT = {"sh":[["a1-morning",1,"My Morning"],["a1-friend",1,"My Best Friend"],["a2-dalat",2,"A Trip to Da Lat"],["a2-english",2,"Learning English"],["b1-home",3,"Working from Home"],["b1-sleep",3,"Why Sleep Matters"],["b2-habits",4,"The Power of Habits"],["b2-city",4,"City Life or Country Life?"],["c1-slow",5,"The Case for Slowing Down"],["c1-fail",5,"Learning from Failure"],["d-cafe",1,"At the Coffee Shop"],["d-meet",1,"Meeting a New Neighbour"],["d-weekend",2,"Weekend Plans"],["d-doctor",2,"Booking an Appointment"],["d-complain",3,"Returning a Faulty Product"],["d-small",3,"Small Talk at a Party"],["d-roommate",4,"Talking to a Flatmate"],["t-airport",2,"Checking In at the Airport"],["t-hoian",2,"A Day in Hoi An"],["t-hotel",3,"A Problem at the Hotel"],["t-culture",3,"Tet Holiday Traditions"],["t-solo",4,"Why I Travel Alone"],["w-first",2,"My First Day at Work"],["w-meeting",3,"Starting a Team Meeting"],["w-email",3,"Asking for a Deadline Extension"],["w-present",4,"Presenting Quarterly Results"],["w-negotiate",5,"Negotiating with a Supplier"],["i-intro",2,"Tell Me About Yourself"],["i-strength",3,"Strengths and Weaknesses"],["i-why",3,"Why Do You Want This Job?"],["i-conflict",4,"Handling a Difficult Situation"],["i-questions",4,"Questions for the Interviewer"],["h-water",1,"Drink More Water"],["h-walk",2,"The Benefits of Walking"],["h-stress",3,"Dealing with Stress"],["h-food",4,"What Is a Balanced Diet?"],["s-phone",2,"My Phone and Me"],["s-ai",3,"AI in Everyday Life"],["s-space",3,"Why Explore Space?"],["s-ocean",4,"The Plastic Problem"],["s-brain",5,"How the Brain Learns a Language"],["x-kindness",3,"The Ripple Effect of Kindness"],["x-public",4,"Overcoming the Fear of Public Speaking"],["e-hometown",3,"Part 1: Your Hometown"],["e-hobby",3,"Part 1: Free Time"],["e-person",4,"Part 2: A Person Who Inspired You"],["e-place",4,"Part 2: A Place You Want to Visit"],["e-tech",5,"Part 3: Technology and Society"],["o-announce",3,"Office Announcement"],["o-voicemail",3,"A Voicemail Message"],["o-conversation",3,"Rescheduling a Client Visit"],["o-ad",4,"A Radio Advertisement"],["o-tour",4,"A Factory Tour"],["a1-family",1,"My Family"],["a1-fruit",1,"Buying Fruit at the Market"],["a1-room",1,"My Room"],["a2-cook",2,"Cooking with My Grandmother"],["b2-memory",4,"The Photo I Almost Lost"],["c1-attention",5,"Reclaiming Our Attention"]],"rd":[["a1-family",1,"My Family"],["a1-day",1,"A Day in My Life"],["a1-market",1,"At the Market"],["a1-room",1,"My Room"],["a1-weekend",1,"A Weekend in the Park"],["a1-message",1,"A Message to a Friend"],["a2-trip",2,"A Trip to Sa Pa"],["a2-job",2,"My First Job"],["a2-phone",2,"Too Much Phone?"],["a2-recipe",2,"Grandma's Pho"],["a2-neighbour",2,"A Helpful Neighbour"],["a2-3d",2,"Learning 3D at Home"],["b1-remote",3,"Working from Home"],["b1-plastic",3,"Living with Less Plastic"],["b1-sleep",3,"Why We Need Sleep"],["b1-volunteer",3,"A Summer of Volunteering"],["b1-render",3,"How an Animated Film Is Made"],["b1-language",3,"Learning a Language as an Adult"],["b2-ai",4,"Will AI Take Our Jobs?"],["b2-city",4,"Cities Built for People"],["b2-gamedev",4,"The Hidden Cost of Beautiful Games"],["b2-tourism",4,"When Tourists Become Too Many"],["b2-habits",4,"The Science of Habits"],["b2-coffee",4,"Viet Nam's Coffee Story"],["c1-attention",5,"The Attention Economy"],["c1-memory",5,"How Reliable Is Memory?"],["c1-digital-human",5,"The Uncanny Valley"],["c1-water",5,"The Sinking Delta"],["c1-translation",5,"What Gets Lost in Translation"],["c1-failure",5,"The Value of Failure"]],"wr":[["w-a1-me",1,"Introduce yourself"],["w-a1-day",1,"My daily routine"],["w-a1-friend",1,"My best friend"],["w-a1-note",1,"A short note"],["w-a2-weekend",2,"Last weekend"],["w-a2-email",2,"Invite a friend"],["w-a2-city",2,"My hometown"],["w-a2-review",2,"Review a restaurant"],["w-b1-opinion",3,"Online or classroom learning?"],["w-b1-story",3,"A day that didn't go as planned"],["w-b1-complaint",3,"A complaint email"],["w-b1-goal",3,"A goal for next year"],["w-b2-essay",4,"Social media: good or bad for young people?"],["w-b2-report",4,"Improving the workplace"],["w-b2-cover",4,"A cover letter"],["w-b2-problem",4,"Traffic in big cities"],["w-c1-ai",5,"AI and creative work"],["w-c1-proposal",5,"A proposal for your city"],["w-c1-review",5,"Review a film or book"],["w-c1-reflect",5,"A lesson from failure"]]};
   const SKN = { l: 'Nghe', s: 'Nói', r: 'Đọc', w: 'Viết', v: 'Từ vựng', g: 'Ngữ pháp' };
   async function openIn(page, fn) {
+    const mk = { 'page-vocab': 'hoc-tieng-anh-vi-mode', 'page-para': 'hoc-tieng-anh-pq-mode' }[page];
+    if (mk) try { localStorage.setItem(mk, 'main'); } catch (e) {}
     const b = document.querySelector(`nav.tabbar button[data-page="${page}"]`);
     if (b) b.click();
     try { if (window.appLoadTab) await window.appLoadTab(page); } catch (e) {}
@@ -512,19 +514,92 @@
   /* ---------- v148: LỘ TRÌNH HỌC CHUNG — mỗi cấp 6 chặng nối các tab; việc tự tick khi làm xong ---------- */
   const TK = [["a1-meet",1,"Làm quen bạn mới"],["a1-family",1,"Kể về gia đình"],["a1-day",1,"Một ngày của bạn"],["a1-cafe",1,"Gọi đồ ở quán cà phê"],["a2-weekend",2,"Cuối tuần vừa rồi"],["a2-plans",2,"Kế hoạch tuần tới"],["a2-shop",2,"Mua áo ở cửa hàng"],["a2-directions",2,"Hỏi đường"],["a2-hotel",2,"Nhận phòng khách sạn"],["b1-interview",3,"Phỏng vấn vị trí 3D Artist"],["b1-review",3,"Họp review với trưởng nhóm 3D"],["b1-doctor",3,"Đi khám bệnh"],["b1-debate",3,"Bàn luận: học online hay học ở lớp?"],["b2-client",4,"Thương lượng deadline với khách hàng"],["b2-complaint",4,"Phàn nàn về đơn hàng lỗi"]];
   const UNITS = 6;
+  // Từ vựng cho từng chặng: bài ngữ pháp của chặng → chủ đề từ vựng liên quan ("chủ đề" hoặc "chủ đề:từ khoá nhóm").
+  const GXV = {
+    pronouns: ['basics:Đại từ', 'family'], 'be-present': ['family', 'feelings', 'appearance'], plural: ['home', 'animals', 'fruitveg'],
+    nouns: ['food', 'basics:số lượng', 'fruitveg'], articles: ['home', 'city'], demonstratives: ['basics:chỉ định', 'clothes', 'colors'],
+    thereis: ['home', 'city'], frequency: ['routine:tần suất', 'routine'], prepositions: ['basics:Giới từ', 'city', 'home'],
+    conjunctions: ['basics:Liên từ', 'feelings'], 'past-be': ['time', 'weather', 'feelings'], 'present-simple': ['routine', 'jobs', 'hobbies'],
+    'present-continuous': ['routine', 'sports', 'clothes'], 'modal-can': ['sports', 'hobbies', 'body'], 'howto-greet': ['relationships', 'family'],
+    'howto-personal': ['jobs', 'school', 'city'], 'howto-time': ['time', 'routine'], 'howto-family': ['family', 'relationships'],
+    'possessive-s': ['family', 'home'], havegot: ['family', 'appearance', 'body'], 'adj-modifier': ['appearance', 'personality', 'feelings'],
+    'adverb-manner': ['sports', 'personality'], 'prep-movement': ['transport', 'city'], 'simple-vs-continuous': ['routine', 'hobbies'],
+    'past-simple': ['travel', 'holidays'], 'regular-ed': ['holidays', 'hobbies'], 'past-continuous': ['weather', 'transport'],
+    'going-to': ['travel', 'holidays'], 'future-simple': ['weather', 'technology'], 'present-perfect': ['travel', 'school', 'jobs'],
+    imperative: ['cooking', 'health'], 'like-ing': ['hobbies', 'sports', 'entertainment'], 'verb-to-v': ['school', 'jobs'],
+    questions: ['basics:để hỏi', 'jobs'], 'wh-questions': ['basics:để hỏi', 'city'], 'howmuch-howadj': ['shopping', 'food'],
+    compare: ['city', 'animals', 'technology'], 'modal-more': ['health', 'school'], too: ['clothes', 'shopping'], enough: ['food', 'shopping'],
+    ittakes: ['transport', 'cooking'], itsadj: ['sports', 'nature'], 'cond-1': ['weather', 'health', 'nature'],
+    'howto-suggest': ['hobbies', 'entertainment'], 'howto-invite': ['holidays', 'relationships'], 'howto-restaurant': ['restaurant', 'food'],
+    'howto-shop': ['shopping', 'clothes'], 'howto-directions': ['city', 'transport'], 'howto-hotel': ['travel'], 'howto-phone': ['technology', 'socialmedia'],
+    'howto-apologise': ['relationships', 'office'],
+    quantifiers: ['food', 'shopping'], indefinite: ['home', 'relationships'], 'present-perfect-continuous': ['sports', 'hobbies'],
+    'pp-vs-past': ['travel', 'holidays'], 'past-perfect': ['travel', 'media'], 'future-continuous': ['jobs', 'office'], 'future-forms': ['holidays', 'travel'],
+    stative: ['feelings', 'personality'], 'time-clauses': ['routine', 'school'], 'modal-deduction': ['law', 'appearance'],
+    obligation: ['school', 'office'], passive: ['science', 'technology'], 'gerund-1': ['hobbies', 'entertainment'], 'relative-1': ['jobs', 'city'],
+    'cond-2': ['finance', 'nature'], reported: ['media', 'relationships'], tag: ['weather', 'feelings'], 'so-neither': ['food', 'entertainment'],
+    phrasal: ['routine', 'relationships'], sothat: ['weather', 'health'], suchthat: ['art', 'entertainment'], makelet: ['family', 'school'],
+    asktell: ['health', 'office'], usedto: ['city', 'holidays'], hadbetter: ['health', 'travel'], spend: ['socialmedia', 'finance'],
+    'howto-opinion': ['society', 'media'],
+    'past-perfect-continuous': ['sports', 'jobs'], 'future-perfect': ['finance', 'office'], 'future-in-past': ['science', 'art'], 'cond-3': ['law', 'health'],
+    'relative-2': ['art', 'city'], 'gerund-2': ['personality', 'school'], 'modal-perfect': ['law', 'nature'], 'passive-report': ['media', 'science'],
+    participle: ['nature', 'travel'], 'unless-provided': ['finance', 'law'], 'prep-collocation': ['personality', 'feelings'], havedone: ['home', 'appearance'],
+    suggest: ['health', 'restaurant'], prefer: ['entertainment', 'food'], itstime: ['nature', 'society'], although: ['society', 'sports'],
+    paired: ['technology', 'jobs'], prevent: ['health', 'nature'], 'howto-email': ['office', 'jobs'],
+    'future-perfect-continuous': ['office', 'science'], 'polite-tenses': ['office', 'restaurant'], 'inversion-perfect': ['media', 'law'],
+    wish: ['feelings', 'relationships'], mixedcond: ['finance', 'school'], inversion: ['art', 'nature'], cleft: ['personality', 'media'],
+    themore: ['technology', 'health'], subjunctive: ['society', 'law'], 'relative-advanced': ['science', 'art'], whatever: ['finance', 'society'],
+    emphasis: ['feelings', 'entertainment'], discourse: ['society', 'science']
+  };
+  const isFirm = it => { const r = srs[vcK(it)]; return !!(r && (r.s || 0) >= 3); };
+  const uwCache = {};
+  // mỗi chặng một bộ từ cố định, không trùng chặng khác: lấy xen kẽ từ các chủ đề liên quan, thiếu thì bù từ chủ đề nhiều từ nhất của cấp
+  function unitWords(L, size) {
+    if (uwCache[L]) return uwCache[L];
+    let G = [], T = []; try { G = GX_ALL.filter(x => x.lv === L); T = VOCAB_TOPICS; } catch (e) { return []; }
+    const per = Math.ceil(G.length / UNITS), used = new Set(), out = [];
+    const pool = spec => {
+      const [tid, kw] = spec.split(':'), t = T.find(x => x.id === tid); if (!t) return null;
+      let gi = -1; if (kw) gi = t.groups.findIndex(g => (g.vi || '').toLowerCase().includes(kw.toLowerCase()));
+      const g = gi >= 0 ? t.groups[gi] : null;
+      return { vi: g ? g.vi : t.vi, items: t.items.filter(it => it.lv === L && (gi < 0 || it.gi === gi)) };
+    };
+    const fill = T.filter(t => t.id !== 'cg3d').map(t => ({ vi: t.vi, items: t.items.filter(it => it.lv === L) })).sort((a, b) => b.items.length - a.items.length);
+    for (let u = 0; u < UNITS; u++) {
+      // tầng 1: chủ đề chính của từng bài ngữ pháp; tầng 2: chủ đề phụ — để bộ từ gọn trong vài chủ đề
+      const gs = G.slice(u * per, (u + 1) * per), t1 = [], t2 = [];
+      gs.forEach(g => { const x = (GXV[g.id] || [])[0]; if (x && !t1.includes(x)) t1.push(x); });
+      gs.forEach(g => (GXV[g.id] || []).slice(1).forEach(x => { if (!t1.includes(x) && !t2.includes(x)) t2.push(x); }));
+      const pick = [], cnt = new Map();
+      const take = (pl) => { while (pl.items.length) { const it = pl.items.shift(), k = vcK(it); if (used.has(k)) continue; used.add(k); pick.push(it); try { Object.defineProperty(it, '_pv', { value: pl.vi, configurable: true, writable: true }); } catch (e) {} cnt.set(pl.vi, (cnt.get(pl.vi) || 0) + 1); return true; } return false; };
+      [t1, t2].forEach(tier => {
+        const pools = tier.map(pool).filter(Boolean); let any = true;
+        while (pick.length < size && any) { any = false; for (const pl of pools) { if (pick.length >= size) break; if (take(pl)) any = true; } }
+      });
+      for (const pl of fill) { if (pick.length >= size) break; while (pick.length < size && take(pl)); }
+      const src = [...cnt].map(([vi, n]) => ({ vi, n })).sort((a, b) => b.n - a.n), ord = src.map(x => x.vi);
+      // hiện theo từng chủ đề cho dễ học
+      out.push({ items: pick.map((it, i) => [it, i]).sort((a, b) => ord.indexOf(a[0]._pv) - ord.indexOf(b[0]._pv) || a[1] - b[1]).map(x => x[0]), src });
+    }
+    return (uwCache[L] = out);
+  }
   function known(L) { let n = 0; try { VC_ALL.forEach(it => { if (it.lv === L) { const r = srs[vcK(it)]; if (r && (r.s || 0) >= 3) n++; } }); } catch (e) {} return n; }
   function buildPath(L) {
     let G = []; try { G = GX_ALL.filter(x => x.lv === L); } catch (e) {}
     const R = TT.rd.filter(x => x[1] === L), Sh = TT.sh.filter(x => x[1] === L), W = TT.wr.filter(x => x[1] === L), T = TK.filter(x => x[1] === L);
     const rp = J('hoc-tieng-anh-read') || {}, wp = J('hoc-tieng-anh-write') || {}, sp = J('hoc-tieng-anh-shadow-prog') || {}, tp = J('hoc-tieng-anh-talk') || {};
-    const kn = known(L), per = Math.ceil(G.length / UNITS), vStep = [40, 70, 100, 100, 70][L - 1];
+    const kn = known(L), per = Math.ceil(G.length / UNITS), vStep = [40, 50, 60, 60, 50][L - 1];
     const wAt = [1, 2, 4, 5], tAt = T.length >= UNITS ? [0, 1, 2, 3, 4, 5] : T.length >= 3 ? [0, 2, 4, 1, 3, 5] : [1, 4, 0, 2, 3, 5];
     const units = [];
     for (let u = 0; u < UNITS; u++) {
       const items = [];
       G.slice(u * per, (u + 1) * per).forEach(g => items.push({ ic: '📐', t: g.title, kind: 'Ngữ pháp', done: (() => { try { return gxStatus(g.id) === 'done'; } catch (e) { return false; } })(), go: () => openIn('page-grammar', () => gxLesson(g.id)) }));
-      const vGoal = Math.min(vStep * (u + 1), (() => { let t = 0; try { t = VC_ALL.filter(x => x.lv === L).length; } catch (e) {} return t || 9999; })());
-      items.push({ ic: '📚', t: `Nhớ chắc ${vGoal} từ ${LV[L - 1]} (đang có ${Math.min(kn, vGoal)})`, kind: 'Từ vựng', done: kn >= vGoal, go: () => openIn('page-vocab') });
+      const ws = unitWords(L, vStep)[u] || { items: [], src: [] }, wl = ws.items, wk = wl.filter(isFirm).length, wn = wl.length;
+      const wTop = ws.src.slice(0, 3).map(x => `${x.vi} (${x.n})`).join(' · ') + (ws.src.length > 3 ? ' …' : '');
+      if (wn) items.push({ ic: '📚', t: `Nhớ chắc ${wn} từ ${LV[L - 1]} của chặng (đang có ${wk}/${wn})`,
+        sub: `Chủ đề: ${wTop} — gắn với bài ngữ pháp của chặng · “nhớ chắc” = ôn đúng 3 lần, mỗi lần cách vài ngày`,
+        kind: 'Từ vựng', done: wk >= wn,
+        go: () => openIn('page-vocab', () => { if (typeof vcOpenUnit === 'function') vcOpenUnit({ mix: true, icon: '🗺️', vi: `Lộ trình ${LV[L - 1]} · chặng ${u + 1}`, en: `${wn} từ · ${ws.src.map(x => x.vi).join(', ')}`, items: wl }, 'list'); }) });
       if (R[u]) items.push({ ic: '📖', t: R[u][2], kind: 'Đọc hiểu', done: !!(rp[R[u][0]] && rp[R[u][0]].best >= 70), go: () => openIn('page-read', () => { if (window.rdHome) window.rdHome('read'); if (window.rdOpen) window.rdOpen(R[u][0]); }) });
       const sh = Sh.length ? Sh[u % Sh.length] : null;
       if (sh && (u < Sh.length || Sh.length >= 3)) items.push({ ic: '🎙️', t: sh[2], kind: 'Shadowing', done: Object.keys((sp[sh[0]] || {}).b || {}).length >= 3, go: () => openIn('page-shadow', () => { if (window.shOpen) window.shOpen(sh[0]); }) });
@@ -581,7 +656,7 @@
         const r = E('button', 'db-task' + (it.done ? ' done' : '')); r.type = 'button';
         r.appendChild(E('span', 'db-task-ck', it.done ? '✓' : ''));
         r.appendChild(E('span', 'db-task-ic', it.ic));
-        const t2 = E('span', 'db-task-t'); t2.appendChild(E('span', 'db-task-k', it.kind)); t2.appendChild(E('span', null, it.t)); r.appendChild(t2);
+        const t2 = E('span', 'db-task-t'); t2.appendChild(E('span', 'db-task-k', it.kind)); t2.appendChild(E('span', null, it.t)); if (it.sub) t2.appendChild(E('span', 'db-task-s', it.sub)); r.appendChild(t2);
         r.appendChild(E('span', 'db-rec-go', '→'));
         r.addEventListener('click', () => it.go());
         c.appendChild(r);

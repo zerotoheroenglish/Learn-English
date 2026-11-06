@@ -5461,7 +5461,7 @@ function gxQuiz(box, qs, opts) {
         const s = grEl('div', 'gx-sent');
         q[0].split('___').forEach((p, i) => { if (i) s.appendChild(grEl('span', 'gx-blank', '_____')); s.appendChild(document.createTextNode(p)); });
         body.appendChild(s);
-        body.appendChild(grEl('div', 'gx-vi', q[4]));
+        if (!opts.noVi) body.appendChild(grEl('div', 'gx-vi', q[4]));
       }
       if (Q.type === 'mc') {
         const opts2 = lsShuffle([ans[0], ...q[2].map(w => w[0])]);
@@ -5574,6 +5574,8 @@ function gxQuiz(box, qs, opts) {
     box.appendChild(fb); box.appendChild(next);
   };
   draw();
+  // dừng giữa chừng (hết giờ): các câu chưa trả lời tính là sai
+  return { stop: () => { if (S.i >= qs.length) return; for (let k = S.res.length; k < qs.length; k++) S.res.push({ id: qs[k].id, qid: qs[k].qid, ok: false, skip: true }); S.i = qs.length; draw(); } };
 }
 function gxOrderHint(right, user) {
   const a = right.split(/\s+/), b = user.split(/\s+/);
@@ -5664,7 +5666,7 @@ function renderGrammarHome(keepScroll) {
   pb.appendChild(grEl('span', 'gx-act-ic', '🧭'));
   const ptx = grEl('span', 'gx-act-t');
   ptx.appendChild(grEl('b', null, plc ? `Kiểm tra xếp trình độ · kết quả: ${plc.track}` : 'Chưa biết bắt đầu từ đâu? Kiểm tra xếp trình độ'));
-  ptx.appendChild(grEl('span', null, plc ? `Làm ngày ${new Date(plc.d).toLocaleDateString('vi-VN')} · bấm để làm lại` : '30 câu từ A1 đến C1, khoảng 10 phút · app gợi ý chặng bắt đầu và tự đặt lộ trình'));
+  ptx.appendChild(grEl('span', null, plc ? `Làm ngày ${new Date(plc.d).toLocaleDateString('vi-VN')} · bấm để làm lại (50 câu mới · 15 phút)` : '50 câu từ A1 đến C1, làm trong 15 phút · app gợi ý chặng bắt đầu và tự đặt lộ trình'));
   pb.appendChild(ptx);
   pb.appendChild(grEl('span', 'vc-unit-go', '›'));
   pb.addEventListener('click', gxPlacementTest);
@@ -5987,30 +5989,59 @@ function gxLevelTest(key) {
   });
 }
 
-/* ---------- v119: bài kiểm tra xếp trình độ (30 câu A1 → C1: mỗi chặng 5 câu, riêng A2 nhiều bài gấp đôi nên 10 câu) ---------- */
+/* ---------- v119: bài kiểm tra xếp trình độ (v157: 50 câu A1 → C1, 15 phút, không lặp câu lần trước) ---------- */
 const GX_PLACE_KEY = 'hoc-tieng-anh-placement';
 const gxPlaceGet = () => { try { const o = JSON.parse(localStorage.getItem(GX_PLACE_KEY) || 'null'); if (o && /^A2\./.test(o.track)) o.track = 'A2'; return o && o.track ? o : null; } catch (e) { return null; } };
-function gxPlacementTest() {
-  // mỗi chặng lấy 5 bài ngẫu nhiên (bỏ các bài mẫu câu giao tiếp "howto-"), mỗi bài 1 câu trắc nghiệm; câu dễ trước, khó sau
-  const qs = [];
+const GX_PLACE_N = { A1: 8, A2: 12, B1: 12, B2: 10, C1: 8 }, GX_PLACE_MIN = 15, GX_PLACE_SEEN = 'hoc-tieng-anh-placement-seen';
+// 50 câu, không lặp câu của lần trước; ưu tiên câu chưa gặp ở các lần trước nữa, hết câu mới thì quay vòng lại
+function gxPlacementPick() {
+  let st = {}; try { st = JSON.parse(localStorage.getItem(GX_PLACE_SEEN) || '{}') || {}; } catch (e) {}
+  const seen = new Set(st.seen || []), last = new Set(st.last || []), qs = [];
   GX_TRACKS.forEach(t => {
-    const ids = lsShuffle(t.ids.filter(id => !/^howto-/.test(id) && (GX_Q[id] || []).length));
-    ids.slice(0, t.ids.length > 25 ? 10 : 5).forEach(id => { const q = gxCoreQ(id, Math.floor(Math.random() * Math.min(3, GX_Q[id].length)), 'mc'); if (q) { q.track = t.key; qs.push(q); } });
+    const n = GX_PLACE_N[t.key] || 8, all = [];
+    t.ids.filter(id => !/^howto-/.test(id)).forEach(id => (GX_Q[id] || []).forEach((q, ci) => { if (q && q[2] && q[2].length) all.push([id, ci]); }));
+    const key = x => x[0] + '#' + x[1];
+    let fresh = all.filter(x => !seen.has(key(x)));
+    if (fresh.length < n) { all.forEach(x => seen.delete(key(x))); fresh = all.filter(x => !last.has(key(x))); }
+    // mỗi bài tối đa 1 câu trước, thiếu mới lấy câu thứ hai của cùng bài
+    const pick = [], usedId = new Set();
+    lsShuffle(fresh).forEach(x => { if (pick.length < n && !usedId.has(x[0])) { pick.push(x); usedId.add(x[0]); } });
+    lsShuffle(fresh).forEach(x => { if (pick.length < n && !pick.includes(x)) pick.push(x); });
+    pick.forEach(([id, ci]) => { const q = gxCoreQ(id, ci, 'mc'); if (q) { q.track = t.key; qs.push(q); } });
   });
+  const keys = qs.map(q => q.id + '#' + q.qid.slice(1));
+  keys.forEach(k => seen.add(k));
+  try { localStorage.setItem(GX_PLACE_SEEN, JSON.stringify({ seen: [...seen], last: keys })); } catch (e) {}
+  return qs;
+}
+function gxPlacementTest() {
+  const qs = gxPlacementPick();
   grRoot.innerHTML = '';
   const back = grEl('button', 'gr-back', '← Ngữ pháp');
-  back.addEventListener('click', () => { renderGrammarHome(); grScrollTop(); });
   grRoot.appendChild(back);
-  const head = grEl('div', 'gr-head'); head.appendChild(grEl('div', 'gr-en', `${qs.length} câu · khoảng 10 phút · từ dễ (A1) đến khó (C1)`)); head.appendChild(grEl('h2', 'gr-title', '🧭 Kiểm tra xếp trình độ'));
+  const head = grEl('div', 'gr-head'); head.appendChild(grEl('div', 'gr-en', `${qs.length} câu · ${GX_PLACE_MIN} phút · từ dễ (A1) đến khó (C1)`)); head.appendChild(grEl('h2', 'gr-title', '🧭 Kiểm tra xếp trình độ'));
   grRoot.appendChild(head);
-  grRoot.appendChild(grEl('p', 'ls-level-desc', 'Câu hỏi khó dần. Không biết thì cứ chọn đáp án bạn thấy hợp lý nhất, đừng đoán bừa nhiều lần. Kết quả dùng để gợi ý chặng bắt đầu, bạn vẫn có thể đổi lại bất cứ lúc nào.'));
+  grRoot.appendChild(grEl('p', 'ls-level-desc', `Câu hỏi khó dần. Bạn có ${GX_PLACE_MIN} phút, hết giờ bài tự nộp và các câu chưa làm tính là sai. Không biết thì chọn đáp án bạn thấy hợp lý nhất. Mỗi lần làm lại sẽ là bộ câu hỏi khác.`));
+  const tm = grEl('div', 'gx-timer'); grRoot.appendChild(tm);
   const box = grEl('div', 'tense-card gx-quiz');
   grRoot.appendChild(box);
   const trackOf = new Map(qs.map(q => [q.id, q.track]));
-  gxQuiz(box, qs, { showLesson: false, onDone: (res, bx) => gxPlacementResult(res, bx, trackOf) });
+  const end = Date.now() + GX_PLACE_MIN * 60000;
+  let timer = 0, timeUp = false;
+  const stopT = () => { clearInterval(timer); timer = 0; };
+  const tick = () => {
+    if (!tm.isConnected) return stopT();
+    const left = Math.max(0, Math.round((end - Date.now()) / 1000));
+    tm.textContent = `⏱ Còn ${String(Math.floor(left / 60)).padStart(2, '0')}:${String(left % 60).padStart(2, '0')}`;
+    tm.classList.toggle('warn', left <= 120);
+    if (!left) { stopT(); timeUp = true; ctl.stop(); }
+  };
+  const ctl = gxQuiz(box, qs, { showLesson: false, noVi: true, onDone: (res, bx) => { stopT(); tm.remove(); gxPlacementResult(res, bx, trackOf, timeUp); } });
+  back.addEventListener('click', () => { stopT(); renderGrammarHome(); grScrollTop(); });
+  tick(); timer = setInterval(tick, 1000);
   grScrollTop();
 }
-function gxPlacementResult(res, box, trackOf) {
+function gxPlacementResult(res, box, trackOf, timeUp) {
   const per = GX_TRACKS.map(t => { const r = res.filter(x => trackOf.get(x.id) === t.key); return { key: t.key, lv: t.lv, n: r.length, ok: r.filter(x => x.ok).length }; });
   // chặng bắt đầu = chặng đầu tiên đúng dưới 80% số câu
   let place = per.find(p => p.n && p.ok / p.n < 0.8);
@@ -6022,6 +6053,8 @@ function gxPlacementResult(res, box, trackOf) {
   try { localStorage.setItem(GX_TRACK_KEY, T.key); } catch (e) {}
   try { localStorage.setItem('hoc-tieng-anh-irr-level', String(T.lv)); if (typeof irr !== 'undefined') irr.lv = T.lv; } catch (e) {}
   const lvCode = ['', 'A1', 'A2', 'B1', 'B2', 'C1'][T.lv];
+  const skip = res.filter(x => x.skip).length;
+  if (timeUp) box.appendChild(grEl('div', 'gx-timeup', `⏰ Hết ${GX_PLACE_MIN} phút · ${skip} câu chưa làm được tính là sai.`));
   const sc = gxScoreBox(res, 'Kết quả kiểm tra xếp trình độ'); box.appendChild(sc.box);
   const rec = grEl('div', 'tense-card gx-place-rec');
   rec.appendChild(grEl('div', 'gx-place-k', allPass ? 'Bạn vững hầu hết các chặng' : 'Chặng nên bắt đầu'));
@@ -6037,7 +6070,7 @@ function gxPlacementResult(res, box, trackOf) {
   });
   rec.appendChild(tb);
   rec.appendChild(grEl('p', 'gx-place-note', `App đã đặt tab Ngữ pháp ở chặng ${T.key} và tab Bất quy tắc ở cấp ${lvCode}. Gợi ý thêm: tab Từ vựng học các bài cấp ${lvCode}, tab Shadowing chọn lọc cấp ${lvCode} (hoặc thấp hơn một cấp cho dễ nói).`));
-  rec.appendChild(grEl('p', 'gx-place-note', 'Đây là ước lượng từ 30 câu ngữ pháp, chưa đo kỹ năng nghe và nói. Nếu thấy bài quá dễ hoặc quá khó, cứ đổi chặng ở danh sách cấp độ trên trang Ngữ pháp.'));
+  rec.appendChild(grEl('p', 'gx-place-note', `Đây là ước lượng từ ${res.length} câu ngữ pháp, chưa đo kỹ năng nghe và nói. Nếu thấy bài quá dễ hoặc quá khó, cứ đổi chặng ở danh sách cấp độ trên trang Ngữ pháp.`));
   const btns = grEl('div', 'ls-sum-btns');
   const first = GX_ALL.find(x => x.track === T.key && gxStatus(x.id) !== 'done');
   const go = grEl('button', 'btn-primary', first ? `▶ Học bài đầu tiên: ${first.title}` : '▶ Về trang Ngữ pháp');
