@@ -1,7 +1,7 @@
 // Offline support: keep the app shell cached; translation/IPA requests always go to the network.
-const CACHE = 'hoc-tieng-anh-v140';
+const CACHE = 'hoc-tieng-anh-v141';
 const PREFIX = 'hoc-tieng-anh-';
-const SHELL = ["./","./index.html","./manifest.json","./icon-192.png","./icon-512.png","./apple-touch-icon.png","./app.css?h=d88319febf","./js/data-core.js?h=5c068bf2d4","./js/data-vocab.js?h=923ca16f1c","./js/app-core.js?h=f81cb1324f","./js/app-sync.js?h=e4fd8f5536","./js/app-feedback.js?h=f1bd3f9e55","./js/data-exercises.js?h=f9a63d9a98","./js/app-exercises.js?h=35cdc9deb3","./js/app-review.js?h=17aa9f04eb","./js/app-backup.js?h=ad4d3eb295"];
+const SHELL = ["./","./index.html","./manifest.json","./icon-192.png","./icon-512.png","./apple-touch-icon.png","./app.css?h=d88319febf","./js/data-core.js?h=5c068bf2d4","./js/data-vocab.js?h=923ca16f1c","./js/app-core.js?h=918d40c092","./js/app-sync.js?h=e4fd8f5536","./js/app-feedback.js?h=f1bd3f9e55","./js/data-exercises.js?h=f9a63d9a98","./js/app-exercises.js?h=35cdc9deb3","./js/app-review.js?h=17aa9f04eb","./js/app-backup.js?h=ad4d3eb295"];
 // Tab / dữ liệu nạp khi cần: KHÔNG tải sẵn lúc cài (đỡ tốn mạng và pin); được lưu offline khi bạn mở lần đầu.
 // Khi cập nhật phiên bản, file nào không đổi (cùng mã băm) được chép từ bộ nhớ cũ sang, nên vẫn dùng offline được.
 const LAZY_FILES = ["./js/data-vocab-vi.js?h=31cb69d052","./js/tab-shadowing.js?h=86db87861d","./js/tab-questions.js?h=a4ab4a9112","./js/tab-talk.js?h=d5ab91a4c6","./js/tab-para.js?h=8bd3ce0862"];

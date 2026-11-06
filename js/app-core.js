@@ -7257,34 +7257,55 @@ function vspScore(target, heard) {
   return s > base.score ? { score: s, hit: base.hit, a: base.a } : base;
 }
 
-function vspListen(target, onDone) {
+/* v141: nghe nhanh hơn. Trước đây app chờ trình duyệt tự xác định bạn đã nói xong (thường 1–3 giây im lặng, iPhone có khi lâu hơn).
+   Giờ app nhận chữ ngay trong lúc bạn nói (interim): nói đúng hết câu mẫu → chấm ngay; ngừng nói ~0.8–1.2 giây → tự chốt. */
+function vspListen(target, onDone, onPartial) {
   if (prRecog) { try { prRecog.abort(); } catch (e) {} prRecog = null; }
   try { speechSynthesis.cancel(); } catch (e) {}
   const r = new PR_SR();
   r.lang = (typeof pronVoice !== 'undefined' && pronVoice && /^en/i.test(pronVoice.lang)) ? pronVoice.lang.replace('_', '-') : 'en-US';
-  r.interimResults = false; r.continuous = false; r.maxAlternatives = 5;
-  let got = false;
+  r.interimResults = true; r.continuous = false; r.maxAlternatives = 5;
+  const nW = lsNorm(vspText(target)).length, QUIET = nW <= 2 ? 800 : nW <= 6 ? 1000 : 1200;
+  let done = false, lastAlts = null, quiet = 0, cap = 0, lastTxt = '';
   prRecog = r;
-  r.onresult = ev => {
-    got = true;
-    const res = ev.results[0];
+  const scoreAlts = alts => {
     let best = null;
-    for (let i = 0; i < res.length; i++) {
-      const sc = vspScore(target, res[i].transcript);
-      if (!best || sc.score > best.score) best = { ...sc, heard: res[i].transcript };
-    }
-    onDone(best, null);
+    alts.forEach(t => { if (!t || !t.trim()) return; const sc = vspScore(target, t); if (!best || sc.score > best.score) best = { ...sc, heard: t.trim() }; });
+    return best;
+  };
+  const finish = (best, err) => {
+    if (done) return; done = true;
+    clearTimeout(quiet); clearTimeout(cap);
+    if (prRecog === r) prRecog = null;
+    try { r.onresult = r.onerror = r.onend = null; r.abort(); } catch (e) {}
+    onDone(best, err);
+  };
+  r.onresult = ev => {
+    // ghép các đoạn kết quả; với đoạn đầu lấy thêm các phương án khác máy đoán
+    let head = '', fin = true;
+    for (let i = 0; i < ev.results.length; i++) { head += ev.results[i][0].transcript + ' '; if (!ev.results[i].isFinal) fin = false; }
+    const alts = [head];
+    if (ev.results.length === 1) for (let k = 1; k < ev.results[0].length; k++) alts.push(ev.results[0][k].transcript);
+    lastAlts = alts;
+    const best = scoreAlts(alts);
+    const txt = head.trim();
+    if (onPartial && txt && txt !== lastTxt) { try { onPartial(txt); } catch (e) {} }
+    lastTxt = txt;
+    if (fin || (best && best.score >= 0.999)) return finish(best, null);   // đã nói đúng hết → không cần chờ im lặng
+    clearTimeout(quiet);
+    quiet = setTimeout(() => finish(scoreAlts(lastAlts), null), QUIET);
   };
   r.onerror = ev => {
-    got = true;
-    onDone(null, ev.error === 'not-allowed' || ev.error === 'service-not-allowed'
+    if (lastAlts && ev.error !== 'not-allowed' && ev.error !== 'service-not-allowed') return finish(scoreAlts(lastAlts), null);
+    finish(null, ev.error === 'not-allowed' || ev.error === 'service-not-allowed'
       ? 'Bạn cần cho phép micro và nhận dạng giọng nói cho trình duyệt (iPhone: Cài đặt → Safari → Micrô).'
       : ev.error === 'no-speech' ? 'Không nghe thấy gì. Hãy nói to và gần micro hơn nhé.'
       : ev.error === 'network' ? 'Nhận dạng giọng nói cần có mạng. Kiểm tra kết nối rồi thử lại.'
       : ev.error === 'aborted' ? '' : 'Không nhận dạng được (' + ev.error + '). Hãy thử lại.');
   };
-  r.onend = () => { prRecog = null; if (!got) onDone(null, 'Không nghe rõ. Bấm nói lại và đọc to hơn nhé.'); };
-  try { r.start(); } catch (e) { prRecog = null; onDone(null, 'Không mở được micro. Hãy thử lại.'); }
+  r.onend = () => { if (lastAlts) finish(scoreAlts(lastAlts), null); else finish(null, 'Không nghe rõ. Bấm nói lại và đọc to hơn nhé.'); };
+  cap = setTimeout(() => { if (lastAlts) finish(scoreAlts(lastAlts), null); else { try { r.stop(); } catch (e) {} } }, nW <= 2 ? 7000 : 15000);
+  try { r.start(); } catch (e) { finish(null, 'Không mở được micro. Hãy thử lại.'); }
 }
 
 function vcStartSpeak(only) {
@@ -7382,7 +7403,7 @@ function vcRenderSpeak() {
         vspSave(it, S.what, best.pct);
       } else if (err) q.err = err;
       vcRenderSpeak();
-    });
+    }, t => { const b = document.getElementById('vc-body'), o = b && b.querySelector('.vsp-out'); if (o && vc.sp === S && S.busy) { o.className = 'pr-speak-out vsp-out vsp-live'; o.textContent = '👂 ' + t; } });
   });
   const rec = lsEl('button', 'btn-ghost pr-rec', '⏺ Ghi âm & nghe lại');
   rec.addEventListener('click', () => prToggleRecord(target, rec, recOut));
@@ -9509,7 +9530,7 @@ function irrRenderSpeak() {
         irrSpSave(v, S.what, best.pct);
       } else if (err) q.err = err;
       irrRenderSpeak();
-    });
+    }, t => { const b = irrBody(), o = b && b.querySelector('.vsp-out'); if (o && irr.sp === S && S.busy) { o.className = 'pr-speak-out vsp-out vsp-live'; o.textContent = '👂 ' + t; } });
   });
   const rec = lsEl('button', 'btn-ghost pr-rec', '⏺ Ghi âm & nghe lại');
   rec.addEventListener('click', () => prToggleRecord(target, rec, recOut));
