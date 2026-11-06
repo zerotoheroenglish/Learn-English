@@ -64,6 +64,7 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
   const dayKey = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
   // ghi kết quả (giữ điểm cao nhất) + ngày luyện; bài ảo ghi thẳng vào bài gốc
   function record(l, i, key, val) {
+    try { if (key === 'h' && window.actLog) actLog('l'); } catch (e) {}
     let id = l.id, k = i;
     if (l.map) [id, k] = l.map[i];
     const p = prog[id] || (prog[id] = { b: {}, cur: 0 });
@@ -884,6 +885,7 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
   }
 
   /* ---------- lesson ---------- */
+  window.shOpen = id => { const l = (typeof SH_LESSONS !== 'undefined' ? SH_LESSONS : []).find(x => x.id === id); if (l) openLesson(l); };   // v147: mở thẳng một bài (từ Dashboard)
   function openLesson(l) {
     view.lesson = l; view.page = 'lesson';
     const p = P(l);
@@ -1720,6 +1722,7 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     if (!Q.qs.length) { box.appendChild(E('p', 'sd-create-p', 'Bài này chưa đủ câu để tạo quiz.')); main.appendChild(box); return; }
     if (Q.k >= Q.qs.length) {
       const p = Math.round(Q.score / Q.qs.length * 100);
+      try { if (!Q.saved && window.actLog) actLog('l', Math.max(1, Q.n || 3)); } catch (e) {}
       if (!l.map && !Q.saved) { Q.saved = true; const pr = prog[l.id] || (prog[l.id] = { b: {}, cur: 0 }); if (pr.q == null || p > pr.q) pr.q = p; pr.t = Date.now(); saveProg(); }
       box.appendChild(E('div', 'vc-q-label', '🧩 Kết quả quiz'));
       box.appendChild(E('div', 'sd-result ' + cls(p), `Bạn trả lời đúng ${Q.score}/${Q.qs.length} câu (${p}%).` + (prog[l.id] && prog[l.id].q != null ? ` Kết quả tốt nhất: ${prog[l.id].q}%.` : '')));

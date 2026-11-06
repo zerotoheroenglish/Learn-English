@@ -875,6 +875,7 @@ function smartReport(r, opts) {
     // a correct answer is saved and the sentence stays on screen
     const solved = label => {
       exDone.add(k); save(); footSync();
+      try { if (window.mkOk) window.mkOk('ex|' + k); } catch (e) {}
       card.classList.add('ok'); card.classList.remove('bad');
       res.hidden = false; res.innerHTML = '';
       res.appendChild(E('div', 'ex-ok', label));
@@ -891,10 +892,12 @@ function smartReport(r, opts) {
 
     const finish = (ok, typed) => {
       res.hidden = false; res.innerHTML = '';
+      try { if (window.actLog) actLog('w'); } catch (e) {}
       if (ok) {
         solved('✓ Chính xác!');
       } else {
         card.classList.remove('ok'); card.classList.add('bad');
+        try { if (window.mkAdd) window.mkAdd({ k: 'ex|' + k, src: 'ex', cat: l.title, mode: 'sent', ask: 'Dịch sang tiếng Anh', p: it[1], a: exAnswers(it), wrong: typed }); } catch (e) {}
         res.appendChild(E('div', 'ex-wrong', '✗ Chưa đúng. So lại với đáp án:'));
         const row = E('div', 'ex-ans-row');
         const d = E('div', 'ex-ans-en');

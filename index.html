@@ -152,7 +152,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="app.css?h=d88319febf">
+<link rel="stylesheet" href="app.css?h=ac70b581a8">
 </head>
 <body>
 
@@ -161,7 +161,7 @@
   <div class="hw-deco" aria-hidden="true"><i class="hw-witch"></i><i class="hw-spider"></i><i class="hw-ghost"></i><i class="hw-caul"></i><i class="hw-candy"></i><i class="hw-cat"></i><i class="hw-skel"></i></div>
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v141</span>
+      <span class="hero-badge">EN ⇄ VI · v154</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice hero-season" id="season-btn" aria-label="Đổi giao diện theo mùa" title="Đổi giao diện theo mùa">🎃</button>
@@ -171,7 +171,10 @@
     <h1>Học <span class="hero-hl">Tiếng Anh</span></h1>
     <p class="sub">Dịch, luyện phát âm và ôn ngữ pháp mỗi ngày, ngay trên điện thoại.</p>
     <div class="hero-stats" id="hero-stats"></div>
-    <button class="hero-review" id="review-btn" type="button" hidden></button>
+    <div class="hero-row">
+      <button class="hero-review" id="review-btn" type="button" hidden></button>
+      <button class="hero-dash" id="dash-btn" type="button" aria-label="Tiến độ của tôi" title="Tiến độ của tôi">📊<span class="hd-label">Tiến độ</span></button>
+    </div>
   </div>
 </header>
 
@@ -268,6 +271,11 @@
   </section>
 
   <!-- PAGE: SPEAKING PARTNER -->
+  <section class="page" id="page-read">
+    <div class="section-title">Đọc · Nghe · Viết</div>
+    <div class="section-sub">Đọc hiểu, nghe hội thoại và viết theo đề A1 → C1, nội dung do app tự soạn. Chạm từ để tra nghĩa; bài viết được AI chấm bằng khoá của bạn.</div>
+    <div id="rd-root"></div>
+  </section>
   <section class="page" id="page-talk">
     <div class="section-title">Nói chuyện</div>
     <div class="section-sub">Speaking Partner: nhập vai theo tình huống hoặc trò chuyện tự do với AI. Trả lời bằng giọng nói, app chấm cấu trúc và ngữ pháp sau mỗi câu.</div>
@@ -275,6 +283,11 @@
   </section>
 
   <!-- PAGE: ÔN TẬP HÔM NAY (mở từ nút ở đầu trang) -->
+  <section class="page" id="page-dash">
+    <div class="section-title">Tiến độ của tôi</div>
+    <div class="section-sub">Toàn bộ tiến độ học trong app: chuỗi ngày học, mục tiêu hôm nay, điểm từng kỹ năng và mức hoàn thành theo cấp độ.</div>
+    <div id="db-root"></div>
+  </section>
   <section class="page" id="page-review">
     <div class="section-title">Ôn tập hôm nay</div>
     <div class="section-sub">Ôn tập giãn cách: từ vựng, ngữ pháp, động từ bất quy tắc và sổ từ của bạn, mỗi thứ quay lại đúng lúc bạn sắp quên.</div>
@@ -494,6 +507,10 @@
         <button class="btn-ghost" id="hs-import">⬆️ Khôi phục từ file</button>
       </div>
       <input type="file" id="hs-file" accept=".json,application/json" hidden>
+      <div class="hs-snaps" id="hs-snaps"></div>
+      <label class="hs-remind">⏰ Nhắc tải file sao lưu:
+        <select id="hs-every"><option value="0">Tắt</option><option value="7">mỗi 7 ngày</option><option value="14">mỗi 14 ngày</option><option value="30">mỗi 30 ngày</option></select>
+      </label>
       <p class="acct-note" id="hs-note">File sao lưu chứa toàn bộ tiến độ: từ đã thuộc, lịch ôn, bài đã làm, bài nghe tự tạo, từ và câu đã lưu… Hãy giữ file ở iCloud Drive, Google Drive hoặc máy tính. Khi đổi máy hoặc lỡ xoá dữ liệu trình duyệt, bấm "Khôi phục từ file" là có lại.</p>
     </div>
     <p class="acct-msg" id="acct-msg"></p>
@@ -522,7 +539,7 @@
       <h4>1. Về app</h4>
       <p>“Học Tiếng Anh” là app học tiếng Anh cá nhân, miễn phí, không quảng cáo và không bán dữ liệu. Nội dung học (từ vựng, câu ví dụ, ngữ pháp, cụm từ, mẹo phát âm) do người làm app tự biên soạn, chỉ dùng cho mục đích học tập. App được cung cấp “nguyên trạng”: chúng tôi cố gắng để nội dung chính xác nhưng không bảo đảm tuyệt đối, và không chịu trách nhiệm cho thiệt hại phát sinh từ việc sử dụng app.</p>
       <h4>2. Dữ liệu lưu trên máy bạn</h4>
-      <p>Tiến độ học (từ và cụm từ đã thuộc, bài Shadowing đã học, bài tập dịch đã làm, video đã xem, ghi chú, bài nghe tự tạo, điểm luyện nghe) và các cài đặt (giọng đọc, tốc độ…) được lưu trong bộ nhớ trình duyệt (localStorage, kèm một bản dự phòng trong IndexedDB) trên chính thiết bị của bạn. Xoá dữ liệu trang web trong trình duyệt sẽ xoá các dữ liệu này. Bạn có thể tự tải file sao lưu (.json) trong mục “👤 Tài khoản” để cất ở nơi bạn chọn; file này chỉ nằm ở chỗ bạn lưu, app không gửi đi đâu.</p>
+      <p>Tiến độ học (sổ lỗi, từ và cụm từ đã thuộc, bài Shadowing đã học, bài tập dịch đã làm, video đã xem, ghi chú, bài nghe tự tạo, điểm luyện nghe) và các cài đặt (giọng đọc, tốc độ…) được lưu trong bộ nhớ trình duyệt (localStorage, kèm một bản dự phòng trong IndexedDB) trên chính thiết bị của bạn. Xoá dữ liệu trang web trong trình duyệt sẽ xoá các dữ liệu này. Bạn có thể tự tải file sao lưu (.json) trong mục “👤 Tài khoản” để cất ở nơi bạn chọn; file này chỉ nằm ở chỗ bạn lưu, app không gửi đi đâu.</p>
       <h4>3. Khi bạn đăng nhập (không bắt buộc)</h4>
       <p>Nếu bạn đăng nhập bằng Google hoặc email, app lưu email, tên hiển thị và ảnh đại diện (do Google cung cấp) cùng tiến độ học của bạn trên Firebase của Google để đồng bộ giữa các thiết bị. Mỗi người chỉ đọc và ghi được dữ liệu của chính mình. Giọng đọc đã chọn không được đồng bộ. Bạn có thể xoá tài khoản và toàn bộ dữ liệu bất cứ lúc nào trong mục “👤 Tài khoản” → “Xoá tài khoản và dữ liệu”.</p>
       <h4>4. Khi bạn gửi góp ý</h4>
@@ -611,7 +628,7 @@
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19v-3"/><path d="M9 8h6M9 11.5h4"/></svg></span>
     Ngữ pháp
   </button>
-  <button data-page="page-irregular">
+  <button data-page="page-irregular" hidden aria-hidden="true" tabindex="-1">
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg></span>
     Bất quy tắc
   </button>
@@ -621,15 +638,19 @@
   </button>
   <button data-page="page-para">
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3" width="17" height="18" rx="2.5"/><path d="M7.5 8h9M7.5 12h9M7.5 16h5.5"/></svg></span>
-    Luyện dịch
+    Dịch · Hỏi
   </button>
-  <button data-page="page-qb">
+  <button data-page="page-qb" hidden aria-hidden="true" tabindex="-1">
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4A1.5 1.5 0 0 1 4 14.5z"/><path d="M9.8 7.6a2.3 2.3 0 1 1 3 2.2c-.6.2-.8.6-.8 1.2"/><path d="M12 13.3h.01"/></svg></span>
     Câu hỏi
   </button>
   <button data-page="page-talk">
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.5A2.5 2.5 0 0 1 5.5 4h7A2.5 2.5 0 0 1 15 6.5v4a2.5 2.5 0 0 1-2.5 2.5H8l-3.5 3v-3A1.5 1.5 0 0 1 3 11.5z"/><path d="M17.5 9h1A2.5 2.5 0 0 1 21 11.5v4A1.5 1.5 0 0 1 19.5 17v3l-3.5-3h-3.5a2.5 2.5 0 0 1-2.4-1.8"/></svg></span>
     Nói chuyện
+  </button>
+  <button data-page="page-read">
+    <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5C5.5 4.3 8.5 4.3 12 6c3.5-1.7 6.5-1.7 9-.5v13c-2.5-1.2-5.5-1.2-9 .5-3.5-1.7-6.5-1.7-9-.5z"/><path d="M12 6v13.5"/></svg></span>
+    Đọc · Nghe · Viết
   </button>
 </nav>
 
@@ -639,7 +660,7 @@
    - không tải sẵn hàng loạt. Chỉ tải trước ĐÚNG MỘT tab (tab nạp-khi-cần bạn mở gần nhất), khi trình duyệt thật sự rảnh,
      và không làm việc này nếu bật tiết kiệm dữ liệu, mạng chậm (2G/3G) hoặc máy ít RAM */
 (function () {
-  var LAZY = {"page-shadow":"js/tab-shadowing.js?h=86db87861d","page-qb":"js/tab-questions.js?h=a4ab4a9112","page-talk":"js/tab-talk.js?h=d5ab91a4c6","page-para":"js/tab-para.js?h=8bd3ce0862"}, DATA = {"exvi":"js/data-vocab-vi.js?h=31cb69d052"}, DEPS = { 'page-vocab': ['exvi'] }, state = {};
+  var LAZY = {"page-shadow":"js/tab-shadowing.js?h=35faf2eb50","page-qb":"js/tab-questions.js?h=d109208d25","page-read":"js/tab-reading.js?h=5c03462f22","page-talk":"js/tab-talk.js?h=04ae153a62","page-para":"js/tab-para.js?h=f2f7a86a27"}, DATA = {"exvi":"js/data-vocab-vi.js?h=31cb69d052"}, DEPS = { 'page-vocab': ['exvi'] }, state = {};
   function inject(key, url) {
     if (!url) return Promise.resolve();
     if (state[key]) return state[key];
@@ -692,16 +713,16 @@
 </script>
 <script src="js/data-core.js?h=5c068bf2d4"></script>
 <script src="js/data-vocab.js?h=923ca16f1c"></script>
-<script src="js/app-core.js?h=918d40c092"></script>
+<script src="js/app-core.js?h=de02e983a4"></script>
 
-<script src="js/app-sync.js?h=e4fd8f5536"></script>
+<script src="js/app-sync.js?h=9bcfb70f21"></script>
 
 <script src="js/app-feedback.js?h=f1bd3f9e55"></script>
 
 <!-- tab-shadowing: nạp khi mở tab -->
 
 <script src="js/data-exercises.js?h=f9a63d9a98"></script>
-<script src="js/app-exercises.js?h=35cdc9deb3"></script>
+<script src="js/app-exercises.js?h=ae89fefbb0"></script>
 
 <script>
 /* ---- Terms, privacy & credits sheet ---- */
@@ -728,16 +749,65 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
 }
 </script>
 <!-- tab-questions: nạp khi mở tab -->
+<!-- tab-reading: nạp khi mở tab -->
 <!-- tab-talk: nạp khi mở tab -->
-<script src="js/app-review.js?h=17aa9f04eb"></script>
+<script src="js/app-review.js?h=0ea89088fe"></script>
+<script>
+/* ============================================================
+   v153–v154: GỘP TAB — mỗi cặp trang dùng chung một nút trên thanh tab, chuyển bằng thanh ở đầu trang.
+   "Dịch · Hỏi" = Luyện dịch + Câu hỏi · "Từ vựng" = Từ vựng + Bất quy tắc.
+   Hai trang giữ nguyên (tải, tiến độ, phím tắt như cũ); app nhớ phần đang học.
+============================================================ */
+(function () {
+  function merge(mainPage, subPage, key, labels) {
+    const main = document.querySelector(`nav.tabbar button[data-page="${mainPage}"]`), sub = document.querySelector(`nav.tabbar button[data-page="${subPage}"]`);
+    const pMain = document.getElementById(mainPage), pSub = document.getElementById(subPage);
+    if (!main || !sub || !pMain || !pSub) return;
+    let internal = false;
+    const bars = [];
+    const mark = () => {
+      const m = pSub.classList.contains('active') ? 'sub' : 'main';
+      bars.forEach(b => b.querySelectorAll('.rw-tab').forEach(t => { const on = t.dataset.m === m; t.classList.toggle('active', on); t.setAttribute('aria-selected', String(on)); }));
+    };
+    const keepNav = () => { document.querySelectorAll('nav.tabbar button').forEach(b => b.classList.remove('active')); main.classList.add('active'); };
+    function go(m) {
+      try { localStorage.setItem(key, m === 'sub' ? 'sub' : 'main'); } catch (e) {}
+      internal = true;
+      try { (m === 'sub' ? sub : main).click(); } finally { internal = false; }
+      keepNav(); mark();
+    }
+    [pMain, pSub].forEach(pg => {
+      const bar = document.createElement('div'); bar.className = 'rw-mode pq-mode'; bar.setAttribute('role', 'tablist');
+      [['main', labels[0]], ['sub', labels[1]]].forEach(([m, label]) => {
+        const t = document.createElement('button'); t.type = 'button'; t.className = 'rw-tab'; t.dataset.m = m; t.textContent = label; t.setAttribute('role', 'tab');
+        t.addEventListener('click', () => { if (!t.classList.contains('active')) { go(m); const mm = document.querySelector('main'); window.scrollTo({ top: mm ? Math.max(0, mm.offsetTop - 8) : 0 }); } });
+        bar.appendChild(t);
+      });
+      pg.insertBefore(bar, pg.firstChild);
+      bars.push(bar);
+    });
+    main.addEventListener('click', () => {
+      if (internal) return;
+      let m = 'main'; try { m = localStorage.getItem(key) || 'main'; } catch (e) {}
+      if (m === 'sub' || m === 'qb') setTimeout(() => go('sub'), 0); else setTimeout(mark, 0);
+    });
+    sub.addEventListener('click', () => setTimeout(() => { keepNav(); mark(); }, 0));
+    mark();
+    // cho phần khác (Dashboard, Lộ trình…) mở thẳng trang phụ
+    window['open_' + subPage.replace(/-/g, '_')] = () => go('sub');
+  }
+  merge('page-para', 'page-qb', 'hoc-tieng-anh-pq-mode', ['📝 Luyện dịch', '❓ Đặt câu hỏi']);
+  merge('page-vocab', 'page-irregular', 'hoc-tieng-anh-vi-mode', ['📚 Từ vựng', '🔀 Bất quy tắc']);
+})();
+</script>
 <script>
 /* ============================================================
    PHÍM TẮT (bàn phím máy tính) — v84
 ============================================================ */
 (function () {
-  const TABS = [...document.querySelectorAll('nav.tabbar button[data-page]')];
+  const TABS = [...document.querySelectorAll('nav.tabbar button[data-page]:not([hidden])')];   // v153: bỏ nút ẩn (Câu hỏi đã gộp vào Dịch · Hỏi)
   const vis = el => !!el && el.offsetParent !== null && !el.disabled;
-  const page = () => { const b = document.querySelector('nav.tabbar button.active'); return b && document.getElementById(b.dataset.page); };
+  const page = () => document.querySelector('.page.active') || (() => { const b = document.querySelector('nav.tabbar button.active'); return b && document.getElementById(b.dataset.page); })();
   const q = (sel) => { const p = page(); if (!p) return null; return [...p.querySelectorAll(sel)].find(vis) || null; };
   const typing = t => t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));
   const byText = (sel, re) => { const p = page(); if (!p) return null; return [...p.querySelectorAll(sel)].find(b => vis(b) && re.test(b.textContent.trim())) || null; };
@@ -745,7 +815,7 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
 
   const HELP = [
     ['Chung', [
-      ['1 – 9, 0', 'Chuyển tab (1 Dịch · 2 Phát âm · 3 Từ vựng · 4 Shadowing · 5 Ngữ pháp · 6 Bất quy tắc · 7 Bài tập · 8 Luyện dịch · 9 Câu hỏi · 0 Nói chuyện)'],
+      ['1 – 9', 'Chuyển tab (1 Dịch · 2 Phát âm · 3 Từ vựng & Bất quy tắc · 4 Shadowing · 5 Ngữ pháp · 6 Bài tập · 7 Dịch · Hỏi · 8 Nói chuyện · 9 Đọc · Nghe · Viết)'],
       ['/', 'Đưa con trỏ vào ô tìm kiếm / ô nhập của tab'],
       ['Esc', 'Thoát ô nhập · đóng bảng · quay lại trang trước'],
       ['T', 'Cuộn lên đầu trang'],
@@ -886,6 +956,6 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
 })();
 </script>
 <!-- tab-para: nạp khi mở tab -->
-<script src="js/app-backup.js?h=ad4d3eb295"></script>
+<script src="js/app-backup.js?h=e98a7421e8"></script>
 </body>
 </html>

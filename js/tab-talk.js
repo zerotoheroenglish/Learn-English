@@ -401,7 +401,10 @@ const TALK_SCENES = [
     const hasKey = !!aiKey();
     m2.innerHTML = '<b>🤖 Trò chuyện tự do với AI</b><span>' + (hasKey ? PROV[prov()].name + ' · đã cài khoá · nói về bất cứ chủ đề nào' : 'Dùng khoá AI của bạn (Gemini, Groq miễn phí hoặc ChatGPT) · cài một lần') + '</span>';
     m2.addEventListener('click', () => { aiHome(); top(); });
-    modes.appendChild(m1); modes.appendChild(m2);
+    const m3 = E('button', 'tk-mode'); m3.type = 'button';
+    m3.innerHTML = '<b>🎤 Nói theo đề</b><span>20 đề A1 → C1 · nói liên tục 30 giây – 2 phút · chép lại lời nói, AI nhận xét</span>';
+    m3.addEventListener('click', () => { spHome(); top(); });
+    modes.appendChild(m1); modes.appendChild(m2); modes.appendChild(m3);
     hero.appendChild(modes);
     const total = TALK_SCENES.filter(s => prog[s.id] && prog[s.id].n).length;
     if (total || prog._turns) hero.appendChild(E('div', 'tk-stat', `Đã luyện ${total}/${TALK_SCENES.length} tình huống · ${prog._turns || 0} câu đã nói`));
@@ -766,7 +769,8 @@ const TALK_SCENES = [
   function toMessages(body) {
     const msgs = [], sys = body.systemInstruction && body.systemInstruction.parts.map(x => x.text).join('\n');
     const sc = body.generationConfig && body.generationConfig.responseSchema;
-    const shape = sc ? '\nJSON keys, in this order: ' + (sc.propertyOrdering || Object.keys(sc.properties)).map(k => sc.properties[k].type === 'ARRAY' ? `"${k}": [strings]` : `"${k}": string`).join(', ') + '.' : '';
+    const ty = x => !x ? 'string' : x.type === 'NUMBER' || x.type === 'INTEGER' ? 'number' : x.type === 'ARRAY' ? '[' + ty(x.items) + ', …]' : x.type === 'OBJECT' ? '{' + Object.keys(x.properties || {}).map(k => `"${k}": ${ty(x.properties[k])}`).join(', ') + '}' : 'string';
+    const shape = sc ? '\nJSON keys, in this order: ' + (sc.propertyOrdering || Object.keys(sc.properties)).map(k => `"${k}": ${ty(sc.properties[k])}`).join(', ') + '.' : '';
     if (sys || shape) msgs.push({ role: 'system', content: (sys || 'Return only JSON.') + shape });
     (body.contents || []).forEach(c => msgs.push({ role: c.role === 'model' ? 'assistant' : 'user', content: (c.parts || []).map(x => x.text || '').join('') }));
     return msgs;
@@ -781,7 +785,7 @@ const TALK_SCENES = [
     for (;;) {
       const ri = OAI_R[rk] || 0, re = opts[Math.min(ri, opts.length - 1)];
       const stream = typeof onDelta === 'function' && !OAI_NOSTREAM[rk];
-      const req = { model, messages: toMessages(body), max_completion_tokens: re ? 2048 : (gc.maxOutputTokens || 1024) };
+      const req = { model, messages: toMessages(body), max_completion_tokens: (gc.maxOutputTokens || 1024) + (re ? 2048 : 0) };
       if (!(pv === 'openai' && /^(gpt-5|o\d)/.test(model)) && gc.temperature != null) req.temperature = gc.temperature;
       if (re) req.reasoning_effort = re;
       if (json && !dropJSON) req.response_format = { type: 'json_object' };
@@ -1099,6 +1103,7 @@ const TALK_SCENES = [
     }
     const reply = String(out.reply || '').trim() || '…';
     me.hist.push({ role: 'model', parts: [{ text: reply }] });
+    try { if (myBubble && window.actLog) actLog('s'); } catch (e) {}
     // nhận xét câu vừa nói (gắn dưới bong bóng của người học)
     if (myBubble) {
       const corr = String(out.correction || '').trim(), why = String(out.explain_vi || '').trim(), better = String(out.better || '').trim();
@@ -1109,6 +1114,7 @@ const TALK_SCENES = [
         const m = E('div', 'tk-model'); m.appendChild(E('span', null, corr)); m.appendChild(play(corr)); fb.appendChild(m);
         if (why) fb.appendChild(E('div', 'tk-why', why));
         me.mine.push({ said: myBubble.text, fix: corr, why });
+        try { if (window.mkAdd) window.mkAdd({ k: 'talk|' + myBubble.text.toLowerCase().slice(0, 160), src: 'talk', cat: me.cfg && me.cfg.topic ? String(me.cfg.topic) : 'Trò chuyện tự do', mode: 'fix', p: myBubble.text, a: [corr].concat(better && !same(better, corr) ? [better] : []), why }); } catch (e) {}
       } else fb.appendChild(E('div', 'tk-fb-h', '✓ Câu của bạn ổn'));
       if (better && !same(better, myBubble.text) && !(corr && same(better, corr))) {
         const m = E('div', 'tk-model'); m.appendChild(E('span', 'tk-ml', '✨ Tự nhiên hơn: ')); m.appendChild(E('span', null, better)); m.appendChild(play(better)); fb.appendChild(m);
@@ -1198,9 +1204,228 @@ const TALK_SCENES = [
       box.appendChild(b);
     });
   };
+  const SP_TASKS = [{"id":"s-a1-me","lv":1,"icon":"🙋","t":"Talk about yourself","vi":"Nói về bản thân","sec":30,"prompt":"Introduce yourself: your name, age, where you live, your job and one thing you like.","points":["Tên, tuổi","Nơi sống","Công việc / trường học","Một sở thích"],"phrases":[["My name is …","Tên tôi là …"],["I live in …","Tôi sống ở …"],["I work as …","Tôi làm …"],["I really like …","Tôi rất thích …"]],"sample":"Hi, my name is Hieu. I am twenty-eight years old and I live in Ho Chi Minh City. I work as a 3D artist. In my free time, I really like playing badminton with my friends."},{"id":"s-a1-food","lv":1,"icon":"🍜","t":"Your favourite food","vi":"Món ăn yêu thích","sec":30,"prompt":"What is your favourite food? When do you eat it, and why do you like it?","points":["Món gì","Ăn khi nào, ở đâu","Vì sao thích (vị, kỷ niệm…)"],"phrases":[["My favourite food is …","Món tôi thích nhất là …"],["I usually eat it …","Tôi thường ăn nó …"],["It is delicious and …","Nó rất ngon và …"],["because …","vì …"]],"sample":"My favourite food is bun cha. I usually eat it for lunch near my office. It has grilled pork, noodles and fresh herbs. I like it because it is delicious and not expensive."},{"id":"s-a1-home","lv":1,"icon":"🏠","t":"Your home","vi":"Ngôi nhà của bạn","sec":30,"prompt":"Describe your home. How many rooms are there? What is your favourite room?","points":["Nhà hay căn hộ","Có mấy phòng","Phòng thích nhất và vì sao"],"phrases":[["I live in a flat / a house.","Tôi sống trong căn hộ / ngôi nhà."],["There are … rooms.","Có … phòng."],["My favourite room is …","Phòng tôi thích nhất là …"],["It is small but …","Nó nhỏ nhưng …"]],"sample":"I live in a small flat with my wife. There are three rooms: a living room, a bedroom and a kitchen. My favourite room is the living room because it is bright and I can watch films there."},{"id":"s-a1-weekend","lv":1,"icon":"📅","t":"Your weekend","vi":"Cuối tuần của bạn","sec":30,"prompt":"What do you usually do at the weekend?","points":["Sáng thứ Bảy","Chiều / tối","Chủ Nhật","Đi với ai"],"phrases":[["At the weekend, I usually …","Cuối tuần tôi thường …"],["On Saturday morning, …","Sáng thứ Bảy, …"],["Sometimes I …","Thỉnh thoảng tôi …"],["with my family / friends","cùng gia đình / bạn bè"]],"sample":"At the weekend, I usually get up late. On Saturday morning, I clean my flat and go to the market. In the evening, I meet my friends for dinner. On Sunday, I visit my parents and sometimes we watch a film together."},{"id":"s-a2-trip","lv":2,"icon":"🧳","t":"A memorable trip","vi":"Một chuyến đi đáng nhớ","sec":45,"prompt":"Talk about a trip you took. Where did you go, who did you go with, and what did you do?","points":["Đi đâu, khi nào","Đi với ai, bằng gì","Làm gì ở đó","Cảm nhận"],"phrases":[["Last year, I went to …","Năm ngoái tôi đã đi …"],["We stayed in …","Chúng tôi ở …"],["The best part was …","Điều tuyệt nhất là …"],["I would love to go back.","Tôi rất muốn quay lại."]],"sample":"Last year, I went to Hoi An with my two best friends. We took the train from Saigon, and it was a long but fun journey. We stayed in a small homestay near the old town. During the day we rode bicycles to the beach, and in the evening we walked around the lantern streets. The best part was the food, especially cao lau. I would love to go back."},{"id":"s-a2-person","lv":2,"icon":"👩‍🏫","t":"A person you admire","vi":"Người bạn ngưỡng mộ","sec":45,"prompt":"Describe a person you admire. Who is this person, and why do you admire them?","points":["Người đó là ai","Ngoại hình / tính cách","Một việc người đó đã làm","Vì sao bạn ngưỡng mộ"],"phrases":[["The person I admire most is …","Người tôi ngưỡng mộ nhất là …"],["She / He is very …","Bà ấy / Ông ấy rất …"],["For example, …","Ví dụ, …"],["That's why I admire …","Đó là lý do tôi ngưỡng mộ …"]],"sample":"The person I admire most is my mother. She is a primary school teacher, and she is very patient and kind. For example, when I was a student, she worked all day and still helped me with my homework every evening. She never complained, even when she was tired. That's why I admire her so much."},{"id":"s-a2-job","lv":2,"icon":"💼","t":"Your job or studies","vi":"Công việc hoặc việc học","sec":45,"prompt":"Talk about your job or your studies. What do you do every day? What do you like and dislike about it?","points":["Làm gì / học gì","Một ngày điển hình","Điều thích","Điều không thích"],"phrases":[["I work for … / I study …","Tôi làm cho … / Tôi học …"],["Every day, I have to …","Mỗi ngày tôi phải …"],["What I like most is …","Điều tôi thích nhất là …"],["The hardest part is …","Phần khó nhất là …"]],"sample":"I work for a small game company as a 3D artist. Every day, I have to create models for the game, like trees, houses and characters. What I like most is seeing my work in the game, and my colleagues are very friendly. The hardest part is the deadlines. Sometimes we have to work late, and that can be tiring."},{"id":"s-a2-plans","lv":2,"icon":"🗓️","t":"Plans for next weekend","vi":"Kế hoạch cuối tuần tới","sec":45,"prompt":"What are you going to do next weekend? Talk about your plans.","points":["Thứ Bảy định làm gì","Chủ Nhật định làm gì","Với ai","Vì sao bạn mong chờ"],"phrases":[["Next weekend, I'm going to …","Cuối tuần tới tôi định …"],["I'm meeting … on Saturday.","Tôi sẽ gặp … vào thứ Bảy."],["If the weather is nice, …","Nếu thời tiết đẹp, …"],["I'm really looking forward to it.","Tôi rất mong chờ."]],"sample":"Next weekend, I'm going to visit my grandparents in the countryside. I'm leaving on Saturday morning by bus. If the weather is nice, my cousins and I are going to go fishing in the river. On Sunday, we're having a big family lunch because it is my grandfather's birthday. I'm really looking forward to it."},{"id":"s-b1-city","lv":3,"icon":"🏙️","t":"City or countryside?","vi":"Thành phố hay nông thôn?","sec":60,"prompt":"Would you prefer to live in a big city or in the countryside? Give reasons and examples.","points":["Lựa chọn của bạn","Lý do 1 + ví dụ","Lý do 2 + ví dụ","Nhược điểm của lựa chọn đó","Kết luận"],"phrases":[["Personally, I'd prefer …","Cá nhân tôi thích …"],["The main reason is that …","Lý do chính là …"],["On the other hand, …","Mặt khác, …"],["All in all, …","Nhìn chung, …"]],"sample":"Personally, I'd prefer to live in a big city, at least for now. The main reason is work. In a city like Saigon, there are many more job opportunities, especially in creative industries like mine. Cities are also convenient: I can find good food, cinemas and English classes near my home. On the other hand, the traffic and pollution can be terrible, and the cost of living is high. Maybe when I'm older, I'll move to a quieter place. But all in all, for a young person, I think the city is the better choice."},{"id":"s-b1-skill","lv":3,"icon":"🛠️","t":"A skill you learned","vi":"Một kỹ năng bạn đã học","sec":60,"prompt":"Talk about a skill you learned. How did you learn it, what was difficult, and how has it helped you?","points":["Kỹ năng gì, khi nào","Học bằng cách nào","Khó khăn","Lợi ích hiện tại"],"phrases":[["A few years ago, I decided to learn …","Vài năm trước tôi quyết định học …"],["At first, it was difficult because …","Lúc đầu khó vì …"],["I kept practising …","Tôi tiếp tục luyện …"],["Now it helps me …","Giờ nó giúp tôi …"]],"sample":"A few years ago, I decided to learn 3D modelling. I learned mostly by myself, using free online tutorials and practising every evening after work. At first, it was really difficult because the software had so many tools, and my early models looked terrible. But I kept practising and joined an online community where people gave me feedback. Now this skill has completely changed my life, because it became my job. It also taught me that I can learn almost anything if I'm patient."},{"id":"s-b1-tech","lv":3,"icon":"📱","t":"Technology in your life","vi":"Công nghệ trong cuộc sống","sec":60,"prompt":"How has technology changed your daily life? Is the change mostly positive or negative?","points":["Công nghệ bạn dùng nhiều nhất","Thay đổi tích cực","Thay đổi tiêu cực","Quan điểm của bạn"],"phrases":[["These days, I can't imagine life without …","Ngày nay tôi không thể tưởng tượng cuộc sống thiếu …"],["It has made … much easier.","Nó làm … dễ hơn nhiều."],["The downside is that …","Mặt trái là …"],["Overall, I think …","Nhìn chung tôi nghĩ …"]],"sample":"These days, I can't imagine life without my smartphone. It has made many things much easier: I can pay for coffee, book a taxi or video call my parents in seconds. I also use it to learn English with apps and podcasts. The downside is that I spend too much time on social media, and sometimes I check my phone instead of sleeping. Overall, I think technology is mostly positive, but we need to control how we use it."},{"id":"s-b1-advice","lv":3,"icon":"💡","t":"Advice for a new learner","vi":"Lời khuyên cho người mới học","sec":60,"prompt":"A friend wants to start learning English. What advice would you give them?","points":["2–3 lời khuyên cụ thể","Giải thích vì sao","Ví dụ từ kinh nghiệm của bạn","Lời động viên"],"phrases":[["If I were you, I would …","Nếu tôi là bạn, tôi sẽ …"],["It's a good idea to …","Nên …"],["Try not to …","Cố đừng …"],["In my experience, …","Theo kinh nghiệm của tôi, …"]],"sample":"If you want to start learning English, my first advice is to study a little every day instead of a lot once a week. Even fifteen minutes is enough at the beginning. It's also a good idea to choose materials you enjoy, like films or songs, so you don't get bored. Try not to worry too much about mistakes. In my experience, I improved much faster when I started speaking, even though my English was terrible at first. Just be patient and keep going."},{"id":"s-b2-remote","lv":4,"icon":"🏡","t":"Working from home","vi":"Làm việc tại nhà","sec":90,"prompt":"Some companies now let employees work from home permanently. What are the advantages and disadvantages, for both employees and companies?","points":["Lợi ích cho nhân viên","Lợi ích cho công ty","Bất lợi (cô đơn, khó giao tiếp…)","Giải pháp kết hợp + quan điểm"],"phrases":[["There are clear benefits for …","Có những lợi ích rõ ràng cho …"],["From the company's point of view, …","Từ góc độ công ty, …"],["That said, …","Dù vậy, …"],["In my view, the best approach is …","Theo tôi, cách tốt nhất là …"]],"sample":"There are clear benefits for employees. They save time and money on commuting, and many people find they can concentrate better at home. From the company's point of view, they can reduce office costs and hire talented people who live in other cities. That said, working from home permanently has real disadvantages. Some people feel isolated, and it's harder for junior staff to learn by watching experienced colleagues. Communication can also be slower when every small question becomes a message. In my view, the best approach is a hybrid model, where teams meet in the office two or three days a week for collaboration and work from home on the other days."},{"id":"s-b2-project","lv":4,"icon":"🚀","t":"A challenging project","vi":"Một dự án đầy thử thách","sec":90,"prompt":"Describe a challenging project you worked on. What was the challenge, what did you do, and what was the result?","points":["Bối cảnh dự án","Thử thách chính","Bạn đã làm gì (hành động cụ thể)","Kết quả + bài học"],"phrases":[["I was responsible for …","Tôi phụ trách …"],["The biggest challenge was …","Thử thách lớn nhất là …"],["To solve this, I …","Để giải quyết, tôi …"],["As a result, …","Kết quả là …"],["Looking back, …","Nhìn lại, …"]],"sample":"Last year, I was responsible for the environment art in a mobile game. The biggest challenge was performance: our forest level looked beautiful, but on mid-range phones the frame rate dropped to around twenty frames per second. To solve this, I analysed which assets were the most expensive and found that the trees had too many transparent leaves. I created simpler versions for distant trees and baked most of the lighting into textures. I also worked closely with a programmer to test each change. As a result, the frame rate rose to a stable fifty without a noticeable loss in quality. Looking back, I learned that optimisation should be planned from the start, not left until the end."},{"id":"s-b2-social","lv":4,"icon":"📲","t":"Social media and young people","vi":"Mạng xã hội và giới trẻ","sec":90,"prompt":"Should there be stricter rules about how much time children and teenagers spend on social media? Explain your opinion.","points":["Quan điểm","Lý do ủng hộ (giấc ngủ, sức khỏe tinh thần)","Ý kiến phản bác (quyền tự do, lợi ích)","Ai nên chịu trách nhiệm: gia đình, trường, công ty, nhà nước"],"phrases":[["I'm in favour of … / I'm against …","Tôi ủng hộ … / Tôi phản đối …"],["There is growing evidence that …","Ngày càng có nhiều bằng chứng rằng …"],["Critics would argue that …","Người phản đối sẽ cho rằng …"],["Ultimately, …","Rốt cuộc, …"]],"sample":"I'm in favour of stronger rules, but I don't think a simple time limit is enough. There is growing evidence that heavy social media use can affect teenagers' sleep and self-esteem, partly because the apps are designed to keep them scrolling. Critics would argue that banning or limiting social media takes away young people's freedom and ignores the benefits, like staying in touch with friends or learning new skills. I think that's a fair point. That's why, in my opinion, the most important rules should apply to companies: for example, no infinite scrolling or targeted advertising for children. Ultimately, parents and schools also need to teach young people how to use these platforms in a healthy way."},{"id":"s-b2-change","lv":4,"icon":"🔄","t":"A decision that changed your life","vi":"Quyết định thay đổi cuộc đời","sec":90,"prompt":"Talk about an important decision you made. What were the options, why did you choose as you did, and how do you feel about it now?","points":["Bối cảnh, các lựa chọn","Điều khiến bạn phân vân","Vì sao bạn chọn như vậy","Kết quả và cảm nghĩ hiện tại"],"phrases":[["At the time, I had to choose between …","Lúc đó tôi phải chọn giữa …"],["I was torn because …","Tôi phân vân vì …"],["In the end, I decided to …","Cuối cùng tôi quyết định …"],["I don't regret it at all.","Tôi không hề hối tiếc."]],"sample":"Three years ago, I had to choose between a stable job in a bank and a much less secure job at a small animation studio. I was torn because my parents strongly preferred the bank, and the salary there was almost twice as high. However, I had been teaching myself 3D modelling for two years, and I knew I would be unhappy doing something I didn't care about. In the end, I decided to join the studio. The first year was hard financially, and I had to work long hours. But I learned incredibly fast, and now I earn a reasonable salary doing something I love. I don't regret it at all, and even my parents are proud of me now."},{"id":"s-c1-ai","lv":5,"icon":"🤖","t":"AI and the future of work","vi":"AI và tương lai việc làm","sec":120,"prompt":"To what extent will artificial intelligence change the job market in the next ten years? Which skills will become more valuable?","points":["Mức độ thay đổi (nhiệm vụ vs nghề)","Ví dụ ngành bị ảnh hưởng","Kỹ năng sẽ giá trị hơn","Rủi ro, điều kiện để chuyển đổi công bằng"],"phrases":[["I'd argue that …","Tôi cho rằng …"],["Rather than replacing entire jobs, …","Thay vì thay thế cả nghề, …"],["Take … as an example.","Lấy … làm ví dụ."],["What will matter most is …","Điều quan trọng nhất sẽ là …"],["The real risk, in my view, is …","Rủi ro thực sự, theo tôi, là …"]],"sample":"I'd argue that AI will change the job market profoundly, but not in the dramatic way many headlines suggest. Rather than replacing entire jobs, it is likely to automate specific tasks within them. Take my own field, 3D art, as an example. Generating variations of a texture or unwrapping UVs could soon take seconds, but someone still needs to decide what the game should look like and whether an asset fits the story. In that sense, routine execution will become cheaper, while judgement, taste and communication will become more valuable. What will matter most is the ability to learn continuously and to work effectively alongside these tools. The real risk, in my view, is the transition. Junior positions, which are where people traditionally learn, may shrink, and not everyone will have the time or money to retrain. So companies and governments will need to invest seriously in training if the benefits are going to be shared fairly."},{"id":"s-c1-success","lv":5,"icon":"🏆","t":"What does success mean?","vi":"Thành công nghĩa là gì?","sec":120,"prompt":"People define success in very different ways. How would you define it, and has your definition changed over time?","points":["Định nghĩa phổ biến (tiền, địa vị)","Định nghĩa của bạn","Định nghĩa đã thay đổi thế nào, vì sao","Suy ngẫm kết luận"],"phrases":[["For many people, success simply means …","Với nhiều người, thành công chỉ đơn giản là …"],["When I was younger, I used to think …","Hồi nhỏ tôi từng nghĩ …"],["Over the years, I've come to realise …","Theo năm tháng, tôi dần nhận ra …"],["To me, success is less about … and more about …","Với tôi, thành công ít liên quan đến … mà nhiều hơn là …"]],"sample":"For many people, success simply means money and status: a high salary, a nice car, an impressive job title. When I was younger, I used to think the same way. I measured myself by grades and later by how much my friends were earning. Over the years, though, I've come to realise that these things are poor guides to whether a life is going well. I've met people with excellent salaries who dread every Monday, and others with modest incomes who are genuinely content. To me, success is now less about reaching a particular position and more about three things: doing work I find meaningful, continuing to grow, and having time for the people I care about. Of course, financial security matters; it's hard to feel successful when you're constantly worried about rent. But beyond a certain point, I think chasing more money often comes at the expense of the things that actually make us happy."},{"id":"s-c1-tourism","lv":5,"icon":"🌏","t":"Tourism: benefit or burden?","vi":"Du lịch: lợi hay hại?","sec":120,"prompt":"Is mass tourism more of a benefit or a burden for popular destinations? Use examples and suggest how its negative effects could be reduced.","points":["Lợi ích kinh tế","Tác hại (môi trường, giá nhà, văn hóa)","Ví dụ cụ thể (Hội An, Sa Pa, Venice…)","Giải pháp + quan điểm cân bằng"],"phrases":[["There is no doubt that …","Không thể nghi ngờ rằng …"],["However, the costs are often borne by …","Tuy nhiên cái giá thường do … gánh chịu"],["A case in point is …","Một ví dụ điển hình là …"],["One way to mitigate this would be …","Một cách giảm thiểu là …"]],"sample":"There is no doubt that tourism brings enormous economic benefits. In places like Hoi An or Sa Pa, it supports thousands of jobs, from hotel staff to street vendors, and it gives local crafts a market they would never otherwise have. However, the costs are often borne by residents rather than visitors. Rents rise as homes are converted into guesthouses, traditional shops are replaced by souvenir stalls, and natural sites can be badly damaged. A case in point is Maya Bay in Thailand, which had to close for several years so that its coral could recover. So I would say tourism is a benefit only when it is managed carefully. One way to mitigate the negative effects would be to limit visitor numbers at fragile sites and charge entry fees that go directly to conservation. Encouraging people to visit outside the peak season and to stay longer in one place would also spread the benefits more evenly. Ultimately, the goal should be tourism that local communities actually want."},{"id":"s-c1-language","lv":5,"icon":"🗣️","t":"Why learn languages in the age of AI?","vi":"Vì sao học ngoại ngữ khi đã có AI?","sec":120,"prompt":"Now that translation apps are so good, is it still worth spending years learning a foreign language? Explain your view.","points":["Thừa nhận khả năng của công cụ dịch","Điều công cụ không thay được (quan hệ, văn hóa, tư duy)","Ví dụ cá nhân / nghề nghiệp","Kết luận có sắc thái"],"phrases":[["Admittedly, …","Phải thừa nhận rằng …"],["What these tools can't do is …","Điều các công cụ này không làm được là …"],["In my own experience, …","Theo trải nghiệm của tôi, …"],["So, on balance, …","Vì vậy, cân nhắc mọi mặt, …"]],"sample":"Admittedly, translation apps have become remarkably good. For reading a menu or asking for directions in a foreign country, they are more than enough, and I use them myself all the time. What these tools can't do, at least not yet, is build relationships. When you speak to a colleague or a client in their language, even imperfectly, they respond to you differently; there is a level of trust and humour that simply doesn't happen through a screen. Learning a language also changes the way you think. You start to notice ideas and expressions that don't exist in your own language, and that makes you more open-minded. In my own experience, improving my English didn't just help me read technical documentation; it allowed me to join international online communities, get feedback from artists all over the world, and eventually find better jobs. So, on balance, I believe language learning is still very much worth it, although the reasons have shifted from pure necessity to connection and personal growth."}];   // v151: đề nói (tự soạn)
+  /* ---------- v151: 🎤 NÓI THEO ĐỀ — nói liên tục 30 giây → 2 phút, app chép lại lời nói, thống kê, AI nhận xét ---------- */
+  const SPK = 'hoc-tieng-anh-speak2', SPLV = ['A1', 'A2', 'B1', 'B2', 'C1'], SPWPM = [60, 80, 100, 115, 130];
+  let spProg = {}; try { spProg = JSON.parse(localStorage.getItem(SPK) || '{}') || {}; } catch (e) {}
+  const spSave = () => { try { localStorage.setItem(SPK, JSON.stringify(spProg)); } catch (e) {} };
+  let spFilt = 0, spRec = null, spTimer = 0;
+  const spStop = () => { if (spRec) { try { spRec.stop(); } catch (e) {} spRec = null; } clearInterval(spTimer); };
+  const spWords = s => (String(s).match(/[A-Za-z][A-Za-z'’-]*/g) || []).length;
+  function spHome() {
+    stopAll(); spStop();
+    root.innerHTML = '';
+    const back = E('button', 'gr-back', '← Nói chuyện'); back.type = 'button'; back.addEventListener('click', () => { spStop(); home(); top(); });
+    root.appendChild(back);
+    const hero = E('div', 'tense-card tk-hero');
+    hero.appendChild(E('div', 'tk-hero-t', '🎤 Nói theo đề'));
+    hero.appendChild(E('p', 'tk-hero-s', 'Đọc đề, chuẩn bị vài giây rồi nói liên tục trong thời gian quy định (A1: 30 giây → C1: 2 phút). App chép lại lời bạn nói, đếm số từ, tốc độ nói. Có khoá AI thì được nhận xét chi tiết; chưa có vẫn luyện được và nghe bài nói mẫu.'));
+    const done = SP_TASKS.filter(t => spProg[t.id] && spProg[t.id].n).length;
+    if (done) hero.appendChild(E('div', 'tk-stat', `Đã luyện ${done}/${SP_TASKS.length} đề`));
+    root.appendChild(hero);
+    const chips = E('div', 'colloc-chips tk-chips');
+    [[0, 'Tất cả'], ...SPLV.map((x, i) => [i + 1, x])].forEach(([v, l]) => {
+      const ch = E('button', 'colloc-chip' + (spFilt === v ? ' active' : ''), l); ch.type = 'button';
+      ch.addEventListener('click', () => { spFilt = v; spHome(); });
+      chips.appendChild(ch);
+    });
+    root.appendChild(chips);
+    const grid = E('div', 'rd-grid');
+    SP_TASKS.filter(t => !spFilt || t.lv === spFilt).forEach(t => {
+      const p = spProg[t.id], c = E('button', 'rd-card' + (p && p.n ? ' done' : '')); c.type = 'button';
+      const h = E('div', 'rd-card-h'); h.appendChild(E('span', 'rd-ic', t.icon)); h.appendChild(E('span', 'rd-lv', SPLV[t.lv - 1]));
+      if (p && p.best != null) h.appendChild(E('span', 'rd-st ' + (p.best >= 7 ? 'ok' : 'mid'), `✓ ${p.best}/10`)); else if (p && p.n) h.appendChild(E('span', 'rd-st nx', `Đã nói ${p.n} lần`));
+      c.appendChild(h);
+      c.appendChild(E('div', 'rd-card-t', t.t)); c.appendChild(E('div', 'rd-card-vi', t.vi));
+      c.appendChild(E('div', 'rd-card-m', `Nói ${t.sec >= 60 ? (t.sec / 60) + ' phút' : t.sec + ' giây'}`));
+      c.addEventListener('click', () => { spTask(t); top(); });
+      grid.appendChild(c);
+    });
+    root.appendChild(grid);
+  }
+  function spTask(t) {
+    stopAll(); spStop();
+    root.innerHTML = '';
+    const P = spProg[t.id] || (spProg[t.id] = { n: 0, h: [] });
+    const back = E('button', 'gr-back', '← Nói theo đề'); back.type = 'button'; back.addEventListener('click', () => { spStop(); spHome(); top(); });
+    root.appendChild(back);
+    const head = E('div', 'gr-head');
+    head.appendChild(E('div', 'gr-en', `${SPLV[t.lv - 1]} · nói ${t.sec >= 60 ? (t.sec / 60) + ' phút' : t.sec + ' giây'}`));
+    head.appendChild(E('h2', 'gr-title', t.icon + ' ' + t.t));
+    head.appendChild(E('div', 'rd-vi-t', t.vi));
+    root.appendChild(head);
+    const tc = E('div', 'tense-card');
+    const pr = E('div', 'wr-task-en', t.prompt); tc.appendChild(pr);
+    const pl = E('button', 'btn-ghost sp-hear', '🔊 Nghe đề'); pl.type = 'button'; pl.addEventListener('click', () => say(t.prompt)); tc.appendChild(pl);
+    const d1 = E('details', 'wr-det'); d1.appendChild(E('summary', null, '🧭 Ý nên nói'));
+    const ul = E('ul', 'wr-ol'); t.points.forEach(x => ul.appendChild(E('li', null, x))); d1.appendChild(ul); tc.appendChild(d1);
+    const d2 = E('details', 'wr-det'); d2.appendChild(E('summary', null, '🧩 Cụm từ nên dùng'));
+    const pw = E('div', 'wr-ph'); t.phrases.forEach(([en, vi]) => { const b = E('button', 'rd-gli'); b.type = 'button'; b.appendChild(E('b', null, en)); b.appendChild(E('span', null, vi)); b.addEventListener('click', () => say(en.replace(/…/g, ''))); pw.appendChild(b); }); d2.appendChild(pw); tc.appendChild(d2);
+    root.appendChild(tc);
+
+    // ghi âm
+    const rc = E('div', 'tense-card sp-rec');
+    const clock = E('div', 'sp-clock', fmt(t.sec));
+    const mic = E('button', 'btn-primary sp-mic', '🎤 Bắt đầu nói'); mic.type = 'button';
+    const live = E('div', 'sp-live', 'Bấm “Bắt đầu nói” rồi nói liên tục. Lời bạn nói sẽ hiện ở đây.');
+    const ta = E('textarea', 'wr-ta sp-ta'); ta.rows = 5; ta.hidden = true; ta.spellcheck = false;
+    const stat = E('div', 'sp-stat');
+    const acts = E('div', 'wr-acts');
+    const bAI = E('button', 'btn-primary', '✨ AI nhận xét'); bAI.type = 'button'; bAI.hidden = true;
+    const bS = E('button', 'btn-ghost', '📄 Bài nói mẫu'); bS.type = 'button';
+    acts.appendChild(bAI); acts.appendChild(bS);
+    rc.appendChild(clock); rc.appendChild(mic); rc.appendChild(live); rc.appendChild(ta); rc.appendChild(stat); rc.appendChild(acts);
+    const can = typeof PR_SR !== 'undefined' && !!PR_SR;
+    if (!can) {
+      mic.hidden = true; ta.hidden = false; ta.placeholder = 'Trình duyệt này chưa hỗ trợ nhận dạng giọng nói. Hãy nói thành tiếng, rồi gõ lại những gì bạn đã nói vào đây để được nhận xét.';
+      live.textContent = '💡 Mẹo: trên iPhone dùng Safari, trên máy tính dùng Chrome hoặc Edge để app nghe được giọng nói.';
+      bAI.hidden = false;
+    }
+    root.appendChild(rc);
+    const out = E('div', 'wr-out'); root.appendChild(out);
+    const sbox = E('div', 'tense-card wr-sample'); sbox.hidden = true; root.appendChild(sbox);
+    if (P.h && P.h.length) root.insertBefore(E('div', 'rv-note wr-hist', 'Các lần trước: ' + P.h.slice(-5).map(x => `${x.w} từ · ${x.wpm} từ/phút` + (x.s != null ? ` · ${x.s}/10` : '')).join('  ·  ')), out);
+    function fmt(s) { s = Math.max(0, Math.round(s)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }
+    let t0 = 0, elapsed = 0;
+    const showStats = () => {
+      const txt = ta.value.trim(), w = spWords(txt), wpm = elapsed > 3 ? Math.round(w / (elapsed / 60)) : 0;
+      stat.innerHTML = '';
+      if (!w) return;
+      const tgt = SPWPM[t.lv - 1];
+      [[String(w), 'từ'], [wpm ? String(wpm) : '—', 'từ / phút'], [elapsed ? fmt(elapsed) : '—', 'thời gian nói']].forEach(([a, b2]) => { const d = E('div', 'rv-kpi'); d.appendChild(E('b', null, a)); d.appendChild(E('span', null, b2)); stat.appendChild(d); });
+      if (wpm) stat.appendChild(E('div', 'rv-note sp-tip', wpm < tgt * 0.6 ? `Tốc độ còn chậm so với mức gợi ý ~${tgt} từ/phút. Cố nói liền mạch, đừng dừng lại để sửa từng lỗi.` : wpm > tgt * 1.6 ? 'Bạn nói khá nhanh. Nhớ nói rõ âm cuối và ngắt nghỉ ở dấu câu.' : 'Tốc độ phù hợp với cấp độ này 👍'));
+    };
+    ta.addEventListener('input', showStats);
+    mic.addEventListener('click', () => {
+      if (spRec) { finish(); return; }
+      out.innerHTML = ''; stat.innerHTML = ''; ta.hidden = true; ta.value = ''; bAI.hidden = true;
+      try { speechSynthesis.cancel(); } catch (e) {}
+      let final = '', ended = false, alive = true, r = null;
+      const begin = () => {
+        r = new PR_SR(); r.lang = 'en-US'; r.continuous = true; r.interimResults = true;
+        r.onresult = ev => {
+          let interim = '';
+          for (let i = ev.resultIndex; i < ev.results.length; i++) { const tx = ev.results[i][0].transcript; if (ev.results[i].isFinal) final += (final ? ' ' : '') + tx.trim(); else interim += tx; }
+          live.textContent = (final + ' ' + interim).trim() || '👂 Đang nghe…';
+        };
+        r.onerror = e => { if (e.error === 'not-allowed' || e.error === 'service-not-allowed') { alive = false; live.textContent = 'Bạn cần cho phép micro và nhận dạng giọng nói cho trình duyệt (iPhone: Cài đặt → Safari → Micrô).'; endRec(true); } };
+        r.onend = () => { if (alive && spRec) { try { begin(); } catch (e) { endRec(); } } };   // Safari tự dừng khi im lặng → nghe tiếp
+        try { r.start(); } catch (e) {}
+      };
+      spRec = { stop: () => { alive = false; try { r && r.stop(); } catch (e) {} }, get text() { return final; } };
+      begin();
+      t0 = Date.now(); live.textContent = '👂 Đang nghe… hãy bắt đầu nói.';
+      mic.textContent = '⏹ Dừng'; mic.classList.add('rec');
+      spTimer = setInterval(() => { const left = t.sec - (Date.now() - t0) / 1000; clock.textContent = fmt(left); clock.classList.toggle('low', left <= 10); if (left <= 0) endRec(); }, 250);
+      function endRec(err) {
+        if (ended) return; ended = true;
+        elapsed = Math.min(t.sec, (Date.now() - t0) / 1000);
+        clearInterval(spTimer);
+        const rec = spRec; spRec = null;
+        if (rec) rec.stop();
+        mic.textContent = '🎤 Nói lại'; mic.classList.remove('rec'); clock.textContent = fmt(t.sec); clock.classList.remove('low');
+        setTimeout(() => {
+          const txt = (final || '').trim();
+          ta.hidden = false; ta.value = txt;
+          ta.placeholder = 'Máy chưa nghe được gì. Bạn có thể gõ lại những gì đã nói vào đây.';
+          live.textContent = txt ? '✍️ Máy đã chép lại lời bạn nói (bên dưới). Sửa lại nếu máy nghe sai, rồi bấm ✨ AI nhận xét.' : (err ? live.textContent : 'Máy chưa nghe được gì. Hãy nói to, gần micro hơn, hoặc gõ lại vào ô bên dưới.');
+          bAI.hidden = false; showStats();
+          if (txt) { P.n = (P.n || 0) + 1; P.h = (P.h || []).concat([{ t: Date.now(), w: spWords(txt), wpm: elapsed > 3 ? Math.round(spWords(txt) / (elapsed / 60)) : 0 }]).slice(-10); P.last = txt.slice(0, 2000); spSave(); try { if (window.actLog) actLog('s', 3); } catch (e) {} }
+        }, 600);
+      }
+      spRec.finish = endRec;
+    });
+    const finish = () => { if (spRec && spRec.finish) spRec.finish(); };
+
+    bS.addEventListener('click', () => {
+      if (!sbox.hidden) { sbox.hidden = true; return; }
+      sbox.innerHTML = '';
+      const h = E('div', 'wr-sh'); h.appendChild(E('h3', null, '📄 Bài nói mẫu (' + spWords(t.sample) + ' từ)'));
+      const p2 = E('button', 'btn-ghost', '🔊 Nghe'); p2.type = 'button'; p2.addEventListener('click', () => say(t.sample)); h.appendChild(p2);
+      sbox.appendChild(h); sbox.appendChild(E('p', 'wr-sp', t.sample));
+      sbox.appendChild(E('div', 'rv-note', 'Nghe bài mẫu, ghi lại vài cụm từ hay, rồi tự nói lại bằng ý của bạn.'));
+      sbox.hidden = false; try { sbox.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) {}
+    });
+
+    const SCHEMA = { type: 'OBJECT', properties: {
+      score: { type: 'NUMBER' }, cefr: { type: 'STRING' }, s_task: { type: 'NUMBER' }, n_task: { type: 'STRING' }, s_flu: { type: 'NUMBER' }, n_flu: { type: 'STRING' },
+      s_voc: { type: 'NUMBER' }, n_voc: { type: 'STRING' }, s_gram: { type: 'NUMBER' }, n_gram: { type: 'STRING' }, praise: { type: 'STRING' },
+      errors: { type: 'ARRAY', items: { type: 'OBJECT', properties: { wrong: { type: 'STRING' }, right: { type: 'STRING' }, why: { type: 'STRING' } }, required: ['wrong', 'right', 'why'] } },
+      tips: { type: 'ARRAY', items: { type: 'STRING' } }, improved: { type: 'STRING' } },
+      required: ['score', 'cefr', 's_task', 'n_task', 's_flu', 'n_flu', 's_voc', 'n_voc', 's_gram', 'n_gram', 'praise', 'errors', 'tips', 'improved'],
+      propertyOrdering: ['score', 'cefr', 's_task', 'n_task', 's_flu', 'n_flu', 's_voc', 'n_voc', 's_gram', 'n_gram', 'praise', 'errors', 'tips', 'improved'] };
+    const SYS = ['You are an experienced, encouraging English speaking examiner for Vietnamese adult learners.',
+      'You receive an automatic speech-to-text transcript of the learner speaking about a topic. The transcript may contain recognition errors and has no punctuation from the learner: do NOT penalise punctuation, capitalisation or obvious recognition mistakes, and do not comment on pronunciation (you cannot hear it).',
+      'Scores 0–10: score = overall; s_task = answers the question with enough relevant content for the time; s_flu = fluency and coherence (logical flow, linking words, length relative to the time); s_voc = vocabulary range and accuracy; s_gram = grammar range and accuracy. A performance that fully meets the target level deserves 7–8.',
+      'n_task, n_flu, n_voc, n_gram, praise, tips and every "why" MUST be in Vietnamese, short and concrete.',
+      'errors: up to 10 real language mistakes (grammar, word choice, unnatural phrasing). "wrong" must be copied exactly from the transcript (short phrase); "right" = corrected phrase.',
+      'improved: a natural spoken version of what the learner said at the target level, keeping their ideas; similar length. cefr: estimated level shown. tips: 2–3 suggestions. Return only JSON.'].join('\n');
+    bAI.addEventListener('click', async () => {
+      const txt = ta.value.trim(); if (!txt) { ta.hidden = false; ta.focus(); return; }
+      out.innerHTML = '';
+      const wait = E('div', 'tense-card wr-wait'); out.appendChild(wait);
+      if (!aiKey()) {
+        wait.appendChild(E('div', 'wr-need', '🔑 Cần cài khoá AI một lần (Gemini hoặc Groq miễn phí, chỉ lưu trên máy bạn).'));
+        const s2 = E('button', 'btn-primary', 'Cài khoá AI →'); s2.type = 'button'; s2.addEventListener('click', () => { aiHome({}); top(); }); wait.appendChild(s2);
+        return;
+      }
+      wait.textContent = `⏳ ${PROV[prov()].name} đang nghe lại bài nói của bạn…`;
+      bAI.disabled = true;
+      const user = `Topic (target level ${SPLV[t.lv - 1]}, speaking time ${t.sec} seconds, actual ${Math.round(elapsed || t.sec)} seconds):\n${t.prompt}\n\nTranscript (${spWords(txt)} words):\n"""\n${txt}\n"""`;
+      let r = null, err = null;
+      try { r = parseJSON(await gem({ systemInstruction: { parts: [{ text: SYS }] }, contents: [{ role: 'user', parts: [{ text: user }] }], generationConfig: { temperature: 0.2, maxOutputTokens: 4096, responseMimeType: 'application/json', responseSchema: SCHEMA } }, true, null, n => { wait.textContent = n >= 2 ? '⏳ Máy chủ bận, đang đổi model…' : '⏳ Đang thử lại…'; })); } catch (e) { err = e; }
+      bAI.disabled = false;
+      if (!r || r.score == null) { wait.textContent = '⚠️ ' + (err ? errText(err) : 'AI trả lời không đúng định dạng. Bấm lại nhé.'); return; }
+      wait.remove();
+      const sc = Math.max(0, Math.min(10, Math.round(+r.score * 10) / 10));
+      const last = P.h && P.h[P.h.length - 1]; if (last && last.s == null) last.s = sc;
+      P.best = Math.max(P.best || 0, sc); spSave();
+      const top1 = E('div', 'tense-card gx-score ' + (sc >= 7 ? 'ok' : sc >= 5 ? 'mid' : 'bad'));
+      top1.appendChild(E('div', 'gx-score-t', 'Điểm tổng'));
+      top1.appendChild(E('div', 'gx-score-big', `${sc}/10`));
+      top1.appendChild(E('div', 'gx-score-sub', `Trình độ thể hiện: khoảng ${String(r.cefr || '?').toUpperCase()} · đề ${SPLV[t.lv - 1]}`));
+      if (r.praise) top1.appendChild(E('div', 'gx-score-msg', '👍 ' + r.praise));
+      out.appendChild(top1);
+      const cr = E('div', 'tense-card'); cr.appendChild(E('h3', null, '📋 Theo từng tiêu chí'));
+      [['Trả lời đúng đề', r.s_task, r.n_task], ['Trôi chảy, mạch lạc', r.s_flu, r.n_flu], ['Từ vựng', r.s_voc, r.n_voc], ['Ngữ pháp', r.s_gram, r.n_gram]].forEach(([nm, s3, n3]) => {
+        const v = Math.max(0, Math.min(10, +s3 || 0)), row = E('div', 'db-sk');
+        const h = E('div', 'db-sk-h'); h.appendChild(E('span', 'db-sk-n', nm)); h.appendChild(E('span', 'db-sk-v', `${Math.round(v * 10) / 10}/10`)); row.appendChild(h);
+        const b2 = E('div', 'db-bar wr-bar'); const f = E('span', 'db-fill'); f.style.width = v * 10 + '%'; b2.appendChild(f); row.appendChild(b2);
+        if (n3) row.appendChild(E('div', 'db-sk-d', n3)); cr.appendChild(row);
+      });
+      cr.appendChild(E('div', 'rv-note', 'AI chỉ đọc lời đã được chép lại nên không chấm phát âm. Để luyện phát âm, dùng tab Phát âm hoặc Shadowing.'));
+      out.appendChild(cr);
+      const errs = (Array.isArray(r.errors) ? r.errors : []).filter(x => x && x.wrong && x.right && String(x.wrong).trim() !== String(x.right).trim() && txt.includes(String(x.wrong)));
+      if (errs.length) {
+        const ec = E('div', 'tense-card'); ec.appendChild(E('h3', null, `✏️ ${errs.length} lỗi cần sửa`));
+        const ol = E('ol', 'wr-errs');
+        errs.forEach(x => { const li = E('li'); li.appendChild(E('s', null, x.wrong)); li.appendChild(document.createTextNode(' → ')); li.appendChild(E('b', null, x.right)); if (x.why) li.appendChild(E('div', 'wr-why', x.why)); ol.appendChild(li);
+          try { if (window.mkAdd) window.mkAdd({ k: 'spk|' + t.id + '|' + String(x.wrong).toLowerCase().slice(0, 80), src: 'talk', cat: 'Nói theo đề · ' + t.t, mode: 'fix', p: x.wrong, a: [x.right], why: x.why || '' }); } catch (e) {} });
+        ec.appendChild(ol); ec.appendChild(E('div', 'rv-note', 'Các lỗi đã được ghi vào 📕 Sổ lỗi.'));
+        out.appendChild(ec);
+      }
+      if (r.improved) { const ic = E('div', 'tense-card'); const h = E('div', 'wr-sh'); h.appendChild(E('h3', null, '✨ Cách nói tự nhiên hơn')); const p3 = E('button', 'btn-ghost', '🔊 Nghe'); p3.type = 'button'; p3.addEventListener('click', () => say(String(r.improved))); h.appendChild(p3); ic.appendChild(h); ic.appendChild(E('p', 'wr-sp', String(r.improved))); out.appendChild(ic); }
+      if (Array.isArray(r.tips) && r.tips.length) { const tcd = E('div', 'tense-card'); tcd.appendChild(E('h3', null, '💡 Lần sau nên')); const u2 = E('ul', 'wr-ol'); r.tips.slice(0, 4).forEach(x => u2.appendChild(E('li', null, String(x)))); tcd.appendChild(u2); out.appendChild(tcd); }
+      try { top1.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) {}
+    });
+  }
+  window.spOpen = id => { const t = SP_TASKS.find(x => x.id === id); if (t) spTask(t); else spHome(); };
   window.talkOpen = id => { const s = TALK_SCENES.find(x => x.id === id); if (s) intro(s); else home(); };
+  // v146: các tab khác (Viết theo đề, Dịch) gọi AI qua cùng khoá / nhà cung cấp đã cài ở đây
+  window.aiAPI = {
+    hasKey: () => !!aiKey(),
+    name: () => PROV[prov()].name,
+    errText: e => errText(e),
+    setup: () => { const nav = document.querySelector('nav.tabbar button[data-page="page-talk"]'); if (nav) nav.click(); setTimeout(() => { aiHome({}); top(); }, 0); },
+    json: async (sys, user, schema, o) => {
+      o = o || {};
+      const txt = await gem({ systemInstruction: { parts: [{ text: sys }] }, contents: [{ role: 'user', parts: [{ text: user }] }],
+        generationConfig: { temperature: o.temperature != null ? o.temperature : 0.3, maxOutputTokens: o.max || 4096, responseMimeType: 'application/json', responseSchema: schema } }, true, o.onDelta, o.onRetry);
+      return parseJSON(txt);
+    }
+  };
   document.querySelectorAll('nav.tabbar button').forEach(b => b.addEventListener('click', () => {
-    if (b.dataset.page !== 'page-talk') { if (R || A) hush(); return; }
+    if (b.dataset.page !== 'page-talk') { if (R || A) hush(); spStop(); return; }
     if (!R && !A && !root.querySelector('.tk-intro, .tk-ai')) home();
   }));
   home();

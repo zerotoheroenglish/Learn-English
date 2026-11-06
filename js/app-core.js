@@ -278,7 +278,9 @@ function pickEnglishVoice() {
   if (!('speechSynthesis' in window)) return null;
   const voices = speechSynthesis.getVoices();
   if (!voices.length) return null;
-  return voices.find(v => v.lang === 'en-US')
+  const us = voices.filter(v => (v.lang || '').replace('_', '-') === 'en-US');
+  const good = v => /natural|neural|online|enhanced|premium|^google|samantha|\bava\b/i.test(v.name) && !/albert|bad news|bells|boing|bubbles|cellos|jester|organ|superstar|trinoids|whisper|wobble|zarvox|eddy|grandma|grandpa|rocko|shelley|sandy|\bflo\b|\breed\b/i.test(v.name);
+  return us.find(good) || us[0]
       || voices.find(v => v.lang && v.lang.startsWith('en'))
       || voices[0];
 }
@@ -293,7 +295,11 @@ if ('speechSynthesis' in window) {
    - resume() in case the engine got stuck in a paused state
    - online voices (Google…, Microsoft … Online) that never start or fail are retried once with a voice installed on the device
    - keep online voices alive past Chrome's ~15 s cut-off */
-const TTS = { keep: null, timer: 0, ka: 0, watch: 0, stuck: 0, last: null };
+const TTS = { keep: null, timer: 0, ka: 0, watch: 0, stuck: 0, last: null, micEnd: 0 };
+// v142: micro vừa tắt → iPhone / Windows cần một nhịp để chuyển âm thanh từ "ghi âm" về "phát" (nếu không tiếng đọc bị vấp, nhỏ hoặc mất chữ đầu)
+function ttsMicEnded() { TTS.micEnd = Date.now(); }
+// v142: tốc độ quá chậm làm giọng máy bị kéo dài, rè và giật → giữ trong khoảng nghe tự nhiên (0.5 → 0.72, 0.8 → 0.87)
+function ttsRate(r) { r = r || 0.9; return r >= 0.9 ? r : Math.max(0.68, 0.72 + (r - 0.5) * 0.5); }
 const TTS_IOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 // v129: nhớ danh sách giọng (một số máy Android trả về danh sách mới rất chậm mỗi lần hỏi); làm mới khi trình duyệt báo đổi
 let TTS_VOICES = null, TTS_VCHECKED = false;
@@ -387,7 +393,8 @@ function ttsPlay(u, retried) {
       }, 9000);
     }
   };
-  if (busy) TTS.timer = setTimeout(go, 120); else go();
+  const gap = Math.max(busy ? 120 : 0, TTS.micEnd ? (TTS_IOS ? 450 : 250) - (Date.now() - TTS.micEnd) : 0);
+  if (gap > 0) TTS.timer = setTimeout(go, gap); else go();
   return u;
 }
 
@@ -422,7 +429,7 @@ function speak(text, rate, lang) {
     utter.lang = 'en-US';
     if (pronVoice) { utter.voice = pronVoice; utter.lang = (pronVoice.lang || 'en-US').replace('_', '-'); }
   }
-  utter.rate = rate || 0.8;
+  utter.rate = ttsRate(rate || 0.8);
   return ttsPlay(utter);
 }
 
@@ -5401,6 +5408,22 @@ function gxReviewSet(ids) {
   return out;
 }
 
+/* v143: ghi câu sai vào Sổ lỗi (đúng lại thì tính một lần luyện đúng) */
+function gxMk(Q, ok, user) {
+  if (typeof window.mkAdd !== 'function') return;
+  const k = 'gx|' + Q.id + '|' + Q.qid;
+  if (ok) { window.mkOk(k); return; }
+  const it = gxFind(Q.id), cat = it ? it.title : '';
+  if (Q.q) {
+    const q = Q.q, ans = gxAns(q);
+    if (Q.type === 'fix') window.mkAdd({ k, src: 'gx', cat, mode: 'fix', p: Q._wrongSent, hint: q[4], a: ans.map(a => gxFill(q[0], a)), wrong: user, why: (Q._w ? `Lỗi: “${Q._w[0] === '—' ? '(thiếu từ)' : Q._w[0]}” → ${Q._w[1]} ` : '') + q[3] });
+    else if (ans[0] === '—') window.mkAdd({ k, src: 'gx', cat, mode: 'sent', ask: 'Viết lại cả câu cho đúng (chỗ trống có thể không cần từ nào)', p: q[0].replace('___', '_____'), hint: q[4], a: ans.map(a => gxFill(q[0], a)), wrong: user, why: q[3] });
+    else window.mkAdd({ k, src: 'gx', cat, mode: 'blank', p: q[0].replace('___', '_____'), hint: q[4], a: ans.filter(a => a !== '—'), right: gxFill(q[0], ans[0]), wrong: user, why: q[3] });
+  } else if (Q.r) {
+    const r = Q.r;
+    window.mkAdd({ k, src: 'gx', cat, mode: 'sent', ask: Q.type === 'order' ? 'Viết câu tiếng Anh (sắp xếp đúng trật tự từ)' : 'Dịch sang tiếng Anh', p: r[1], a: [r[0], ...(r[2] || [])], wrong: user, why: gxStructHint(Q.id) });
+  }
+}
 /* ---------- một lượt câu hỏi (dùng cho luyện tập, kiểm tra, ôn tập) ---------- */
 const GX_TYPE_VI = { mc: 'Chọn đáp án đúng', fill: 'Điền từ còn thiếu', order: 'Sắp xếp từ thành câu', fix: 'Tìm và sửa lỗi sai', trans: 'Dịch Việt → Anh' };
 function gxQuiz(box, qs, opts) {
@@ -5420,8 +5443,9 @@ function gxQuiz(box, qs, opts) {
     const next = grEl('button', 'btn-primary gx-next', S.i + 1 < qs.length ? 'Câu tiếp →' : (opts.doneLabel || 'Xem kết quả'));
     next.hidden = true;
     next.addEventListener('click', () => { S.i++; draw(); });
-    const finish = (ok, detail) => {
+    const finish = (ok, detail, user) => {
       S.res.push({ id: Q.id, qid: Q.qid, ok });
+      try { gxMk(Q, ok, user); if (window.actLog) actLog('g'); } catch (e) {}
       fb.hidden = false; fb.className = 'gx-fb ' + (ok ? 'ok' : 'bad');
       fb.innerHTML = '';
       fb.appendChild(grEl('div', 'gx-fb-t', ok ? '✓ Chính xác!' : '✗ Chưa đúng'));
@@ -5452,7 +5476,7 @@ function gxQuiz(box, qs, opts) {
             if (!ok) { const w = q[2].find(x => x[0] === o); if (w) det.push(why(`Vì sao “${o === '—' ? '(bỏ trống)' : o}” sai: ${w[1]}`, 'bad')); }
             det.push(why(`Vì sao “${ans[0]}” đúng: ${q[3]}`, 'ok'));
             if (ok) q[2].forEach(w => det.push(why(`“${w[0] === '—' ? '(bỏ trống)' : w[0]}” sai vì: ${w[1]}`, 'soft')));
-            finish(ok, det);
+            finish(ok, det, o === '—' ? '(bỏ trống)' : o);
           });
           wrap.appendChild(b);
         });
@@ -5484,7 +5508,7 @@ function gxQuiz(box, qs, opts) {
           else if (!ok) { const w = q[2].find(x => gxNorm(x[0]) === gxNorm(v)); if (w) det.push(why(`Vì sao “${v}” sai: ${w[1]}`, 'bad')); }
           det.push(why(`Vì sao “${ans[0]}” đúng: ${q[3]}`, 'ok'));
           if (ans.length > 1) det.push(why('Cũng chấp nhận: ' + ans.slice(1).join(', '), 'soft'));
-          finish(ok, det);
+          finish(ok, det, v);
         };
         ck.addEventListener('click', go);
         inp.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); if (S.res.length > S.i) next.click(); else go(); } });
@@ -5517,7 +5541,7 @@ function gxQuiz(box, qs, opts) {
           det.push(line('Câu đúng', r[0], 'gx-right', r[0]));
           if (!ok) det.push(why('So sánh trật tự từ với câu đúng: ' + gxOrderHint(r[0], v), 'bad'));
           det.push(why(gxStructHint(Q.id), 'ok'));
-          finish(ok, det);
+          finish(ok, det, v);
         });
         clr.addEventListener('click', () => { picked.length = 0; drawT(); });
         body.appendChild(ansBox); body.appendChild(bank);
@@ -5540,7 +5564,7 @@ function gxQuiz(box, qs, opts) {
           det.push(line(ok && !exact ? 'Đáp án mẫu' : 'Câu đúng', r[0], 'gx-right', r[0]));
           if (models.length > 1) det.push(why('Cách nói khác: ' + models.slice(1).join(' · '), 'soft'));
           det.push(why(gxStructHint(Q.id), 'ok'));
-          finish(ok, det);
+          finish(ok, det, v);
         };
         ck.addEventListener('click', go);
         inp.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); if (S.res.length > S.i) next.click(); else go(); } });
@@ -7175,6 +7199,7 @@ function srsTouch(it) {
 }
 // g: 0 = quên · 1 = nhớ nhưng còn chậm · 2 = nhớ chính xác · 3 = nhớ dễ dàng
 function srsGrade(it, g) {
+  try { if (window.actLog) actLog('v'); } catch (e) {}
   const r = srsTouch(it), d = vrToday();
   const again = r.t === d;                     // đã ôn hôm nay rồi: chỉ ghi nhận, không tăng mức thêm
   // v132: hạn ôn tính theo FSRS (độ khó riêng của từng từ); r.s vẫn là bậc để xét trạng thái
@@ -7261,7 +7286,8 @@ function vspScore(target, heard) {
    Giờ app nhận chữ ngay trong lúc bạn nói (interim): nói đúng hết câu mẫu → chấm ngay; ngừng nói ~0.8–1.2 giây → tự chốt. */
 function vspListen(target, onDone, onPartial) {
   if (prRecog) { try { prRecog.abort(); } catch (e) {} prRecog = null; }
-  try { speechSynthesis.cancel(); } catch (e) {}
+  let wasTalking = false;
+  try { wasTalking = speechSynthesis.speaking || speechSynthesis.pending; clearTimeout(TTS.timer); TTS.keep = null; speechSynthesis.cancel(); } catch (e) {}
   const r = new PR_SR();
   r.lang = (typeof pronVoice !== 'undefined' && pronVoice && /^en/i.test(pronVoice.lang)) ? pronVoice.lang.replace('_', '-') : 'en-US';
   r.interimResults = true; r.continuous = false; r.maxAlternatives = 5;
@@ -7278,6 +7304,8 @@ function vspListen(target, onDone, onPartial) {
     clearTimeout(quiet); clearTimeout(cap);
     if (prRecog === r) prRecog = null;
     try { r.onresult = r.onerror = r.onend = null; r.abort(); } catch (e) {}
+    ttsMicEnded();
+    try { if (best && window.actLog) actLog('s'); } catch (e) {}
     onDone(best, err);
   };
   r.onresult = ev => {
@@ -7305,7 +7333,9 @@ function vspListen(target, onDone, onPartial) {
   };
   r.onend = () => { if (lastAlts) finish(scoreAlts(lastAlts), null); else finish(null, 'Không nghe rõ. Bấm nói lại và đọc to hơn nhé.'); };
   cap = setTimeout(() => { if (lastAlts) finish(scoreAlts(lastAlts), null); else { try { r.stop(); } catch (e) {} } }, nW <= 2 ? 7000 : 15000);
-  try { r.start(); } catch (e) { finish(null, 'Không mở được micro. Hãy thử lại.'); }
+  // giọng mẫu đang đọc → chờ nó dừng hẳn rồi mới mở micro (tránh tiếng "bụp" và micro thu lại chính giọng máy)
+  const open = () => { if (done) return; try { r.start(); } catch (e) { finish(null, 'Không mở được micro. Hãy thử lại.'); } };
+  if (wasTalking) setTimeout(open, TTS_IOS ? 250 : 150); else open();
 }
 
 function vcStartSpeak(only) {
@@ -7401,6 +7431,11 @@ function vcRenderSpeak() {
         q.tries++; q.last = best;
         if (!q.best || best.pct > q.best.pct) q.best = best;
         vspSave(it, S.what, best.pct);
+        try {   // v143: đọc chưa khớp (< 60%) → Sổ lỗi; đọc tốt (≥ 80%) → tính một lần luyện đúng
+          const mk = 'say|' + String(target).toLowerCase();
+          if (best.pct >= 80) { if (window.mkOk) window.mkOk(mk); }
+          else if (best.pct < 60 && window.mkAdd) window.mkAdd({ k: mk, src: 'say', cat: S.what === 'ex' ? 'Câu ví dụ' : 'Từ vựng', mode: 'say', p: vspText(target), a: [vspText(target)], right: vspText(target), hint: it.ipa ? it.ipa + ' · ' + it.vi : it.vi, wrong: best.heard ? 'Máy nghe thành: “' + best.heard + '”' : '', pct: best.pct });
+        } catch (e) {}
       } else if (err) q.err = err;
       vcRenderSpeak();
     }, t => { const b = document.getElementById('vc-body'), o = b && b.querySelector('.vsp-out'); if (o && vc.sp === S && S.busy) { o.className = 'pr-speak-out vsp-out vsp-live'; o.textContent = '👂 ' + t; } });
@@ -8449,6 +8484,7 @@ function vcStartQuiz() {
 function vcQuizAnswer(q, ok) {
   const Q = vc.quiz;
   if (ok) Q.score++; else Q.wrong.push(q.it);
+  try { const it = q.it, k = 'vc|' + it.w; if (ok) { if (window.mkOk) window.mkOk(k); } else if (window.mkAdd) window.mkAdd({ k, src: 'vc', cat: (typeof VC_POS !== 'undefined' && VC_POS[it.pos]) || '', mode: 'word', p: it.vi, hint: (it.ipa || '') + ' · bắt đầu bằng “' + String(it.w).charAt(0) + '”, ' + String(it.w).length + ' chữ cái', a: [it.w], wrong: q.picked && q.picked.w ? q.picked.w : (q.typed || '') }); } catch (e) {}
   srsGrade(q.it, ok ? 2 : 0);
   vcRenderQuiz();
   speak(q.it.w, 0.8);
@@ -9627,6 +9663,14 @@ const irrDue = () => IRREGULAR_VERBS.filter(v => irrStatus(v) === 'review');
 function irrSeen(v) { if (!irrSrs[v.v1]) { irrSrs[v.v1] = { b: 0, n: 0, w: 0, due: irrToday(), last: irrToday() }; irrSrsSave(); } }
 // chấm một lần trả lời: đúng → lên một bậc và hẹn ôn sau 1, 3, 7, 14, 30 ngày; sai → về bậc thấp, ôn ngay
 function irrGrade(v, ok, kind, val, grade) {
+  try { if (window.actLog && kind !== 'rv') actLog('v'); } catch (e) {}
+  try {   // v143: Sổ lỗi (không tính thẻ tự chấm)
+    if (kind !== 'card' && kind !== 'rv' && v && v.v1) {
+      const k = 'irr|' + v.v1;
+      if (ok) { if (window.mkOk) window.mkOk(k); }
+      else if (window.mkAdd) window.mkAdd({ k, src: 'irr', cat: 'Động từ bất quy tắc', mode: 'irr', p: `“${v.v1}” (${v.meaning || ''})`, a: [v.v2 + '|' + v.v3], right: `${v.v1} → ${v.v2} → ${v.v3}`, why: v.ipa ? 'Phiên âm: ' + v.ipa : '' });
+    }
+  } catch (e) {}
   const r = irrSrs[v.v1] || (irrSrs[v.v1] = { b: 0, n: 0, w: 0, due: irrToday(), last: irrToday() });
   const t = irrToday();
   // v132: FSRS cho hạn ôn; thẻ cũ được ước lượng từ bậc đang có
@@ -10574,6 +10618,9 @@ function vScore(v, p) {
   if (VOICE_NOVELTY.test(v.name)) s -= 20;
   if (/enhanced|premium|natural|neural|online|siri/i.test(v.name)) s += 3;
   if (v.localService) s += 1;
+  // v142: giọng Google của Chrome tự nhiên hơn hẳn giọng Microsoft cài sẵn trên Windows (David, Zira, Mark… nghe rất "robot")
+  if (/^google\b/i.test(v.name)) s += 4;
+  if (/^microsoft (david|zira|mark|hazel|george|susan|james|catherine|linda|richard|heera|ravi|sean)\b/i.test(v.name) && !/online|natural/i.test(v.name)) s -= 6;
   return s;
 }
 let vAll = [], vResolved = {};

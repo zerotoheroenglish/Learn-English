@@ -19,7 +19,7 @@ const FIREBASE_CONFIG = {
   if (!FIREBASE_CONFIG || !btn) return;
   btn.hidden = false;
   const PREFIX = 'hoc-tieng-anh-', META = PREFIX + 'sync-meta', UIDK = PREFIX + 'sync-uid', BASEK = PREFIX + 'sync-base';
-  const SKIP = new Set([PREFIX + 'voice', META, UIDK, BASEK, PREFIX + 'autofix-open', PREFIX + 'backup-at', PREFIX + 'backup-nag', PREFIX + 'ipa-cache', PREFIX + 'talk-key', PREFIX + 'talk-model', PREFIX + 'talk-models', PREFIX + 'talk-prov', PREFIX + 'talk-key-groq', PREFIX + 'talk-model-groq', PREFIX + 'talk-models-groq', PREFIX + 'talk-key-openai', PREFIX + 'talk-model-openai', PREFIX + 'talk-models-openai', PREFIX + 'syncbar-at', PREFIX + 'syncbar-mute']);   // v128: cache IPA tự tạo lại được, không cần đẩy lên tài khoản   // device-specific / bookkeeping
+  const SKIP = new Set([PREFIX + 'voice', META, UIDK, BASEK, PREFIX + 'autofix-open', PREFIX + 'backup-at', PREFIX + 'backup-nag', PREFIX + 'backup-every', PREFIX + 'ipa-cache', PREFIX + 'talk-key', PREFIX + 'talk-model', PREFIX + 'talk-models', PREFIX + 'talk-prov', PREFIX + 'talk-key-groq', PREFIX + 'talk-model-groq', PREFIX + 'talk-models-groq', PREFIX + 'talk-key-openai', PREFIX + 'talk-model-openai', PREFIX + 'talk-models-openai', PREFIX + 'syncbar-at', PREFIX + 'syncbar-mute']);   // v128: cache IPA tự tạo lại được, không cần đẩy lên tài khoản   // device-specific / bookkeeping
   const FB = 'https://www.gstatic.com/firebasejs/10.12.2/';
   const $ = id => document.getElementById(id);
   const sheet = $('asheet'), msg = $('acct-msg');

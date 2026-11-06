@@ -195,6 +195,7 @@ const PA_LESSONS = [{"id":"a1-me","lv":1,"icon":"🙋","title":"Giới thiệu b
       const b = score(v, l, i);
       p.a[i] = ta.value;
       if (p.sc[i] == null || b.pct > p.sc[i]) p.sc[i] = b.pct;
+      try { if (window.actLog) actLog('w'); } catch (e) {}
       save();
       const badge = h.querySelector('.pe-badge'); if (badge) badge.remove();
       h.appendChild(E('span', 'pe-badge ' + grade(p.sc[i]), p.sc[i] + '%'));
@@ -362,6 +363,7 @@ const PA_LESSONS = [{"id":"a1-me","lv":1,"icon":"🙋","title":"Giới thiệu b
           scores.push(best.pct);
           const pendIdx = scores.length - 1;
           if (p.sc[i] == null || best.pct > p.sc[i]) p.sc[i] = best.pct;
+          try { if (window.actLog) actLog('w'); } catch (e) {}
           const u = E('div', 'pe-line'); u.appendChild(E('span', 'pe-lab', 'Bạn viết')); u.appendChild(colorUser(best.text, best.tb, best.poss)); u.appendChild(E('span', 'pe-badge ' + grade(best.pct), best.pct + '%'));
           line.appendChild(u);
           const m = E('div', 'pe-line'); m.appendChild(E('span', 'pe-lab', 'Bản mẫu')); m.appendChild(colorModel(r[1 + best.k], best.ta, best.poss));
