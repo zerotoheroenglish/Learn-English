@@ -1,3 +1,13 @@
+/* v171: trang đang ẩn chỉ vẽ lần đầu khi bạn mở tới (app mở nhanh hơn).
+   Nếu trang đã được vẽ bằng đường khác (ví dụ mở thẳng một bài từ "Hôm nay") thì không vẽ đè. */
+function whenPageShown(pageId, root, fn) {
+  const pg = document.getElementById(pageId);
+  const run = () => { if (!root || !root.firstElementChild) fn(); };
+  if (!pg || pg.classList.contains('active')) { run(); return; }
+  const mo = new MutationObserver(() => { if (pg.classList.contains('active')) { mo.disconnect(); run(); } });
+  mo.observe(pg, { attributes: true, attributeFilter: ['class'] });
+}
+
 /* ============================================================
    COLLOCATIONS — words that commonly go together
    Each group: { id, group, note, items: [{ p: phrase, m: meaning, ex: example }] }
@@ -328,9 +338,61 @@ function ttsLocal(lang) {
       || all.find(v => (v.lang || '').toLowerCase().startsWith(l.slice(0, 2)))
       || null;
 }
-function ttsPlay(u, retried) {
+/* v170: câu dài (> ~180 ký tự) được chia theo câu / dấu phẩy và đọc nối tiếp.
+   Trước đây giọng online phải pause()+resume() mỗi 9 giây để khỏi bị Chrome cắt ở ~15 giây → nghe bị khựng. */
+const TTS_MAX = 180;
+function ttsSplit(text) {
+  const t = String(text || '').replace(/\s+/g, ' ').trim();
+  if (t.length <= TTS_MAX) return [t];
+  const sent = t.match(/[^.!?…;:]+[.!?…;:]+["”’)]*\s*|[^.!?…;:]+$/g) || [t];
+  const out = []; let cur = '';
+  const push = piece => {
+    piece = piece.trim(); if (!piece) return;
+    if (piece.length > TTS_MAX) {   // câu quá dài không có dấu chấm → tách tiếp ở dấu phẩy, rồi theo từ
+      const parts = piece.split(/(?<=,)\s+/); let c = '';
+      parts.forEach(pp => {
+        if ((c + ' ' + pp).trim().length > TTS_MAX && c) { out.push(c.trim()); c = ''; }
+        if (pp.length > TTS_MAX) { pp.split(' ').forEach(w => { if ((c + ' ' + w).length > TTS_MAX && c) { out.push(c.trim()); c = ''; } c += ' ' + w; }); }
+        else c += ' ' + pp;
+      });
+      if (c.trim()) out.push(c.trim());
+      return;
+    }
+    out.push(piece);
+  };
+  sent.forEach(sx => { if ((cur + ' ' + sx).trim().length > TTS_MAX && cur) { push(cur); cur = ''; } cur += ' ' + sx; });
+  if (cur.trim()) push(cur);
+  return out.length ? out : [t];
+}
+let TTS_SEQ = 0;
+// bấm dừng ở bất cứ đâu (speechSynthesis.cancel) → cũng dừng luôn các đoạn còn lại của câu dài
+try { if (window.speechSynthesis && !speechSynthesis.__seqWrap) { const oc = speechSynthesis.cancel.bind(speechSynthesis); speechSynthesis.cancel = function () { TTS_SEQ++; return oc(); }; speechSynthesis.__seqWrap = true; } } catch (e) {}
+function ttsPlay(u, retried, inChain) {
   const ss = window.speechSynthesis;
   if (!ss) return u;
+  // câu dài → đọc nối tiếp từng đoạn; sự kiện start/end/error vẫn báo về câu gốc u
+  if (!retried && !u.__chunk) {
+    const parts = ttsSplit(u.text);
+    if (parts.length > 1) {
+      let was = false; try { was = !!(ss.speaking || ss.pending); if (was) ss.cancel(); } catch (e) {}
+      const seq = ++TTS_SEQ;
+      let k = 0, startedAll = false;
+      const fire = ev => { try { u.dispatchEvent(new Event(ev)); } catch (e) {} };
+      const next = () => {
+        if (seq !== TTS_SEQ) return;
+        if (k >= parts.length) { fire('end'); return; }
+        const c = new SpeechSynthesisUtterance(parts[k++]);
+        c.__chunk = true; c.voice = u.voice; c.lang = u.lang; c.rate = u.rate; c.pitch = u.pitch; c.volume = u.volume;
+        c.addEventListener('start', () => { if (!startedAll) { startedAll = true; fire('start'); } });
+        c.addEventListener('end', () => { if (seq === TTS_SEQ) next(); });
+        c.addEventListener('error', e => { const er = e && e.error; if (er === 'interrupted' || er === 'canceled') { TTS_SEQ === seq && (TTS_SEQ++); return; } next(); });
+        ttsPlay(c, false, true);
+      };
+      if (was) setTimeout(next, TTS_IOS ? 150 : 70); else next();
+      return u;
+    }
+  }
+  if (!u.__chunk) TTS_SEQ++;   // câu mới (không phải đoạn kế tiếp) → dừng chuỗi đoạn đang đọc
   if (!retried && !TTS_IOS && !TTS_VCHECKED && !u.__vw && !ttsVoices().length) {
     u.__vw = true;
     ttsWaitVoices().then(() => {
@@ -346,8 +408,9 @@ function ttsPlay(u, retried) {
   clearTimeout(TTS.timer); clearInterval(TTS.ka); clearTimeout(TTS.watch); clearTimeout(TTS.stuck);
   let busy = false;
   try { busy = !!(ss.speaking || ss.pending); } catch (e) {}
-  // iOS: gọi cancel() rồi speak() ngay trong cùng một nhịp đôi khi làm mất câu mới, nên chỉ cancel khi đang có tiếng
-  if (busy || !TTS_IOS) { try { ss.cancel(); } catch (e) {} }
+  // v170: chỉ cancel khi đang có tiếng — gọi cancel() lúc máy rảnh làm Chrome/Safari vấp ở đầu câu mới
+  if (inChain) busy = false;
+  else if (busy) { try { ss.cancel(); } catch (e) {} }
   if (u.voice) { const f = ttsFresh(u.voice); if (f) u.voice = f; else if (ttsVoices().length) u.voice = null; }
   TTS.keep = u;
   let started = false;
@@ -371,7 +434,7 @@ function ttsPlay(u, retried) {
     });
   } catch (e) {}
   const go = () => {
-    try { ss.resume(); } catch (e) {}
+    try { if (ss.paused) ss.resume(); } catch (e) {}
     try { ss.speak(u); } catch (e) { return; }
     // máy đọc bị "kẹt" (hay gặp trên iPhone sau khi mở lại app hoặc cập nhật iOS): không bắt đầu sau 2 giây → dừng hẳn rồi đọc lại một lần
     if (!retried && !online) TTS.stuck = setTimeout(() => {
@@ -388,12 +451,10 @@ function ttsPlay(u, retried) {
     }, 2000);
     if (online) {
       TTS.watch = setTimeout(() => { if (!started && TTS.keep === u) retry('no-start'); }, 2500);
-      TTS.ka = setInterval(() => {
-        try { if (!ss.speaking) { clearInterval(TTS.ka); return; } if (!ss.paused) { ss.pause(); ss.resume(); } } catch (e) {}
-      }, 9000);
+      // v170: không còn pause()+resume() định kỳ (gây khựng) — câu dài đã được chia đoạn ở trên
     }
   };
-  const gap = Math.max(busy ? 120 : 0, TTS.micEnd ? (TTS_IOS ? 450 : 250) - (Date.now() - TTS.micEnd) : 0);
+  const gap = Math.max(busy ? (TTS_IOS ? 150 : 70) : 0, TTS.micEnd ? (TTS_IOS ? 450 : 250) - (Date.now() - TTS.micEnd) : 0);
   if (gap > 0) TTS.timer = setTimeout(go, gap); else go();
   return u;
 }
@@ -4639,7 +4700,7 @@ function prSentGuide(text) {
   return d;
 }
 
-renderPronSets();
+whenPageShown('page-pron', pronSets, renderPronSets);
 // leaving the tab stops the "play all" loop
 document.querySelectorAll('nav.tabbar button').forEach(b => b.addEventListener('click', () => { if (b.dataset.page !== 'page-pron') prSeqStop(); }));
 
@@ -6099,7 +6160,7 @@ function gxPlacementResult(res, box, trackOf, timeUp) {
   box.appendChild(rec);
 }
 
-renderGrammarHome();
+whenPageShown('page-grammar', grRoot, renderGrammarHome);
 
 /* ============================================================
    UI WIRING - Collocations page
@@ -7143,7 +7204,11 @@ try {
 const VC_KEY = 'hoc-tieng-anh-vocab-learned';
 let vcLearned = new Set();
 try { const a = JSON.parse(localStorage.getItem(VC_KEY) || '[]'); if (Array.isArray(a)) vcLearned = new Set(a); } catch (e) {}
-const vcK = it => it.tid + '|' + it.w + (it.sense ? '|' + it.sense : '');  // sense: nghĩa thứ hai (vd. động từ của một danh từ cùng chủ đề)
+const vcK = it => {   // v171: nhớ sẵn khoá trên từng từ (thuộc tính ẩn, không lọt vào JSON hay bản sao), đỡ tạo chuỗi lặp lại hàng chục nghìn lần
+  let k = it._vk;
+  if (k === undefined) { k = it.tid + '|' + it.w + (it.sense ? '|' + it.sense : ''); try { Object.defineProperty(it, '_vk', { value: k }); } catch (e) {} }
+  return k;
+};  // sense: nghĩa thứ hai (vd. động từ của một danh từ cùng chủ đề)
 // Each word now lives in exactly one topic: move "learned" marks of words that changed topic, drop marks of removed words
 (() => {
   const home = new Map(VC_ALL.filter(it => !it.sense).map(it => [it.w.toLowerCase(), vcK(it)]));
@@ -7379,7 +7444,8 @@ function vspListen(target, onDone, onPartial, opts) {
   const nW = lsNorm(vspText(target)).length, QUIET = nW <= 2 ? 800 : nW <= 6 ? 1000 : 1200;
   // v167: câu từ 4 từ trở lên nghe liên tục — không bị cắt khi người học ngừng lấy hơi giữa câu
   const LONG = nW >= 4;
-  r.interimResults = true; r.continuous = LONG; r.maxAlternatives = LONG ? 1 : 5;
+  const TGT = new Set(lsNorm(vspText(target)));
+  r.interimResults = true; r.continuous = LONG; r.maxAlternatives = LONG ? 3 : 5;
   let done = false, lastAlts = null, quiet = 0, cap = 0, lastTxt = '';
   prRecog = r;
   const scoreAlts = alts => {
@@ -7399,7 +7465,15 @@ function vspListen(target, onDone, onPartial, opts) {
   r.onresult = ev => {
     // ghép các đoạn kết quả; với đoạn đầu lấy thêm các phương án khác máy đoán
     let head = '', fin = true;
-    for (let i = 0; i < ev.results.length; i++) { head += ev.results[i][0].transcript + ' '; if (!ev.results[i].isFinal) fin = false; }
+    // v170: với từng đoạn máy nghe được, chọn phương án có nhiều từ trùng với câu mẫu nhất (nhận đúng hơn khi phát âm chưa chuẩn)
+    for (let i = 0; i < ev.results.length; i++) {
+      const res = ev.results[i]; let pick = res[0].transcript;
+      if (res.length > 1 && ev.results.length > 1) {
+        let bestHit = -1;
+        for (let k = 0; k < res.length; k++) { const ws = lsNorm(res[k].transcript); const hit = ws.filter(w => TGT.has(w)).length - ws.length * 0.01; if (hit > bestHit) { bestHit = hit; pick = res[k].transcript; } }
+      }
+      head += pick + ' '; if (!res.isFinal) fin = false;
+    }
     const alts = [head];
     if (ev.results.length === 1) for (let k = 1; k < ev.results[0].length; k++) alts.push(ev.results[0][k].transcript);
     lastAlts = alts;
@@ -8723,7 +8797,7 @@ function vcRenderQuiz() {
 }
 document.querySelectorAll('nav.tabbar button[data-page="page-vocab"]').forEach(b =>
   b.addEventListener('click', () => { if (vc.view === 'home') vcRenderHome(); else if (vc.view === 'topic') vcRenderTopicPage(); }));
-vcRenderHome();
+whenPageShown('page-vocab', vcRoot, vcRenderHome);
 
 /* IRR_EX: xem file dữ liệu */
 /* ============================================================
@@ -10187,7 +10261,7 @@ document.querySelectorAll('nav.tabbar button').forEach(b => b.addEventListener('
   if (b.dataset.page !== 'page-irregular') { irrSeqStop(); irrSpStop(); return; }
   if (irr.view === 'home') irrRenderHome();
 }));
-irrRenderHome();
+whenPageShown('page-irregular', irrRoot, irrRenderHome);
 
 /* ============================================================
    WRITE MODE ("Viết từ") — shared by the vocabulary & collocation tabs.

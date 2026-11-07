@@ -2,10 +2,11 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>/* v171: cho phép chụm 2 ngón để phóng to (giúp người mắt kém). Riêng iPhone/iPad giữ maximum-scale: Safari vẫn cho phóng to, mà không tự phóng khi chạm vào ô nhập */(function(){var u=navigator.userAgent||"";if(/iP(hone|ad|od)/.test(u)||(/Macintosh/.test(u)&&navigator.maxTouchPoints>1)){var m=document.querySelector('meta[name="viewport"]');if(m)m.setAttribute("content","width=device-width, initial-scale=1.0, maximum-scale=1.0");}})();</script>
 <title>Học Tiếng Anh</title>
 <meta name="theme-color" content="#14213D">
-<script>(function(){var c="auto";try{c=localStorage.getItem("hoc-tieng-anh-season2")||"";if(!c){c=localStorage.getItem("hoc-tieng-anh-season")==="off"?"off":"auto";}}catch(e){}var m=new Date().getMonth()+1,d=new Date().getDate();var a=m===10?"halloween":(m===11||m===12||(m===1&&d<=6))?"christmas":"";var v=c==="auto"?a:(c==="off"?"":c);if(v){document.documentElement.setAttribute("data-season",v);}var t=document.querySelector('meta[name="theme-color"]');if(t)t.setAttribute("content",v==="halloween"?"#1B1029":v==="christmas"?"#0B1E3A":"#14213D");window.__seasonAuto=a;})();</script>
+<script>/* v169: đã bỏ giao diện Halloween / Noel */try{localStorage.removeItem("hoc-tieng-anh-season2");localStorage.removeItem("hoc-tieng-anh-season");}catch(e){}</script>
 <script>
 /* v128 — LƯU TRỮ BỀN HƠN
    localStorage vẫn là nơi app đọc/ghi (đọc ngay, không phải chờ). Mỗi lần ghi, dữ liệu được chép thêm sang IndexedDB.
@@ -152,19 +153,16 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="app.css?h=55796e2990">
+<link rel="stylesheet" href="app.css?h=414ccb57ce">
 </head>
 <body>
 
 <header class="hero">
-  <div class="xm-deco" aria-hidden="true"><i class="xm-snow a"></i><i class="xm-snow b"></i><i class="xm-lights"></i><i class="xm-sleigh"></i><i class="xm-flake1"></i><i class="xm-flake2"></i><i class="xm-tree"></i><i class="xm-snowman"></i></div>
-  <div class="hw-deco" aria-hidden="true"><i class="hw-witch"></i><i class="hw-spider"></i><i class="hw-ghost"></i><i class="hw-caul"></i><i class="hw-candy"></i><i class="hw-cat"></i><i class="hw-skel"></i></div>
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v168</span>
+      <span class="hero-badge">EN ⇄ VI · v172</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
-        <button class="hero-voice hero-season" id="season-btn" aria-label="Đổi giao diện theo mùa" title="Đổi giao diện theo mùa">🎃</button>
         <button class="hero-voice" id="voice-btn" aria-label="Chọn giọng đọc">🔊 <span class="hv-label">Giọng đọc</span></button>
       </span>
     </div>
@@ -734,16 +732,16 @@
 </script>
 <script src="js/data-core.js?h=5c068bf2d4"></script>
 <script src="js/data-vocab.js?h=923ca16f1c"></script>
-<script src="js/app-core.js?h=8cb9aa6874"></script>
+<script src="js/app-core.js?h=15dd40ac52"></script>
 
-<script src="js/app-sync.js?h=9bcfb70f21"></script>
+<script src="js/app-sync.js?h=a3bbda8ea1"></script>
 
 <script src="js/app-feedback.js?h=f1bd3f9e55"></script>
 
 <!-- tab-shadowing: nạp khi mở tab -->
 
 <script src="js/data-exercises.js?h=dcbe86d1d8"></script>
-<script src="js/app-exercises.js?h=ae89fefbb0"></script>
+<script src="js/app-exercises.js?h=7304dd661c"></script>
 
 <script>
 /* ---- Terms, privacy & credits sheet ---- */
@@ -932,7 +930,7 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
 
   const HELP = [
     ['Chung', [
-      ['1 – 9', 'Chuyển tab (1 Dịch · 2 Phát âm · 3 Từ vựng & Bất quy tắc · 4 Shadowing · 5 Ngữ pháp · 6 Bài tập · 7 Dịch · Hỏi · 8 Nói chuyện · 9 Đọc · Nghe · Viết)'],
+      ['1 – 5', 'Chuyển tab (1 Hôm nay · 2 Học · 3 Luyện · 4 Ôn tập · 5 Dịch)'],   // v171: theo thanh 5 tab
       ['/', 'Đưa con trỏ vào ô tìm kiếm / ô nhập của tab'],
       ['Esc', 'Thoát ô nhập · đóng bảng · quay lại trang trước'],
       ['T', 'Cuộn lên đầu trang'],
@@ -1053,23 +1051,6 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
     b.addEventListener('click', () => help(true));
     links.appendChild(sep); links.appendChild(b);
   }
-})();
-</script>
-<script>
-/* 🎃 / 🎄 đổi giao diện theo mùa (lưu trên máy): Halloween → Noel → Bình thường */
-(function () {
-  const b = document.getElementById('season-btn'); if (!b) return;
-  const meta = document.querySelector('meta[name="theme-color"]');
-  const cur = () => document.documentElement.getAttribute('data-season') || '';
-  const LABEL = { halloween: ['🎃', 'Giao diện Halloween · bấm để đổi sang Noel'], christmas: ['🎄', 'Giao diện Noel · bấm để tắt'], '': ['🌙', 'Giao diện thường · bấm để bật Halloween'] };
-  const paint = () => { const v = cur(); b.textContent = LABEL[v][0]; b.title = LABEL[v][1]; b.setAttribute('aria-label', LABEL[v][1]); if (meta) meta.setAttribute('content', v === 'halloween' ? '#1B1029' : v === 'christmas' ? '#0B1E3A' : '#14213D'); };
-  b.addEventListener('click', () => {
-    const next = { halloween: 'christmas', christmas: '', '': 'halloween' }[cur()];
-    if (next) document.documentElement.setAttribute('data-season', next); else document.documentElement.removeAttribute('data-season');
-    try { localStorage.setItem('hoc-tieng-anh-season2', next || 'off'); } catch (e) {}
-    paint();
-  });
-  paint();
 })();
 </script>
 <!-- tab-para: nạp khi mở tab -->

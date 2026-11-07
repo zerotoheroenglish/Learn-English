@@ -91,6 +91,53 @@ const FIREBASE_CONFIG = {
     return JSON.stringify(srt(o));
   }
   const eq = (a, b) => a === b || (a != null && b != null && canon(a) === canon(b));
+
+  /* v172: TÀI KHOẢN CÓ NHIỀU DỮ LIỆU
+     Firestore chỉ cho mỗi tài khoản 1 MB (tính theo byte: chữ có dấu tiếng Việt tốn 2–3 byte).
+     Khi tiến độ vượt ngưỡng, các mục lớn nhất được nén (gzip) và cất ở trường "z" thay vì "data".
+     Tài khoản nhỏ không đổi gì cả, nên máy còn bản app cũ vẫn đồng bộ như trước. */
+  const BUDGET = 950000, ZMIN = 2000;
+  const canZip = typeof CompressionStream === 'function' && typeof DecompressionStream === 'function';
+  const te = typeof TextEncoder === 'function' ? new TextEncoder() : null;
+  const bytes = str => te ? te.encode(str).length : unescape(encodeURIComponent(str)).length;
+  async function zip(str) {
+    const st = new window.Blob([str]).stream().pipeThrough(new CompressionStream('gzip'));
+    return new Uint8Array(await new Response(st).arrayBuffer());
+  }
+  async function unzip(u8) {
+    const st = new window.Blob([u8]).stream().pipeThrough(new DecompressionStream('gzip'));
+    return new Response(st).text();
+  }
+  // đọc tiến độ trên tài khoản: ghép phần thường và phần đã nén
+  async function readCloud(cloud) {
+    const data = Object.assign({}, cloud.data || {}), z = cloud.z || {};
+    const zk = Object.keys(z);
+    if (zk.length && !canZip) throw Object.assign(new Error('no-unzip'), { code: 'no-unzip' });
+    for (const k of zk) { const b = z[k]; data[k] = await unzip(b && typeof b.toUint8Array === 'function' ? b.toUint8Array() : b); }
+    return data;
+  }
+  // chuẩn bị bản ghi lên tài khoản: chỉ nén khi vượt ngưỡng, nén mục lớn nhất trước
+  async function packCloud(out, outTs) {
+    const data = Object.assign({}, out), z = {};
+    let size = bytes(JSON.stringify({ v: 1, data, ts: outTs })) + 200;
+    if (size > BUDGET && canZip) {
+      const big = Object.keys(data).filter(k => typeof data[k] === 'string' && data[k].length >= ZMIN).sort((a, b) => data[b].length - data[a].length);
+      for (const k of big) {
+        if (size <= BUDGET) break;
+        const plain = bytes(JSON.stringify(k)) + bytes(JSON.stringify(data[k])) + 2;
+        const u8 = await zip(data[k]);
+        const packed = bytes(k) + u8.length + 16;
+        if (packed >= plain) continue;
+        z[k] = firebase.firestore.Blob.fromUint8Array(u8); delete data[k];
+        size += packed - plain;
+      }
+    }
+    if (size > BUDGET) throw Object.assign(new Error('too-big'), { code: 'too-big' });
+    const doc = { v: 1, data, ts: outTs };
+    if (Object.keys(z).length) doc.z = z;
+    return doc;
+  }
+
   async function syncNow(reason) {
     if (!user || !db) return;
     if (syncing) { again = true; return; }
@@ -103,7 +150,7 @@ const FIREBASE_CONFIG = {
         changes = [];
         const snap = await tx.get(ref);
         const cloud = snap.exists ? snap.data() : {};
-        const cData = cloud.data || {}, cTs = cloud.ts || {};
+        const cData = await readCloud(cloud), cTs = cloud.ts || {};
         const { data: lData, ts: lTs } = localSnapshot();
         const firstHere = !prevUid, otherUser = prevUid && prevUid !== uid;
         let base = {};
@@ -126,8 +173,9 @@ const FIREBASE_CONFIG = {
           out[k] = v; outTs[k] = t;
           if (!eq(v, lv === undefined ? null : lv) && !(v == null && lv == null)) changes.push([k, v, t]);
         });
-        if (JSON.stringify(out).length > 900000) throw Object.assign(new Error('too-big'), { code: 'too-big' });
-        tx.set(ref, { v: 1, data: out, ts: outTs, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+        const doc = await packCloud(out, outTs);
+        doc.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
+        tx.set(ref, doc);
         merged = out;
       });
       // apply what came from the cloud, without marking it as a local change
@@ -148,7 +196,10 @@ const FIREBASE_CONFIG = {
       if (changes.length) remoteChanged(reason, changes);
     } catch (e) {
       applying = false;
-      setStatus('err', e && e.code === 'too-big' ? 'Dữ liệu quá lớn để đồng bộ (bài nghe tự tạo quá dài).'
+      const big = e && (e.code === 'too-big' || (e.code === 'invalid-argument' && /size|maximum|bytes/i.test(e.message || '')));
+      setStatus('err', big ? (canZip ? 'Dữ liệu quá lớn để đồng bộ. Hãy xoá bớt bài nghe tự tạo hoặc lịch sử dịch cũ, rồi bấm Đồng bộ ngay.'
+          : 'Dữ liệu quá lớn để đồng bộ trên trình duyệt này. Hãy cập nhật trình duyệt (iPhone: iOS 16.4 trở lên) rồi thử lại.')
+        : e && e.code === 'no-unzip' ? 'Trình duyệt này quá cũ để đọc tiến độ trên tài khoản. Hãy cập nhật trình duyệt (iPhone: iOS 16.4 trở lên).'
         : e && e.code === 'permission-denied' ? 'Không có quyền ghi dữ liệu (kiểm tra Firestore rules).'
         : 'Chưa đồng bộ được — kiểm tra mạng. App sẽ thử lại.');
     } finally {

@@ -1293,7 +1293,7 @@ function smartReport(r, opts) {
     }
   } catch (e) {}
 
-  exHome();
+  if (typeof whenPageShown === 'function') whenPageShown('page-exercise', root, exHome); else exHome();   // v171
   window.exGoHome = exHome;
   window.exOpenLesson = exLesson;
   window.exOpenTest = exTest;
