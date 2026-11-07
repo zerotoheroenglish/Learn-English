@@ -489,15 +489,20 @@ const QBB = (() => {
     const go = t => { t = String(t || '').trim(); if (!t) return; if (!/\?\s*$/.test(t)) t += '?'; t = capW(t); mic.disabled = true; finish(card, it, check(t, it), t, [ck, skip, inp, mic]); };
     let rec = null;
     mic.addEventListener('click', () => {
-      if (rec) { try { rec.stop(); } catch (e) {} return; }
+      if (rec) { rec.stop(); return; }
       try { speechSynthesis.cancel(); } catch (e) {}
-      let fin = '';
-      try { rec = new SRX(); rec.lang = 'en-US'; rec.interimResults = true; rec.continuous = false; } catch (e) { return; }
-      mic.textContent = '⏹ Đang nghe… nhấn để dừng'; mic.classList.add('on'); live.textContent = ''; live.className = 'qb-live';
-      rec.onresult = ev => { let tmp = ''; for (let i = ev.resultIndex; i < ev.results.length; i++) { const r = ev.results[i]; if (r.isFinal) fin += r[0].transcript + ' '; else tmp += r[0].transcript; } live.textContent = (fin + tmp).trim(); };
-      rec.onerror = ev => { live.className = 'qb-live err'; live.textContent = ev && ev.error === 'not-allowed' ? 'Bạn chưa cho phép dùng micro. Hãy bật quyền micro, hoặc gõ câu hỏi.' : ev && ev.error === 'no-speech' ? 'Chưa nghe thấy gì, thử nói to và rõ hơn.' : 'Micro gặp lỗi, thử lại hoặc gõ câu hỏi.'; };
-      rec.onend = () => { rec = null; mic.classList.remove('on'); mic.textContent = '🎤 Nhấn để nói'; const t = (fin || '').trim() || (live.classList.contains('err') ? '' : live.textContent.trim()); if (t) go(t); };
-      try { rec.start(); } catch (e) { rec = null; }
+      mic.textContent = '⏳ Đang mở micro…'; mic.classList.add('on'); live.textContent = ''; live.className = 'qb-live';
+      // v168: nghe liên tục, tự chốt sau khi ngừng nói ~1,5 giây
+      rec = srFree({
+        silence: 1500,
+        onStart: () => { if (rec) mic.textContent = '👂 Đang nghe… nói ngay (nhấn để dừng)'; },
+        onText: t => { live.textContent = t; },
+        onDone: (t, err) => {
+          rec = null; mic.classList.remove('on'); mic.textContent = '🎤 Nhấn để nói';
+          if (t) { go(t); return; }
+          if (err) { live.className = 'qb-live err'; live.textContent = err === 'not-allowed' || err === 'service-not-allowed' ? 'Bạn chưa cho phép dùng micro. Hãy bật quyền micro, hoặc gõ câu hỏi.' : err === 'no-speech' ? 'Chưa nghe thấy gì, thử nói to và rõ hơn.' : 'Micro gặp lỗi, thử lại hoặc gõ câu hỏi.'; }
+        }
+      });
     });
     ck.addEventListener('click', () => go(inp.value));
     skip.addEventListener('click', () => finish(card, it, { ok: false, pct: 0, skipped: true }, '', [ck, skip, inp, mic]));

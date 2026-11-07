@@ -322,41 +322,34 @@ const TALK_SCENES = [
     const inp = E('input'); inp.type = 'text'; inp.placeholder = 'hoặc gõ câu trả lời bằng tiếng Anh…'; inp.autocomplete = 'off'; inp.setAttribute('autocapitalize', 'sentences');
     const send = E('button', 'btn-primary', 'Gửi'); send.type = 'submit';
     row.appendChild(inp); row.appendChild(send);
-    let rec = null, finalText = '';
-    const stop = () => { try { rec && rec.stop(); } catch (e) {} };
+    let rec = null;
+    const stop = () => { if (rec) rec.stop(); };
     const reset = () => { rec = null; btn.classList.remove('on'); btn.textContent = '🎤 Nhấn để nói'; };
     btn.disabled = !SR;
     btn.addEventListener('click', () => {
       if (rec) { stop(); return; }
       hush();
-      finalText = ''; live.textContent = ''; live.className = 'tk-live';
-      try {
-        rec = new SR();
-        rec.lang = 'en-US'; rec.interimResults = true; rec.maxAlternatives = 1; rec.continuous = false;
-      } catch (e) { live.textContent = 'Không mở được micro.'; return; }
-      btn.classList.add('on'); btn.textContent = '⏹ Đang nghe… nhấn để dừng';
-      rec.onresult = ev => {
-        let interim = '';
-        for (let i = ev.resultIndex; i < ev.results.length; i++) {
-          const r = ev.results[i]; if (r.isFinal) finalText += r[0].transcript + ' '; else interim += r[0].transcript;
+      live.textContent = ''; live.className = 'tk-live';
+      btn.classList.add('on'); btn.textContent = '⏳ Đang mở micro…';
+      // v168: nghe liên tục (ngừng lấy hơi không bị cắt câu), tự gửi sau khi ngừng nói ~1,8 giây
+      rec = srFree({
+        silence: 1800,
+        onStart: () => { if (rec) btn.textContent = '👂 Đang nghe… nói ngay (nhấn để gửi)'; },
+        onText: t => { live.textContent = t; },
+        onDone: (t, er) => {
+          reset();
+          if (t) { live.textContent = ''; onText(t); return; }
+          if (er) {
+            live.className = 'tk-live err';
+            live.textContent = er === 'not-allowed' || er === 'service-not-allowed' ? 'Bạn chưa cho phép dùng micro. Bật quyền micro cho trang này, hoặc gõ câu trả lời.'
+              : er === 'no-speech' ? 'Chưa nghe thấy gì. Nhấn micro rồi nói to, rõ hơn nhé.'
+              : er === 'network' ? 'Nhận giọng nói cần mạng. Kiểm tra kết nối, hoặc gõ câu trả lời.' : 'Micro gặp lỗi. Thử lại hoặc gõ câu trả lời.';
+          }
         }
-        live.textContent = (finalText + interim).trim();
-      };
-      rec.onerror = ev => {
-        const er = ev && ev.error;
-        live.className = 'tk-live err';
-        live.textContent = er === 'not-allowed' || er === 'service-not-allowed' ? 'Bạn chưa cho phép dùng micro. Bật quyền micro cho trang này, hoặc gõ câu trả lời.'
-          : er === 'no-speech' ? 'Chưa nghe thấy gì. Nhấn micro rồi nói to, rõ hơn nhé.'
-          : er === 'network' ? 'Nhận giọng nói cần mạng. Kiểm tra kết nối, hoặc gõ câu trả lời.' : 'Micro gặp lỗi. Thử lại hoặc gõ câu trả lời.';
-      };
-      rec.onend = () => {
-        reset();
-        const t = (finalText || live.textContent || '').trim();
-        if (t && !live.classList.contains('err')) { live.textContent = ''; onText(t); }
-      };
-      try { rec.start(); } catch (e) { reset(); }
+      });
+      if (!rec) reset();
     });
-    row.addEventListener('submit', e => { e.preventDefault(); const t = inp.value.trim(); if (!t) { inp.focus(); return; } inp.value = ''; stop(); onText(t); });
+    row.addEventListener('submit', e => { e.preventDefault(); const t = inp.value.trim(); if (!t) { inp.focus(); return; } inp.value = ''; if (rec) { rec.abort(); reset(); } onText(t); });
     wrap.appendChild(btn); wrap.appendChild(live); wrap.appendChild(row);
     if (!SR) wrap.appendChild(E('div', 'tk-note', 'Trình duyệt này không có nhận giọng nói. Hãy dùng Chrome, Edge hoặc Safari (iPhone), hoặc gõ câu trả lời.'));
     wrap.focusInput = () => inp.focus();

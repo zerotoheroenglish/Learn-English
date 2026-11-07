@@ -249,7 +249,7 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     }
     return say(l.s[i][0], rate, speakerAlt(l, i));
   }
-  let playing = false, listening = false;
+  let playing = false, listening = false, micReady = false;
   const speakerAlt = (l, i) => {
     const r = l.s[i]; if (!r[2]) return false;
     const names = [...new Set(l.s.map(x => x[2]).filter(Boolean))];
@@ -1789,12 +1789,13 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     const box = E('div', 'sd-mic-w');
     const start = along => {
       if (listening) { try { prRecog && prRecog.stop(); } catch (e) {} return; }
-      stopAll(); listening = true; last.err = '';
+      stopAll(); listening = true; micReady = false; last.err = '';
       renderMain();
       const target = r[0];
+      const setMic = (ic, t) => { const m = document.getElementById('sd-mic'); if (!m) return; const a = m.querySelector('.sd-mic-ic'), b = m.querySelector('.sd-mic-t b'); if (a) a.textContent = ic; if (b) b.textContent = t; };
       vspListen(target, (best, err) => {
         if (view.lesson !== l || view.idx !== i) return;
-        listening = false;
+        listening = false; micReady = false;
         if (along) { try { speechSynthesis.cancel(); } catch (e) {} ytPause(); }
         if (best) {
           const T = tokens(target);
@@ -1806,15 +1807,20 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
           touch(l);
         } else if (err) last.err = err;
         renderSide(); renderMain();
-      });
+      }, txt => {
+        // chữ máy đang nghe được → hiện ngay để biết micro đang nhận
+        const lv = document.getElementById('sd-live'); if (lv) { lv.textContent = '“' + txt + '”'; lv.hidden = false; }
+        if (!micReady) { micReady = true; setMic('👂', opt.recall ? 'Đang nghe… hãy nói lại câu từ trí nhớ' : 'Đang nghe… hãy nói to câu này'); }
+      }, { onStart: () => { if (!listening || view.lesson !== l || view.idx !== i) return; micReady = true; setMic('👂', opt.recall ? 'Đang nghe… hãy nói lại câu từ trí nhớ' : 'Đang nghe… nói ngay bây giờ'); const m = document.getElementById('sd-mic'); if (m) m.classList.add('ready'); } });
       // bước 3: phát giọng mẫu ngay khi micro bắt đầu nghe để bạn nói cùng lúc (nên đeo tai nghe)
       if (along) setTimeout(() => { if (listening && view.lesson === l && view.idx === i) hear(l, i, rateOf()); }, 350);
     };
     const mic = E('button', 'sd-mic' + (listening ? ' on' : ''));
     mic.id = 'sd-mic';
-    mic.appendChild(E('span', 'sd-mic-ic', listening ? '👂' : '🎙️'));
+    if (listening && micReady) mic.classList.add('ready');
+    mic.appendChild(E('span', 'sd-mic-ic', listening ? (micReady ? '👂' : '⏳') : '🎙️'));
     const mt = E('span', 'sd-mic-t');
-    mt.appendChild(E('b', null, listening ? (opt.recall ? 'Đang nghe… hãy nói lại câu từ trí nhớ' : 'Đang nghe… hãy nói to câu này') : last.tries ? 'Nhấn để nói lại' : opt.recall ? 'Nhấn rồi tự nói lại câu' : opt.along ? 'Nhấn để nói (sau khi nghe)' : 'Nhấn để bắt đầu nói'));
+    mt.appendChild(E('b', null, listening && !micReady ? 'Đang mở micro… chờ một chút' : listening ? (opt.recall ? 'Đang nghe… hãy nói lại câu từ trí nhớ' : 'Đang nghe… hãy nói to câu này') : last.tries ? 'Nhấn để nói lại' : opt.recall ? 'Nhấn rồi tự nói lại câu' : opt.along ? 'Nhấn để nói (sau khi nghe)' : 'Nhấn để bắt đầu nói'));
     mt.appendChild(E('span', null, PR_SR ? (opt.recall ? 'Nói xong app so sánh với câu gốc và chỉ ra từ còn thiếu' : 'Nói xong app đo độ khớp nhận diện từng từ') : 'Trình duyệt này chưa hỗ trợ nhận dạng giọng nói (dùng Safari trên iPhone, Chrome/Edge trên máy tính)'));
     mic.appendChild(mt);
     mic.disabled = !PR_SR;
@@ -1827,6 +1833,7 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
       box.appendChild(E('div', 'sd-hint', 'Nên đeo tai nghe để micro không thu lại giọng mẫu. Nếu thiết bị không cho phát và nghe cùng lúc, dùng nút micro bên dưới.'));
     }
     box.appendChild(mic);
+    if (listening) { const lv = E('div', 'sd-live'); lv.id = 'sd-live'; lv.hidden = true; box.appendChild(lv); }
     if (opt.recall && !last.res && !last.peek) {
       const pk = E('button', 'sd-link sd-peek', '👀 Không nhớ? Xem câu gốc');
       pk.addEventListener('click', () => { last.peek = true; renderMain(); });

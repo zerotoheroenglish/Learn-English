@@ -2480,40 +2480,28 @@ function prListen(target, btn, out, onScore) {
   if (prRecog) { try { prRecog.abort(); } catch (e) {} prRecog = null; }
   if (!PR_SR) {
     out.className = 'pr-speak-out warn';
-    out.textContent = 'Trình duyệt này chưa hỗ trợ nhận dạng giọng nói. Trên iPhone hãy mở app bằng Safari; trên máy tính dùng Chrome. Bạn vẫn có thể dùng nút "Ghi âm & nghe lại".';
+    out.textContent = 'Trình duyệt này chưa hỗ trợ nhận dạng giọng nói. Trên iPhone hãy mở app bằng Safari; trên máy tính dùng Chrome. Bạn vẫn có thể dùng nút "Ghi âm" để tự so sánh.';
     return;
   }
-  try { speechSynthesis.cancel(); } catch (e) {}
-  const r = new PR_SR();
-  r.lang = (typeof pronVoice !== 'undefined' && pronVoice && /^en/i.test(pronVoice.lang)) ? pronVoice.lang.replace('_', '-') : 'en-US';
-  r.interimResults = false; r.continuous = false; r.maxAlternatives = 5;
-  let got = false;
-  prRecog = r;
-  btn.classList.add('listening'); btn.textContent = '👂 Đang nghe… hãy đọc to';
+  // bấm lần nữa khi đang nghe → dừng và chấm phần đã nói
+  if (btn.classList.contains('listening') && btn.__stop) { btn.__stop(); return; }
+  // v168: dùng chung bộ nghe nhanh của app — nhận chữ ngay lúc nói, câu dài không bị cắt khi ngừng lấy hơi,
+  //       nút báo rõ lúc micro đã mở thật sự
+  btn.classList.add('listening'); btn.textContent = '⏳ Đang mở micro…';
   out.className = 'pr-speak-out'; out.textContent = 'Hãy đọc: "' + target + '"';
-  const reset = () => { btn.classList.remove('listening'); btn.textContent = '🎙️ Nói lại'; prRecog = null; };
-  r.onresult = ev => {
-    got = true;
-    const res = ev.results[0];
-    // điểm chính = bản nhận diện đầu tiên (máy tin nhất); các phương án khác chỉ để tham khảo
-    const first = { ...prScore(target, res[0].transcript), heard: res[0].transcript };
-    let best = first;
-    for (let i = 1; i < res.length; i++) { const sc = prScore(target, res[i].transcript); if (sc.score > best.score) best = { ...sc, heard: res[i].transcript }; }
-    prShowScore(out, first);
-    if (best !== first && best.score > first.score) out.appendChild(prEl('div', 'pr-alt', `Nếu tính cả các phương án khác máy đoán, độ khớp cao nhất là ${Math.round(best.score * 100)}% ("${best.heard}"). App lấy phương án đầu tiên làm kết quả chính.`));
-    if (onScore) try { onScore(Math.round(first.score * 100)); } catch (e) {}
-  };
-  r.onerror = ev => {
-    got = true;
-    out.className = 'pr-speak-out warn';
-    out.textContent = ev.error === 'not-allowed' || ev.error === 'service-not-allowed'
-      ? 'Bạn cần cho phép micro và nhận dạng giọng nói cho trình duyệt (iPhone: Cài đặt → Safari → Micrô).'
-      : ev.error === 'no-speech' ? 'Không nghe thấy gì. Hãy nói to và gần micro hơn nhé.'
-      : ev.error === 'network' ? 'Nhận dạng giọng nói cần có mạng. Kiểm tra kết nối rồi thử lại.'
-      : 'Không nhận dạng được (' + ev.error + '). Hãy thử lại.';
-  };
-  r.onend = () => { reset(); if (!got) { out.className = 'pr-speak-out warn'; out.textContent = 'Không nghe rõ. Bấm nói lại và đọc to hơn nhé.'; } };
-  try { r.start(); } catch (e) { reset(); out.className = 'pr-speak-out warn'; out.textContent = 'Không mở được micro. Hãy thử lại.'; }
+  const reset = () => { btn.classList.remove('listening'); btn.textContent = '🎙️ Nói lại'; btn.__stop = null; };
+  btn.__stop = () => { try { prRecog && prRecog.stop(); } catch (e) {} };
+  vspListen(target, (best, err) => {
+    reset();
+    if (best) {
+      const sc = { ...prScore(target, best.heard), heard: best.heard };
+      prShowScore(out, sc);
+      if (onScore) try { onScore(Math.round(sc.score * 100)); } catch (e) {}
+    } else if (err) { out.className = 'pr-speak-out warn'; out.textContent = err; }
+  }, txt => {
+    btn.textContent = '👂 Đang nghe… (bấm để dừng)';
+    out.className = 'pr-speak-out'; out.textContent = '“' + txt + '”';
+  }, { onStart: () => { if (btn.classList.contains('listening')) btn.textContent = '👂 Đang nghe… đọc ngay'; } });
 }
 function prShowScore(out, best) {
   const pct = Math.round(best.score * 100);
@@ -7344,16 +7332,54 @@ function vspScore(target, heard) {
   return s > base.score ? { score: s, hit: base.hit, a: base.a } : base;
 }
 
+
+/* v168: nghe câu tự do (không có câu mẫu) — dùng cho Đặt câu hỏi và Nói chuyện với AI.
+   - nghe liên tục: ngừng lấy hơi giữa câu không bị cắt
+   - tự chốt sau ~1,6 giây im lặng (hoặc khi bấm dừng)
+   - báo khi micro đã thật sự mở (onStart) và đưa chữ nghe được ra ngay (onText) */
+function srFree(o) {
+  const SRc = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SRc) { o.onDone && o.onDone('', 'unsupported'); return null; }
+  let rec; try { rec = new SRc(); } catch (e) { o.onDone && o.onDone('', 'start'); return null; }
+  rec.lang = o.lang || 'en-US'; rec.interimResults = true; rec.continuous = true; rec.maxAlternatives = 1;
+  let fin = '', tmp = '', done = false, quiet = 0, idle = 0, started = false, err = '';
+  const SIL = o.silence || 1600;
+  const text = () => (fin + ' ' + tmp).replace(/\s+/g, ' ').trim();
+  const end = () => {
+    if (done) return; done = true; clearTimeout(quiet); clearTimeout(idle);
+    try { rec.onresult = rec.onerror = rec.onend = null; rec.abort(); } catch (e) {}
+    try { if (typeof ttsMicEnded === 'function') ttsMicEnded(); } catch (e) {}
+    o.onDone && o.onDone(text(), text() ? '' : err);
+  };
+  const ready = () => { if (started || done) return; started = true; try { o.onStart && o.onStart(); } catch (e) {} };
+  rec.onstart = () => setTimeout(ready, 120); rec.onaudiostart = ready;
+  rec.onresult = ev => {
+    ready(); tmp = '';
+    for (let i = ev.resultIndex; i < ev.results.length; i++) { const r = ev.results[i]; if (r.isFinal) fin += ' ' + r[0].transcript; else tmp += r[0].transcript; }
+    try { o.onText && o.onText(text()); } catch (e) {}
+    clearTimeout(idle); clearTimeout(quiet); quiet = setTimeout(end, SIL);
+  };
+  rec.onerror = ev => { err = ev && ev.error || 'error'; if (err === 'no-speech' && !text()) err = 'no-speech'; end(); };
+  rec.onend = () => end();
+  // mở micro mà chưa nói gì trong 8 giây → dừng
+  idle = setTimeout(() => { if (!text()) { err = 'no-speech'; end(); } }, 8000);
+  try { rec.start(); } catch (e) { err = 'start'; end(); return null; }
+  return { stop: () => { if (!done) { clearTimeout(quiet); try { rec.stop(); } catch (e) {} setTimeout(end, 700); } }, abort: () => { err = ''; fin = tmp = ''; end(); } };
+}
+
 /* v141: nghe nhanh hơn. Trước đây app chờ trình duyệt tự xác định bạn đã nói xong (thường 1–3 giây im lặng, iPhone có khi lâu hơn).
    Giờ app nhận chữ ngay trong lúc bạn nói (interim): nói đúng hết câu mẫu → chấm ngay; ngừng nói ~0.8–1.2 giây → tự chốt. */
-function vspListen(target, onDone, onPartial) {
+function vspListen(target, onDone, onPartial, opts) {
+  opts = opts || {};
   if (prRecog) { try { prRecog.abort(); } catch (e) {} prRecog = null; }
   let wasTalking = false;
   try { wasTalking = speechSynthesis.speaking || speechSynthesis.pending; clearTimeout(TTS.timer); TTS.keep = null; speechSynthesis.cancel(); } catch (e) {}
   const r = new PR_SR();
   r.lang = (typeof pronVoice !== 'undefined' && pronVoice && /^en/i.test(pronVoice.lang)) ? pronVoice.lang.replace('_', '-') : 'en-US';
-  r.interimResults = true; r.continuous = false; r.maxAlternatives = 5;
   const nW = lsNorm(vspText(target)).length, QUIET = nW <= 2 ? 800 : nW <= 6 ? 1000 : 1200;
+  // v167: câu từ 4 từ trở lên nghe liên tục — không bị cắt khi người học ngừng lấy hơi giữa câu
+  const LONG = nW >= 4;
+  r.interimResults = true; r.continuous = LONG; r.maxAlternatives = LONG ? 1 : 5;
   let done = false, lastAlts = null, quiet = 0, cap = 0, lastTxt = '';
   prRecog = r;
   const scoreAlts = alts => {
@@ -7381,9 +7407,13 @@ function vspListen(target, onDone, onPartial) {
     const txt = head.trim();
     if (onPartial && txt && txt !== lastTxt) { try { onPartial(txt); } catch (e) {} }
     lastTxt = txt;
-    if (fin || (best && best.score >= 0.999)) return finish(best, null);   // đã nói đúng hết → không cần chờ im lặng
+    if (best && best.score >= 0.999) return finish(best, null);   // đã nói đúng hết → không cần chờ im lặng
+    if (fin && !LONG) return finish(best, null);
     clearTimeout(quiet);
-    quiet = setTimeout(() => finish(scoreAlts(lastAlts), null), QUIET);
+    // đã nghe được gần hết câu (≥ 85%) thì chỉ chờ im lặng ngắn; câu dài đã chốt đoạn thì chờ vừa phải
+    // câu chưa nghe đủ thì cho người học ngừng lấy hơi tới ~1,6 giây rồi nói tiếp
+    const wait = best && best.score >= 0.85 ? 450 : LONG ? 1600 : fin ? 700 : QUIET;
+    quiet = setTimeout(() => finish(scoreAlts(lastAlts), null), wait);
   };
   r.onerror = ev => {
     if (lastAlts && ev.error !== 'not-allowed' && ev.error !== 'service-not-allowed') return finish(scoreAlts(lastAlts), null);
@@ -7394,6 +7424,10 @@ function vspListen(target, onDone, onPartial) {
       : ev.error === 'aborted' ? '' : 'Không nhận dạng được (' + ev.error + '). Hãy thử lại.');
   };
   r.onend = () => { if (lastAlts) finish(scoreAlts(lastAlts), null); else finish(null, 'Không nghe rõ. Bấm nói lại và đọc to hơn nhé.'); };
+  // báo cho giao diện biết micro đã thật sự mở (trước đó nói sẽ bị mất chữ đầu)
+  let started = false;
+  const ready = () => { if (started || done) return; started = true; try { opts.onStart && opts.onStart(); } catch (e) {} };
+  r.onaudiostart = ready; r.onstart = () => setTimeout(ready, 120);
   cap = setTimeout(() => { if (lastAlts) finish(scoreAlts(lastAlts), null); else { try { r.stop(); } catch (e) {} } }, nW <= 2 ? 7000 : 15000);
   // giọng mẫu đang đọc → chờ nó dừng hẳn rồi mới mở micro (tránh tiếng "bụp" và micro thu lại chính giọng máy)
   const open = () => { if (done) return; try { r.start(); } catch (e) { finish(null, 'Không mở được micro. Hãy thử lại.'); } };
