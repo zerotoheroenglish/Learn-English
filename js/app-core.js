@@ -4771,10 +4771,13 @@ function fxExpand(part, depth) {
     const cap = r.sf && (!pre.trim() || /^[^+()]{2,24}:\s*$/.test(pre));
     // ví dụ trong ngoặc ở cuối (What is your name?) chỉ giữ ở dòng đầu, khỏi lặp lại
     const exm = post.match(/\s*\([^()]*[?.!][^()]*\)\s*$/);
+    // v165: ví dụ đi kèm đúng dòng có cùng trợ động từ (Where is your school? → dòng “is”)
+    let jx = 0;
+    if (exm) { const ex = exm[0].toLowerCase(); const f = r.out.findIndex(([, a]) => new RegExp("(^|[^\\w'’])" + a.toLowerCase().replace(/['’]/g, "['’]") + "(?![\\w'’])").test(ex)); if (f >= 0) jx = f; }
     return r.out.flatMap(([k, a], j) => {
       const sub = fxSubjTxt(k, cap);
       const aa = auxCap ? a[0].toUpperCase() + a.slice(1) : a;
-      const tail = j && exm ? post.slice(0, exm.index) : post;
+      const tail = exm && j !== jx ? post.slice(0, exm.index) : post;
       return fxExpand(pre + (r.sf ? sub + ' + ' + aa : aa + ' + ' + sub) + tail, depth + 1);
     });
   }
@@ -4782,10 +4785,31 @@ function fxExpand(part, depth) {
   return [part.replace(/(^|\+\s*|,\s*)S(?=\s*(?:\+|…|\?|$))/g, (m, a) => a + (a ? 'chủ ngữ' : 'Chủ ngữ'))];
 }
 function fxParts(txt) { return fxSplit(txt).flatMap(p => fxExpand(p)); }
+// v164: giải thích chủ ngữ tách từng ý, có bảng đại từ và ví dụ đổi danh từ → đại từ
 function fxSubjNote() {
-  const d = document.createElement('div');
-  d.className = 'gx-fx-subj';
-  d.textContent = '👤 Chủ ngữ: I · you · he / she / it · we · they, hoặc danh từ. Danh từ số ít (Lan, my mother, the cat) đi như he / she / it; danh từ số nhiều (my friends, the students) đi như they.';
+  const el = (t, c, x) => { const e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; };
+  const rich = (t, c, html) => { const e = el(t, c); e.innerHTML = html; return e; };
+  const d = el('div', 'gx-fx-subj');
+  d.appendChild(el('div', 'gx-sj-h', '👤 Chủ ngữ là gì?'));
+  d.appendChild(rich('p', 'gx-sj-p', 'Chủ ngữ là <b>người hoặc vật làm hành động</b>, thường đứng <b>đầu câu</b>, trước động từ.'));
+  d.appendChild(rich('p', 'gx-sj-ex', '<b>Lan</b> reads books. → chủ ngữ là <b>Lan</b>.'));
+  d.appendChild(rich('p', 'gx-sj-p', 'Chủ ngữ có 2 loại: <b>đại từ</b> (I, you, he…) hoặc <b>danh từ</b> (Lan, my mother, the students…).'));
+  d.appendChild(el('div', 'gx-sj-h2', '① Đại từ làm chủ ngữ'));
+  const g = el('div', 'gx-sj-grid');
+  [['I', 'tôi'], ['you', 'bạn / các bạn'], ['he', 'anh ấy, ông ấy'], ['she', 'cô ấy, bà ấy'], ['it', 'nó (con vật, đồ vật)'], ['we', 'chúng tôi, chúng ta'], ['they', 'họ, chúng nó']].forEach(([en, vi]) => {
+    const r = el('div', 'gx-sj-row'); r.appendChild(el('b', null, en)); r.appendChild(el('span', null, vi)); g.appendChild(r);
+  });
+  d.appendChild(g);
+  d.appendChild(el('div', 'gx-sj-h2', '② Danh từ làm chủ ngữ — đổi về đại từ để chia động từ'));
+  d.appendChild(rich('p', 'gx-sj-p', '<b>Danh từ số ít</b> (chỉ 1 người / 1 vật) → chia giống <b>he / she / it</b>:'));
+  const u1 = el('ul', 'gx-sj-ul');
+  [['Lan', 'she'], ['my mother', 'she'], ['my father', 'he'], ['the cat', 'it']].forEach(([n, p]) => u1.appendChild(rich('li', null, `${n} → <b>${p}</b>`)));
+  d.appendChild(u1);
+  d.appendChild(rich('p', 'gx-sj-p', '<b>Danh từ số nhiều</b> (từ 2 người / vật trở lên) → chia giống <b>they</b>:'));
+  const u2 = el('ul', 'gx-sj-ul');
+  [['my friends', 'they'], ['the students', 'they'], ['Lan and Nam', 'they']].forEach(([n, p]) => u2.appendChild(rich('li', null, `${n} → <b>${p}</b>`)));
+  d.appendChild(u2);
+  d.appendChild(rich('p', 'gx-sj-tip', '💡 Mẹo: gặp danh từ, hãy hỏi “thay bằng đại từ nào?”, rồi chia động từ theo đại từ đó. Riêng <b>Lan and Nam</b> là 2 người nên dùng <b>they</b>.'));
   return d;
 }
 
@@ -4798,7 +4822,11 @@ function tnFxBox(rows) {
       const r = tnEl('div', 'tn-frow' + (i ? ' tn-frow-sub' : ''));
       const s = tnEl('span', 'tn-sym' + (i ? ' tn-sym-ghost' : (sym.length > 1 ? ' tn-sym-w' : '')), i ? '·' : sym);
       if (!i && lbl) s.title = lbl;
-      r.appendChild(s); r.appendChild(tnEl('span', 'tn-ftxt', part));
+      // v165: ví dụ trong ngoặc ở cuối công thức → tách thành dòng riêng “Ví dụ: …”
+      const em = part.match(/\s*\(([^()]*[?.!])\)\s*$/);
+      const ft = tnEl('span', 'tn-ftxt', em ? part.slice(0, em.index) : part);
+      if (em) ft.appendChild(tnEl('span', 'tn-fex', 'Ví dụ: ' + em[1]));
+      r.appendChild(s); r.appendChild(ft);
       box.appendChild(r);
     });
   });
