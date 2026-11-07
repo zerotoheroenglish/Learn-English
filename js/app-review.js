@@ -668,6 +668,7 @@
   /* ---------- vẽ ---------- */
   let view = 'sum'; try { if (localStorage.getItem('hoc-tieng-anh-dash-view') === 'path') view = 'path'; } catch (e) {}
   function viewBar() {
+    if (document.querySelector('nav.nav5')) return E('div', 'db-vb-off');   // v160: Hôm nay / Lộ trình là 2 tab riêng
     const bar = E('div', 'rw-mode');
     [['sum', '📊 Tổng quan'], ['path', '🗺️ Lộ trình']].forEach(([v, label]) => {
       const b = E('button', 'rw-tab' + (view === v ? ' active' : ''), label); b.type = 'button';
@@ -679,7 +680,11 @@
   function render() {
     root.innerHTML = '';
     root.appendChild(viewBar());
+    { const tt = document.getElementById('db-title'), ss = document.getElementById('db-sub');
+      if (tt) tt.textContent = view === 'path' ? 'Lộ trình học' : 'Hôm nay';
+      if (ss) ss.textContent = view === 'path' ? 'Mỗi cấp 6 chặng, mỗi chặng nối ngữ pháp, từ vựng, đọc, nghe, nói, viết. Làm xong ở đâu, việc đó tự được đánh dấu ✓.' : 'Việc cần làm hôm nay, chuỗi ngày học, điểm từng kỹ năng và mức hoàn thành theo cấp độ.'; }
     if (view === 'path') { renderPath(); return; }
+    nextCard();
     const t = dayTotals(), d = dayNo(), st = streakOf(t), todayN = t[d] || 0;
     let goal = 20; try { goal = Math.max(5, +localStorage.getItem(GK) || 20); } catch (e) {}
     // 1. hôm nay
@@ -805,6 +810,38 @@
     render();
     const m = document.querySelector('main'); window.scrollTo({ top: m ? Math.max(0, m.offsetTop - 8) : 0 });
   }
+  // v160: thẻ “Việc hôm nay” — chặng đang học của lộ trình và việc tiếp theo
+  function nextCard() {
+    let L, U; try { L = pathLevel(); U = buildPath(L); } catch (e) { return; }
+    const ci = U.findIndex(u => u.done < u.items.length);
+    const c = E('div', 'tense-card db-next');
+    c.appendChild(E('span', 'db-next-tag', 'VIỆC HÔM NAY'));
+    if (ci < 0) {
+      c.appendChild(E('div', 'db-next-k', 'Lộ trình ' + LV[L - 1]));
+      c.appendChild(E('div', 'db-next-h', 'Đã xong cả 6 chặng 🎉'));
+      c.appendChild(E('div', 'db-next-s', 'Chọn cấp tiếp theo trong tab Lộ trình.'));
+    } else {
+      const u = U[ci], nx = u.items.find(x => !x.done);
+      c.appendChild(E('div', 'db-next-k', `Lộ trình ${LV[L - 1]} · ${u.done}/${u.items.length} việc`));
+      c.appendChild(E('div', 'db-next-h', 'Chặng ' + u.n));
+      c.appendChild(E('div', 'db-next-s', u.name));
+      const sg = E('div', 'db-next-seg'); sg.style.setProperty('--n', u.items.length);
+      u.items.forEach(x => sg.appendChild(E('span', x.done ? 'on' : '')));
+      c.appendChild(sg);
+      if (nx) {
+        const go = E('button', 'db-next-go'); go.type = 'button';
+        const tx = E('span', 'db-next-gt'); tx.appendChild(E('small', null, 'HỌC TIẾP · ' + String(nx.kind || '').toUpperCase())); tx.appendChild(E('b', null, nx.t));
+        go.appendChild(tx); go.appendChild(E('span', 'db-next-ar', '→'));
+        go.addEventListener('click', () => nx.go && nx.go());
+        c.appendChild(go);
+      }
+    }
+    const all = E('button', 'db-next-all', 'Xem cả lộ trình →'); all.type = 'button';
+    all.addEventListener('click', () => { if (window.secOpen) window.secOpen('home', 'path'); });
+    c.appendChild(all);
+    root.appendChild(c);
+  }
+  window.dashView = v => { view = v === 'path' ? 'path' : 'sum'; try { localStorage.setItem('hoc-tieng-anh-dash-view', view); } catch (e) {} render(); };
   window.dashOpen = show;
   window.dashSkills = skills;
   if (btn) btn.addEventListener('click', show);
