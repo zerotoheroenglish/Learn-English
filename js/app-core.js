@@ -5445,7 +5445,7 @@ function gxQuiz(box, qs, opts) {
     next.addEventListener('click', () => { S.i++; draw(); });
     const finish = (ok, detail, user) => {
       S.res.push({ id: Q.id, qid: Q.qid, ok });
-      try { gxMk(Q, ok, user); if (window.actLog) actLog('g'); } catch (e) {}
+      try { if (!opts.noMk) gxMk(Q, ok, user); if (window.actLog) actLog('g'); } catch (e) {}   // v162: bài kiểm tra trình độ không ghi Sổ lỗi
       fb.hidden = false; fb.className = 'gx-fb ' + (ok ? 'ok' : 'bad');
       fb.innerHTML = '';
       fb.appendChild(grEl('div', 'gx-fb-t', ok ? '✓ Chính xác!' : '✗ Chưa đúng'));
@@ -6036,7 +6036,7 @@ function gxPlacementTest() {
     tm.classList.toggle('warn', left <= 120);
     if (!left) { stopT(); timeUp = true; ctl.stop(); }
   };
-  const ctl = gxQuiz(box, qs, { showLesson: false, noVi: true, onDone: (res, bx) => { stopT(); tm.remove(); gxPlacementResult(res, bx, trackOf, timeUp); } });
+  const ctl = gxQuiz(box, qs, { showLesson: false, noVi: true, noMk: true, onDone: (res, bx) => { stopT(); tm.remove(); gxPlacementResult(res, bx, trackOf, timeUp); } });
   back.addEventListener('click', () => { stopT(); renderGrammarHome(); grScrollTop(); });
   tick(); timer = setInterval(tick, 1000);
   grScrollTop();
@@ -6052,6 +6052,7 @@ function gxPlacementResult(res, box, trackOf, timeUp) {
   gxTrack = T.key; grSetLevel(T.lv); tnLevel = T.lv;
   try { localStorage.setItem(GX_TRACK_KEY, T.key); } catch (e) {}
   try { localStorage.setItem('hoc-tieng-anh-irr-level', String(T.lv)); if (typeof irr !== 'undefined') irr.lv = T.lv; } catch (e) {}
+  try { localStorage.setItem('hoc-tieng-anh-path-lv', String(T.lv)); } catch (e) {}   // v162: Lộ trình chuyển sang cấp vừa xếp
   const lvCode = ['', 'A1', 'A2', 'B1', 'B2', 'C1'][T.lv];
   const skip = res.filter(x => x.skip).length;
   if (timeUp) box.appendChild(grEl('div', 'gx-timeup', `⏰ Hết ${GX_PLACE_MIN} phút · ${skip} câu chưa làm được tính là sai.`));
@@ -6069,8 +6070,8 @@ function gxPlacementResult(res, box, trackOf, timeUp) {
     tb.appendChild(r);
   });
   rec.appendChild(tb);
-  rec.appendChild(grEl('p', 'gx-place-note', `App đã đặt tab Ngữ pháp ở chặng ${T.key} và tab Bất quy tắc ở cấp ${lvCode}. Gợi ý thêm: tab Từ vựng học các bài cấp ${lvCode}, tab Shadowing chọn lọc cấp ${lvCode} (hoặc thấp hơn một cấp cho dễ nói).`));
-  rec.appendChild(grEl('p', 'gx-place-note', `Đây là ước lượng từ ${res.length} câu ngữ pháp, chưa đo kỹ năng nghe và nói. Nếu thấy bài quá dễ hoặc quá khó, cứ đổi chặng ở danh sách cấp độ trên trang Ngữ pháp.`));
+  rec.appendChild(grEl('p', 'gx-place-note', `App đã đặt Lộ trình ở cấp ${lvCode}, tab Ngữ pháp ở chặng ${T.key} và tab Bất quy tắc ở cấp ${lvCode}. Gợi ý thêm: tab Từ vựng học các bài cấp ${lvCode}, tab Shadowing chọn lọc cấp ${lvCode} (hoặc thấp hơn một cấp cho dễ nói).`));
+  rec.appendChild(grEl('p', 'gx-place-note', `Câu sai trong bài kiểm tra không vào Sổ lỗi vì có thể bạn chưa học tới. Đây là ước lượng từ ${res.length} câu ngữ pháp, chưa đo kỹ năng nghe và nói. Nếu thấy bài quá dễ hoặc quá khó, cứ đổi chặng ở danh sách cấp độ trên trang Ngữ pháp.`));
   const btns = grEl('div', 'ls-sum-btns');
   const first = GX_ALL.find(x => x.track === T.key && gxStatus(x.id) !== 'done');
   const go = grEl('button', 'btn-primary', first ? `▶ Học bài đầu tiên: ${first.title}` : '▶ Về trang Ngữ pháp');

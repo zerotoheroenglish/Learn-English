@@ -551,7 +551,7 @@
     themore: ['technology', 'health'], subjunctive: ['society', 'law'], 'relative-advanced': ['science', 'art'], whatever: ['finance', 'society'],
     emphasis: ['feelings', 'entertainment'], discourse: ['society', 'science']
   };
-  const isFirm = it => { const r = srs[vcK(it)]; return !!(r && (r.s || 0) >= 3); };
+  const isFirm = it => { try { if (typeof vcIs === 'function' && vcIs(it)) return true; } catch (e) {} const r = srs[vcK(it)]; return !!(r && (r.s || 0) >= 3); };   // v162: “thuộc” = đã ✓ thuộc hoặc đã nhớ chắc
   const uwCache = {};
   // mỗi chặng một bộ từ cố định, không trùng chặng khác: lấy xen kẽ từ các chủ đề liên quan, thiếu thì bù từ chủ đề nhiều từ nhất của cấp
   function unitWords(L, size) {
@@ -596,8 +596,8 @@
       G.slice(u * per, (u + 1) * per).forEach(g => items.push({ ic: '📐', t: g.title, kind: 'Ngữ pháp', done: (() => { try { return gxStatus(g.id) === 'done'; } catch (e) { return false; } })(), go: () => openIn('page-grammar', () => gxLesson(g.id)) }));
       const ws = unitWords(L, vStep)[u] || { items: [], src: [] }, wl = ws.items, wk = wl.filter(isFirm).length, wn = wl.length;
       const wTop = ws.src.slice(0, 3).map(x => `${x.vi} (${x.n})`).join(' · ') + (ws.src.length > 3 ? ' …' : '');
-      if (wn) items.push({ ic: '📚', t: `Nhớ chắc ${wn} từ ${LV[L - 1]} của chặng (đang có ${wk}/${wn})`,
-        sub: `Chủ đề: ${wTop} — gắn với bài ngữ pháp của chặng · “nhớ chắc” = ôn đúng 3 lần, mỗi lần cách vài ngày`,
+      if (wn) items.push({ ic: '📚', t: `Học thuộc ${wn} từ ${LV[L - 1]} của chặng (đã thuộc ${wk}/${wn})`,
+        sub: `Chủ đề: ${wTop} — gắn với bài ngữ pháp của chặng · từ được tính “thuộc” khi bạn bấm ✓ hoặc trả lời đúng ở Thẻ nhớ / Kiểm tra`,
         kind: 'Từ vựng', done: wk >= wn,
         go: () => openIn('page-vocab', () => { if (typeof vcOpenUnit === 'function') vcOpenUnit({ mix: true, icon: '🗺️', vi: `Lộ trình ${LV[L - 1]} · chặng ${u + 1}`, en: `${wn} từ · ${ws.src.map(x => x.vi).join(', ')}`, items: wl }, 'list'); }) });
       if (R[u]) items.push({ ic: '📖', t: R[u][2], kind: 'Đọc hiểu', done: !!(rp[R[u][0]] && rp[R[u][0]].best >= 70), go: () => openIn('page-read', () => { if (window.rdHome) window.rdHome('read'); if (window.rdOpen) window.rdOpen(R[u][0]); }) });
@@ -684,6 +684,7 @@
       if (tt) tt.textContent = view === 'path' ? 'Lộ trình học' : 'Hôm nay';
       if (ss) ss.textContent = view === 'path' ? 'Mỗi cấp 6 chặng, mỗi chặng nối ngữ pháp, từ vựng, đọc, nghe, nói, viết. Làm xong ở đâu, việc đó tự được đánh dấu ✓.' : 'Việc cần làm hôm nay, chuỗi ngày học, điểm từng kỹ năng và mức hoàn thành theo cấp độ.'; }
     if (view === 'path') { renderPath(); return; }
+    placeCard();
     nextCard();
     const t = dayTotals(), d = dayNo(), st = streakOf(t), todayN = t[d] || 0;
     let goal = 20; try { goal = Math.max(5, +localStorage.getItem(GK) || 20); } catch (e) {}
@@ -809,6 +810,27 @@
     try { if (pend) { clearTimeout(pend); localStorage.setItem(AK, JSON.stringify(act)); } } catch (e) {}
     render();
     const m = document.querySelector('main'); window.scrollTo({ top: m ? Math.max(0, m.offsetTop - 8) : 0 });
+  }
+  // v162: lối vào Kiểm tra xếp trình độ ngay đầu trang Hôm nay
+  function placeCard() {
+    let P = null; try { P = JSON.parse(localStorage.getItem('hoc-tieng-anh-placement') || 'null'); } catch (e) {}
+    const b = E('button', 'tense-card db-place' + (P ? ' done' : '')); b.type = 'button';
+    b.appendChild(E('span', 'db-place-ic', '🧭'));
+    const tx = E('span', 'db-place-t');
+    if (P && P.track) {
+      const d = new Date(P.d || Date.now());
+      tx.appendChild(E('b', null, `Trình độ của bạn: ${P.track}`));
+      tx.appendChild(E('small', null, `Kiểm tra ngày ${d.getDate()}/${d.getMonth() + 1} · bấm để làm lại (50 câu mới · 15 phút)`));
+    } else {
+      tx.appendChild(E('b', null, 'Kiểm tra xếp trình độ'));
+      tx.appendChild(E('small', null, 'Chưa biết bắt đầu từ đâu? 50 câu · 15 phút · app tự xếp cấp cho bạn'));
+    }
+    b.appendChild(tx); b.appendChild(E('span', 'db-place-ar', '→'));
+    b.addEventListener('click', () => {
+      if (window.secOpen) window.secOpen('learn', 'grammar'); else { const nb = document.querySelector('nav.tabbar button[data-page="page-grammar"]'); if (nb) nb.click(); }
+      setTimeout(() => { if (typeof gxPlacementTest === 'function') gxPlacementTest(); }, 120);
+    });
+    root.appendChild(b);
   }
   // v160: thẻ “Việc hôm nay” — chặng đang học của lộ trình và việc tiếp theo
   function nextCard() {
