@@ -616,7 +616,10 @@ async function fetchWithProxyFallback(targetUrl) {
     console.warn('[Dịch nghĩa] Gọi trực tiếp thất bại, thử qua proxy:', e && e.message);
   }
 
-  // 2) fall back to CORS proxies (helps when running from file://)
+  // 2) fall back to CORS proxies — v173: CHỈ khi mở app từ file trên máy (file://).
+  //    Trên trang web thật (GitHub Pages) Google Dịch / MyMemory gọi thẳng được; nếu vẫn lỗi thì
+  //    đó là do mạng hoặc dịch vụ quá tải, gửi chữ của người dùng qua máy chủ lạ không giúp được gì.
+  if (location.protocol !== 'file:') return null;
   for (const buildProxyUrl of CORS_PROXIES) {
     try {
       const res = await fetch(buildProxyUrl(targetUrl));
@@ -5747,7 +5750,8 @@ function renderGrammarHome(keepScroll) {
   pb.appendChild(ptx);
   pb.appendChild(grEl('span', 'vc-unit-go', '›'));
   pb.addEventListener('click', gxPlacementTest);
-  grRoot.appendChild(pb);
+  // v176: lối vào kiểm tra xếp trình độ chỉ còn ở tab Hôm nay (bài kiểm tra vẫn mở ở đây khi bấm từ Hôm nay)
+  if (!document.querySelector('nav.nav5')) grRoot.appendChild(pb);
   // 4 lối vào
   const acts = grEl('div', 'gx-acts4');
   const curT = GX_TRACKS.find(t => t.key === gxTrack) || GX_TRACKS[0];
@@ -6118,6 +6122,16 @@ function gxPlacementTest() {
   tick(); timer = setInterval(tick, 1000);
   grScrollTop();
 }
+// v177: đặt cùng lúc cấp cho Ngữ pháp, Bất quy tắc và Lộ trình (dùng cho kết quả kiểm tra và màn chào người mới)
+function gxApplyLevel(lv) {
+  const T = GX_TRACKS.find(t => t.lv === lv) || GX_TRACKS[0];
+  gxTrack = T.key; grSetLevel(T.lv); tnLevel = T.lv;
+  try { localStorage.setItem(GX_TRACK_KEY, T.key); } catch (e) {}
+  try { localStorage.setItem('hoc-tieng-anh-irr-level', String(T.lv)); if (typeof irr !== 'undefined') irr.lv = T.lv; } catch (e) {}
+  try { localStorage.setItem('hoc-tieng-anh-path-lv', String(T.lv)); } catch (e) {}
+  return T;
+}
+window.gxApplyLevel = gxApplyLevel;
 function gxPlacementResult(res, box, trackOf, timeUp) {
   const per = GX_TRACKS.map(t => { const r = res.filter(x => trackOf.get(x.id) === t.key); return { key: t.key, lv: t.lv, n: r.length, ok: r.filter(x => x.ok).length }; });
   // chặng bắt đầu = chặng đầu tiên đúng dưới 80% số câu
@@ -6126,10 +6140,7 @@ function gxPlacementResult(res, box, trackOf, timeUp) {
   if (!place) place = per[per.length - 1];
   const T = GX_TRACKS.find(t => t.key === place.key);
   try { localStorage.setItem(GX_PLACE_KEY, JSON.stringify({ track: T.key, d: Date.now(), per: per.map(p => [p.key, p.ok, p.n]) })); } catch (e) {}
-  gxTrack = T.key; grSetLevel(T.lv); tnLevel = T.lv;
-  try { localStorage.setItem(GX_TRACK_KEY, T.key); } catch (e) {}
-  try { localStorage.setItem('hoc-tieng-anh-irr-level', String(T.lv)); if (typeof irr !== 'undefined') irr.lv = T.lv; } catch (e) {}
-  try { localStorage.setItem('hoc-tieng-anh-path-lv', String(T.lv)); } catch (e) {}   // v162: Lộ trình chuyển sang cấp vừa xếp
+  gxApplyLevel(T.lv);   // v162: Lộ trình chuyển sang cấp vừa xếp
   const lvCode = ['', 'A1', 'A2', 'B1', 'B2', 'C1'][T.lv];
   const skip = res.filter(x => x.skip).length;
   if (timeUp) box.appendChild(grEl('div', 'gx-timeup', `⏰ Hết ${GX_PLACE_MIN} phút · ${skip} câu chưa làm được tính là sai.`));
@@ -6151,11 +6162,20 @@ function gxPlacementResult(res, box, trackOf, timeUp) {
   rec.appendChild(grEl('p', 'gx-place-note', `Câu sai trong bài kiểm tra không vào Sổ lỗi vì có thể bạn chưa học tới. Đây là ước lượng từ ${res.length} câu ngữ pháp, chưa đo kỹ năng nghe và nói. Nếu thấy bài quá dễ hoặc quá khó, cứ đổi chặng ở danh sách cấp độ trên trang Ngữ pháp.`));
   const btns = grEl('div', 'ls-sum-btns');
   const first = GX_ALL.find(x => x.track === T.key && gxStatus(x.id) !== 'done');
-  const go = grEl('button', 'btn-primary', first ? `▶ Học bài đầu tiên: ${first.title}` : '▶ Về trang Ngữ pháp');
+  // v177: nút gọn 2 dòng — việc cần làm ở trên, tên bài ở dưới
+  const go = grEl('button', 'btn-primary gx-place-go');
+  go.appendChild(grEl('b', null, first ? '▶ Học bài đầu tiên' : '▶ Về trang Ngữ pháp'));
+  if (first) go.appendChild(grEl('small', null, first.title));
   go.addEventListener('click', () => { if (first) gxLesson(first.id); else { renderGrammarHome(); grScrollTop(); } });
   const home = grEl('button', 'btn-ghost', 'Về trang Ngữ pháp'); home.addEventListener('click', () => { renderGrammarHome(); grScrollTop(); });
   const again = grEl('button', 'btn-ghost', '🔄 Làm lại'); again.addEventListener('click', gxPlacementTest);
-  btns.appendChild(go); btns.appendChild(home); btns.appendChild(again);
+  btns.appendChild(go);
+  if (typeof window.htaShare === 'function') {
+    const sh = grEl('button', 'btn-ghost gx-place-share', '📤 Chia sẻ kết quả');
+    sh.addEventListener('click', () => window.htaShare('place', { lv: T.key, per: per.map(p => [p.key, p.ok, p.n]) }));
+    btns.appendChild(sh);
+  }
+  btns.appendChild(home); btns.appendChild(again);
   rec.appendChild(btns);
   box.appendChild(rec);
 }

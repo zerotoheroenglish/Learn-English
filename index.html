@@ -153,14 +153,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="app.css?h=414ccb57ce">
+<link rel="stylesheet" href="app.css?h=e256b4f31d">
 </head>
 <body>
 
 <header class="hero">
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v172</span>
+      <span class="hero-badge">EN ⇄ VI · v177</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice" id="voice-btn" aria-label="Chọn giọng đọc">🔊 <span class="hv-label">Giọng đọc</span></button>
@@ -534,7 +534,7 @@
       <button class="vsheet-close" data-close aria-label="Đóng">✕</button>
     </div>
     <div class="legal-body" id="legal-privacy">
-      <p class="legal-date">Cập nhật: 18/10/2026</p>
+      <p class="legal-date">Cập nhật: 07/11/2026</p>
       <h4>1. Về app</h4>
       <p>“Học Tiếng Anh” là app học tiếng Anh cá nhân, miễn phí, không quảng cáo và không bán dữ liệu. Nội dung học (từ vựng, câu ví dụ, ngữ pháp, cụm từ, mẹo phát âm) do người làm app tự biên soạn, chỉ dùng cho mục đích học tập. App được cung cấp “nguyên trạng”: chúng tôi cố gắng để nội dung chính xác nhưng không bảo đảm tuyệt đối, và không chịu trách nhiệm cho thiệt hại phát sinh từ việc sử dụng app.</p>
       <h4>2. Dữ liệu lưu trên máy bạn</h4>
@@ -549,7 +549,7 @@
         <li><b>Dịch:</b> Google Dịch, MyMemory: chữ bạn gõ ở tab Dịch.</li>
         <li><b>Tự sửa lỗi:</b> LanguageTool: câu tiếng Anh bạn gõ. Gợi ý chính tả của Google cho câu tiếng Việt.</li>
         <li><b>Phiên âm:</b> Free Dictionary API: từ bạn tra khi không có trong từ điển sẵn của app.</li>
-        <li><b>Máy chủ trung gian:</b> allorigins.win, codetabs.com: chỉ dùng khi trình duyệt chặn kết nối thẳng tới các dịch vụ trên.</li>
+        <li><b>Máy chủ trung gian:</b> allorigins.win, codetabs.com: chỉ dùng khi bạn mở app từ file lưu trên máy (không qua trang web). Khi dùng app trên web hoặc từ màn hình chính, chữ bạn gõ không đi qua các máy chủ này.</li>
         <li><b>Video:</b> YouTube (Google) phát video, nên YouTube có thể ghi nhận việc xem theo chính sách của họ.</li>
         <li><b>Chấm phát âm:</b> nhận dạng giọng nói có sẵn của trình duyệt (Google trên Chrome, Apple trên Safari). Bản ghi âm ở “Ghi âm & nghe lại” và tab Shadowing chỉ phát trên máy, không lưu và không gửi đi.</li>
         <li><b>Nói chuyện (Speaking Partner):</b> phần Nhập vai chấm câu trên máy và qua LanguageTool. Phần “Trò chuyện tự do với AI” chỉ chạy khi bạn tự dán khoá của mình (Google Gemini, Groq hoặc OpenAI ChatGPT): câu bạn nói được gửi tới nhà cung cấp bạn chọn theo điều khoản của họ (bản Gemini miễn phí có thể được Google dùng để cải thiện dịch vụ). Khoá chỉ lưu trên máy bạn, không đồng bộ và không có trong file sao lưu.</li>
@@ -732,7 +732,7 @@
 </script>
 <script src="js/data-core.js?h=5c068bf2d4"></script>
 <script src="js/data-vocab.js?h=923ca16f1c"></script>
-<script src="js/app-core.js?h=15dd40ac52"></script>
+<script src="js/app-core.js?h=eb5a75ddf1"></script>
 
 <script src="js/app-sync.js?h=a3bbda8ea1"></script>
 
@@ -770,7 +770,8 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
 <!-- tab-questions: nạp khi mở tab -->
 <!-- tab-reading: nạp khi mở tab -->
 <!-- tab-talk: nạp khi mở tab -->
-<script src="js/app-review.js?h=ccdc683afb"></script>
+<script src="js/app-review.js?h=3cc4330d5a"></script>
+<script src="js/app-onboard.js?h=c7e909afab"></script>
 <script>
 /* ============================================================
    v153–v154: GỘP TAB — mỗi cặp trang dùng chung một nút trên thanh tab, chuyển bằng thanh ở đầu trang.

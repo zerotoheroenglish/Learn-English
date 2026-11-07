@@ -332,6 +332,60 @@
     while (t[k]) { n++; k--; }
     return n;
   }
+  // v175: chuỗi dài nhất từng có (để hiện "Kỷ lục")
+  function bestStreak(t) {
+    const ks = Object.keys(t).map(Number).filter(k => t[k] > 0).sort((a, b) => a - b);
+    let best = 0, run = 0, prev = null;
+    ks.forEach(k => { run = prev !== null && k === prev + 1 ? run + 1 : 1; prev = k; if (run > best) best = run; });
+    return best;
+  }
+  /* v175: khối chuỗi ngày học — số ngày cỡ lớn, 7 chấm của tuần này (T2 → CN), mục tiêu lượt luyện hôm nay */
+  const FLAME = '<svg viewBox="0 0 54 64" aria-hidden="true"><path d="M27 3c4 11 18 18 18 34a18 18 0 0 1-36 0c0-8 4-13 8-17 0 7 3 11 7 12-2-12 3-22 3-29z" fill="#FF8A65" stroke="#14213D" stroke-width="3" stroke-linejoin="round"/><path d="M27 34c3 5 8 7 8 14a8 8 0 0 1-16 0c0-4 2-6 4-8 0 3 2 4 3 4-1-4 0-7 1-10z" fill="#FFFFFF" stroke="#14213D" stroke-width="3" stroke-linejoin="round"/></svg>';
+  function streakCard(t, d, st, todayN, goal) {
+    const c = E('section', 'db-sc');
+    const best = bestStreak(t);
+    if (best > st && best >= 2) c.appendChild(E('span', 'db-sc-rec', `Kỷ lục: ${best} ngày`));
+    const row = E('div', 'db-sc-row');
+    row.appendChild(E('b', 'db-sc-n', String(st)));
+    const lb = E('span', 'db-sc-l');
+    lb.appendChild(E('span', 'db-sc-u', 'ngày'));
+    lb.appendChild(E('span', null, st ? 'học liên tiếp' : 'Học một bài là bắt đầu chuỗi'));
+    row.appendChild(lb);
+    const fl = E('span', 'db-sc-fl'); fl.innerHTML = FLAME; row.appendChild(fl);
+    c.appendChild(row);
+    const mon = d - ((d + 3) % 7), WK = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
+    let doneN = 0; const states = [];
+    const wk = E('div', 'db-sc-week');
+    WK.forEach((lab, i) => {
+      const day = mon + i, on = !!t[day];
+      if (on && day <= d) doneN++;
+      const stt = day > d ? 'fut' : on ? 'on' : day === d ? 'off' : 'miss'; states.push(stt);
+      const cell = E('span', 'db-sc-d');
+      cell.appendChild(E('i', stt + (day === d ? ' now' : '')));
+      cell.appendChild(E('span', null, lab));
+      wk.appendChild(cell);
+    });
+    wk.setAttribute('role', 'img');
+    wk.setAttribute('aria-label', `Tuần này đã học ${doneN} ngày` + (t[d] ? ', kể cả hôm nay' : ', hôm nay chưa học'));
+    c.appendChild(wk);
+    const g = E('div', 'db-sc-goal');
+    const pct = Math.min(100, Math.round(todayN / goal * 100));
+    const gt = E('span', 'db-sc-gt'); gt.appendChild(E('b', null, pct >= 100 ? 'Đạt mục tiêu hôm nay' : `Hôm nay ${todayN}/${goal} lượt`));
+    const sel = E('select'); sel.setAttribute('aria-label', 'Mục tiêu mỗi ngày');
+    [10, 20, 40, 60].forEach(n => { const o = E('option', null, 'mục tiêu ' + n); o.value = n; if (n === goal) o.selected = true; sel.appendChild(o); });
+    sel.addEventListener('change', () => { try { localStorage.setItem(GK, sel.value); } catch (e) {} render(); });
+    gt.appendChild(sel); g.appendChild(gt);
+    const bar = E('span', 'db-sc-bar'); bar.setAttribute('role', 'img'); bar.setAttribute('aria-label', `Đã làm ${pct}% mục tiêu hôm nay`);
+    const f = E('i'); f.style.width = pct + '%'; bar.appendChild(f); g.appendChild(bar);
+    c.appendChild(g);
+    // v177: khoe chuỗi ngày học
+    if (st >= 2 && typeof window.htaShare === 'function') {
+      const sh = E('button', 'db-sc-share', `📤 Chia sẻ chuỗi ${st} ngày`); sh.type = 'button';
+      sh.addEventListener('click', () => window.htaShare('streak', { n: st, best: Math.max(best, st), week: states, today: (d + 3) % 7 }));
+      c.appendChild(sh);
+    }
+    return c;
+  }
 
   /* ---------- điểm từng kỹ năng: mỗi cấp chiếm 20 điểm (A1 0–20 … C1 80–100) ---------- */
   function ladder(fr) {
@@ -492,10 +546,10 @@
   function recBox(S, due) {
     const R = recs(S, due);
     const box = E('div', 'tense-card db-recs');
-    box.appendChild(E('h3', null, '🧭 Hôm nay nên học'));
+    box.appendChild(E('h3', null, R.length ? `Hôm nay nên học · ${R.length} việc` : 'Hôm nay nên học'));
     box.appendChild(E('p', 'rv-note', 'Gợi ý dựa trên thẻ đến hạn, Sổ lỗi và kỹ năng còn yếu của bạn. Bấm để mở đúng bài.'));
     R.forEach((r, i) => {
-      const b = E('button', 'db-rec' + (i === 0 ? ' first' : '')); b.type = 'button';
+      const b = E('button', 'db-rec c' + (i % 4) + (i === 0 ? ' first' : '')); b.type = 'button';
       b.appendChild(E('span', 'db-rec-ic', r.ic));
       const tx = E('span', 'db-rec-t');
       if (r.why) tx.appendChild(E('span', 'db-rec-why', r.why));
@@ -684,12 +738,18 @@
       if (tt) tt.textContent = view === 'path' ? 'Lộ trình học' : 'Hôm nay';
       if (ss) ss.textContent = view === 'path' ? 'Mỗi cấp 6 chặng, mỗi chặng nối ngữ pháp, từ vựng, đọc, nghe, nói, viết. Làm xong ở đâu, việc đó tự được đánh dấu ✓.' : 'Việc cần làm hôm nay, chuỗi ngày học, điểm từng kỹ năng và mức hoàn thành theo cấp độ.'; }
     if (view === 'path') { renderPath(); return; }
-    placeCard();
-    nextCard();
     const t = dayTotals(), d = dayNo(), st = streakOf(t), todayN = t[d] || 0;
     let goal = 20; try { goal = Math.max(5, +localStorage.getItem(GK) || 20); } catch (e) {}
-    // 1. hôm nay
-    const top = E('div', 'tense-card db-today');
+    // v175: chuỗi ngày học lên đầu; chưa làm kiểm tra xếp trình độ thì mời làm ngay sau đó
+    let placed = false; try { placed = !!JSON.parse(localStorage.getItem('hoc-tieng-anh-placement') || 'null'); } catch (e) {}
+    root.appendChild(streakCard(t, d, st, todayN, goal));
+    if (!placed) placeCard();
+    let due0 = 0; try { const hb = document.getElementById('review-btn'); const m = hb && /(\d+)/.exec(hb.textContent); due0 = m && !hb.classList.contains('done') ? +m[1] : 0; } catch (e) {}
+    root.appendChild(recBox(skills(), due0));
+    nextCard();
+    if (placed) placeCard();
+    // 1. hôm nay (v175: thay bằng khối chuỗi ngày ở trên; giữ lại cho chắc, không hiện)
+    const top = E('div', 'tense-card db-today db-old');
     const ring = E('div', 'db-ring'); const pct = Math.min(100, Math.round(todayN / goal * 100));
     ring.style.setProperty('--p', pct); ring.setAttribute('role', 'img'); ring.setAttribute('aria-label', `Hôm nay ${todayN}/${goal} lượt luyện`);
     ring.appendChild(E('b', null, String(todayN))); ring.appendChild(E('span', null, '/ ' + goal));
@@ -718,9 +778,8 @@
     qa.appendChild(q1); qa.appendChild(q2);
     root.appendChild(qa);
 
-    // 2b. hôm nay nên học
+    // 2b. hôm nay nên học (v175: đã lên đầu trang)
     const S = skills();
-    root.appendChild(recBox(S, due));
 
     // 3. kỹ năng
     const sc = E('div', 'tense-card db-skills');
@@ -1217,6 +1276,8 @@
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'nhac-on-tap-tieng-anh.ics';
     document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
   }
+  // v177: màn chào người mới dùng chung lời nhắc qua Lịch
+  window.rvMakeIcs = at => { set.at = at || '20:00'; saveSet(); makeIcs(set.at); };
   function howBox() {
     const d = E('details', 'tense-card rv-how');
     d.appendChild(E('summary', null, '💡 App tính lịch ôn thế nào?'));
