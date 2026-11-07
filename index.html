@@ -152,7 +152,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="app.css?h=9c21117189">
+<link rel="stylesheet" href="app.css?h=40b2f71748">
 </head>
 <body>
 
@@ -161,7 +161,7 @@
   <div class="hw-deco" aria-hidden="true"><i class="hw-witch"></i><i class="hw-spider"></i><i class="hw-ghost"></i><i class="hw-caul"></i><i class="hw-candy"></i><i class="hw-cat"></i><i class="hw-skel"></i></div>
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v157</span>
+      <span class="hero-badge">EN ⇄ VI · v161</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice hero-season" id="season-btn" aria-label="Đổi giao diện theo mùa" title="Đổi giao diện theo mùa">🎃</button>
@@ -181,7 +181,7 @@
 <main>
 
   <!-- PAGE 1: TRANSLATOR -->
-  <section class="page active" id="page-check">
+  <section class="page" id="page-check">
     <div class="section-title">Dịch song ngữ</div>
     <div class="section-sub">Gõ tiếng Anh hoặc tiếng Việt, bấm ⇄ để đổi chiều dịch. App dịch nguyên văn câu bạn nhập, gợi ý sửa lỗi riêng để bạn chọn dịch câu gốc hay câu đã sửa.</div>
     <div class="tr-langbar">
@@ -283,11 +283,12 @@
   </section>
 
   <!-- PAGE: ÔN TẬP HÔM NAY (mở từ nút ở đầu trang) -->
-  <section class="page" id="page-dash">
-    <div class="section-title">Tiến độ của tôi</div>
-    <div class="section-sub">Toàn bộ tiến độ học trong app: chuỗi ngày học, mục tiêu hôm nay, điểm từng kỹ năng và mức hoàn thành theo cấp độ.</div>
+  <section class="page active" id="page-dash">
+    <div class="section-title" id="db-title">Hôm nay</div>
+    <div class="section-sub" id="db-sub">Việc cần làm hôm nay, chuỗi ngày học, điểm từng kỹ năng và mức hoàn thành theo cấp độ.</div>
     <div id="db-root"></div>
   </section>
+  <section class="page" id="page-hub" aria-hidden="true"></section>
   <section class="page" id="page-review">
     <div class="section-title">Ôn tập hôm nay</div>
     <div class="section-sub">Ôn tập giãn cách: từ vựng, ngữ pháp, động từ bất quy tắc và sổ từ của bạn, mỗi thứ quay lại đúng lúc bạn sắp quên.</div>
@@ -607,24 +608,48 @@
   </div>
 </div>
 
-<nav class="tabbar">
-  <button class="active" data-page="page-check">
+<nav class="tabbar nav5">
+  <button class="active grp-on" data-page="page-hub" data-grp="home">
+    <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></span>
+    Hôm nay
+  </button>
+  <button data-page="page-hub" data-grp="learn">
+    <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5V5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2.5zM8 7h6M8 11h6"/></svg></span>
+    Học
+  </button>
+  <button data-page="page-hub" data-grp="practice">
+    <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3zM19 11a7 7 0 0 1-14 0M12 18v3"/></svg></span>
+    Luyện
+  </button>
+  <button data-page="page-hub" data-grp="review">
+    <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/></svg></span>
+    Ôn tập
+  </button>
+  <button data-page="page-hub" data-grp="tool">
+    <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h8M8 3v2M5 9c1.5 3 4 5 7 6M11 5c-1 4-3.5 7-7 9M13 20l4-9 4 9M14.5 17h5"/></svg></span>
+    Dịch
+  </button>
+  <button hidden aria-hidden="true" tabindex="-1" data-page="page-talk">
+    <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.5A2.5 2.5 0 0 1 5.5 4h7A2.5 2.5 0 0 1 15 6.5v4a2.5 2.5 0 0 1-2.5 2.5H8l-3.5 3v-3A1.5 1.5 0 0 1 3 11.5z"/><path d="M17.5 9h1A2.5 2.5 0 0 1 21 11.5v4A1.5 1.5 0 0 1 19.5 17v3l-3.5-3h-3.5a2.5 2.5 0 0 1-2.4-1.8"/></svg></span>
+    Nói chuyện
+  </button>
+  <button hidden aria-hidden="true" tabindex="-1" data-page="page-check">
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h8M8 3v2M6 5c0 4 2 7 5 8M10 5c-.5 3-2.5 6-6 8"/><path d="M13 21l4-9 4 9M14.5 18h5"/></svg></span>
     Dịch
   </button>
-  <button data-page="page-pron">
+  <button hidden aria-hidden="true" tabindex="-1" data-page="page-pron">
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg></span>
     Phát âm
   </button>
-  <button data-page="page-vocab">
+  <button hidden aria-hidden="true" tabindex="-1" data-page="page-vocab">
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="13" height="14" rx="2.2"/><path d="M8 3.5h10.8A2.2 2.2 0 0 1 21 5.7V17"/><path d="M6.5 17.5l3-7 3 7M7.6 15h3.8"/></svg></span>
     Từ vựng
   </button>
-  <button data-page="page-shadow">
+  <button hidden aria-hidden="true" tabindex="-1" data-page="page-shadow">
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h1.5M7 8v8M11 4.5v15M15 8.5v7M19 10.5v3"/><path d="M21.5 12h.01" /></svg></span>
     Shadowing
   </button>
-  <button data-page="page-grammar">
+  <button hidden aria-hidden="true" tabindex="-1" data-page="page-grammar">
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19v-3"/><path d="M9 8h6M9 11.5h4"/></svg></span>
     Ngữ pháp
   </button>
@@ -632,11 +657,11 @@
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg></span>
     Bất quy tắc
   </button>
-  <button data-page="page-exercise">
+  <button hidden aria-hidden="true" tabindex="-1" data-page="page-exercise">
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H16l3 3v14.5A1.5 1.5 0 0 1 17.5 21h-11A1.5 1.5 0 0 1 5 19.5z"/><path d="M8.5 13.5 10.5 16l5-5.5"/></svg></span>
     Bài tập
   </button>
-  <button data-page="page-para">
+  <button hidden aria-hidden="true" tabindex="-1" data-page="page-para">
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3" width="17" height="18" rx="2.5"/><path d="M7.5 8h9M7.5 12h9M7.5 16h5.5"/></svg></span>
     Dịch · Hỏi
   </button>
@@ -644,11 +669,7 @@
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4A1.5 1.5 0 0 1 4 14.5z"/><path d="M9.8 7.6a2.3 2.3 0 1 1 3 2.2c-.6.2-.8.6-.8 1.2"/><path d="M12 13.3h.01"/></svg></span>
     Câu hỏi
   </button>
-  <button data-page="page-talk">
-    <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.5A2.5 2.5 0 0 1 5.5 4h7A2.5 2.5 0 0 1 15 6.5v4a2.5 2.5 0 0 1-2.5 2.5H8l-3.5 3v-3A1.5 1.5 0 0 1 3 11.5z"/><path d="M17.5 9h1A2.5 2.5 0 0 1 21 11.5v4A1.5 1.5 0 0 1 19.5 17v3l-3.5-3h-3.5a2.5 2.5 0 0 1-2.4-1.8"/></svg></span>
-    Nói chuyện
-  </button>
-  <button data-page="page-read">
+  <button hidden aria-hidden="true" tabindex="-1" data-page="page-read">
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5C5.5 4.3 8.5 4.3 12 6c3.5-1.7 6.5-1.7 9-.5v13c-2.5-1.2-5.5-1.2-9 .5-3.5-1.7-6.5-1.7-9-.5z"/><path d="M12 6v13.5"/></svg></span>
     Đọc · Nghe · Viết
   </button>
@@ -751,7 +772,7 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
 <!-- tab-questions: nạp khi mở tab -->
 <!-- tab-reading: nạp khi mở tab -->
 <!-- tab-talk: nạp khi mở tab -->
-<script src="js/app-review.js?h=259c354b15"></script>
+<script src="js/app-review.js?h=b0a65c79ae"></script>
 <script>
 /* ============================================================
    v153–v154: GỘP TAB — mỗi cặp trang dùng chung một nút trên thanh tab, chuyển bằng thanh ở đầu trang.
@@ -796,8 +817,104 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
     // cho phần khác (Dashboard, Lộ trình…) mở thẳng trang phụ
     window['open_' + subPage.replace(/-/g, '_')] = () => go('sub');
   }
-  merge('page-para', 'page-qb', 'hoc-tieng-anh-pq-mode', ['📝 Luyện dịch', '❓ Đặt câu hỏi']);
-  merge('page-vocab', 'page-irregular', 'hoc-tieng-anh-vi-mode', ['📚 Từ vựng', '🔀 Bất quy tắc']);
+  // v161: thay bằng thanh chọn phần của 5 tab (xem khối v161 bên dưới)
+})();
+</script>
+<script>
+/* ============================================================
+   v161 · 5 tab theo chu trình học: Hôm nay → Học → Luyện → Ôn tập · Dịch (công cụ)
+   Bấm tab là vào thẳng nội dung; thanh chọn phần ở đầu trang để đổi phần trong tab.
+   Các trang cũ vẫn giữ nguyên (nút tab cũ ẩn), nên mọi lối tắt cũ vẫn chạy.
+============================================================ */
+(function () {
+  const nav = document.querySelector('nav.nav5'); if (!nav) return;
+  document.body.classList.add('nav5');
+  const E = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  const mkClick = () => setTimeout(() => { const b = document.querySelector('#page-review .mk-entry button'); if (b) b.click(); }, 0);
+  const rd = m => () => window.rdHome && window.rdHome(m);
+  // Nhóm → các phần, theo thứ tự học: tiếp nhận (nghe, đọc) trước, tạo lập (nói, viết) sau
+  const G = {
+    home: { name: 'Hôm nay', secs: [
+      { id: 'today', t: 'Việc hôm nay', page: 'page-dash', run: () => { window.dashOpen && window.dashOpen(); window.dashView && window.dashView('sum'); } },
+      { id: 'path', t: 'Lộ trình', page: 'page-dash', run: () => { window.dashOpen && window.dashOpen(); window.dashView && window.dashView('path'); } } ] },
+    learn: { name: 'Học', secs: [
+      { id: 'vocab', t: 'Từ vựng', page: 'page-vocab' },
+      { id: 'grammar', t: 'Ngữ pháp', page: 'page-grammar' },
+      { id: 'irr', t: 'Động từ bất quy tắc', page: 'page-irregular' } ] },
+    practice: { name: 'Luyện', secs: [
+      { id: 'listen', t: 'Nghe', page: 'page-read', post: rd('listen') },
+      { id: 'read', t: 'Đọc', page: 'page-read', post: rd('read') },
+      { id: 'pron', t: 'Phát âm', page: 'page-pron' },
+      { id: 'shadow', t: 'Nói đuổi', page: 'page-shadow' },
+      { id: 'talk', t: 'Nói', page: 'page-talk' },
+      { id: 'write', t: 'Viết', page: 'page-read', post: rd('write') } ] },
+    review: { name: 'Ôn tập', secs: [
+      { id: 'cards', t: 'Thẻ đến hạn', page: 'page-review', run: () => window.srOpen && window.srOpen() },
+      { id: 'mist', t: 'Sổ lỗi', page: 'page-review', run: () => { window.srOpen && window.srOpen(); mkClick(); } },
+      { id: 'ex', t: 'Bài tập ngữ pháp', page: 'page-exercise' },
+      { id: 'para', t: 'Luyện dịch câu', page: 'page-para' },
+      { id: 'qb', t: 'Đặt câu hỏi', page: 'page-qb' } ] },
+    tool: { name: 'Dịch', secs: [ { id: 'check', t: 'Dịch', page: 'page-check' } ] }
+  };
+  const PG = {}; Object.keys(G).forEach(g => G[g].secs.forEach(sc => { if (!PG[sc.page]) PG[sc.page] = g; }));
+  PG['page-listen'] = 'practice';
+  const LK = 'hoc-tieng-anh-nav5-sec';
+  let last = {}; try { last = JSON.parse(localStorage.getItem(LK) || '{}') || {}; } catch (e) {}
+  let cur = { g: 'home', s: 'today' };
+  const grpBtns = [...nav.querySelectorAll('button[data-grp]')];
+  { const db = document.getElementById('dash-btn'); if (db) db.style.display = 'none'; }
+
+  const bar = E('div', 'sec-bar'); bar.setAttribute('role', 'tablist');
+  function drawBar() {
+    const grp = G[cur.g]; bar.innerHTML = '';
+    if (!grp || grp.secs.length < 2) { bar.remove(); return; }
+    grp.secs.forEach((sc, i) => {
+      const b = E('button', 'sec-chip' + (sc.id === cur.s ? ' on' : ''));
+      b.type = 'button'; b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', String(sc.id === cur.s));
+      if (cur.g === 'practice') b.appendChild(E('span', 'sec-n', String(i + 1)));
+      b.appendChild(document.createTextNode(sc.t));
+      b.addEventListener('click', () => { if (sc.id !== cur.s) secOpen(cur.g, sc.id); });
+      bar.appendChild(b);
+    });
+    const pg = document.querySelector('main .page.active');
+    if (pg && pg.id !== 'page-hub' && pg.firstChild !== bar) pg.insertBefore(bar, pg.firstChild);
+    const on = bar.querySelector('.on'); if (on && bar.scrollWidth > bar.clientWidth) bar.scrollLeft = on.offsetLeft - 16;
+  }
+  // khi trang đổi bằng đường khác (lối tắt trong lộ trình, gợi ý…): sáng đúng nhóm và đúng phần
+  function sync() {
+    const pg = document.querySelector('main .page.active'); if (!pg || pg.id === 'page-hub') return;
+    const g = PG[pg.id] || cur.g;
+    const secs = G[g].secs.filter(x => x.page === pg.id);
+    const s = secs.some(x => x.id === cur.s) && cur.g === g ? cur.s : (secs[0] || G[g].secs[0]).id;
+    cur = { g, s };
+    grpBtns.forEach(b => { const on = b.dataset.grp === g; b.classList.toggle('grp-on', on); b.classList.toggle('active', on); if (on) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
+    document.body.dataset.grp = g; document.body.dataset.sec = s;
+    drawBar();
+  }
+  const mo = new MutationObserver(() => sync());
+  document.querySelectorAll('main .page').forEach(p => mo.observe(p, { attributes: true, attributeFilter: ['class'] }));
+
+  function secOpen(g, sid) {
+    const grp = G[g]; if (!grp) return;
+    const sc = grp.secs.find(x => x.id === sid) || grp.secs[0];
+    cur = { g, s: sc.id }; last[g] = sc.id;
+    try { localStorage.setItem(LK, JSON.stringify(last)); } catch (e) {}
+    if (sc.run) sc.run();
+    else {
+      const b = nav.querySelector(`button[data-page="${sc.page}"]:not([data-grp])`);
+      if (b) b.click();
+    }
+    Promise.resolve(window.appLoadTab ? window.appLoadTab(sc.page) : 0).catch(() => {}).then(() => setTimeout(() => { try { sc.post && sc.post(); } catch (e) {} sync(); }, 60));
+    sync();
+    const m = document.querySelector('main'); window.scrollTo({ top: g === 'home' && sc.id === 'today' ? 0 : (m ? Math.max(0, m.offsetTop - 8) : 0) });
+  }
+  window.secOpen = secOpen;
+  grpBtns.forEach(b => b.addEventListener('click', () => {
+    const g = b.dataset.grp;
+    // Hôm nay luôn mở “Việc hôm nay”; các tab khác mở lại phần dùng gần nhất
+    secOpen(g, g === 'home' ? 'today' : (last[g] || G[g].secs[0].id));
+  }));
+  secOpen('home', 'today');
 })();
 </script>
 <script>

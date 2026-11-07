@@ -4186,3 +4186,117 @@
   .gx-score.ok .gx-score-big{ color:var(--moss); } .gx-score.mid .gx-score-big{ color:#E67700; } .gx-score.bad .gx-score-big{ color:var(--mark); }
   .gx-score-sub{ font-size:13px; color:var(--ink-soft); } .gx-score-msg{ font-size:14px; margin-top:8px; line-height:1.5; }
   .gx-res-t{ width:100%; border-collapse:collapse; font-size:13.5px; } .gx-res-t td{ padding:6px 8px; border-bottom:1px solid var(--paper-line); } .gx-res-t td.ok{ color:var(--moss); font-weight:700; } .gx-res-t td.bad{ color:var(--mark); font-weight:700; }
+
+  /* ===================== v158: giao diện “Sổ tay dịu” (Đợt 1) — chỉ đổi màu, viền, nút; giữ nguyên bố cục 9 tab ===================== */
+  :root{
+    --paper:#F7F5F0; --paper-line:#E4DED2; --ink:#23302C; --ink-soft:#56615C; --hint:#9A978E; --strike:#9A978E;
+    --rust:#3D6B52; --rust-light:#E3EFD6; --moss:#3D7A4E; --moss-light:#E3EFD6; --mark:#B9472F;
+    --card:#FFFFFF; --on-accent:#FFFFFF;
+    --hero:#F4E8BF; --hero-ink:#23302C; --hero-soft:#56615C;
+    --hl:#F4E3A1;
+    --shadow:3px 3px 0 #DDD5C4;
+    --c-check:#3D6B52; --c-check-l:#DCEBC4; --c-para:#33698F; --c-para-l:#D6E6F3; --c-qb:#64569A; --c-qb-l:#E4DDF4; --c-talk:#3B7656; --c-talk-l:#DCEBC4; --c-read:#935623; --c-read-l:#F6DCCD;
+    --c-pron:#A24E35; --c-pron-l:#F6DCCD;
+    --c-tenses:#2D7268; --c-tenses-l:#D3EAE4;
+    --c-grammar:#64569A; --c-grammar-l:#E4DDF4;
+    --c-irregular:#85601A; --c-irregular-l:#F4E8BF;
+    --c-exercise:#9A4563; --c-exercise-l:#F4DCE4;
+    --c-listen:#4D7329; --c-listen-l:#DCEBC4;
+    --c-shadow:#2D6A77; --c-shadow-l:#D6E6F3;
+    --c-vocab:#54529E; --c-vocab-l:#E4DDF4;
+    /* chỉ có ở giao diện dịu: viền mực mảnh + bóng be cứng */
+    --soft-bd:#3A4541; --soft-sh:3px 3px 0 #DDD5C4; --soft-sh-lg:4px 4px 0 #DDD5C4;
+    --hero-chip:#FFFFFF; --hero-chip-bd:#3A4541; --hero-num:#85601A; --hero-rv:#FFFFFF; --hero-rv-ink:#23302C; --hero-hl-c:#DCEBC4;
+  }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --soft-bd:var(--paper-line); --soft-sh:none; --soft-sh-lg:var(--shadow); --hero-chip:initial; --hero-chip-bd:initial; --hero-num:initial; --hero-rv:initial; --hero-rv-ink:initial; --hero-hl-c:initial; } }
+  :root[data-theme="dark"], :root[data-season]{ --soft-bd:var(--paper-line); --soft-sh:none; --soft-sh-lg:var(--shadow); --hero-chip:initial; --hero-chip-bd:initial; --hero-num:initial; --hero-rv:initial; --hero-rv-ink:initial; --hero-hl-c:initial; }
+  /* v158b: bản dịu cho chế độ tối */
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --paper:#1B201E; --paper-line:#333B37; --ink:#ECE9E1; --ink-soft:#AEB5AF; --hint:#79807B; --strike:#79807B;
+      --rust:#A8CF8E; --rust-light:#2D3A2A; --moss:#9FD3AE; --moss-light:#24352A; --mark:#F0937E;
+      --card:#242A27; --on-accent:#1B201E;
+      --hero:#34301F; --hero-ink:#F3EEDC; --hero-soft:#CFC8AE; --hl:rgba(244,227,161,0.25);
+      --shadow:3px 3px 0 #0F1312;
+      --c-check:#A8CF8E; --c-check-l:#2D3A2A; --c-para:#92BEE3; --c-para-l:#24323D; --c-qb:#BBAEE8; --c-qb-l:#322D42; --c-talk:#9FD3AE; --c-talk-l:#2A3A30; --c-read:#E8B48A; --c-read-l:#3D2F25;
+      --c-pron:#EFA88E; --c-pron-l:#3E2C26; --c-tenses:#8FD0C4; --c-tenses-l:#233733; --c-grammar:#BBAEE8; --c-grammar-l:#322D42;
+      --c-irregular:#E3C27A; --c-irregular-l:#3A3220; --c-exercise:#E7A2BA; --c-exercise-l:#3D2A31; --c-listen:#B5D68A; --c-listen-l:#2F3A24;
+      --c-shadow:#8CC6D2; --c-shadow-l:#213439; --c-vocab:#B4B2EC; --c-vocab-l:#2E2E45;
+      --soft-bd:#4A5550; --soft-sh:3px 3px 0 #0F1312; --soft-sh-lg:4px 4px 0 #0F1312;
+      --hero-chip:#242A27; --hero-chip-bd:#4A5550; --hero-num:#E3C27A; --hero-rv:#242A27; --hero-rv-ink:#ECE9E1; --hero-hl-c:rgba(168,207,142,0.35);
+      color-scheme:dark; } }
+  :root[data-theme="dark"]{ --paper:#1B201E; --paper-line:#333B37; --ink:#ECE9E1; --ink-soft:#AEB5AF; --hint:#79807B; --strike:#79807B;
+      --rust:#A8CF8E; --rust-light:#2D3A2A; --moss:#9FD3AE; --moss-light:#24352A; --mark:#F0937E;
+      --card:#242A27; --on-accent:#1B201E;
+      --hero:#34301F; --hero-ink:#F3EEDC; --hero-soft:#CFC8AE; --hl:rgba(244,227,161,0.25);
+      --shadow:3px 3px 0 #0F1312;
+      --c-check:#A8CF8E; --c-check-l:#2D3A2A; --c-para:#92BEE3; --c-para-l:#24323D; --c-qb:#BBAEE8; --c-qb-l:#322D42; --c-talk:#9FD3AE; --c-talk-l:#2A3A30; --c-read:#E8B48A; --c-read-l:#3D2F25;
+      --c-pron:#EFA88E; --c-pron-l:#3E2C26; --c-tenses:#8FD0C4; --c-tenses-l:#233733; --c-grammar:#BBAEE8; --c-grammar-l:#322D42;
+      --c-irregular:#E3C27A; --c-irregular-l:#3A3220; --c-exercise:#E7A2BA; --c-exercise-l:#3D2A31; --c-listen:#B5D68A; --c-listen-l:#2F3A24;
+      --c-shadow:#8CC6D2; --c-shadow-l:#213439; --c-vocab:#B4B2EC; --c-vocab-l:#2E2E45;
+      --soft-bd:#4A5550; --soft-sh:3px 3px 0 #0F1312; --soft-sh-lg:4px 4px 0 #0F1312;
+      --hero-chip:#242A27; --hero-chip-bd:#4A5550; --hero-num:#E3C27A; --hero-rv:#242A27; --hero-rv-ink:#ECE9E1; --hero-hl-c:rgba(168,207,142,0.35);
+      color-scheme:dark; }
+  html:root[data-season]{ --soft-bd:var(--paper-line); --soft-sh:none; --soft-sh-lg:var(--shadow); --hero-chip:initial; --hero-chip-bd:initial; --hero-num:initial; --hero-rv:initial; --hero-rv-ink:initial; --hero-hl-c:initial; }
+  html,body{ background-image:radial-gradient(color-mix(in srgb, var(--paper-line) 70%, transparent) 1px, transparent 1px); background-size:20px 20px; }
+  .tense-card{ border:1.5px solid var(--soft-bd); border-radius:18px; box-shadow:var(--soft-sh); }
+  .tense-card .tense-card{ border-width:1px; border-color:var(--paper-line); box-shadow:none; }
+  .btn-primary{ border:1.5px solid var(--soft-bd); border-radius:14px; box-shadow:var(--soft-sh); }
+  .btn-ghost{ border-color:var(--soft-bd); color:var(--ink); border-radius:14px; }
+  header.hero{ border-bottom:1.5px solid var(--soft-bd); }
+  header.hero::after{ color:color-mix(in srgb, var(--hero-ink) 6%, transparent); }
+  .hero-badge{ background:color-mix(in srgb, var(--hero-ink) 9%, transparent); }
+  nav.tabbar{ border-top:1.5px solid var(--soft-bd); box-shadow:none; }
+  .hero-stat{ background:var(--hero-chip, rgba(255,255,255,0.09)); border:1px solid var(--hero-chip-bd, transparent); }
+  .hero-stat .n{ color:var(--hero-num, #FFD54A); }
+  .hero-voice{ background:var(--hero-chip, rgba(255,255,255,0.12)); border-color:var(--hero-chip-bd, rgba(255,255,255,0.2)); color:var(--hero-ink, #fff); }
+  .hero-dash{ background:var(--hero-chip, rgba(255,255,255,0.12)); border-color:var(--hero-chip-bd, rgba(255,255,255,0.18)); }
+  .hero-review{ background:var(--hero-rv, #FFE066); color:var(--hero-rv-ink, #14213D); border:1.5px solid var(--hero-chip-bd, transparent); }
+  .hero-review.done{ background:var(--hero-chip, rgba(255,255,255,0.12)); color:var(--hero-ink); }
+  .hero-hl{ background:linear-gradient(transparent 68%, var(--hero-hl-c, rgba(255,204,51,0.9)) 68%, var(--hero-hl-c, rgba(255,204,51,0.9)) 92%, transparent 92%); }
+  nav.tabbar button.active{ color:var(--ink); box-shadow:inset 0 0 0 1.5px var(--soft-bd); }
+
+  /* ===================== v160 · ĐỢT 2: thanh 5 tab + trang Học / Luyện + thẻ Việc hôm nay ===================== */
+  nav.nav5{ justify-content:space-around; overflow:visible; }
+  nav.nav5 button[data-grp]{ flex:1 1 0; min-width:0; }
+  nav.nav5 button.grp-on{ background:var(--c-check-l); color:var(--ink); box-shadow:inset 0 0 0 1.5px var(--soft-bd); }
+  nav.nav5 button[data-grp].active:not(.grp-on){ background:transparent; color:var(--ink-soft); box-shadow:none; }
+  body[data-grp]:not([data-grp="home"]) header.hero{ display:none; }
+  body[data-grp]:not([data-grp="home"]) main{ padding-top:max(14px, env(safe-area-inset-top, 0px)); }
+  .db-vb-off{ display:none; }
+  .db-next{ position:relative; background:var(--hero); color:var(--hero-ink); padding:20px 18px 16px; margin-top:18px; box-shadow:var(--soft-sh-lg); display:flex; flex-direction:column; gap:6px; }
+  .db-next-tag{ position:absolute; top:-11px; right:16px; background:var(--card); color:var(--ink); border:1.5px solid var(--soft-bd); border-radius:999px; padding:3px 10px; font-size:11px; font-weight:700; letter-spacing:.08em; }
+  .db-next-k{ font-size:13px; font-weight:600; color:var(--hero-soft); }
+  .db-next-h{ font:800 34px/1.05 var(--font-display); letter-spacing:-.03em; }
+  .db-next-s{ font-size:14.5px; font-weight:500; }
+  .db-next-seg{ display:grid; grid-template-columns:repeat(var(--n), minmax(0,1fr)); gap:5px; margin:8px 0 4px; }
+  .db-next-seg span{ height:8px; border-radius:999px; background:color-mix(in srgb, var(--hero-ink) 18%, transparent); }
+  .db-next-seg span.on{ background:var(--hero-ink); }
+  .db-next-go{ display:flex; align-items:center; gap:10px; width:100%; text-align:left; background:var(--card); color:var(--ink); border:1.5px solid var(--soft-bd); border-radius:16px; padding:12px 14px; margin-top:6px; cursor:pointer; font:inherit; }
+  .db-next-gt{ display:flex; flex-direction:column; gap:2px; flex:1; min-width:0; }
+  .db-next-gt small{ font-size:11px; font-weight:700; letter-spacing:.07em; color:var(--ink-soft); }
+  .db-next-gt b{ font-size:16px; font-weight:700; }
+  .db-next-ar{ width:38px; height:38px; border-radius:12px; background:var(--ink); color:var(--card); display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:700; flex:none; }
+  .db-next-all{ align-self:flex-start; background:none; border:0; padding:8px 2px 0; color:var(--hero-ink); font:600 13.5px var(--font-body); text-decoration:underline; text-underline-offset:3px; cursor:pointer; }
+  .hub-g{ margin:20px 2px 8px; font-size:12px; font-weight:700; letter-spacing:.08em; color:var(--ink-soft); }
+  .hub-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(104px, 1fr)); gap:10px; }
+  .hub-tile{ display:flex; flex-direction:column; justify-content:space-between; gap:10px; min-height:100px; padding:13px 12px; border-radius:18px; border:1.5px solid var(--soft-bd); text-align:left; color:var(--ink); cursor:pointer; font:inherit; box-shadow:var(--soft-sh); }
+  .hub-tile svg, .hub-wi svg{ width:23px; height:23px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+  .hub-tx{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+  .hub-tx b{ font-size:14.5px; font-weight:700; line-height:1.25; }
+  .hub-tx small{ font-size:12px; color:var(--ink-soft); }
+  .hub-wide{ display:flex; align-items:center; gap:12px; width:100%; margin-top:16px; padding:12px 14px; border-radius:20px; border:1.5px solid var(--soft-bd); text-align:left; color:var(--ink); cursor:pointer; font:inherit; box-shadow:var(--soft-sh); }
+  .hub-wide .hub-tx{ flex:1; }
+  .hub-wi{ width:42px; height:42px; border-radius:12px; background:var(--card); border:1.5px solid var(--soft-bd); display:flex; align-items:center; justify-content:center; flex:none; }
+  .hub-ar{ font-size:18px; font-weight:700; }
+  .hub-lav{ background:var(--c-vocab-l); } .hub-butter{ background:var(--c-irregular-l); } .hub-sky{ background:var(--c-para-l); } .hub-peach{ background:var(--c-read-l); }
+  .hub-tile:active, .hub-wide:active, .db-next-go:active{ transform:translate(1px,1px); box-shadow:none; }
+
+  /* v161: thanh chọn phần trong tab */
+  .sec-bar{ display:flex; gap:6px; overflow-x:auto; scrollbar-width:none; margin:0 -4px 14px; padding:4px; position:sticky; top:0; z-index:20; background:var(--paper); }
+  .sec-bar::-webkit-scrollbar{ display:none; }
+  .sec-chip{ flex:none; display:inline-flex; align-items:center; gap:6px; min-height:40px; padding:0 14px; border-radius:999px; border:1.5px solid var(--paper-line); background:var(--card); color:var(--ink-soft); font:600 14px var(--font-body); white-space:nowrap; cursor:pointer; }
+  .sec-chip.on{ background:var(--c-check-l); color:var(--ink); border-color:var(--soft-bd); box-shadow:var(--soft-sh); }
+  .sec-n{ width:20px; height:20px; border-radius:999px; background:color-mix(in srgb, var(--ink) 10%, transparent); display:inline-flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; }
+  .sec-chip.on .sec-n{ background:var(--ink); color:var(--card); }
+  body.nav5 #page-read .rw-mode{ display:none; }
+  body[data-sec="path"] header.hero{ display:none; }
+  #page-hub{ min-height:40vh; }
