@@ -4580,3 +4580,5 @@
   .sd-q-steps{ margin:0; padding:0 14px 12px 32px; display:flex; flex-direction:column; gap:8px; font-size:13.5px; line-height:1.5; color:var(--ink); }
   .sd-q-steps b{ font-weight:800; }
   @media (max-width:420px){ .sd-quick{ grid-template-columns:1fr; } }
+  .sd-export{ margin-top:14px; display:flex; flex-direction:column; gap:8px; }
+  .sd-export .btn-primary{ align-self:flex-start; min-height:46px; }

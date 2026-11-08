@@ -1,14 +1,32 @@
 LẤY BẢN CHÉP LỜI CHO VIDEO BBC (làm một lần)
 
-Cách 1 — từ điện thoại, nhờ GitHub chạy hộ:
-  1. Mở kho GitHub của app trên trình duyệt → tab "Actions".
-  2. Chọn "Lấy bản chép lời video BBC" → "Run workflow" → "Run workflow".
-  3. Đợi vài phút. Xong, file data/bbc-subs.json trong kho được cập nhật, trang GitHub Pages tự cập nhật theo.
-  Lưu ý: YouTube đôi khi chặn máy chủ của GitHub. Nếu nhật ký báo "RequestBlocked", dùng cách 2.
+Lưu ý: YouTube chặn máy chủ của GitHub, nên nút "Run workflow" trong tab Actions
+thường KHÔNG lấy được. Hãy chạy từ điện thoại hoặc máy tính ở nhà.
+
+Cách 0 — không phải gõ lệnh: Google Colab (cần tài khoản Google)
+  1. Tải file tools/lay_ban_chep_loi.ipynb lên kho (nếu chưa có).
+  2. Mở trên Safari: https://colab.research.google.com/github/zerotoheroenglish/Learn-English/blob/main/tools/lay_ban_chep_loi.ipynb
+  3. Đăng nhập Google → Runtime → Run all → đợi 3–5 phút → file bbc-subs.json tự tải về.
+  4. Đưa file đó lên thư mục data của kho. (Nếu báo bị chặn: thử lại sau vài giờ.)
+
+Cách 0b — dán từng video trong app rồi xuất file chung:
+  Mở video BBC → ① Mở video trên YouTube → sao chép bản chép lời → ② Dán. Làm cho các video bạn muốn.
+  Quay về danh sách Video BBC → bấm "Tải file bbc-subs.json" ở cuối trang → đưa file lên thư mục data.
+
+Cách 1 — trên iPhone, bằng app a-Shell (miễn phí trên App Store):
+  1. Cài a-Shell.
+  2. Lưu file lay_ban_chep_loi.py vào Tệp → Trên iPhone → a-Shell.
+  3. Mở a-Shell, gõ lần lượt (mỗi dòng Enter một lần):
+       pip install youtube-transcript-api
+       python3 lay_ban_chep_loi.py
+     Đợi khoảng 3–5 phút đến khi hiện "Xong: lấy mới …".
+  4. Mở app Tệp → Trên iPhone → a-Shell → thấy file bbc-subs.json.
+  5. Vào kho GitHub trên Safari → mở thư mục data → Add file → Upload files
+     → chọn bbc-subs.json → Commit changes. Vài phút sau trang web có chữ.
 
 Cách 2 — trên máy tính có Python:
   pip install "youtube-transcript-api>=1.2,<2"
   python tools/lay_ban_chep_loi.py
-  Rồi tải file data/bbc-subs.json lên kho như các file khác.
+  Rồi tải file data/bbc-subs.json lên thư mục data của kho.
 
 Chạy lại bất cứ lúc nào: video đã có được bỏ qua, chỉ lấy video mới hoặc video lần trước bị lỗi.

@@ -709,6 +709,23 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     root.appendChild(sr);
     root.appendChild(body);
     renderVideoBody(body);
+    loadBuilt().then(() => { if (body.isConnected && Object.keys(bbcBuilt).length) renderVideoBody(body); });
+    // v190: gom các bản chép lời đã dán thành file chung → tải lên data/ để mọi người học cùng dùng
+    const mineN = Object.keys(bbcStore).filter(k => bbcStore[k] && bbcStore[k].s && bbcStore[k].s.length).length;
+    if (mineN) {
+      const ex = E('div', 'tense-card sd-export');
+      ex.appendChild(E('div', 'vc-q-label', '📤 Chia sẻ bản chép lời cho mọi người'));
+      ex.appendChild(E('p', 'sd-create-p', `Bạn đã dán bản chép lời cho ${mineN} video. Tải file dưới đây rồi đưa lên thư mục data của kho GitHub (Add file → Upload files): mọi người mở các video đó sẽ có chữ sẵn.`));
+      const b = E('button', 'btn-primary', `⬇️ Tải file bbc-subs.json (${mineN + Object.keys(bbcBuilt).filter(k => !bbcStore[k]).length} video)`);
+      b.addEventListener('click', () => {
+        const v = Object.assign({}, bbcBuilt);
+        const t = x => { const h = Math.floor(x / 3600), m = Math.floor(x % 3600 / 60), sec = (x % 60).toFixed(3).padStart(6, '0'); return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${sec}`; };
+        Object.keys(bbcStore).forEach(k => { const st = bbcStore[k]; if (!st || !st.s || !st.s.length || !st.tm) return; v[k] = st.s.map((x, i) => `${t(st.tm[i][0])} --> ${t(st.tm[i][1])}\n${x[0]}\n`).join('\n'); });
+        const blob = new Blob([JSON.stringify({ made: new Date().toISOString().slice(0, 10), v })], { type: 'application/json' });
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'bbc-subs.json'; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+      });
+      ex.appendChild(b); root.appendChild(ex);
+    }
   }
   function renderVideoBody(body) {
     body.innerHTML = '';
