@@ -2588,16 +2588,27 @@ function prShowScore(out, best) {
   info.appendChild(prEl('p', null, 'Để tự đánh giá phát âm: ghi âm, nghe lại và so với giọng mẫu, chú ý âm cuối, trọng âm và nhịp.'));
   out.appendChild(info);
 }
+let prRecOpening = false;
 async function prToggleRecord(target, btn, out) {
   if (prRec) { try { prRec.stop(); } catch (e) {} return; }
+  if (prRecOpening) return;   // v178: đang chờ cấp quyền micro → bấm thêm không mở micro thứ hai
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder) {
     out.className = 'pr-rec-out warn'; out.textContent = 'Trình duyệt này chưa hỗ trợ ghi âm.'; return;
   }
   let stream;
+  prRecOpening = true;
   try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
-  catch (e) { out.className = 'pr-rec-out warn'; out.textContent = 'Không mở được micro. Hãy cho phép dùng micro rồi thử lại.'; return; }
+  catch (e) {
+    prRecOpening = false;
+    out.className = 'pr-rec-out warn';
+    out.textContent = e && (e.name === 'NotFoundError' || e.name === 'NotReadableError') ? 'Không tìm thấy micro, hoặc micro đang được app khác dùng. Hãy đóng app đó rồi thử lại.' : 'Không mở được micro. Hãy cho phép dùng micro rồi thử lại.';
+    return;
+  }
+  prRecOpening = false;
   try { speechSynthesis.cancel(); } catch (e) {}
-  const mr = new MediaRecorder(stream);
+  let mr;
+  try { mr = new MediaRecorder(stream); }
+  catch (e) { stream.getTracks().forEach(t => t.stop()); out.className = 'pr-rec-out warn'; out.textContent = 'Trình duyệt này chưa ghi âm được. Hãy thử Safari hoặc Chrome bản mới.'; return; }
   const chunks = [];
   mr.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); };
   const timer = setTimeout(() => { if (mr.state !== 'inactive') mr.stop(); }, 10000);
@@ -2606,6 +2617,8 @@ async function prToggleRecord(target, btn, out) {
     stream.getTracks().forEach(t => t.stop());
     prRec = null;
     btn.classList.remove('rec'); btn.textContent = '⏺ Ghi âm lại';
+    try { ttsMicEnded(); } catch (e) {}
+    if (!chunks.length) { out.className = 'pr-rec-out warn'; out.textContent = 'Chưa ghi được âm thanh. Hãy ghi lại và nói ít nhất 1 giây.'; return; }
     if (prRecUrl) URL.revokeObjectURL(prRecUrl);
     prRecUrl = URL.createObjectURL(new Blob(chunks, { type: mr.mimeType || 'audio/mp4' }));
     const url = prRecUrl;
@@ -2619,11 +2632,18 @@ async function prToggleRecord(target, btn, out) {
     acts.appendChild(mine); acts.appendChild(model);
     out.appendChild(acts);
   };
-  mr.start();
+  try { mr.start(); } catch (e) { stream.getTracks().forEach(t => t.stop()); clearTimeout(timer); out.className = 'pr-rec-out warn'; out.textContent = 'Không bắt đầu ghi âm được. Hãy thử lại.'; return; }
   prRec = mr;
   btn.classList.add('rec'); btn.textContent = '⏹ Dừng ghi';
   out.className = 'pr-rec-out'; out.textContent = 'Đang ghi âm… đọc xong bấm "Dừng ghi" (tự dừng sau 10 giây).';
 }
+
+// v178: rời app (chuyển app khác, khoá màn hình) → tắt micro ngay, không để micro mở ngầm
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState !== 'hidden') return;
+  try { if (prRecog) prRecog.abort(); } catch (e) {}
+  try { if (prRec && prRec.state !== 'inactive') prRec.stop(); } catch (e) {}
+});
 
 /* ---------- result card ---------- */
 function renderPronResult(rawText, hint) {
@@ -7430,8 +7450,11 @@ function srFree(o) {
   let fin = '', tmp = '', done = false, quiet = 0, idle = 0, started = false, err = '';
   const SIL = o.silence || 1600;
   const text = () => (fin + ' ' + tmp).replace(/\s+/g, ' ').trim();
+  const vis = () => { if (document.visibilityState === 'hidden' && !done) { try { rec.stop(); } catch (e) {} setTimeout(end, 300); } };   // v178: rời app → tắt micro
+  document.addEventListener('visibilitychange', vis);
   const end = () => {
     if (done) return; done = true; clearTimeout(quiet); clearTimeout(idle);
+    document.removeEventListener('visibilitychange', vis);
     try { rec.onresult = rec.onerror = rec.onend = null; rec.abort(); } catch (e) {}
     try { if (typeof ttsMicEnded === 'function') ttsMicEnded(); } catch (e) {}
     o.onDone && o.onDone(text(), text() ? '' : err);
@@ -7515,6 +7538,7 @@ function vspListen(target, onDone, onPartial, opts) {
       ? 'Bạn cần cho phép micro và nhận dạng giọng nói cho trình duyệt (iPhone: Cài đặt → Safari → Micrô).'
       : ev.error === 'no-speech' ? 'Không nghe thấy gì. Hãy nói to và gần micro hơn nhé.'
       : ev.error === 'network' ? 'Nhận dạng giọng nói cần có mạng. Kiểm tra kết nối rồi thử lại.'
+      : ev.error === 'audio-capture' ? 'Không tìm thấy micro, hoặc micro đang được app khác dùng. Hãy đóng app đó rồi thử lại.'
       : ev.error === 'aborted' ? '' : 'Không nhận dạng được (' + ev.error + '). Hãy thử lại.');
   };
   r.onend = () => { if (lastAlts) finish(scoreAlts(lastAlts), null); else finish(null, 'Không nghe rõ. Bấm nói lại và đọc to hơn nhé.'); };
@@ -10975,7 +10999,7 @@ vUpdateButton();
     const done = () => { bM.disabled = false; };
     const tm = setTimeout(() => { if (!got) { try { r.abort(); } catch (e) {} } }, 8000);
     r.onresult = ev => { got = true; clearTimeout(tm); w.remove(); line(true, 'Nhận dạng giọng nói hoạt động. Máy nghe được: "' + ev.results[0][0].transcript + '"'); done(); };
-    r.onerror = ev => { got = true; clearTimeout(tm); w.remove(); line(false, 'Nhận dạng giọng nói lỗi: ' + ev.error + '.'); tips(ev.error === 'not-allowed' || ev.error === 'service-not-allowed' ? ['Vào <b>Cài đặt → Quyền riêng tư & Bảo mật → Nhận dạng lời nói</b> và bật cho Safari, đồng thời bật <b>Siri & Đọc chính tả</b> (Cài đặt → Cài đặt chung → Bàn phím → Bật Đọc chính tả).'] : ev.error === 'network' ? ['Nhận dạng giọng nói cần mạng. Kiểm tra Wi-Fi / 4G rồi thử lại.'] : ['Nói gần micro hơn rồi thử lại.']); done(); };
+    r.onerror = ev => { got = true; clearTimeout(tm); w.remove(); line(false, 'Nhận dạng giọng nói lỗi: ' + ev.error + '.'); tips(ev.error === 'audio-capture' ? ['Không tìm thấy micro, hoặc micro đang được app khác dùng (gọi điện, ghi âm, Zalo…). Hãy đóng app đó rồi thử lại.', 'Trên máy tính: kiểm tra đã cắm micro / tai nghe có micro chưa.'] : ev.error === 'not-allowed' || ev.error === 'service-not-allowed' ? ['Vào <b>Cài đặt → Quyền riêng tư & Bảo mật → Nhận dạng lời nói</b> và bật cho Safari, đồng thời bật <b>Siri & Đọc chính tả</b> (Cài đặt → Cài đặt chung → Bàn phím → Bật Đọc chính tả).'] : ev.error === 'network' ? ['Nhận dạng giọng nói cần mạng. Kiểm tra Wi-Fi / 4G rồi thử lại.'] : ['Nói gần micro hơn rồi thử lại.']); done(); };
     r.onend = () => { clearTimeout(tm); if (!got) { w.remove(); line(false, 'Không nghe thấy gì trong 8 giây.'); tips(['Nói to và gần micro hơn.', 'Nếu micro báo đang nghe mà không có kết quả, hãy vuốt tắt hẳn app rồi mở lại (lỗi hay gặp trên iPhone sau khi vừa phát âm thanh).']); } done(); };
     try { r.start(); } catch (e) { line(false, 'Không bắt đầu nghe được.'); done(); }
   });

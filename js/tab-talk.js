@@ -1204,6 +1204,8 @@ const TALK_SCENES = [
   const spSave = () => { try { localStorage.setItem(SPK, JSON.stringify(spProg)); } catch (e) {} };
   let spFilt = 0, spRec = null, spTimer = 0;
   const spStop = () => { if (spRec) { try { spRec.stop(); } catch (e) {} spRec = null; } clearInterval(spTimer); };
+  // v178: rời app khi đang nói theo đề → chốt phần đã nói và tắt micro
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && spRec && spRec.finish) { try { spRec.finish(); } catch (e) {} } });
   const spWords = s => (String(s).match(/[A-Za-z][A-Za-z'’-]*/g) || []).length;
   function spHome() {
     stopAll(); spStop();
@@ -1293,17 +1295,30 @@ const TALK_SCENES = [
       if (spRec) { finish(); return; }
       out.innerHTML = ''; stat.innerHTML = ''; ta.hidden = true; ta.value = ''; bAI.hidden = true;
       try { speechSynthesis.cancel(); } catch (e) {}
-      let final = '', ended = false, alive = true, r = null;
+      let final = '', ended = false, alive = true, r = null, restarts = 0, lastStart = 0, heard = false;
+      // v178: lỗi không tự hết (không có micro, mất mạng, bị chặn quyền) → dừng hẳn và báo rõ, không mở lại micro liên tục
+      const FATAL = { 'not-allowed': 'Bạn cần cho phép micro và nhận dạng giọng nói cho trình duyệt (iPhone: Cài đặt → Safari → Micrô).',
+        'service-not-allowed': 'Bạn cần cho phép micro và nhận dạng giọng nói cho trình duyệt (iPhone: Cài đặt → Safari → Micrô).',
+        'audio-capture': 'Không tìm thấy micro, hoặc micro đang được app khác dùng. Hãy đóng app đang dùng micro rồi thử lại.',
+        'network': 'Nhận dạng giọng nói cần có mạng. Kiểm tra Wi-Fi / 4G rồi bấm nói lại.',
+        'language-not-supported': 'Máy chưa hỗ trợ nhận dạng tiếng Anh. Hãy thử Chrome, Edge hoặc Safari bản mới.' };
       const begin = () => {
+        lastStart = Date.now(); heard = false;
         r = new PR_SR(); r.lang = 'en-US'; r.continuous = true; r.interimResults = true;
         r.onresult = ev => {
-          let interim = '';
+          let interim = ''; heard = true;
           for (let i = ev.resultIndex; i < ev.results.length; i++) { const tx = ev.results[i][0].transcript; if (ev.results[i].isFinal) final += (final ? ' ' : '') + tx.trim(); else interim += tx; }
           live.textContent = (final + ' ' + interim).trim() || '👂 Đang nghe…';
         };
-        r.onerror = e => { if (e.error === 'not-allowed' || e.error === 'service-not-allowed') { alive = false; live.textContent = 'Bạn cần cho phép micro và nhận dạng giọng nói cho trình duyệt (iPhone: Cài đặt → Safari → Micrô).'; endRec(true); } };
-        r.onend = () => { if (alive && spRec) { try { begin(); } catch (e) { endRec(); } } };   // Safari tự dừng khi im lặng → nghe tiếp
-        try { r.start(); } catch (e) {}
+        r.onerror = e => { const m = FATAL[e && e.error]; if (m) { alive = false; live.textContent = m; endRec(true); } };
+        // Safari tự dừng khi im lặng → nghe tiếp; nếu micro cứ tắt ngay sau khi mở (lỗi máy) thì dừng sau vài lần thử
+        r.onend = () => {
+          if (!alive || !spRec) return;
+          restarts = !heard && Date.now() - lastStart < 1500 ? restarts + 1 : 0;   // chỉ tính lần micro tắt ngay mà không nghe được gì
+          if (restarts >= 5) { alive = false; live.textContent = 'Micro cứ tự tắt ngay sau khi mở. Hãy vuốt tắt hẳn app rồi mở lại, hoặc gõ lại những gì bạn đã nói.'; endRec(true); return; }
+          setTimeout(() => { if (alive && spRec) { try { begin(); } catch (e) { endRec(); } } }, 250);
+        };
+        try { r.start(); } catch (e) { alive = false; live.textContent = 'Không mở được micro. Hãy thử lại.'; endRec(true); }
       };
       spRec = { stop: () => { alive = false; try { r && r.stop(); } catch (e) {} }, get text() { return final; } };
       begin();
@@ -1316,6 +1331,7 @@ const TALK_SCENES = [
         clearInterval(spTimer);
         const rec = spRec; spRec = null;
         if (rec) rec.stop();
+        try { if (typeof ttsMicEnded === 'function') ttsMicEnded(); } catch (e) {}
         mic.textContent = '🎤 Nói lại'; mic.classList.remove('rec'); clock.textContent = fmt(t.sec); clock.classList.remove('low');
         setTimeout(() => {
           const txt = (final || '').trim();
