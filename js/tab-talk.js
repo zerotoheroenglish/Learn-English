@@ -1304,6 +1304,7 @@ const TALK_SCENES = [
         'language-not-supported': 'Máy chưa hỗ trợ nhận dạng tiếng Anh. Hãy thử Chrome, Edge hoặc Safari bản mới.' };
       const begin = () => {
         lastStart = Date.now(); heard = false;
+        try { if (typeof micOpening === 'function') micOpening(); } catch (e) {}
         r = new PR_SR(); r.lang = 'en-US'; r.continuous = true; r.interimResults = true;
         r.onresult = ev => {
           let interim = ''; heard = true;

@@ -930,7 +930,8 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
       root.appendChild(info);
     }
     const modes = E('div', 'ls-modes sd-modes');
-    [['shadow', '🎙️ Shadowing'], ['dict', '⌨️ Chính tả'], ['listen', '🎧 Nghe cả bài'], ...(l.s.length >= 3 ? [['quiz', '🧩 Quiz'], ['tf', '✅ True/False']] : [])].forEach(([m, label]) => {
+    // v180: thứ tự theo yêu cầu — Shadowing · Nghe cả bài · Quiz · True/False · Chính tả
+    [['shadow', '🎙️ Shadowing'], ['listen', '🎧 Nghe cả bài'], ...(l.s.length >= 3 ? [['quiz', '🧩 Quiz'], ['tf', '✅ True/False']] : []), ['dict', '⌨️ Chính tả']].forEach(([m, label]) => {
       const b = E('button', 'ls-mode' + (view.mode === m ? ' active' : ''), label);
       b.addEventListener('click', () => { stopAll(); if (m === 'quiz') quiz = null; if (m === 'tf') tfState = null; view.mode = m; renderLesson(); });
       modes.appendChild(b);

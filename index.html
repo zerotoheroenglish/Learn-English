@@ -153,14 +153,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="app.css?h=e256b4f31d">
+<link rel="stylesheet" href="app.css?h=02f183e0df">
 </head>
 <body>
 
 <header class="hero">
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v178</span>
+      <span class="hero-badge">EN ⇄ VI · v188</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice" id="voice-btn" aria-label="Chọn giọng đọc">🔊 <span class="hv-label">Giọng đọc</span></button>
@@ -679,7 +679,7 @@
    - không tải sẵn hàng loạt. Chỉ tải trước ĐÚNG MỘT tab (tab nạp-khi-cần bạn mở gần nhất), khi trình duyệt thật sự rảnh,
      và không làm việc này nếu bật tiết kiệm dữ liệu, mạng chậm (2G/3G) hoặc máy ít RAM */
 (function () {
-  var LAZY = {"page-shadow":"js/tab-shadowing.js?h=4d501607a5","page-qb":"js/tab-questions.js?h=dccfc4a30b","page-read":"js/tab-reading.js?h=99cae5f11b","page-talk":"js/tab-talk.js?h=182f1190e2","page-para":"js/tab-para.js?h=f2f7a86a27"}, DATA = {"exvi":"js/data-vocab-vi.js?h=31cb69d052"}, DEPS = { 'page-vocab': ['exvi'] }, state = {};
+  var LAZY = {"page-shadow":"js/tab-shadowing.js?h=12f7d2acb6","page-qb":"js/tab-questions.js?h=dccfc4a30b","page-read":"js/tab-reading.js?h=99cae5f11b","page-talk":"js/tab-talk.js?h=8b70c0a6e8","page-para":"js/tab-para.js?h=f2f7a86a27"}, DATA = {"exvi":"js/data-vocab-vi.js?h=31cb69d052"}, DEPS = { 'page-vocab': ['exvi'] }, state = {};
   function inject(key, url) {
     if (!url) return Promise.resolve();
     if (state[key]) return state[key];
@@ -732,7 +732,7 @@
 </script>
 <script src="js/data-core.js?h=5c068bf2d4"></script>
 <script src="js/data-vocab.js?h=923ca16f1c"></script>
-<script src="js/app-core.js?h=6d05d9ef5f"></script>
+<script src="js/app-core.js?h=6bbca83c94"></script>
 
 <script src="js/app-sync.js?h=a3bbda8ea1"></script>
 
@@ -770,7 +770,8 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
 <!-- tab-questions: nạp khi mở tab -->
 <!-- tab-reading: nạp khi mở tab -->
 <!-- tab-talk: nạp khi mở tab -->
-<script src="js/app-review.js?h=3cc4330d5a"></script>
+<script src="js/app-review.js?h=5f70efde37"></script>
+<script src="js/app-gxlearn.js?h=ac1033d2d7"></script>
 <script src="js/app-onboard.js?h=c7e909afab"></script>
 <script>
 /* ============================================================

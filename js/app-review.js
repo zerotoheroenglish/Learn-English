@@ -1345,7 +1345,7 @@
     const card = E('div', 'tense-card rv-card');
     const tag = E('div', 'rv-tag', SRC[c.k][0] + ' ' + SRC[c.k][1]); card.appendChild(tag);
     const front = E('div', 'rv-front'), back = E('div', 'rv-back'); back.hidden = true;
-    let speakText = '', rec = null;
+    let speakText = '', rec = null, onReveal = null;
     if (c.k === 'v') {
       const it = c.it; rec = srs[vcK(it)];
       const rev = rec && rec.s >= 3 && (S.i % 2 === 1);      // từ đã khá quen: có lúc hỏi chiều Việt → Anh
@@ -1375,6 +1375,31 @@
       speakText = v.v1;
     } else {
       const m = cards[c.id]; rec = m;
+      if (m.src === 'fx') {   // v183: thẻ ngữ pháp từ bước Học công thức
+        tag.textContent = '📐 Công thức ngữ pháp';
+        front.appendChild(E('div', 'rv-ask', m.ask || 'Bạn còn nhớ?'));
+        front.appendChild(E('div', 'rv-word vi rv-fx', m.f));
+        // v184: tự gõ câu trả lời trước khi xem đáp án (nhớ lại chủ động)
+        const fItem = m.a && /^F:/.test(m.a) && window.gxlFormulaKey ? gxlFormulaKey(m.a.slice(2)) : null;
+        if (fItem && window.gxlFormula) {   // v186: tự viết lại cả công thức
+          const fw = gxlFormula(fItem, () => S.reveal && S.reveal.click()); front.appendChild(fw.el);
+          onReveal = () => { if (!fw.filled()) { fw.focus(); return false; } const r = fw.check(); fw.reveal(r.ok); back.prepend(E('div', 'rv-fxr ' + (r.ok ? 'ok' : 'bad'), r.ok ? '✓ Bạn viết đúng' : '✗ ' + r.msg)); return true; };
+          setTimeout(() => fw.focus(), 60);
+        } else if (m.a && !/^F:/.test(m.a) && window.gxlFill) {
+          const fill = gxlFill(m.a, () => S.reveal && S.reveal.click()); front.appendChild(fill.el);
+          onReveal = () => { if (!fill.filled()) { fill.focus(); return false; } const r = fill.check(); fill.reveal(); back.prepend(E('div', 'rv-fxr ' + (r.ok ? 'ok' : 'bad'), r.ok ? '✓ Bạn viết đúng' : '✗ Chưa đúng, xem đáp án bên dưới')); return true; };
+          setTimeout(() => fill.focus(), 60);
+        } else if (window.gxlSame && !VI_RE.test(m.b)) {
+          const inp = E('input', 'gxl-in rv-fxin'); inp.type = 'text'; inp.autocomplete = 'off'; inp.autocapitalize = 'off'; inp.spellcheck = false; inp.placeholder = 'Gõ câu tiếng Anh…'; inp.setAttribute('aria-label', 'Câu tiếng Anh của bạn');
+          inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); S.reveal && S.reveal.click(); } });
+          front.appendChild(inp);
+          onReveal = () => { if (!inp.value.trim()) { inp.focus(); return false; } const ok = gxlSame(inp.value, m.b); inp.disabled = true; inp.classList.add(ok ? 'good' : 'bad'); back.prepend(E('div', 'rv-fxr ' + (ok ? 'ok' : 'bad'), ok ? '✓ Bạn viết đúng' : '✗ Chưa khớp, so với đáp án bên dưới')); return true; };
+          setTimeout(() => { try { inp.focus(); } catch (e) {} }, 60);
+        }
+        if (!fItem) { const bk = E('div', 'rv-ex'); bk.appendChild(E('b', null, m.b)); if (!VI_RE.test(m.b)) bk.appendChild(play(m.b)); back.appendChild(bk); }
+        if (m.x) back.appendChild(E('div', 'rv-exvi', (VI_RE.test(m.x) ? '💡 ' : 'Ví dụ: ') + m.x));
+        if (isNew(m)) tag.appendChild(E('span', 'rv-new', 'MỚI'));
+      } else {
       const viFront = VI_RE.test(m.f);
       front.appendChild(E('div', 'rv-ask', viFront ? 'Nói câu này bằng tiếng Anh?' : 'Bạn còn nhớ nghĩa?'));
       const w = E('div', 'rv-word' + (viFront ? ' vi' : '')); w.textContent = m.f; front.appendChild(w);
@@ -1383,6 +1408,7 @@
       if (viFront) back.appendChild(play(m.b));
       if (isNew(m)) tag.appendChild(E('span', 'rv-new', 'MỚI'));
       speakText = viFront ? '' : m.f;
+      }
     }
     card.appendChild(front); card.appendChild(back);
     const reveal = E('button', 'btn-primary rv-reveal', 'Lật thẻ (Space)'); reveal.type = 'button';
@@ -1399,7 +1425,8 @@
       b.addEventListener('click', () => grade(c, g));
       grades.appendChild(b);
     });
-    reveal.addEventListener('click', () => { back.hidden = false; reveal.hidden = true; grades.hidden = false; });
+    if (onReveal) reveal.textContent = 'Kiểm tra (Enter)';
+    reveal.addEventListener('click', () => { if (onReveal && onReveal() === false) return; onReveal = null; back.hidden = false; reveal.hidden = true; grades.hidden = false; });
     card.appendChild(reveal); card.appendChild(grades);
     S.box.appendChild(card);
     S.reveal = reveal; S.grades = grades;
@@ -1478,6 +1505,8 @@
   }, true);
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') refresh(); });
   document.querySelectorAll('nav.tabbar button').forEach(b => b.addEventListener('click', () => { if (S) { finishGrammar(); S = null; } setTimeout(refresh, 0); }));
+  // v183: thẻ công thức / câu lắp sai ở bước Học công thức → ôn theo lịch như mọi thẻ khác
+  window.srAddFx = (k, f, b, ask, x, a) => { const id = 'fx|' + k; if (cards[id]) { if (a && cards[id].a !== a) { Object.assign(cards[id], { f, b, ask: ask || '', a }); save(K.cards, cards); } return false; } cards[id] = { f, b, ask: ask || '', x: x || '', a: a || '', src: 'fx', add: today() }; save(K.cards, cards); refresh(); return true; };
   window.srAddCard = (en, vi) => { const id = 'me|' + String(en).toLowerCase(); if (!cards[id]) { cards[id] = { f: en, b: vi || '', src: 'me', add: today() }; save(K.cards, cards); refresh(); } };
   refresh();
 })();

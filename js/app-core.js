@@ -307,7 +307,11 @@ if ('speechSynthesis' in window) {
    - keep online voices alive past Chrome's ~15 s cut-off */
 const TTS = { keep: null, timer: 0, ka: 0, watch: 0, stuck: 0, last: null, micEnd: 0 };
 // v142: micro vừa tắt → iPhone / Windows cần một nhịp để chuyển âm thanh từ "ghi âm" về "phát" (nếu không tiếng đọc bị vấp, nhỏ hoặc mất chữ đầu)
-function ttsMicEnded() { TTS.micEnd = Date.now(); }
+function ttsMicEnded() { TTS.micEnd = Date.now(); audioMode('playback'); }
+/* v179: iPhone (Safari 16.4+) — khi micro mở, máy chuyển sang chế độ "gọi thoại": tiếng phát ra nhỏ hẳn, có khi ra loa trong.
+   Trước đây app không chuyển lại, nên sau khi dùng micro tiếng lúc to lúc nhỏ. Giờ: mở micro → "play-and-record", tắt micro → "playback". */
+function audioMode(m) { try { const s = navigator.audioSession; if (s && s.type !== m) s.type = m; } catch (e) {} }
+function micOpening() { audioMode('play-and-record'); }
 // v142: tốc độ quá chậm làm giọng máy bị kéo dài, rè và giật → giữ trong khoảng nghe tự nhiên (0.5 → 0.72, 0.8 → 0.87)
 function ttsRate(r) { r = r || 0.9; return r >= 0.9 ? r : Math.max(0.68, 0.72 + (r - 0.5) * 0.5); }
 const TTS_IOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -2324,37 +2328,161 @@ try { prRate = parseFloat(localStorage.getItem(PR_RATE_KEY)) || 0.8; } catch (e)
 /* ---------- practice sets for Vietnamese learners ---------- */
 const PRON_SETS = [
   { id: 'ending', icon: '🔚', title: 'Âm cuối', tip: 'Người Việt hay nuốt âm cuối. Hãy đọc rõ /t/, /d/, /k/, /s/, /z/, /v/… ở cuối từ: like ≠ lie, rice ≠ rye.',
-    words: [['bike','/baɪk/','xe đạp'],['like','/laɪk/','thích'],['cat','/kæt/','con mèo'],['bad','/bæd/','tệ'],['map','/mæp/','bản đồ'],['five','/faɪv/','số năm'],
-            ['rice','/raɪs/','gạo'],['page','/peɪdʒ/','trang'],['watch','/wɒtʃ/','xem; đồng hồ'],['laugh','/lɑːf/','cười'],['milk','/mɪlk/','sữa'],['world','/wɜːld/','thế giới'],
-            ['desk','/desk/','bàn học'],['months','/mʌnθs/','các tháng'],['texts','/teksts/','tin nhắn'],['friends','/frendz/','bạn bè']] },
+    words: [
+      ["bike", "/baɪk/", "xe đạp"],["like", "/laɪk/", "thích"],["cat", "/kæt/", "con mèo"],["bad", "/bæd/", "tệ"],
+      ["map", "/mæp/", "bản đồ"],["five", "/faɪv/", "số năm"],["rice", "/raɪs/", "gạo"],["page", "/peɪdʒ/", "trang"],
+      ["watch", "/wɒtʃ/", "xem; đồng hồ"],["laugh", "/lɑːf/", "cười"],["milk", "/mɪlk/", "sữa"],["world", "/wɜːld/", "thế giới"],
+      ["desk", "/desk/", "bàn học"],["months", "/mʌnθs/", "các tháng"],["texts", "/teksts/", "tin nhắn"],["friends", "/frendz/", "bạn bè"],
+      ["book", "/bʊk/", "quyển sách"],["cook", "/kʊk/", "nấu ăn"],["back", "/bæk/", "phía sau"],["cup", "/kʌp/", "cái cốc"],
+      ["top", "/tɒp/", "đỉnh"],["job", "/dʒɒb/", "công việc"],["bed", "/bed/", "cái giường"],["food", "/fuːd/", "đồ ăn"],
+      ["road", "/rəʊd/", "con đường"],["bag", "/bæɡ/", "cái túi"],["dog", "/dɒɡ/", "con chó"],["leg", "/leɡ/", "cái chân"],
+      ["bus", "/bʌs/", "xe buýt"],["kiss", "/kɪs/", "hôn"],["nice", "/naɪs/", "tốt, đẹp"],["love", "/lʌv/", "yêu"],
+      ["size", "/saɪz/", "kích cỡ"],["nose", "/nəʊz/", "cái mũi"],["fish", "/fɪʃ/", "con cá"],["wish", "/wɪʃ/", "ước"],
+      ["orange", "/ˈɒrɪndʒ/", "quả cam"],["change", "/tʃeɪndʒ/", "thay đổi"],["film", "/fɪlm/", "bộ phim"],["help", "/help/", "giúp đỡ"],
+      ["night", "/naɪt/", "buổi tối"],["right", "/raɪt/", "bên phải; đúng"],["white", "/waɪt/", "màu trắng"],["kind", "/kaɪnd/", "tốt bụng"],
+      ["old", "/əʊld/", "cũ; già"],["cold", "/kəʊld/", "lạnh"],["child", "/tʃaɪld/", "đứa trẻ"],["sing", "/sɪŋ/", "hát"]] },
   { id: 'th', icon: '👅', title: 'Âm /θ/ và /ð/', tip: '/θ/: đặt lưỡi giữa hai hàm răng rồi thổi hơi (think). /ð/: giống vậy nhưng rung cổ họng (this). Không đọc thành "th" tiếng Việt, /t/ hay /d/.',
-    words: [['think','/θɪŋk/','nghĩ'],['three','/θriː/','số ba'],['thank','/θæŋk/','cảm ơn'],['birthday','/ˈbɜːθdeɪ/','sinh nhật'],['mouth','/maʊθ/','miệng'],['month','/mʌnθ/','tháng'],
-            ['this','/ðɪs/','cái này'],['that','/ðæt/','cái kia'],['mother','/ˈmʌðə/','mẹ'],['weather','/ˈweðə/','thời tiết'],['together','/təˈɡeðə/','cùng nhau'],['breathe','/briːð/','thở']] },
-  { id: 'pairs', icon: '⚖️', title: 'Cặp từ dễ nhầm', tip: 'Mỗi cặp chỉ khác nhau một âm. Bấm nút ⇄ để nghe liền hai từ, rồi nói thử từng từ.',
-    pairs: [[['ship','/ʃɪp/','con tàu'],['sheep','/ʃiːp/','con cừu']],[['live','/lɪv/','sống'],['leave','/liːv/','rời đi']],[['full','/fʊl/','no, đầy'],['fool','/fuːl/','kẻ ngốc']],
-            [['bad','/bæd/','tệ'],['bed','/bed/','cái giường']],[['cat','/kæt/','con mèo'],['cut','/kʌt/','cắt']],[['light','/laɪt/','ánh sáng'],['right','/raɪt/','bên phải; đúng']],
-            [['think','/θɪŋk/','nghĩ'],['sink','/sɪŋk/','bồn rửa']],[['three','/θriː/','số ba'],['tree','/triː/','cái cây']],[['very','/ˈveri/','rất'],['berry','/ˈberi/','quả mọng']],
-            [['sea','/siː/','biển'],['she','/ʃiː/','cô ấy']],[['watch','/wɒtʃ/','xem'],['wash','/wɒʃ/','rửa']],[['rice','/raɪs/','gạo'],['rise','/raɪz/','tăng lên']],
-            [['walk','/wɔːk/','đi bộ'],['work','/wɜːk/','làm việc']],[['coat','/kəʊt/','áo khoác'],['caught','/kɔːt/','đã bắt']]] },
+    words: [
+      ["think", "/θɪŋk/", "nghĩ"],["three", "/θriː/", "số ba"],["thank", "/θæŋk/", "cảm ơn"],["thing", "/θɪŋ/", "đồ vật; điều"],
+      ["thin", "/θɪn/", "gầy, mỏng"],["thick", "/θɪk/", "dày"],["throw", "/θrəʊ/", "ném"],["thirsty", "/ˈθɜːsti/", "khát nước"],
+      ["Thursday", "/ˈθɜːzdeɪ/", "thứ Năm"],["thousand", "/ˈθaʊznd/", "nghìn"],["theatre", "/ˈθɪətə/", "nhà hát"],["thunder", "/ˈθʌndə/", "sấm"],
+      ["birthday", "/ˈbɜːθdeɪ/", "sinh nhật"],["nothing", "/ˈnʌθɪŋ/", "không có gì"],["something", "/ˈsʌmθɪŋ/", "cái gì đó"],["healthy", "/ˈhelθi/", "khỏe mạnh"],
+      ["mouth", "/maʊθ/", "miệng"],["month", "/mʌnθ/", "tháng"],["tooth", "/tuːθ/", "cái răng"],["bath", "/bɑːθ/", "bồn tắm"],
+      ["north", "/nɔːθ/", "phía bắc"],["south", "/saʊθ/", "phía nam"],["earth", "/ɜːθ/", "trái đất"],["truth", "/truːθ/", "sự thật"],
+      ["this", "/ðɪs/", "cái này"],["that", "/ðæt/", "cái kia"],["these", "/ðiːz/", "những cái này"],["those", "/ðəʊz/", "những cái kia"],
+      ["they", "/ðeɪ/", "họ"],["them", "/ðem/", "họ (tân ngữ)"],["there", "/ðeə/", "ở đó"],["then", "/ðen/", "sau đó"],
+      ["the", "/ðə/", "(mạo từ xác định)"],["mother", "/ˈmʌðə/", "mẹ"],["father", "/ˈfɑːðə/", "bố"],["brother", "/ˈbrʌðə/", "anh/em trai"],
+      ["weather", "/ˈweðə/", "thời tiết"],["together", "/təˈɡeðə/", "cùng nhau"],["other", "/ˈʌðə/", "khác"],["clothes", "/kləʊðz/", "quần áo"],
+      ["breathe", "/briːð/", "thở"],["smooth", "/smuːð/", "mịn"],["with", "/wɪð/", "với"],["without", "/wɪˈðaʊt/", "không có"],
+      ["rather", "/ˈrɑːðə/", "khá; thà"],["although", "/ɔːlˈðəʊ/", "mặc dù"]] },
+  { id: 'pairs', icon: '⚖️', title: 'Cặp từ dễ nhầm', tip: 'Mỗi cặp chỉ khác nhau một âm. Bấm So sánh để nghe liền hai từ, rồi nói thử từng từ.',
+    pairs: [
+      [["ship", "/ʃɪp/", "con tàu"], ["sheep", "/ʃiːp/", "con cừu"]],[["live", "/lɪv/", "sống"], ["leave", "/liːv/", "rời đi"]],[["full", "/fʊl/", "no, đầy"], ["fool", "/fuːl/", "kẻ ngốc"]],
+      [["bad", "/bæd/", "tệ"], ["bed", "/bed/", "cái giường"]],[["cat", "/kæt/", "con mèo"], ["cut", "/kʌt/", "cắt"]],[["light", "/laɪt/", "ánh sáng"], ["right", "/raɪt/", "bên phải; đúng"]],
+      [["think", "/θɪŋk/", "nghĩ"], ["sink", "/sɪŋk/", "bồn rửa"]],[["three", "/θriː/", "số ba"], ["tree", "/triː/", "cái cây"]],[["very", "/ˈveri/", "rất"], ["berry", "/ˈberi/", "quả mọng"]],
+      [["sea", "/siː/", "biển"], ["she", "/ʃiː/", "cô ấy"]],[["watch", "/wɒtʃ/", "xem"], ["wash", "/wɒʃ/", "rửa"]],[["rice", "/raɪs/", "gạo"], ["rise", "/raɪz/", "tăng lên"]],
+      [["walk", "/wɔːk/", "đi bộ"], ["work", "/wɜːk/", "làm việc"]],[["coat", "/kəʊt/", "áo khoác"], ["caught", "/kɔːt/", "đã bắt"]],[["sit", "/sɪt/", "ngồi"], ["seat", "/siːt/", "chỗ ngồi"]],
+      [["fit", "/fɪt/", "vừa vặn"], ["feet", "/fiːt/", "bàn chân"]],[["pull", "/pʊl/", "kéo"], ["pool", "/puːl/", "hồ bơi"]],[["man", "/mæn/", "người đàn ông"], ["men", "/men/", "những người đàn ông"]],
+      [["hat", "/hæt/", "cái mũ"], ["hut", "/hʌt/", "túp lều"]],[["cap", "/kæp/", "mũ lưỡi trai"], ["cup", "/kʌp/", "cái cốc"]],[["fan", "/fæn/", "cái quạt"], ["van", "/væn/", "xe tải nhỏ"]],
+      [["fast", "/fɑːst/", "nhanh"], ["vast", "/vɑːst/", "rộng lớn"]],[["boat", "/bəʊt/", "con thuyền"], ["vote", "/vəʊt/", "bỏ phiếu"]],[["save", "/seɪv/", "cứu; tiết kiệm"], ["safe", "/seɪf/", "an toàn"]],
+      [["price", "/praɪs/", "giá cả"], ["prize", "/praɪz/", "giải thưởng"]],[["bus", "/bʌs/", "xe buýt"], ["buzz", "/bʌz/", "tiếng vo ve"]],[["sip", "/sɪp/", "nhấp một ngụm"], ["zip", "/zɪp/", "khóa kéo"]],
+      [["chip", "/tʃɪp/", "khoai tây chiên"], ["ship", "/ʃɪp/", "con tàu"]],[["chair", "/tʃeə/", "cái ghế"], ["share", "/ʃeə/", "chia sẻ"]],[["cheap", "/tʃiːp/", "rẻ"], ["jeep", "/dʒiːp/", "xe jeep"]],
+      [["choke", "/tʃəʊk/", "nghẹn"], ["joke", "/dʒəʊk/", "câu đùa"]],[["long", "/lɒŋ/", "dài"], ["wrong", "/rɒŋ/", "sai"]],[["lead", "/liːd/", "dẫn dắt"], ["read", "/riːd/", "đọc"]],
+      [["fly", "/flaɪ/", "bay"], ["fry", "/fraɪ/", "chiên"]],[["glass", "/ɡlɑːs/", "cái ly"], ["grass", "/ɡrɑːs/", "cỏ"]],[["they", "/ðeɪ/", "họ"], ["day", "/deɪ/", "ngày"]],
+      [["then", "/ðen/", "sau đó"], ["den", "/den/", "hang ổ"]],[["thank", "/θæŋk/", "cảm ơn"], ["tank", "/tæŋk/", "bể chứa"]],[["pen", "/pen/", "cây bút"], ["pan", "/pæn/", "cái chảo"]],
+      [["heart", "/hɑːt/", "trái tim"], ["hurt", "/hɜːt/", "đau"]],[["bird", "/bɜːd/", "con chim"], ["bud", "/bʌd/", "nụ hoa"]],[["law", "/lɔː/", "luật"], ["low", "/ləʊ/", "thấp"]],
+      [["cold", "/kəʊld/", "lạnh"], ["called", "/kɔːld/", "đã gọi"]],[["wait", "/weɪt/", "chờ"], ["wet", "/wet/", "ướt"]],[["mouse", "/maʊs/", "con chuột"], ["mouth", "/maʊθ/", "miệng"]],
+      [["pick", "/pɪk/", "nhặt"], ["peak", "/piːk/", "đỉnh núi"]]] },
   { id: 's', icon: '🐍', title: 'Đuôi -s / -es', tip: 'Đọc /s/ sau âm vô thanh (p, t, k, f, θ). Đọc /z/ sau âm hữu thanh và nguyên âm. Đọc /ɪz/ sau s, z, ʃ, tʃ, dʒ.',
-    words: [['cats','/kæts/','những con mèo · /s/'],['books','/bʊks/','những quyển sách · /s/'],['laughs','/lɑːfs/','cười · /s/'],['shops','/ʃɒps/','các cửa hàng · /s/'],['dogs','/dɒɡz/','những con chó · /z/'],['cars','/kɑːz/','những chiếc xe · /z/'],
-            ['plays','/pleɪz/','chơi · /z/'],['friends','/frendz/','bạn bè · /z/'],['buses','/ˈbʌsɪz/','xe buýt · /ɪz/'],['watches','/ˈwɒtʃɪz/','xem; đồng hồ · /ɪz/'],['pages','/ˈpeɪdʒɪz/','các trang · /ɪz/'],['roses','/ˈrəʊzɪz/','hoa hồng · /ɪz/']] },
+    words: [
+      ["cats", "/kæts/", "những con mèo · /s/"],["books", "/bʊks/", "những quyển sách · /s/"],["laughs", "/lɑːfs/", "cười (he/she) · /s/"],["shops", "/ʃɒps/", "các cửa hàng · /s/"],
+      ["cakes", "/keɪks/", "những cái bánh · /s/"],["hats", "/hæts/", "những cái mũ · /s/"],["maps", "/mæps/", "các bản đồ · /s/"],["cups", "/kʌps/", "những cái cốc · /s/"],
+      ["desks", "/desks/", "những cái bàn học · /s/"],["lips", "/lɪps/", "đôi môi · /s/"],["socks", "/sɒks/", "đôi tất · /s/"],["students", "/ˈstjuːdnts/", "các học sinh · /s/"],
+      ["parents", "/ˈpeərənts/", "bố mẹ · /s/"],["months", "/mʌnθs/", "các tháng · /s/"],["works", "/wɜːks/", "làm việc (he/she) · /s/"],["helps", "/helps/", "giúp (he/she) · /s/"],
+      ["likes", "/laɪks/", "thích (he/she) · /s/"],["eats", "/iːts/", "ăn (he/she) · /s/"],["walks", "/wɔːks/", "đi bộ (he/she) · /s/"],["writes", "/raɪts/", "viết (he/she) · /s/"],
+      ["gets", "/ɡets/", "nhận; lấy (he/she) · /s/"],["sleeps", "/sliːps/", "ngủ (he/she) · /s/"],["chefs", "/ʃefs/", "các đầu bếp · /s/"],["weeks", "/wiːks/", "các tuần · /s/"],
+      ["streets", "/striːts/", "các con phố · /s/"],["jackets", "/ˈdʒækɪts/", "những chiếc áo khoác · /s/"],["tickets", "/ˈtɪkɪts/", "những tấm vé · /s/"],["stops", "/stɒps/", "dừng (he/she) · /s/"],
+      ["drinks", "/drɪŋks/", "đồ uống; uống (he/she) · /s/"],["photographs", "/ˈfəʊtəɡrɑːfs/", "những bức ảnh · /s/"],["dogs", "/dɒɡz/", "những con chó · /z/"],["cars", "/kɑːz/", "những chiếc xe · /z/"],
+      ["plays", "/pleɪz/", "chơi (he/she) · /z/"],["friends", "/frendz/", "bạn bè · /z/"],["pens", "/penz/", "những cây bút · /z/"],["bags", "/bæɡz/", "những cái túi · /z/"],
+      ["days", "/deɪz/", "các ngày · /z/"],["trees", "/triːz/", "những cái cây · /z/"],["birds", "/bɜːdz/", "những con chim · /z/"],["apples", "/ˈæplz/", "những quả táo · /z/"],
+      ["rooms", "/ruːmz/", "các căn phòng · /z/"],["girls", "/ɡɜːlz/", "các cô gái · /z/"],["songs", "/sɒŋz/", "các bài hát · /z/"],["phones", "/fəʊnz/", "các điện thoại · /z/"],
+      ["eggs", "/eɡz/", "những quả trứng · /z/"],["goes", "/ɡəʊz/", "đi (he/she) · /z/"],["lives", "/lɪvz/", "sống (he/she) · /z/"],["reads", "/riːdz/", "đọc (he/she) · /z/"],
+      ["sings", "/sɪŋz/", "hát (he/she) · /z/"],["comes", "/kʌmz/", "đến (he/she) · /z/"],["runs", "/rʌnz/", "chạy (he/she) · /z/"],["knows", "/nəʊz/", "biết (he/she) · /z/"],
+      ["calls", "/kɔːlz/", "gọi (he/she) · /z/"],["shoes", "/ʃuːz/", "đôi giày · /z/"],["windows", "/ˈwɪndəʊz/", "các cửa sổ · /z/"],["teachers", "/ˈtiːtʃəz/", "các giáo viên · /z/"],
+      ["flowers", "/ˈflaʊəz/", "những bông hoa · /z/"],["clothes", "/kləʊðz/", "quần áo · /z/"],["studies", "/ˈstʌdiz/", "học (he/she) · /z/"],["dreams", "/driːmz/", "những giấc mơ · /z/"],
+      ["buses", "/ˈbʌsɪz/", "những chiếc xe buýt · /ɪz/"],["watches", "/ˈwɒtʃɪz/", "xem (he/she); đồng hồ · /ɪz/"],["pages", "/ˈpeɪdʒɪz/", "các trang · /ɪz/"],["roses", "/ˈrəʊzɪz/", "hoa hồng · /ɪz/"],
+      ["boxes", "/ˈbɒksɪz/", "những cái hộp · /ɪz/"],["washes", "/ˈwɒʃɪz/", "rửa (he/she) · /ɪz/"],["classes", "/ˈklɑːsɪz/", "các lớp học · /ɪz/"],["dishes", "/ˈdɪʃɪz/", "các món ăn; bát đĩa · /ɪz/"],
+      ["glasses", "/ˈɡlɑːsɪz/", "cái kính; những cái ly · /ɪz/"],["horses", "/ˈhɔːsɪz/", "những con ngựa · /ɪz/"],["houses", "/ˈhaʊzɪz/", "những ngôi nhà · /ɪz/"],["oranges", "/ˈɒrɪndʒɪz/", "những quả cam · /ɪz/"],
+      ["bridges", "/ˈbrɪdʒɪz/", "những cây cầu · /ɪz/"],["faces", "/ˈfeɪsɪz/", "các khuôn mặt · /ɪz/"],["places", "/ˈpleɪsɪz/", "các nơi · /ɪz/"],["prizes", "/ˈpraɪzɪz/", "các giải thưởng · /ɪz/"],
+      ["sentences", "/ˈsentənsɪz/", "các câu · /ɪz/"],["languages", "/ˈlæŋɡwɪdʒɪz/", "các ngôn ngữ · /ɪz/"],["wishes", "/ˈwɪʃɪz/", "những điều ước · /ɪz/"],["catches", "/ˈkætʃɪz/", "bắt (he/she) · /ɪz/"],
+      ["misses", "/ˈmɪsɪz/", "nhớ; lỡ (he/she) · /ɪz/"],["uses", "/ˈjuːzɪz/", "dùng (he/she) · /ɪz/"],["changes", "/ˈtʃeɪndʒɪz/", "thay đổi (he/she) · /ɪz/"],["closes", "/ˈkləʊzɪz/", "đóng (he/she) · /ɪz/"],
+      ["teaches", "/ˈtiːtʃɪz/", "dạy (he/she) · /ɪz/"],["kisses", "/ˈkɪsɪz/", "hôn (he/she) · /ɪz/"],["fixes", "/ˈfɪksɪz/", "sửa (he/she) · /ɪz/"],["brushes", "/ˈbrʌʃɪz/", "chải (he/she) · /ɪz/"],
+      ["pieces", "/ˈpiːsɪz/", "các mảnh · /ɪz/"],["nurses", "/ˈnɜːsɪz/", "các y tá · /ɪz/"]] },
   { id: 'ed', icon: '⏪', title: 'Đuôi -ed', tip: 'Đọc /t/ sau âm vô thanh (p, k, s, ʃ, tʃ, f). Đọc /d/ sau âm hữu thanh và nguyên âm. Đọc /ɪd/ sau t và d.',
-    words: [['worked','/wɜːkt/','đã làm việc · /t/'],['stopped','/stɒpt/','đã dừng · /t/'],['washed','/wɒʃt/','đã rửa · /t/'],['laughed','/lɑːft/','đã cười · /t/'],['played','/pleɪd/','đã chơi · /d/'],['called','/kɔːld/','đã gọi · /d/'],
-            ['lived','/lɪvd/','đã sống · /d/'],['cleaned','/kliːnd/','đã lau dọn · /d/'],['wanted','/ˈwɒntɪd/','đã muốn · /ɪd/'],['needed','/ˈniːdɪd/','đã cần · /ɪd/'],['visited','/ˈvɪzɪtɪd/','đã thăm · /ɪd/'],['decided','/dɪˈsaɪdɪd/','đã quyết định · /ɪd/']] },
+    words: [
+      ["worked", "/wɜːkt/", "đã làm việc · /t/"],["stopped", "/stɒpt/", "đã dừng · /t/"],["washed", "/wɒʃt/", "đã rửa · /t/"],["laughed", "/lɑːft/", "đã cười · /t/"],
+      ["helped", "/helpt/", "đã giúp · /t/"],["watched", "/wɒtʃt/", "đã xem · /t/"],["walked", "/wɔːkt/", "đã đi bộ · /t/"],["talked", "/tɔːkt/", "đã nói chuyện · /t/"],
+      ["cooked", "/kʊkt/", "đã nấu · /t/"],["liked", "/laɪkt/", "đã thích · /t/"],["looked", "/lʊkt/", "đã nhìn · /t/"],["kissed", "/kɪst/", "đã hôn · /t/"],
+      ["missed", "/mɪst/", "đã nhớ; đã lỡ · /t/"],["finished", "/ˈfɪnɪʃt/", "đã hoàn thành · /t/"],["dropped", "/drɒpt/", "đã đánh rơi · /t/"],["jumped", "/dʒʌmpt/", "đã nhảy · /t/"],
+      ["passed", "/pɑːst/", "đã đi qua; đã đỗ · /t/"],["fixed", "/fɪkst/", "đã sửa · /t/"],["asked", "/ɑːskt/", "đã hỏi · /t/"],["hoped", "/həʊpt/", "đã hy vọng · /t/"],
+      ["danced", "/dɑːnst/", "đã nhảy múa · /t/"],["typed", "/taɪpt/", "đã gõ phím · /t/"],["shopped", "/ʃɒpt/", "đã mua sắm · /t/"],["checked", "/tʃekt/", "đã kiểm tra · /t/"],
+      ["touched", "/tʌtʃt/", "đã chạm · /t/"],["reached", "/riːtʃt/", "đã tới nơi · /t/"],["mixed", "/mɪkst/", "đã trộn · /t/"],["picked", "/pɪkt/", "đã nhặt; đã chọn · /t/"],
+      ["brushed", "/brʌʃt/", "đã chải · /t/"],["coughed", "/kɒft/", "đã ho · /t/"],["played", "/pleɪd/", "đã chơi · /d/"],["called", "/kɔːld/", "đã gọi · /d/"],
+      ["lived", "/lɪvd/", "đã sống · /d/"],["cleaned", "/kliːnd/", "đã lau dọn · /d/"],["opened", "/ˈəʊpənd/", "đã mở · /d/"],["enjoyed", "/ɪnˈdʒɔɪd/", "đã thích thú · /d/"],
+      ["stayed", "/steɪd/", "đã ở lại · /d/"],["tried", "/traɪd/", "đã cố gắng · /d/"],["cried", "/kraɪd/", "đã khóc · /d/"],["studied", "/ˈstʌdid/", "đã học · /d/"],
+      ["loved", "/lʌvd/", "đã yêu · /d/"],["moved", "/muːvd/", "đã chuyển đi · /d/"],["arrived", "/əˈraɪvd/", "đã đến · /d/"],["changed", "/tʃeɪndʒd/", "đã thay đổi · /d/"],
+      ["used", "/juːzd/", "đã dùng · /d/"],["closed", "/kləʊzd/", "đã đóng · /d/"],["listened", "/ˈlɪsnd/", "đã nghe · /d/"],["rained", "/reɪnd/", "đã mưa · /d/"],
+      ["turned", "/tɜːnd/", "đã rẽ; đã bật · /d/"],["learned", "/lɜːnd/", "đã học được · /d/"],["answered", "/ˈɑːnsəd/", "đã trả lời · /d/"],["remembered", "/rɪˈmembəd/", "đã nhớ ra · /d/"],
+      ["showed", "/ʃəʊd/", "đã cho xem · /d/"],["followed", "/ˈfɒləʊd/", "đã đi theo · /d/"],["smiled", "/smaɪld/", "đã mỉm cười · /d/"],["filled", "/fɪld/", "đã đổ đầy · /d/"],
+      ["planned", "/plænd/", "đã lên kế hoạch · /d/"],["hugged", "/hʌɡd/", "đã ôm · /d/"],["saved", "/seɪvd/", "đã cứu; đã tiết kiệm · /d/"],["travelled", "/ˈtrævld/", "đã đi du lịch · /d/"],
+      ["wanted", "/ˈwɒntɪd/", "đã muốn · /ɪd/"],["needed", "/ˈniːdɪd/", "đã cần · /ɪd/"],["visited", "/ˈvɪzɪtɪd/", "đã thăm · /ɪd/"],["decided", "/dɪˈsaɪdɪd/", "đã quyết định · /ɪd/"],
+      ["started", "/ˈstɑːtɪd/", "đã bắt đầu · /ɪd/"],["ended", "/ˈendɪd/", "đã kết thúc · /ɪd/"],["waited", "/ˈweɪtɪd/", "đã đợi · /ɪd/"],["painted", "/ˈpeɪntɪd/", "đã sơn; đã vẽ · /ɪd/"],
+      ["invited", "/ɪnˈvaɪtɪd/", "đã mời · /ɪd/"],["added", "/ˈædɪd/", "đã thêm · /ɪd/"],["hated", "/ˈheɪtɪd/", "đã ghét · /ɪd/"],["landed", "/ˈlændɪd/", "đã hạ cánh · /ɪd/"],
+      ["counted", "/ˈkaʊntɪd/", "đã đếm · /ɪd/"],["created", "/kriˈeɪtɪd/", "đã tạo ra · /ɪd/"],["collected", "/kəˈlektɪd/", "đã thu thập · /ɪd/"],["repeated", "/rɪˈpiːtɪd/", "đã lặp lại · /ɪd/"],
+      ["pointed", "/ˈpɔɪntɪd/", "đã chỉ tay · /ɪd/"],["rested", "/ˈrestɪd/", "đã nghỉ ngơi · /ɪd/"],["tested", "/ˈtestɪd/", "đã kiểm tra · /ɪd/"],["shouted", "/ˈʃaʊtɪd/", "đã hét · /ɪd/"],
+      ["expected", "/ɪkˈspektɪd/", "đã mong đợi · /ɪd/"],["attended", "/əˈtendɪd/", "đã tham dự · /ɪd/"],["included", "/ɪnˈkluːdɪd/", "đã bao gồm · /ɪd/"],["provided", "/prəˈvaɪdɪd/", "đã cung cấp · /ɪd/"],
+      ["celebrated", "/ˈselɪbreɪtɪd/", "đã ăn mừng · /ɪd/"],["completed", "/kəmˈpliːtɪd/", "đã hoàn tất · /ɪd/"],["planted", "/ˈplɑːntɪd/", "đã trồng · /ɪd/"],["guided", "/ˈɡaɪdɪd/", "đã hướng dẫn · /ɪd/"],
+      ["printed", "/ˈprɪntɪd/", "đã in · /ɪd/"],["protected", "/prəˈtektɪd/", "đã bảo vệ · /ɪd/"]] },
   { id: 'stress', icon: '🎯', title: 'Trọng âm', tip: 'Âm tiết đứng sau dấu ˈ được nhấn: đọc to hơn, dài hơn và cao hơn. Các âm tiết còn lại đọc nhẹ và nhanh.',
-    words: [['photograph','/ˈfəʊtəɡrɑːf/','bức ảnh'],['photography','/fəˈtɒɡrəfi/','nhiếp ảnh'],['photographic','/ˌfəʊtəˈɡræfɪk/','thuộc nhiếp ảnh'],['economy','/ɪˈkɒnəmi/','nền kinh tế'],
-            ['economic','/ˌiːkəˈnɒmɪk/','thuộc kinh tế'],['banana','/bəˈnɑːnə/','quả chuối'],['hotel','/həʊˈtel/','khách sạn'],['computer','/kəmˈpjuːtə/','máy tính'],
-            ['vegetable','/ˈvedʒtəbl/','rau củ'],['comfortable','/ˈkʌmftəbl/','thoải mái'],['Vietnamese','/ˌvjetnəˈmiːz/','người/tiếng Việt'],['interesting','/ˈɪntrəstɪŋ/','thú vị']] },
+    words: [
+      ["photograph", "/ˈfəʊtəɡrɑːf/", "bức ảnh"],["photography", "/fəˈtɒɡrəfi/", "nhiếp ảnh"],["photographic", "/ˌfəʊtəˈɡræfɪk/", "thuộc nhiếp ảnh"],["economy", "/ɪˈkɒnəmi/", "nền kinh tế"],
+      ["economic", "/ˌiːkəˈnɒmɪk/", "thuộc kinh tế"],["banana", "/bəˈnɑːnə/", "quả chuối"],["hotel", "/həʊˈtel/", "khách sạn"],["computer", "/kəmˈpjuːtə/", "máy tính"],
+      ["vegetable", "/ˈvedʒtəbl/", "rau củ"],["comfortable", "/ˈkʌmftəbl/", "thoải mái"],["Vietnamese", "/ˌvjetnəˈmiːz/", "người/tiếng Việt"],["interesting", "/ˈɪntrəstɪŋ/", "thú vị"],
+      ["table", "/ˈteɪbl/", "cái bàn"],["happy", "/ˈhæpi/", "vui"],["mother", "/ˈmʌðə/", "mẹ"],["student", "/ˈstjuːdnt/", "học sinh"],
+      ["teacher", "/ˈtiːtʃə/", "giáo viên"],["morning", "/ˈmɔːnɪŋ/", "buổi sáng"],["weekend", "/ˌwiːkˈend/", "cuối tuần"],["begin", "/bɪˈɡɪn/", "bắt đầu"],
+      ["forget", "/fəˈɡet/", "quên"],["relax", "/rɪˈlæks/", "thư giãn"],["enjoy", "/ɪnˈdʒɔɪ/", "thích thú"],["decide", "/dɪˈsaɪd/", "quyết định"],
+      ["present", "/ˈpreznt/", "món quà (danh từ)"],["record", "/ˈrekɔːd/", "bản ghi (danh từ)"],["beautiful", "/ˈbjuːtɪfl/", "đẹp"],["family", "/ˈfæməli/", "gia đình"],
+      ["restaurant", "/ˈrestrɒnt/", "nhà hàng"],["important", "/ɪmˈpɔːtnt/", "quan trọng"],["tomorrow", "/təˈmɒrəʊ/", "ngày mai"],["together", "/təˈɡeðə/", "cùng nhau"],
+      ["holiday", "/ˈhɒlədeɪ/", "kỳ nghỉ"],["television", "/ˈtelɪvɪʒn/", "ti vi"],["information", "/ˌɪnfəˈmeɪʃn/", "thông tin"],["education", "/ˌedʒuˈkeɪʃn/", "giáo dục"],
+      ["conversation", "/ˌkɒnvəˈseɪʃn/", "cuộc trò chuyện"],["understand", "/ˌʌndəˈstænd/", "hiểu"],["university", "/ˌjuːnɪˈvɜːsəti/", "trường đại học"],["photographer", "/fəˈtɒɡrəfə/", "nhiếp ảnh gia"],
+      ["opportunity", "/ˌɒpəˈtjuːnəti/", "cơ hội"],["necessary", "/ˈnesəsəri/", "cần thiết"],["engineer", "/ˌendʒɪˈnɪə/", "kỹ sư"],["Japanese", "/ˌdʒæpəˈniːz/", "người/tiếng Nhật"],
+      ["develop", "/dɪˈveləp/", "phát triển"],["history", "/ˈhɪstri/", "lịch sử"],["chocolate", "/ˈtʃɒklət/", "sô-cô-la"],["advice", "/ədˈvaɪs/", "lời khuyên"]] },
   { id: 'cluster', icon: '🔗', title: 'Cụm phụ âm', tip: 'Đọc liền các phụ âm, đừng chèn thêm "ơ" vào giữa: street là /striːt/, không phải "sơ-tơ-rít".',
-    words: [['street','/striːt/','đường phố'],['spring','/sprɪŋ/','mùa xuân'],['school','/skuːl/','trường học'],['play','/pleɪ/','chơi'],['black','/blæk/','màu đen'],['friend','/frend/','bạn'],
-            ['green','/ɡriːn/','xanh lá'],['glass','/ɡlɑːs/','cái ly'],['splash','/splæʃ/','té nước'],['strong','/strɒŋ/','mạnh'],['asked','/ɑːskt/','đã hỏi'],['sixth','/sɪksθ/','thứ sáu']] },
+    words: [
+      ["street", "/striːt/", "đường phố"],["spring", "/sprɪŋ/", "mùa xuân"],["school", "/skuːl/", "trường học"],["play", "/pleɪ/", "chơi"],
+      ["black", "/blæk/", "màu đen"],["friend", "/frend/", "bạn"],["green", "/ɡriːn/", "xanh lá"],["glass", "/ɡlɑːs/", "cái ly"],
+      ["splash", "/splæʃ/", "té nước"],["strong", "/strɒŋ/", "mạnh"],["asked", "/ɑːskt/", "đã hỏi"],["sixth", "/sɪksθ/", "thứ sáu"],
+      ["stop", "/stɒp/", "dừng"],["star", "/stɑː/", "ngôi sao"],["sky", "/skaɪ/", "bầu trời"],["small", "/smɔːl/", "nhỏ"],
+      ["snow", "/snəʊ/", "tuyết"],["sleep", "/sliːp/", "ngủ"],["speak", "/spiːk/", "nói"],["swim", "/swɪm/", "bơi"],
+      ["study", "/ˈstʌdi/", "học"],["blue", "/bluː/", "màu xanh dương"],["bread", "/bred/", "bánh mì"],["brown", "/braʊn/", "màu nâu"],
+      ["clean", "/kliːn/", "sạch"],["class", "/klɑːs/", "lớp học"],["cream", "/kriːm/", "kem"],["drink", "/drɪŋk/", "uống"],
+      ["dress", "/dres/", "váy"],["flower", "/ˈflaʊə/", "bông hoa"],["fruit", "/fruːt/", "trái cây"],["grow", "/ɡrəʊ/", "lớn lên"],
+      ["plane", "/pleɪn/", "máy bay"],["price", "/praɪs/", "giá"],["train", "/treɪn/", "tàu hỏa"],["tree", "/triː/", "cái cây"],
+      ["three", "/θriː/", "số ba"],["scream", "/skriːm/", "hét lên"],["spray", "/spreɪ/", "xịt"],["square", "/skweə/", "hình vuông; quảng trường"],
+      ["desk", "/desk/", "bàn học"],["lunch", "/lʌntʃ/", "bữa trưa"],["next", "/nekst/", "tiếp theo"],["first", "/fɜːst/", "đầu tiên"],
+      ["fifth", "/fɪfθ/", "thứ năm"],["helped", "/helpt/", "đã giúp"],["months", "/mʌnθs/", "các tháng"],["texts", "/teksts/", "tin nhắn"]] },
   { id: 'sentences', icon: '🗣️', title: 'Câu luyện nói', tip: 'Đọc chậm trước, sau đó tăng dần tốc độ. Bấm "Nói thử" để app chấm xem máy nghe ra đúng bao nhiêu từ.',
-    sentences: [['She sells seashells by the seashore.','Cô ấy bán vỏ sò bên bờ biển.'],['I think three thousand thoughts.','Tôi nghĩ ba nghìn ý nghĩ.'],
-                ['Red lorry, yellow lorry.','Xe tải đỏ, xe tải vàng.'],['A big black bug bit a big black bear.','Một con bọ đen to cắn một con gấu đen to.'],
-                ['Could you speak a little more slowly, please?','Bạn có thể nói chậm hơn một chút được không?'],['What do you usually do at the weekend?','Bạn thường làm gì vào cuối tuần?'],
-                ["I'd like a cup of coffee, please.",'Cho tôi một tách cà phê.'],['Nice to meet you. Where are you from?','Rất vui được gặp bạn. Bạn đến từ đâu?'],
-                ["The weather is lovely today, isn't it?",'Hôm nay thời tiết đẹp nhỉ?'],['I asked for three glasses of water.','Tôi đã gọi ba ly nước.']] }
+    sentences: [
+      ["She sells seashells by the seashore.", "Cô ấy bán vỏ sò bên bờ biển."],
+      ["I think three thousand thoughts.", "Tôi nghĩ ba nghìn ý nghĩ."],
+      ["Red lorry, yellow lorry.", "Xe tải đỏ, xe tải vàng."],
+      ["A big black bug bit a big black bear.", "Một con bọ đen to cắn một con gấu đen to."],
+      ["Could you speak a little more slowly, please?", "Bạn có thể nói chậm hơn một chút được không?"],
+      ["What do you usually do at the weekend?", "Bạn thường làm gì vào cuối tuần?"],
+      ["I'd like a cup of coffee, please.", "Cho tôi một tách cà phê."],
+      ["Nice to meet you. Where are you from?", "Rất vui được gặp bạn. Bạn đến từ đâu?"],
+      ["The weather is lovely today, isn't it?", "Hôm nay thời tiết đẹp nhỉ?"],
+      ["I asked for three glasses of water.", "Tôi đã gọi ba ly nước."],
+      ["How much does this jacket cost?", "Chiếc áo khoác này giá bao nhiêu?"],
+      ["Can I have the bill, please?", "Cho tôi xin hóa đơn."],
+      ["Excuse me, where is the nearest station?", "Xin lỗi, ga gần nhất ở đâu?"],
+      ["I'm sorry, I didn't catch that.", "Xin lỗi, tôi nghe chưa rõ."],
+      ["What time does the film start?", "Phim bắt đầu lúc mấy giờ?"],
+      ["I usually get up at six thirty.", "Tôi thường dậy lúc sáu rưỡi."],
+      ["My brother works in a big hospital.", "Anh trai tôi làm ở một bệnh viện lớn."],
+      ["We watched a funny film last night.", "Tối qua chúng tôi xem một bộ phim vui."],
+      ["It's the third Thursday of the month.", "Hôm nay là thứ Năm thứ ba của tháng."],
+      ["Thank you for helping me with this.", "Cảm ơn bạn đã giúp tôi việc này."],
+      ["Would you like to come with us?", "Bạn có muốn đi cùng chúng tôi không?"],
+      ["She lives with her parents in Hanoi.", "Cô ấy sống với bố mẹ ở Hà Nội."],
+      ["Don't worry, it isn't a problem.", "Đừng lo, không có vấn đề gì đâu."],
+      ["Six thick thistle sticks.", "Sáu cành cây kế dày."],
+      ["Fresh French fried fish.", "Cá chiên kiểu Pháp tươi."],
+      ["He has visited his grandparents twice.", "Anh ấy đã đến thăm ông bà hai lần."],
+      ["The students finished their tests early.", "Các học sinh làm xong bài kiểm tra sớm."],
+      ["I've lived here for three years.", "Tôi đã sống ở đây ba năm."],
+      ["Which one do you prefer, tea or coffee?", "Bạn thích cái nào hơn, trà hay cà phê?"],
+      ["Let me think about it and call you back.", "Để tôi suy nghĩ rồi gọi lại cho bạn."]] }
 ];
 
 /* ---------- lookups: 10.000-word vocabulary first, then the old dictionary, then online ---------- */
@@ -2596,10 +2724,10 @@ async function prToggleRecord(target, btn, out) {
     out.className = 'pr-rec-out warn'; out.textContent = 'Trình duyệt này chưa hỗ trợ ghi âm.'; return;
   }
   let stream;
-  prRecOpening = true;
+  prRecOpening = true; micOpening();
   try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
   catch (e) {
-    prRecOpening = false;
+    prRecOpening = false; ttsMicEnded();
     out.className = 'pr-rec-out warn';
     out.textContent = e && (e.name === 'NotFoundError' || e.name === 'NotReadableError') ? 'Không tìm thấy micro, hoặc micro đang được app khác dùng. Hãy đóng app đó rồi thử lại.' : 'Không mở được micro. Hãy cho phép dùng micro rồi thử lại.';
     return;
@@ -2640,7 +2768,7 @@ async function prToggleRecord(target, btn, out) {
 
 // v178: rời app (chuyển app khác, khoá màn hình) → tắt micro ngay, không để micro mở ngầm
 document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState !== 'hidden') return;
+  if (document.visibilityState !== 'hidden') { if (!prRecog && !prRec) audioMode('playback'); return; }
   try { if (prRecog) prRecog.abort(); } catch (e) {}
   try { if (prRec && prRec.state !== 'inactive') prRec.stop(); } catch (e) {}
 });
@@ -3410,7 +3538,7 @@ function ipaAudioEl() {
 function ipaUnlock() {
   if (ipaUnlocked) return;
   ipaUnlocked = true;
-  try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
+  try { if (navigator.audioSession && navigator.audioSession.type !== 'play-and-record') navigator.audioSession.type = 'playback'; } catch (e) {}
   try {
     const a = ipaAudioEl();
     a.src = IPA_SILENT_WAV;
@@ -3422,20 +3550,27 @@ function ipaUnlock() {
   } catch (e) {}
 }
 ['touchend', 'pointerdown', 'click'].forEach(ev => document.addEventListener(ev, ipaUnlock, { capture: true, passive: true }));
+const IPA_TARGET_RMS = 0.11;   // ≈ −19 dB: ngang mức giọng đọc thường gặp của máy
 function ipaWavBlob(buf, end) {
   const rate = buf.sampleRate, d = buf.getChannelData(0);
   let n = Math.min(d.length, Math.ceil((end + 0.06) * rate));
   while (n > 1 && Math.abs(d[n - 1]) < 0.0005) n--;
   n = Math.min(d.length, n + Math.floor(rate * 0.03));
-  let pk = 0; for (let i = 0; i < n; i++) { const x = Math.abs(d[i]); if (x > pk) pk = x; }
-  const amp = pk > 0 ? Math.min(2.4, 0.92 / pk) : 1;      /* loa điện thoại nhỏ: nâng mức nhưng không vỡ tiếng */
+  /* v179: cân bằng theo độ to tai nghe được (năng lượng trung bình của phần có tiếng), không theo đỉnh sóng —
+     trước đây âm xát /s/, /z/ to hơn âm bật /ɡ/, /d/ khoảng 6–7 dB và cả 44 âm to hơn giọng đọc của máy.
+     Giờ mọi âm cùng một mức, gần mức giọng đọc; đỉnh nhọn được nén mềm để không vỡ tiếng. */
+  const FR = Math.max(1, Math.round(rate * 0.02)); let es = 0, ec = 0;
+  for (let i = 0; i < n; i += FR) { let e = 0; const m = Math.min(n, i + FR); for (let k = i; k < m; k++) e += d[k] * d[k]; e /= (m - i); if (e > 1e-6) { es += e; ec++; } }
+  const rms = ec ? Math.sqrt(es / ec) : 0;
+  const amp = rms > 0 ? Math.min(8, IPA_TARGET_RMS / rms) : 1;
+  const lim = x => { const a = Math.abs(x); return a <= 0.6 ? x : Math.sign(x) * (0.6 + 0.38 * Math.tanh((a - 0.6) / 0.38)); };
   const ab = new ArrayBuffer(44 + n * 2), v = new DataView(ab);
   const w = (o, str) => { for (let i = 0; i < str.length; i++) v.setUint8(o + i, str.charCodeAt(i)); };
   w(0, 'RIFF'); v.setUint32(4, 36 + n * 2, true); w(8, 'WAVE'); w(12, 'fmt ');
   v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
   v.setUint32(24, rate, true); v.setUint32(28, rate * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true);
   w(36, 'data'); v.setUint32(40, n * 2, true);
-  for (let i = 0; i < n; i++) { const x = Math.max(-1, Math.min(1, d[i] * amp)); v.setInt16(44 + i * 2, x < 0 ? x * 0x8000 : x * 0x7fff, true); }
+  for (let i = 0; i < n; i++) { const x = Math.max(-1, Math.min(1, lim(d[i] * amp))); v.setInt16(44 + i * 2, x < 0 ? x * 0x8000 : x * 0x7fff, true); }
   return new Blob([ab], { type: 'audio/wav' });
 }
 function ipaRender(sym) {
@@ -3978,6 +4113,241 @@ function renderPronSets() {
   pronSets.appendChild(grid);
 }
 
+/* ============================================================
+   v180 · BÀI LUYỆN PHÁT ÂM — gọn và đủ
+   - quy tắc dạng bảng (đuôi -s / -ed), từ chia theo nhóm âm cuối
+   - mỗi từ: Nghe · Chậm · Nói (chấm ngay trong dòng, ≥ 80% tự đánh dấu đã luyện) · ✓
+   - kiểm tra nhanh cuối bài: phân loại đuôi, nghe chọn từ, nghe phân biệt cặp từ
+============================================================ */
+const PR_RULES = {
+  s: [['/s/', 'Sau âm vô thanh', '/p/ /t/ /k/ /f/ /θ/', 'g1'], ['/z/', 'Sau âm hữu thanh và nguyên âm', '/b/ /d/ /ɡ/ /v/ /m/ /n/ /l/ /r/…', 'g2'], ['/ɪz/', 'Sau âm gió', '/s/ /z/ /ʃ/ /ʒ/ /tʃ/ /dʒ/', 'g3']],
+  ed: [['/t/', 'Sau âm vô thanh', '/p/ /k/ /s/ /ʃ/ /tʃ/ /f/', 'g1'], ['/d/', 'Sau âm hữu thanh và nguyên âm', '/b/ /ɡ/ /v/ /z/ /m/ /n/ /l/ /r/…', 'g2'], ['/ɪd/', 'Sau /t/ và /d/', 'thêm một âm tiết', 'g3']]
+};
+const prSplitVi = vi => { const m = /^(.*?)\s*·\s*(\/[^/]+\/)$/.exec(vi || ''); return m ? [m[1], m[2]] : [vi, '']; };
+function prSvg(path) { const sp = prEl('span', 'pr2-ic'); sp.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true">' + path + '</svg>'; return sp; }
+const PR_IC = { play: '<path d="M8 5.5v13l11-6.5z" fill="currentColor" stroke="none"/>', slow: '<path d="M4 16c0-3.5 3-6 7-6s7 2.5 7 6M2 16h18M7 16v2M15 16v2M18 11l2-2h1.5"/>', mic: '<path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3zM19 11a7 7 0 0 1-14 0M12 18v3"/>', ok: '<path d="m5 12.5 4.5 4.5L19 7.5"/>' };
+function prAct(icon, label, cls, fn) {
+  const b = prEl('button', 'pr2-btn ' + (cls || '')); b.type = 'button';
+  b.appendChild(prSvg(PR_IC[icon])); b.appendChild(prEl('span', 'pr2-bl', label));
+  b.addEventListener('click', e => { e.stopPropagation(); fn(b); });
+  return b;
+}
+/* v182 · gọn: lọc theo nhóm âm + lưới ô từ chia trang + MỘT khung luyện chung (thay cho nút trên từng dòng) */
+const PR_PAGE_W = 12, PR_PAGE_S = 8;
+function prSetBody(set, v, card, rows, texts, openDetail) {
+  card.className = 'pr2-wrap';
+  const PR_PAGE = set.sentences ? PR_PAGE_S : PR_PAGE_W;
+  const rules = PR_RULES[set.id], isSent = !!set.sentences, isPair = !!set.pairs;
+  const gOf = snd => ((rules || []).find(r => r[0] === snd) || [])[3] || '';
+  const items = isPair
+    ? set.pairs.map(p => ({ key: p[0][0] + ' / ' + p[1][0], w: p[0][0] + ' · ' + p[1][0], say: p[0][0] + ', ' + p[1][0], pair: p }))
+    : (set.words || set.sentences).map(x => {
+        if (isSent) return { key: x[0], w: x[0], say: x[0], vi: x[1] };
+        const [vi, snd] = prSplitVi(x[2]); return { key: x[0], w: x[0], say: x[0], ipa: x[1], vi, snd };
+      });
+  const isDone = it => prDone.has(set.id + '|' + it.key);
+  let filter = '', page = 0, cur = null;
+  const list = () => filter ? items.filter(it => it.snd === filter) : items;
+
+  /* --- lọc theo quy tắc (đuôi -s / -ed) --- */
+  let filt = null;
+  if (rules) {
+    filt = prEl('div', 'pr2-filt'); filt.setAttribute('role', 'tablist'); filt.setAttribute('aria-label', 'Lọc theo cách đọc');
+    const mk = (val, top, sub, g) => {
+      const b = prEl('button', 'pr2-fc ' + (g || '')); b.type = 'button'; b.setAttribute('role', 'tab'); b.dataset.f = val;
+      b.appendChild(prEl('b', null, top)); b.appendChild(prEl('span', null, sub));
+      b.addEventListener('click', () => { filter = val; page = 0; prSeqStop(); drawFilt(); drawGrid(); select(list()[0], false); });
+      filt.appendChild(b);
+    };
+    mk('', 'Tất cả', items.length + ' từ');
+    rules.forEach(([snd, when, after, g]) => mk(snd, snd, 'sau ' + after.replace(/…$/, '').split(' ').slice(0, 4).join(' ') + (/…$/.test(after) || after.split(' ').length > 4 ? '…' : ''), g));
+    card.appendChild(filt);
+    const tip = v.querySelector('.pr-set-tip2'); if (tip) tip.remove();
+  }
+  const ruleLine = prEl('div', 'pr2-rl'); ruleLine.hidden = true; if (rules) card.appendChild(ruleLine);
+  const drawFilt = () => {
+    if (!filt) return;
+    [...filt.children].forEach(b => { const on = b.dataset.f === filter; b.classList.toggle('on', on); b.setAttribute('aria-selected', String(on)); });
+    const r = rules.find(x => x[0] === filter);
+    ruleLine.hidden = !r; ruleLine.className = 'pr2-rl ' + (r ? r[3] : '');
+    if (r) ruleLine.textContent = `Đọc ${r[0]} — ${r[1].toLowerCase()}: ${r[2]}`;
+  };
+
+  /* --- khung luyện chung --- */
+  const pan = prEl('section', 'pr2-pan' + (isPair ? ' pair' : '')); pan.setAttribute('aria-live', 'polite');
+  card.appendChild(pan);
+  const mic = (target, res, onOk) => prAct('mic', 'Nói', 'pr2-mic', b => {
+    prSeqStop();
+    if (!PR_SR) { res.hidden = false; res.className = 'pr2-res warn'; res.textContent = 'Trình duyệt này chưa nghe được giọng nói. iPhone: dùng Safari · máy tính: Chrome hoặc Edge.'; return; }
+    if (b.classList.contains('on')) { try { prRecog && prRecog.stop(); } catch (e) {} return; }
+    b.classList.add('on'); b.querySelector('.pr2-bl').textContent = 'Đang mở…';
+    res.hidden = false; res.className = 'pr2-res'; res.textContent = isSent ? 'Hãy đọc cả câu…' : `Hãy đọc: “${target}”`;
+    vspListen(target, (best, err) => {
+      b.classList.remove('on'); b.querySelector('.pr2-bl').textContent = 'Nói';
+      if (!best) { res.className = 'pr2-res warn'; res.textContent = err || 'Không nghe rõ. Bấm Nói và đọc to hơn nhé.'; return; }
+      const sc = prScore(target, best.heard), pct = Math.round(sc.score * 100);
+      res.className = 'pr2-res ' + (pct >= 80 ? 'ok' : pct >= 50 ? 'mid' : 'bad'); res.innerHTML = '';
+      res.appendChild(prEl('b', null, pct + '%'));
+      res.appendChild(prEl('span', null, (pct >= 80 ? 'Máy nghe rõ. ' : pct >= 50 ? 'Gần đúng. ' : 'Chưa khớp. ') + `Máy nghe được: “${best.heard}”`));
+      if (pct >= 80) onOk();
+    }, txt => { b.querySelector('.pr2-bl').textContent = 'Đang nghe'; res.textContent = '“' + txt + '”'; },
+    { onStart: () => { b.querySelector('.pr2-bl').textContent = 'Đang nghe'; } });
+  });
+  const mark = (it, on) => {
+    const k = set.id + '|' + it.key;
+    if (on) prDone.add(k); else prDone.delete(k); prDoneSave(); prSetProg(set);
+    const t = grid.querySelector(`[data-k="${CSS.escape(it.key)}"]`); if (t) t.classList.toggle('learned', on);
+    const ck = pan.querySelector('.pr2-ck'); if (ck && cur === it) { ck.classList.toggle('on', on); ck.setAttribute('aria-pressed', String(on)); }
+  };
+  const step = d => {
+    const L = list(), i = L.indexOf(cur), j = Math.min(L.length - 1, Math.max(0, i + d));
+    if (j === i) return;
+    const np = Math.floor(j / PR_PAGE); if (np !== page) { page = np; drawGrid(); }
+    select(L[j], true);
+  };
+  const select = (it, say) => {
+    cur = it; pan.innerHTML = '';
+    grid.querySelectorAll('.pr2-tile.sel').forEach(x => x.classList.remove('sel'));
+    if (!it) return;
+    const t = grid.querySelector(`[data-k="${CSS.escape(it.key)}"]`); if (t) t.classList.add('sel');
+    const res = prEl('div', 'pr2-res'); res.hidden = true;
+    const L = list(), i = L.indexOf(it);
+    const top = prEl('div', 'pr2-ptop');
+    top.appendChild(prEl('span', 'pr2-pn', `${i + 1}/${L.length}`));
+    const det = prEl('button', 'pr2-pdet', 'Chi tiết ›'); det.type = 'button';
+    top.appendChild(det);
+    pan.appendChild(top);
+    if (isPair) {
+      const cols = prEl('div', 'pr2-pcols');
+      it.pair.forEach(([w, ipa, vi]) => {
+        const c = prEl('div', 'pr2-pc');
+        c.appendChild(prEl('div', 'pr2-pw', w)); c.appendChild(prEl('div', 'pr2-pipa', ipa)); c.appendChild(prEl('div', 'pr2-pvi', vi));
+        const a = prEl('div', 'pr2-acts');
+        a.appendChild(prAct('play', 'Nghe', '', () => { prSeqStop(); prSay(w); }));
+        a.appendChild(mic(w, res, () => {}));
+        c.appendChild(a); cols.appendChild(c);
+      });
+      pan.appendChild(cols);
+      det.addEventListener('click', () => openDetail(it.pair[0][0], { ipa: it.pair[0][1], vi: it.pair[0][2] }));
+    } else {
+      pan.appendChild(prEl('div', 'pr2-pw' + (isSent ? ' sent' : ''), it.w));
+      const meta = prEl('div', 'pr2-pmeta');
+      if (it.ipa) meta.appendChild(prEl('span', 'pr2-pipa', it.ipa));
+      if (it.snd) meta.appendChild(prEl('span', 'pr2-tag ' + gOf(it.snd), 'đuôi ' + it.snd));
+      if (meta.childNodes.length) pan.appendChild(meta);
+      pan.appendChild(prEl('div', 'pr2-pvi', it.vi));
+      det.addEventListener('click', () => openDetail(it.w, isSent ? { vi: it.vi } : { ipa: it.ipa, vi: it.vi }));
+    }
+    const acts = prEl('div', 'pr2-acts pr2-pacts');
+    const prev = prEl('button', 'pr2-btn pr2-nav', '‹'); prev.type = 'button'; prev.setAttribute('aria-label', 'Từ trước'); prev.disabled = i <= 0;
+    prev.addEventListener('click', () => step(-1));
+    acts.appendChild(prev);
+    if (isPair) {
+      acts.appendChild(prAct('play', 'So sánh', '', () => { prSeqStop(); const u = prSay(it.pair[0][0], 0.7); if (u) u.onend = () => setTimeout(() => prSay(it.pair[1][0], 0.7), 450); }));
+    } else {
+      acts.appendChild(prAct('play', 'Nghe', '', () => { prSeqStop(); prSay(it.say); }));
+      acts.appendChild(prAct('slow', 'Chậm', '', () => { prSeqStop(); prSay(it.say, 0.5); }));
+      acts.appendChild(mic(it.say, res, () => { if (!isDone(it)) mark(it, true); }));
+    }
+    const ck = prEl('button', 'pr2-btn pr2-ck' + (isDone(it) ? ' on' : '')); ck.type = 'button';
+    ck.appendChild(prSvg(PR_IC.ok)); ck.setAttribute('aria-label', 'Đánh dấu đã luyện ' + it.key); ck.setAttribute('aria-pressed', String(isDone(it)));
+    ck.addEventListener('click', () => mark(it, !isDone(it)));
+    acts.appendChild(ck);
+    const nx = prEl('button', 'pr2-btn pr2-nav', '›'); nx.type = 'button'; nx.setAttribute('aria-label', 'Từ tiếp theo'); nx.disabled = i >= L.length - 1;
+    nx.addEventListener('click', () => step(1));
+    acts.appendChild(nx);
+    pan.appendChild(acts); pan.appendChild(res);
+    if (say) { prSeqStop(); prSay(isPair ? it.pair[0][0] : it.say); }
+  };
+
+  /* --- lưới ô từ + phân trang --- */
+  const grid = prEl('div', 'pr2-grid' + (isSent ? ' sent' : isPair ? ' pair' : ''));
+  const pager = prEl('div', 'pr2-pager');
+  card.appendChild(grid); card.appendChild(pager);
+  const drawGrid = () => {
+    const L = list(), pages = Math.max(1, Math.ceil(L.length / PR_PAGE));
+    page = Math.min(page, pages - 1);
+    grid.innerHTML = ''; rows.length = 0; texts.length = 0;
+    L.slice(page * PR_PAGE, page * PR_PAGE + PR_PAGE).forEach(it => {
+      const b = prEl('button', 'pr2-tile ' + gOf(it.snd) + (isDone(it) ? ' learned' : '') + (cur === it ? ' sel' : '')); b.type = 'button';
+      b.dataset.k = it.key;
+      b.appendChild(prEl('span', 'pr2-tw', it.w));
+      b.appendChild(prEl('span', 'pr2-ts', isSent ? it.vi : isPair ? it.pair[0][1] + ' ' + it.pair[1][1] : it.ipa));
+      b.setAttribute('aria-label', `${it.w}${it.ipa ? ', ' + it.ipa : ''}${it.vi ? ': ' + it.vi : ''}`);
+      b.addEventListener('click', () => { select(it, true); try { pan.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } catch (e) {} });
+      grid.appendChild(b); rows.push(b); texts.push(it.say);
+    });
+    pager.innerHTML = ''; pager.hidden = pages < 2;
+    const go = p => { page = p; prSeqStop(); drawGrid(); select(list()[page * PR_PAGE], false); };
+    const pv = prEl('button', 'pr2-pg', '‹'); pv.type = 'button'; pv.setAttribute('aria-label', 'Trang trước'); pv.disabled = page === 0; pv.addEventListener('click', () => go(page - 1));
+    const dots = prEl('div', 'pr2-dots');
+    for (let p = 0; p < pages; p++) {
+      const d = prEl('button', 'pr2-dot' + (p === page ? ' on' : ''), String(p + 1)); d.type = 'button'; d.setAttribute('aria-label', 'Trang ' + (p + 1));
+      if (p === page) d.setAttribute('aria-current', 'page');
+      d.addEventListener('click', () => go(p)); dots.appendChild(d);
+    }
+    const nv = prEl('button', 'pr2-pg', '›'); nv.type = 'button'; nv.setAttribute('aria-label', 'Trang sau'); nv.disabled = page >= pages - 1; nv.addEventListener('click', () => go(page + 1));
+    pager.appendChild(pv); pager.appendChild(dots); pager.appendChild(nv);
+  };
+  const first = items.find(it => !isDone(it)) || items[0];   // mở ngay ở từ chưa luyện đầu tiên
+  page = Math.floor(items.indexOf(first) / PR_PAGE);
+  drawFilt(); drawGrid(); select(first, false);
+}
+/* ---------- kiểm tra nhanh ---------- */
+function prQuizBox(set) {
+  const box = prEl('section', 'pr2-quiz');
+  const sh = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  let Q = [];
+  if (PR_RULES[set.id]) Q = sh(set.words).slice(0, 8).map(x => ({ say: x[0], show: x[0], ask: 'Đuôi của từ này đọc là gì?', opts: PR_RULES[set.id].map(r => r[0]), ans: prSplitVi(x[2])[1], why: `${x[0]} ${x[1]} · ${prSplitVi(x[2])[0]}` }));
+  else if (set.pairs) Q = sh(set.pairs).slice(0, 8).map(p => { const t = p[Math.random() < 0.5 ? 0 : 1]; return { say: t[0], ask: 'Nghe và chọn từ bạn nghe được', opts: [p[0][0], p[1][0]], ans: t[0], why: `${p[0][0]} ${p[0][1]} · ${p[1][0]} ${p[1][1]}` }; });
+  else if (set.words) Q = sh(set.words).slice(0, 8).map(x => ({ say: x[0], ask: 'Nghe và chọn từ bạn nghe được', opts: sh([x[0]].concat(sh(set.words.filter(y => y[0] !== x[0])).slice(0, 3).map(y => y[0]))), ans: x[0], why: `${x[0]} ${x[1]} · ${x[2]}` }));
+  else return box;
+  box.appendChild(prEl('h3', null, 'Kiểm tra nhanh'));
+  const p0 = prEl('p', 'pr2-qp', PR_RULES[set.id] ? `${Q.length} câu · nhìn từ, chọn cách đọc đuôi` : `${Q.length} câu · nghe rồi chọn đúng từ`); box.appendChild(p0);
+  const body = prEl('div', 'pr2-qb'); box.appendChild(body);
+  let i = 0, right = 0;
+  const start = prEl('button', 'btn-primary', '▶ Bắt đầu kiểm tra'); start.type = 'button';
+  body.appendChild(start);
+  const draw = () => {
+    body.innerHTML = '';
+    if (i >= Q.length) {
+      const pct = Math.round(right / Q.length * 100);
+      body.appendChild(prEl('div', 'pr2-qend', `${right}/${Q.length} câu đúng`));
+      body.appendChild(prEl('p', 'pr2-qp', pct >= 80 ? 'Rất tốt! Bạn đã nắm được bài này.' : 'Xem lại các từ ở trên rồi làm lại nhé.'));
+      const again = prEl('button', 'btn-ghost', '↻ Làm lại'); again.type = 'button';
+      again.addEventListener('click', () => { const nb = prQuizBox(set); box.replaceWith(nb); nb.querySelector('.btn-primary').click(); });
+      body.appendChild(again);
+      try { if (window.actLog) actLog('p', right); } catch (e) {}
+      return;
+    }
+    const q = Q[i];
+    body.appendChild(prEl('div', 'pr2-qn', `Câu ${i + 1}/${Q.length} · ${q.ask}`));
+    const top = prEl('div', 'pr2-qtop');
+    if (q.show) top.appendChild(prEl('span', 'pr2-qw', q.show));
+    top.appendChild(prAct('play', q.show ? 'Nghe' : 'Nghe lại', 'pr2-qplay', () => prSay(q.say)));
+    body.appendChild(top);
+    const opts = prEl('div', 'pr2-qopts');
+    q.opts.forEach(o => {
+      const b = prEl('button', 'pr2-qo', o); b.type = 'button';
+      b.addEventListener('click', () => {
+        if (opts.dataset.done) return; opts.dataset.done = '1';
+        const ok = o === q.ans; if (ok) right++;
+        [...opts.children].forEach(x => { x.disabled = true; if (x.textContent === q.ans) x.classList.add('ok'); else if (x === b) x.classList.add('bad'); });
+        const fb = prEl('div', 'pr2-qfb ' + (ok ? 'ok' : 'bad'), (ok ? 'Đúng rồi! ' : `Chưa đúng — đáp án: ${q.ans}. `) + q.why);
+        body.appendChild(fb);
+        const nx = prEl('button', 'btn-primary', i + 1 < Q.length ? 'Câu tiếp →' : 'Xem kết quả'); nx.type = 'button';
+        nx.addEventListener('click', () => { i++; draw(); }); body.appendChild(nx);
+        try { nx.focus({ preventScroll: true }); } catch (e) {}
+      });
+      opts.appendChild(b);
+    });
+    body.appendChild(opts);
+    if (!q.show) setTimeout(() => prSay(q.say), 150);
+  };
+  start.addEventListener('click', () => { prSeqStop(); draw(); });
+  return box;
+}
+
 function prShowHome() {
   prSeqStop();
   prOpenSet = null;
@@ -4011,7 +4381,7 @@ function prOpenSetView(set) {
   const acts = prEl('div', 'pr-acts');
   const all = prEl('button', 'ls-slow', '▶ Nghe lần lượt');
   acts.appendChild(all);
-  acts.appendChild(prEl('span', 'pr-acts-hint', 'Chạm vào chữ để xem phiên âm chi tiết và nói thử'));
+  acts.appendChild(prEl('span', 'pr-acts-hint', 'Chạm một ô để nghe, rồi bấm Nói để luyện'));
   v.appendChild(acts);
   v.appendChild(pronResult);           // the detail card shows up here, above the list
   pronResult.innerHTML = '';
@@ -4019,7 +4389,9 @@ function prOpenSetView(set) {
   const rows = [], texts = [];
   const openDetail = (text, hint) => { prSeqStop(); renderPronResult(text, hint); prSay(text); try { pronResult.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) {} };
 
-  if (set.words || set.sentences) {
+  if (set.words || set.sentences || set.pairs) {
+    prSetBody(set, v, card, rows, texts, openDetail);
+  } else if (false) {
     (set.words || set.sentences).forEach(item => {
       const isSent = !set.words;
       const w = item[0], ipa = isSent ? '' : item[1], vi = isSent ? item[1] : item[2];
@@ -4067,6 +4439,7 @@ function prOpenSetView(set) {
   }
   v.appendChild(card);
   all.addEventListener('click', () => prSeqPlay(rows, texts, all));
+  v.appendChild(prQuizBox(set));   // v180: kiểm tra nhanh cuối bài
   // next lesson, like the Vocabulary tab
   const idx = PRON_SETS.indexOf(set), nx = PRON_SETS[idx + 1];
   if (nx) {
@@ -5938,6 +6311,14 @@ function gxLesson(id) {
   }
   if (!s2.length) s2.push(grEl('p', 'gx-hint', 'Bài này không có công thức riêng; hãy học các mẫu câu ở bước 3 và bước 4.'));
   s2.push(gxSymbolsBox(false));
+  // v183: bài có bản học chủ động → 4 bước tương tác ở trên, bảng công thức đầy đủ thu gọn bên dưới để tra
+  if (window.gxLearnHas && window.gxLearnHas(id)) {
+    const ref = grEl('details', 'gxl-ref');
+    ref.appendChild(grEl('summary', null, '📋 Bảng công thức đầy đủ (để tra khi cần)'));
+    s2.forEach(n => n && ref.appendChild(n));
+    s2.length = 0;
+    s2.push(window.gxLearnBox(id), ref);
+  }
   grRoot.appendChild(gxStep(2, tablesInStep2 ? 'Học công thức / bảng tổng hợp' : 'Học công thức', s2, 'gx|' + id + '|2', true));
   // Bước 3: cách dùng
   const s3 = [];
@@ -7471,6 +7852,7 @@ function srFree(o) {
   rec.onend = () => end();
   // mở micro mà chưa nói gì trong 8 giây → dừng
   idle = setTimeout(() => { if (!text()) { err = 'no-speech'; end(); } }, 8000);
+  micOpening();
   try { rec.start(); } catch (e) { err = 'start'; end(); return null; }
   return { stop: () => { if (!done) { clearTimeout(quiet); try { rec.stop(); } catch (e) {} setTimeout(end, 700); } }, abort: () => { err = ''; fin = tmp = ''; end(); } };
 }
@@ -7548,7 +7930,7 @@ function vspListen(target, onDone, onPartial, opts) {
   r.onaudiostart = ready; r.onstart = () => setTimeout(ready, 120);
   cap = setTimeout(() => { if (lastAlts) finish(scoreAlts(lastAlts), null); else { try { r.stop(); } catch (e) {} } }, nW <= 2 ? 7000 : 15000);
   // giọng mẫu đang đọc → chờ nó dừng hẳn rồi mới mở micro (tránh tiếng "bụp" và micro thu lại chính giọng máy)
-  const open = () => { if (done) return; try { r.start(); } catch (e) { finish(null, 'Không mở được micro. Hãy thử lại.'); } };
+  const open = () => { if (done) return; micOpening(); try { r.start(); } catch (e) { finish(null, 'Không mở được micro. Hãy thử lại.'); } };
   if (wasTalking) setTimeout(open, TTS_IOS ? 250 : 150); else open();
 }
 
@@ -10986,9 +11368,11 @@ vUpdateButton();
     bM.disabled = true;
     // 1) quyền micro + ghi âm
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      micOpening();
       try { const st = await navigator.mediaDevices.getUserMedia({ audio: true }); st.getTracks().forEach(t => t.stop()); line(true, 'Micro hoạt động và đã được cho phép.'); }
-      catch (e) { line(false, 'Không mở được micro (' + (e && e.name || 'lỗi') + ').'); tips(TTS_IOS ? ['Vào <b>Cài đặt → Safari → Micrô</b> (hoặc Cài đặt → Quyền riêng tư → Micrô) và chọn Cho phép / Hỏi.', 'Nếu vẫn bị từ chối sau khi cập nhật iOS, hãy khởi động lại iPhone rồi thử lại.'] : ['Bấm biểu tượng ổ khoá trên thanh địa chỉ và cho phép Micro.']); bM.disabled = false; return; }
+      catch (e) { ttsMicEnded(); line(false, 'Không mở được micro (' + (e && e.name || 'lỗi') + ').'); tips(TTS_IOS ? ['Vào <b>Cài đặt → Safari → Micrô</b> (hoặc Cài đặt → Quyền riêng tư → Micrô) và chọn Cho phép / Hỏi.', 'Nếu vẫn bị từ chối sau khi cập nhật iOS, hãy khởi động lại iPhone rồi thử lại.'] : ['Bấm biểu tượng ổ khoá trên thanh địa chỉ và cho phép Micro.']); bM.disabled = false; return; }
     } else line(false, 'Trình duyệt không hỗ trợ ghi âm.');
+    micOpening();
     // 2) nhận dạng giọng nói
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) { line(false, 'Trình duyệt chưa hỗ trợ nhận dạng giọng nói nên phần chấm điểm phát âm không dùng được. Trên iPhone hãy dùng Safari.'); bM.disabled = false; return; }
@@ -10996,9 +11380,13 @@ vUpdateButton();
     try { speechSynthesis.cancel(); } catch (e) {}
     const r = new SR(); r.lang = 'en-US'; r.interimResults = false; r.maxAlternatives = 1;
     let got = false;
-    const done = () => { bM.disabled = false; };
+    const done = () => { bM.disabled = false; ttsMicEnded(); };
     const tm = setTimeout(() => { if (!got) { try { r.abort(); } catch (e) {} } }, 8000);
-    r.onresult = ev => { got = true; clearTimeout(tm); w.remove(); line(true, 'Nhận dạng giọng nói hoạt động. Máy nghe được: "' + ev.results[0][0].transcript + '"'); done(); };
+    r.onresult = ev => { got = true; clearTimeout(tm); w.remove(); line(true, 'Nhận dạng giọng nói hoạt động. Máy nghe được: "' + ev.results[0][0].transcript + '"');
+      // v179: Windows tự giảm âm lượng các âm thanh khác khi có app mở micro → tiếng lúc to lúc nhỏ
+      if (/Windows/.test(navigator.userAgent)) tips(['Nếu tiếng đọc bị nhỏ đi mỗi khi dùng micro: mở <b>Bảng điều khiển → Âm thanh → thẻ Liên lạc (Communications)</b>, chọn <b>Không làm gì (Do nothing)</b>. Windows mặc định tự giảm 80% âm lượng khi có app dùng micro.']);
+      else if (TTS_IOS) tips(['Nếu sau khi dùng micro tiếng đọc nhỏ đi hoặc phát ra loa trong (loa nghe gọi): app đã tự chuyển lại chế độ phát. Nếu vẫn còn, hãy vuốt tắt hẳn app rồi mở lại, hoặc cập nhật iOS 17 trở lên.']);
+      done(); };
     r.onerror = ev => { got = true; clearTimeout(tm); w.remove(); line(false, 'Nhận dạng giọng nói lỗi: ' + ev.error + '.'); tips(ev.error === 'audio-capture' ? ['Không tìm thấy micro, hoặc micro đang được app khác dùng (gọi điện, ghi âm, Zalo…). Hãy đóng app đó rồi thử lại.', 'Trên máy tính: kiểm tra đã cắm micro / tai nghe có micro chưa.'] : ev.error === 'not-allowed' || ev.error === 'service-not-allowed' ? ['Vào <b>Cài đặt → Quyền riêng tư & Bảo mật → Nhận dạng lời nói</b> và bật cho Safari, đồng thời bật <b>Siri & Đọc chính tả</b> (Cài đặt → Cài đặt chung → Bàn phím → Bật Đọc chính tả).'] : ev.error === 'network' ? ['Nhận dạng giọng nói cần mạng. Kiểm tra Wi-Fi / 4G rồi thử lại.'] : ['Nói gần micro hơn rồi thử lại.']); done(); };
     r.onend = () => { clearTimeout(tm); if (!got) { w.remove(); line(false, 'Không nghe thấy gì trong 8 giây.'); tips(['Nói to và gần micro hơn.', 'Nếu micro báo đang nghe mà không có kết quả, hãy vuốt tắt hẳn app rồi mở lại (lỗi hay gặp trên iPhone sau khi vừa phát âm thanh).']); } done(); };
     try { r.start(); } catch (e) { line(false, 'Không bắt đầu nghe được.'); done(); }
