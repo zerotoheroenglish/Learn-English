@@ -1,0 +1,24 @@
+# Lấy bản chép lời cho các video BBC trong app, chạy trên máy chủ của GitHub (bấm từ điện thoại được).
+# Vào tab Actions của kho → "Lấy bản chép lời video BBC" → Run workflow.
+name: Lấy bản chép lời video BBC
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  lay-ban-chep-loi:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install "youtube-transcript-api>=1.2,<2"
+      - run: python tools/lay_ban_chep_loi.py
+      - name: Lưu file vào kho
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/bbc-subs.json
+          git commit -m "Cập nhật bản chép lời video BBC" || echo "Không có gì mới"
+          git push
