@@ -1,0 +1,14 @@
+LẤY BẢN CHÉP LỜI CHO VIDEO BBC (làm một lần)
+
+Cách 1 — từ điện thoại, nhờ GitHub chạy hộ:
+  1. Mở kho GitHub của app trên trình duyệt → tab "Actions".
+  2. Chọn "Lấy bản chép lời video BBC" → "Run workflow" → "Run workflow".
+  3. Đợi vài phút. Xong, file data/bbc-subs.json trong kho được cập nhật, trang GitHub Pages tự cập nhật theo.
+  Lưu ý: YouTube đôi khi chặn máy chủ của GitHub. Nếu nhật ký báo "RequestBlocked", dùng cách 2.
+
+Cách 2 — trên máy tính có Python:
+  pip install "youtube-transcript-api>=1.2,<2"
+  python tools/lay_ban_chep_loi.py
+  Rồi tải file data/bbc-subs.json lên kho như các file khác.
+
+Chạy lại bất cứ lúc nào: video đã có được bỏ qua, chỉ lấy video mới hoặc video lần trước bị lỗi.

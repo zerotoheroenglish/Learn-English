@@ -114,7 +114,12 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
   }
   function paintSeen(b, l) { const on = bbcSeen.has(l.yt); b.textContent = on ? '✓ Đã xem (bấm để bỏ)' : '☐ Đánh dấu đã xem'; b.classList.toggle('on', on); }
   function markSeen(l, on) { if (on) bbcSeen.add(l.yt); else bbcSeen.delete(l.yt); save(K.bbcSeen, [...bbcSeen]); const b = root.querySelector('.sd-seen-btn'); if (b) paintSeen(b, l); }
-  const bbcLesson = x => { const st = bbcStore[x.id] || {}; return { id: 'bbc-' + x.id, cat: 'bbc', lv: x.lv.n, icon: x.col.icon, yt: x.id, title: x.t, vi: x.col.name, sum: '', s: st.s || [], tm: st.tm || null, bbc: x }; };
+  // v189: bản chép lời gói sẵn cho video BBC (data/bbc-subs.json, tạo bằng công cụ tools/lay_ban_chep_loi.py)
+  let bbcBuilt = {}, bbcBuiltP = null; const bbcBuiltCache = {};
+  const loadBuilt = () => bbcBuiltP || (bbcBuiltP = fetch('data/bbc-subs.json').then(r => r.ok ? r.json() : {}).then(j => { bbcBuilt = (j && j.v) || {}; return bbcBuilt; }).catch(() => ({})));
+  const builtSt = id => { if (id in bbcBuiltCache) return bbcBuiltCache[id]; const raw = bbcBuilt[id]; if (typeof raw !== 'string') return null; return (bbcBuiltCache[id] = ytParse(raw)); };
+  const bbcSt = id => bbcStore[id] || builtSt(id);
+  const bbcLesson = x => { const st = bbcSt(x.id) || {}; return { id: 'bbc-' + x.id, cat: 'bbc', lv: x.lv.n, icon: x.col.icon, yt: x.id, title: x.t, vi: x.col.name, sum: '', s: st.s || [], tm: st.tm || null, bbc: x }; };
 
   /* ---------- speech ---------- */
   let tok = 0;
@@ -656,7 +661,7 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     return m;
   }
   function bbcCard(x) {
-    const seen = bbcSeen.has(x.id), st = bbcStore[x.id];
+    const seen = bbcSeen.has(x.id), st = bbcSt(x.id);
     const b = E('button', 'bc-card' + (seen ? ' done' : ''));
     const th = E('div', 'bc-thumb');
     const img = E('img'); img.loading = 'lazy'; img.alt = ''; img.src = 'https://i.ytimg.com/vi/' + x.id + '/mqdefault.jpg';
@@ -887,6 +892,8 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
   /* ---------- lesson ---------- */
   window.shOpen = id => { const l = (typeof SH_LESSONS !== 'undefined' ? SH_LESSONS : []).find(x => x.id === id); if (l) openLesson(l); };   // v147: mở thẳng một bài (từ Dashboard)
   function openLesson(l) {
+    // v189: video BBC chưa có bản chép lời → lấy bản gói sẵn (nếu có) rồi vẽ lại
+    if (l.cat === 'bbc' && !l.s.length) loadBuilt().then(() => { const b = builtSt(l.yt); if (b && b.s.length && view.lesson === l && !l.s.length) { l.s = b.s; l.tm = b.tm; view.idx = 0; renderLesson(); } });
     view.lesson = l; view.page = 'lesson';
     const p = P(l);
     view.idx = p && p.cur < l.s.length ? p.cur : 0;
@@ -1068,10 +1075,31 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     if (l.cat === 'bbc') { const tb = E('div', 'tense-card sd-tf sd-free-tf'); wrap.appendChild(tb); const rd = () => renderTF(tb, l, rd); rd(); }
     const add = E('div', 'tense-card sd-free-add');
     add.appendChild(E('div', 'vc-q-label', 'Muốn luyện từng câu và được chấm điểm?'));
-    add.appendChild(E('p', 'sd-create-p', 'Dán bản chép lời có mốc thời gian của video này (trên YouTube: bấm "…thêm" dưới video → "Hiện bản chép lời" → bôi đen toàn bộ rồi sao chép). App sẽ chia thành từng câu, mỗi câu phát đúng đoạn video thật; chạm vào câu nào trong danh sách là phát lại đúng đoạn đó, và có Quiz cùng bài True/False nghe theo câu.'));
-    const ta = E('textarea', 'sd-create-text'); ta.rows = 6; ta.placeholder = '0:00\nHello and welcome to…\n0:04\nToday we are talking about…';
+    add.appendChild(E('p', 'sd-create-p', 'Thêm bản chép lời của video (làm một lần, app lưu lại) để có chữ chạy theo từng câu, Chính tả, Quiz và True/False.'));
+    // v189: dán nhanh — mở đúng video trên YouTube, sao chép bản chép lời, quay lại bấm một nút
+    const quick = E('div', 'sd-quick');
+    const st1 = E('a', 'btn-ghost sd-q-open', '① Mở video trên YouTube ↗'); st1.href = 'https://www.youtube.com/watch?v=' + l.yt; st1.target = '_blank'; st1.rel = 'noopener';
+    const st2 = E('button', 'btn-primary sd-q-paste', '② Dán bản chép lời & tạo câu'); st2.type = 'button';
+    quick.appendChild(st1); quick.appendChild(st2);
+    add.appendChild(quick);
+    const how = E('details', 'sd-q-how');
+    how.appendChild(E('summary', null, 'Cách sao chép bản chép lời trên YouTube'));
+    const ol = E('ol', 'sd-q-steps');
+    [['Điện thoại (app YouTube)', 'Chạm vào phần mô tả dưới tên video → kéo xuống, chạm “Hiện bản chép lời” → chạm ⋮ ở góc khung, chọn ngôn ngữ English nếu có. App YouTube trên điện thoại chưa cho sao chép cả khung, nên dễ nhất là mở bằng Safari/Chrome ở chế độ máy tính (Yêu cầu trang web cho máy tính).'],
+     ['Máy tính hoặc chế độ máy tính', 'Bấm “…thêm” ở phần mô tả → “Hiện bản chép lời” → giữ nguyên mốc thời gian → bôi đen từ dòng đầu đến dòng cuối trong khung, sao chép.'],
+     ['Quay lại app', 'Bấm nút ② ở trên. Nếu trình duyệt không cho đọc bộ nhớ tạm, chạm vào ô bên dưới, dán, rồi bấm “Tạo câu”.']].forEach(([h, t]) => { const li = E('li'); li.appendChild(E('b', null, h + ': ')); li.appendChild(document.createTextNode(t)); ol.appendChild(li); });
+    how.appendChild(ol); add.appendChild(how);
+    const ta = E('textarea', 'sd-create-text'); ta.rows = 4; ta.placeholder = '0:00\nHello and welcome to…\n0:04\nToday we are talking about…';
     const msg = E('div', 'sd-create-msg');
-    const go = E('button', 'btn-primary', 'Tạo câu từ bản chép lời');
+    const go = E('button', 'btn-ghost', 'Tạo câu từ bản chép lời');
+    st2.addEventListener('click', async () => {
+      msg.textContent = '';
+      let txt = '';
+      try { if (navigator.clipboard && navigator.clipboard.readText) txt = await navigator.clipboard.readText(); } catch (e) { txt = ''; }
+      if (!txt.trim()) { msg.textContent = 'Trình duyệt chưa cho đọc bộ nhớ tạm. Chạm vào ô bên dưới, chọn Dán, rồi bấm “Tạo câu từ bản chép lời”.'; try { ta.focus(); ta.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (e) {} return; }
+      ta.value = txt; go.click();
+    });
+    ta.addEventListener('paste', () => setTimeout(() => { if (ytParse(ta.value)) go.click(); }, 50));   // dán xong là tự tạo câu
     go.addEventListener('click', () => {
       const r = ytParse(ta.value);
       if (!r) { msg.textContent = 'Chưa thấy mốc thời gian (dạng 0:05). Hãy sao chép bản chép lời kèm mốc thời gian.'; return; }
