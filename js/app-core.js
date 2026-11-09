@@ -307,11 +307,18 @@ if ('speechSynthesis' in window) {
    - keep online voices alive past Chrome's ~15 s cut-off */
 const TTS = { keep: null, timer: 0, ka: 0, watch: 0, stuck: 0, last: null, micEnd: 0 };
 // v142: micro vừa tắt → iPhone / Windows cần một nhịp để chuyển âm thanh từ "ghi âm" về "phát" (nếu không tiếng đọc bị vấp, nhỏ hoặc mất chữ đầu)
-function ttsMicEnded() { TTS.micEnd = Date.now(); audioMode('playback'); }
+function ttsMicEnded() { TTS.micEnd = Date.now(); audioMode('auto'); }
 /* v179: iPhone (Safari 16.4+) — khi micro mở, máy chuyển sang chế độ "gọi thoại": tiếng phát ra nhỏ hẳn, có khi ra loa trong.
    Trước đây app không chuyển lại, nên sau khi dùng micro tiếng lúc to lúc nhỏ. Giờ: mở micro → "play-and-record", tắt micro → "playback". */
 function audioMode(m) { try { const s = navigator.audioSession; if (s && s.type !== m) s.type = m; } catch (e) {} }
-function micOpening() { audioMode('play-and-record'); }
+/* v192: lỗi "lần đầu thu tốt, lần 2–3 không thu": sau lần nói đầu app chuyển iPhone sang "playback" (chế độ chỉ phát, không cho thu),
+   rồi ngay trước lần nói sau mới chuyển sang "play-and-record". iPhone đổi chế độ không kịp, micro mở nhưng thu im lặng.
+   Giờ: luôn để "auto" (iPhone tự chọn: đang thu thì vào chế độ thu, thu xong tự về phát bình thường), không còn đổi qua lại.
+   Nếu trước đó đang ở "playback" (do phát âm mẫu IPA) thì đổi về "auto" và trả về số ms nên đợi trước khi mở micro. */
+function micOpening() {
+  try { const s = navigator.audioSession; if (s && s.type !== 'auto') { s.type = 'auto'; return TTS_IOS ? 350 : 0; } } catch (e) {}
+  return 0;
+}
 // v142: tốc độ quá chậm làm giọng máy bị kéo dài, rè và giật → giữ trong khoảng nghe tự nhiên (0.5 → 0.72, 0.8 → 0.87)
 function ttsRate(r) { r = r || 0.9; return r >= 0.9 ? r : Math.max(0.68, 0.72 + (r - 0.5) * 0.5); }
 const TTS_IOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -2724,7 +2731,7 @@ async function prToggleRecord(target, btn, out) {
     out.className = 'pr-rec-out warn'; out.textContent = 'Trình duyệt này chưa hỗ trợ ghi âm.'; return;
   }
   let stream;
-  prRecOpening = true; micOpening();
+  prRecOpening = true; { const d = micOpening(); if (d) await new Promise(r => setTimeout(r, d)); }
   try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
   catch (e) {
     prRecOpening = false; ttsMicEnded();
@@ -2768,7 +2775,7 @@ async function prToggleRecord(target, btn, out) {
 
 // v178: rời app (chuyển app khác, khoá màn hình) → tắt micro ngay, không để micro mở ngầm
 document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState !== 'hidden') { if (!prRecog && !prRec) audioMode('playback'); return; }
+  if (document.visibilityState !== 'hidden') return;
   try { if (prRecog) prRecog.abort(); } catch (e) {}
   try { if (prRec && prRec.state !== 'inactive') prRec.stop(); } catch (e) {}
 });
@@ -3008,7 +3015,7 @@ function cardFold(card, key) {
 const IPA_GROUPS = [
   { id: 'mono', title: 'Nguyên âm đơn', sub: 'Xếp theo cặp ngắn – dài' },
   { id: 'diph', title: 'Nguyên âm đôi', sub: 'Trượt từ âm đầu sang âm sau' },
-  { id: 'cons', title: 'Phụ âm', sub: 'Hàng trên xếp theo cặp vô thanh – hữu thanh' }
+  { id: 'cons', title: 'Phụ âm', sub: 'Xếp theo cặp vô thanh – hữu thanh · bấm nghe: giọng đọc ghép với /ɑː/ (pah, bah…)' }
 ];
 const IPA_FILTER_KEY = 'hoc-tieng-anh-ipa-filter';
 let ipaFilter = 'all';
@@ -3320,8 +3327,20 @@ const IPA_SAY = {
   'iː': 'ee', 'e': 'eh', 'uː': 'ooh', 'ɜː': 'er', 'ə': 'uh', 'ɔː': 'awe', 'ɑː': 'ah',
   'eɪ': 'ay', 'aɪ': 'eye', 'ɔɪ': 'oy', 'aʊ': 'ow', 'əʊ': 'oh', 'ɪə': 'ear', 'eə': 'air'
 };
+/* v194: phụ âm do máy tự dựng nghe vẫn "máy". Giọng đọc có sẵn trong điện thoại (iPhone: Samantha, Ava…) là giọng người thật
+   được ghi sẵn, nên phụ âm giờ được đọc bằng giọng đó, ghép với nguyên âm /ɑː/ như giáo viên vẫn đọc mẫu ("pah", "bah"…).
+   Âm không đứng đầu được (/ŋ/, /ʒ/) đọc qua âm tiết có chứa nó. */
+const IPA_CONS_SAY = {
+  p: 'pah', b: 'bah', t: 'tah', d: 'dah', k: 'kah', 'ɡ': 'gah', f: 'fah', v: 'vah', 'θ': 'thaw', 'ð': 'the',
+  s: 'sah', z: 'zah', 'ʃ': 'shah', 'ʒ': 'azure', 'tʃ': 'chah', 'dʒ': 'jah', m: 'mah', n: 'nah', 'ŋ': 'sing',
+  h: 'hah', l: 'lah', r: 'rah', w: 'wah', j: 'yah'
+};
 function ipaSoundOrSay(sym) {
   try { if (typeof ipaPlayRec === 'function' && ipaPlayRec(sym)) return; } catch (e) {}   /* lớp 1: bản ghi giọng người (nếu có) */
+  if (IPA_CONS_SAY[sym] && 'speechSynthesis' in window && (typeof ttsVoices !== 'function' || ttsVoices().length)) {   /* lớp 2: phụ âm → giọng đọc của máy */
+    const w = IPA_CONS_SAY[sym];
+    prSay(w + '. ' + w + '.', 0.62); return;
+  }
   ipaUnlock();
   try { if (ipaPlayWav(sym)) return; } catch (e) {}     /* iPhone + mọi máy: phát file WAV tự tạo */
   try { if (ipaPlaySound(sym)) return; } catch (e) {}   /* dự phòng: Web Audio trực tiếp */
@@ -3368,6 +3387,26 @@ const IPA_CONS_SPEC = {
   'j':  { t: 'glide', from: [285, 2250, 2890], to: [550, 1450, 2500] }
 };
 
+/* v193: điểm bắt đầu formant [F1, F2, F3] khi phụ âm chuyển sang nguyên âm /ɑː/ (giọng nam) */
+const IPA_LOCUS = {
+  p: [250, 800, 2100], b: [250, 800, 2100], m: [250, 850, 2100], f: [300, 1000, 2200], v: [300, 1000, 2200],
+  θ: [300, 1450, 2600], ð: [300, 1450, 2600], t: [250, 1750, 2650], d: [250, 1750, 2650], n: [250, 1700, 2600],
+  s: [300, 1700, 2650], z: [300, 1700, 2650], l: [360, 1200, 2800], ʃ: [300, 1950, 2500], ʒ: [300, 1950, 2500],
+  tʃ: [300, 1950, 2500], dʒ: [300, 1950, 2500], j: [280, 2200, 2900], k: [280, 1500, 1750], ɡ: [280, 1500, 1750],
+  ŋ: [280, 1500, 1800], r: [330, 1050, 1600], w: [300, 700, 2200], h: [680, 1080, 2540]
+};
+/* v193: hình phổ tiếng xát — chuỗi bộ lọc [loại, tần số, Q, gain] */
+const IPA_FRIC_SHAPE = {
+  s: { amp: 0.7, f: [['highpass', 3800, 0.7], ['peaking', 6200, 1.6, 9], ['lowpass', 11000, 0.7]] },
+  z: { amp: 0.55, f: [['highpass', 3800, 0.7], ['peaking', 6200, 1.6, 9], ['lowpass', 11000, 0.7]] },
+  'ʃ': { amp: 0.8, f: [['highpass', 1800, 0.7], ['peaking', 2900, 1.3, 10], ['lowpass', 7000, 0.7]] },
+  'ʒ': { amp: 0.62, f: [['highpass', 1800, 0.7], ['peaking', 2900, 1.3, 10], ['lowpass', 7000, 0.7]] },
+  f: { amp: 0.42, f: [['highpass', 1100, 0.6], ['lowpass', 8500, 0.6]] },
+  v: { amp: 0.3, f: [['highpass', 1100, 0.6], ['lowpass', 8500, 0.6]] },
+  'θ': { amp: 0.36, f: [['highpass', 1500, 0.6], ['peaking', 5500, 0.8, 3], ['lowpass', 9500, 0.6]] },
+  'ð': { amp: 0.26, f: [['highpass', 1500, 0.6], ['peaking', 5500, 0.8, 3], ['lowpass', 9500, 0.6]] },
+  h: { amp: 0.45, f: [['bandpass', 1200, 0.5], ['lowpass', 4000, 0.6]] }
+};
 let ipaCtx = null;
 function ipaAC() {
   if (!ipaCtx) {
@@ -3399,7 +3438,10 @@ function ipaVoiceSrc(ctx, t0, t1, f0) {
   o.frequency.setValueAtTime(f * 1.07, t0);
   o.frequency.linearRampToValueAtTime(f * 0.93, t1);
   o.start(t0); o.stop(t1 + 0.02);
-  return o;
+  // v193: bớt tiếng "rè" kim loại ở dải cao của giọng máy → nghe tròn, gần giọng người hơn
+  const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 3800; lp.Q.value = 0.5;
+  o.connect(lp);
+  return lp;
 }
 function ipaNoiseSrc(ctx, t0, t1) {
   if (!ctx._ipaNoise) ctx._ipaNoise = ipaNoiseBuffer(ctx);
@@ -3483,7 +3525,7 @@ function ipaBuild(ctx, sym, t0) {
       ap.type = 'bandpass'; ap.frequency.value = spec.burst[0] * 0.62; ap.Q.value = 0.7; ap.connect(aenv);
       ipaNoiseSrc(ctx, bt, at).connect(ap);
       end = at;
-    } else {                                  // âm hữu thanh: ngân rất nhẹ sau khi bật
+    } else if (!spec.noTail) {                // âm hữu thanh: ngân rất nhẹ sau khi bật
       const mt = bt + 0.08;
       const menv = ipaEnv(ctx, bt, mt, 0.22, 0.01, 0.05); menv.connect(out);
       const fm = ipaFormants(ctx, menv, [400, 1200, 2400], bt, mt);
@@ -3492,22 +3534,101 @@ function ipaBuild(ctx, sym, t0) {
     }
     return end;
   };
-  if (C && C.t === 'stop') return mkStop(C, t0);
-  if (C && C.t === 'fric') return mkFric(C, t0, 0.34);
-  if (C && C.t === 'affr') {
-    const t1 = mkStop(Object.assign({}, IPA_CONS_SPEC[C.stop], { asp: 0, voiced: IPA_CONS_SPEC[C.stop].voiced }), t0);
-    return mkFric(IPA_CONS_SPEC[C.fric], t1, 0.24);
-  }
-  if (C && C.t === 'nasal') {
-    const t1 = t0 + 0.36;
-    const env = ipaEnv(ctx, t0, t1, 0.85, 0.04, 0.09); env.connect(out);
-    const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 900; lp.Q.value = 0.7; lp.connect(env);
-    const fm = ipaFormants(ctx, lp, C.f, t0, t1);
-    ipaVoiceSrc(ctx, t0, t1, 112).connect(fm);
+  /* v193: phụ âm đứng một mình rất khó nghe ra (nhất là âm bật p, t, k: chỉ là một tiếng "tách").
+     Tai người nhận ra phụ âm chủ yếu nhờ đoạn chuyển sang nguyên âm phía sau. Vì vậy mỗi phụ âm phát 2 lần:
+     âm đứng riêng → nghỉ ngắn → ghép với nguyên âm /ɑː/ ("pa", "ba", "sa"…), có đoạn chuyển formant như giọng thật. */
+  const VA = IPA_FMT['ɑː'];
+  const mkTrans = (from, t, dur, amp, tr, f0) => {
+    const t1 = t + dur;
+    const env = ipaEnv(ctx, t, t1, amp, 0.012, 0.09); env.connect(out);
+    const inp = ctx.createGain();
+    const bw = [110, 105, 135], gn = [1, 0.72, 0.5];
+    for (let i = 0; i < 3; i++) {
+      const bp = ctx.createBiquadFilter(); bp.type = 'bandpass';
+      bp.frequency.setValueAtTime(from[i], t); bp.frequency.linearRampToValueAtTime(VA[i], t + tr);
+      bp.Q.value = VA[i] / bw[i];
+      const g = ctx.createGain(); g.gain.value = gn[i]; inp.connect(bp); bp.connect(g); g.connect(env);
+    }
+    ipaVoiceSrc(ctx, t, t1, f0 || 108).connect(inp);
     return t1;
+  };
+  const mkFric2 = (sym2, t, dur, amp) => {   // tiếng xát có phổ gần giọng thật hơn (nhiều bộ lọc thay vì một)
+    const sp = IPA_CONS_SPEC[sym2], FS = IPA_FRIC_SHAPE[sym2];
+    if (!FS) return mkFric(sp, t, dur);
+    const t1 = t + dur;
+    const env = ipaEnv(ctx, t, t1, (amp || 1) * FS.amp, 0.035, 0.06); env.connect(out);
+    let node = env;
+    FS.f.forEach(([type, fr, q, gain]) => { const b = ctx.createBiquadFilter(); b.type = type; b.frequency.value = fr; b.Q.value = q; if (gain) b.gain.value = gain; b.connect(node); node = b; });
+    ipaNoiseSrc(ctx, t, t1).connect(node);
+    if (sp.voiced) {                          // âm hữu thanh: dây thanh rung rõ (trước đây quá nhỏ nên v, z, ð, ʒ nghe như f, s, θ, ʃ)
+      const venv = ipaEnv(ctx, t, t1, 0.2, 0.03, 0.06); venv.connect(out);
+      const fm = ipaFormants(ctx, venv, [260, 1300, 2400], t, t1);
+      ipaVoiceSrc(ctx, t, t1, 112).connect(fm);
+    }
+    return t1;
+  };
+  const LOC = IPA_LOCUS[sym];
+  const isolated = () => {
+    if (C.t === 'stop') return mkStop(C, t0);
+    if (C.t === 'fric') return mkFric2(sym, t0, 0.34);
+    if (C.t === 'affr') {
+      const t1 = mkStop(Object.assign({}, IPA_CONS_SPEC[C.stop], { asp: 0, voiced: IPA_CONS_SPEC[C.stop].voiced }), t0);
+      return mkFric2(C.fric, t1, 0.22);
+    }
+    if (C.t === 'nasal') {
+      const t1 = t0 + 0.36;
+      const env = ipaEnv(ctx, t0, t1, 0.85, 0.04, 0.09); env.connect(out);
+      const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 900; lp.Q.value = 0.7; lp.connect(env);
+      const fm = ipaFormants(ctx, lp, C.f, t0, t1);
+      ipaVoiceSrc(ctx, t0, t1, 112).connect(fm);
+      return t1;
+    }
+    if (C.t === 'glide') return mkVowel(C.from, 0.30, C.to);
+    return mkVowel(C.f, C.dur);
+  };
+  const syllable = t => {                    // phụ âm + /ɑː/
+    if (C.t === 'stop' || C.t === 'affr') {
+      const st = C.t === 'stop' ? C : IPA_CONS_SPEC[C.stop];
+      let e = mkStop(Object.assign({}, st, { asp: 0, noTail: true }), t);
+      if (C.t === 'affr') e = mkFric2(C.fric, e - 0.06, 0.12, 0.8);
+      if (!st.voiced) {                       // hơi bật (aspiration) mang màu của nguyên âm sắp tới
+        const at = e + 0.065;
+        const aenv = ipaEnv(ctx, e - 0.01, at, 0.28, 0.008, 0.02); aenv.connect(out);
+        const fm = ipaFormants(ctx, aenv, LOC, e - 0.01, at, VA);
+        ipaNoiseSrc(ctx, e - 0.01, at).connect(fm);
+        e = at;
+      }
+      return mkTrans(LOC, e - 0.005, 0.32, 0.9, 0.05);
+    }
+    if (C.t === 'fric') {
+      if (sym === 'h') {                     // h = hơi thở mang sẵn hình miệng của nguyên âm
+        const t1 = t + 0.13;
+        const env = ipaEnv(ctx, t, t1, 0.5, 0.03, 0.02); env.connect(out);
+        const fm = ipaFormants(ctx, env, VA, t, t1);
+        ipaNoiseSrc(ctx, t, t1).connect(fm);
+        return mkTrans(VA, t1 - 0.01, 0.32, 0.9, 0.01);
+      }
+      const e = mkFric2(sym, t, 0.17, 0.85);
+      return mkTrans(LOC, e - 0.03, 0.32, 0.9, 0.06);
+    }
+    if (C.t === 'nasal') {
+      const t1 = t + 0.11;
+      const env = ipaEnv(ctx, t, t1, 0.8, 0.03, 0.015); env.connect(out);
+      const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 900; lp.Q.value = 0.7; lp.connect(env);
+      ipaVoiceSrc(ctx, t, t1, 110).connect(ipaFormants(ctx, lp, C.f, t, t1));
+      return mkTrans(LOC, t1 - 0.01, 0.32, 0.9, 0.045);
+    }
+    // l, r, w, j: giữ vị trí lưỡi/môi một chút rồi lướt sang nguyên âm
+    const hold = sym === 'r' ? 0.09 : 0.07;
+    const t1 = t + hold;
+    const env = ipaEnv(ctx, t, t1 + 0.02, 0.8, 0.03, 0.02); env.connect(out);
+    ipaVoiceSrc(ctx, t, t1 + 0.02, 110).connect(ipaFormants(ctx, env, LOC, t, t1 + 0.02));
+    return mkTrans(LOC, t1, 0.34, 0.9, sym === 'r' || sym === 'w' ? 0.11 : 0.08);
+  };
+  if (C && C.t !== 'vowel' || (C && (sym === 'l' || sym === 'r'))) {
+    const e = isolated();
+    return LOC ? syllable(e + 0.3) : e;
   }
-  if (C && C.t === 'glide') return mkVowel(C.from, 0.30, C.to);
-  if (C && C.t === 'vowel') return mkVowel(C.f, C.dur);
   if (D && IPA_FMT[D[0]] && IPA_FMT[D[1]]) return mkVowel(IPA_FMT[D[0]], 0.46, IPA_FMT[D[1]]);
   if (V) return mkVowel(V, IPA_VLONG[sym] ? 0.46 : 0.26);
   return t0;
@@ -3538,7 +3659,7 @@ function ipaAudioEl() {
 function ipaUnlock() {
   if (ipaUnlocked) return;
   ipaUnlocked = true;
-  try { if (navigator.audioSession && navigator.audioSession.type !== 'play-and-record') navigator.audioSession.type = 'playback'; } catch (e) {}
+  // v192: không ép iPhone sang "playback" nữa (làm micro thu im lặng ở lần nói sau)
   try {
     const a = ipaAudioEl();
     a.src = IPA_SILENT_WAV;
@@ -3579,7 +3700,7 @@ function ipaRender(sym) {
   const OC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
   if (!OC || !window.URL || !URL.createObjectURL) return Promise.reject(new Error('no offline'));
   let oc = null;
-  for (const rate of [44100, 48000]) { try { oc = new OC(1, Math.ceil(rate * 1.3), rate); break; } catch (e) {} }
+  for (const rate of [44100, 48000]) { try { oc = new OC(1, Math.ceil(rate * 2.2), rate); break; } catch (e) {} }
   if (!oc) return Promise.reject(new Error('no offline'));
   let end;
   try { end = ipaBuild(oc, sym, 0.02); } catch (e) { return Promise.reject(e); }
@@ -3611,12 +3732,51 @@ function ipaPlayWav(sym) {
 }
 /* dựng sẵn cả 44 âm khi máy rảnh để bấm là nghe ngay */
 function ipaPrerender() {
-  const list = IPA_SOUNDS.map(x => x[0]);
+  const list = IPA_SOUNDS.map(x => x[0]).filter(x => !IPA_CONS_SAY[x]);
   let i = 0;
   const step = () => { if (i >= list.length) return; ipaRender(list[i++]).catch(() => {}).then(() => setTimeout(step, 30)); };
   setTimeout(step, 400);
 }
 
+/* v195: video giáo viên đọc mẫu — loạt "The Sounds of English" của BBC Learning English trên YouTube (nhúng từ kênh gốc).
+   IPA_VID_AT: giây bắt đầu – kết thúc của đoạn giáo viên đọc âm (điền dần; chưa có thì phát từ đầu). */
+const IPA_VID = {
+  'ɪ': 'TNFKG0yvDx4', 'iː': 'RZmGzSb-6OM', 'ʊ': 'eJ7dM_LU9t4', 'uː': 'mnKEGLuEzV4', 'e': 'hLN1cdSTDo8', 'æ': 'qVhaIHk88a8',
+  'ə': 'wg0P0oYkniE', 'ɜː': 'zSJJWHymEPw', 'ɒ': 'MAk-XtHsyzM', 'ɔː': 'KHllC40_u1Q', 'ʌ': 'PZwKFFp7V50', 'ɑː': 'uDHMuMQdBNw',
+  'eɪ': '5FMPlqlFt9g', 'aɪ': 'Hb8COxAtl14', 'ɔɪ': 'lFRrEI85IcM', 'aʊ': '9WDnVMQIaTs', 'əʊ': 'r1BRCG0P9C8', 'ɪə': 'vC0h4S0YPJc',
+  'eə': '0J7-5maJJIk', 'ʊə': 'nHSqluHrD-U',
+  p: 'AZRREr7DqqM', b: 'yP7aCKO6bTE', t: '0T1QYByMxrs', d: 'qA5ZYC89oso', k: 'd1jyIpAmLe8', 'ɡ': '9eAqj9EfeK0',
+  f: 'vE12RFyH-hY', v: 'mO04G0v5a_c', 'θ': 'b4Aj3k65HSo', 'ð': 'tu1t3Fn5Lw8', s: 'QtH3vRXmvvo', z: 'o1ZvmX80t7Q',
+  'ʃ': 'NF92RdZC6wE', 'ʒ': 'bTxeAiBF61I', 'tʃ': 'PykxZ5kkrjs', 'dʒ': '0IeQmGdo7gQ', m: '0Te4Us8Tsv8', n: 'qkgucMjv4T0',
+  'ŋ': 'rgWse3tloTw', h: 'DM_gN6imoC8', l: 'CwWLgmMk0Z0', r: 'Lxuo14hjP_8', w: 'HzhPB1hXG-o', j: '_Fi9E6Yw-qg'
+};
+const IPA_VID_AT = {};   // ví dụ: 'θ': [12, 20]
+function ipaVideoEl(sym) {
+  const id = IPA_VID[sym]; if (!id) return null;
+  const sec = prEl('div', 'ipa-d-sec ipa-vid');
+  sec.appendChild(prEl('div', 'ipa-d-h', '🎬 Xem giáo viên đọc mẫu /' + sym + '/'));
+  const box = prEl('button', 'ipa-vid-box'); box.type = 'button'; box.setAttribute('aria-label', 'Phát video âm /' + sym + '/');
+  const img = document.createElement('img'); img.alt = ''; img.loading = 'lazy'; img.onerror = () => img.remove(); img.src = 'https://i.ytimg.com/vi/' + id + '/hqdefault.jpg';
+  box.appendChild(img); box.appendChild(prEl('span', 'ipa-vid-play', '▶'));
+  const at = IPA_VID_AT[sym];
+  box.appendChild(prEl('span', 'ipa-vid-len', at ? Math.round(at[1] - at[0]) + ' giây' : 'Video'));
+  box.addEventListener('click', () => {
+    if (!navigator.onLine) { note.textContent = 'Cần có mạng để xem video.'; return; }
+    try { prSeqStop(); speechSynthesis.cancel(); } catch (e) {}
+    const q = 'autoplay=1&playsinline=1&rel=0&modestbranding=1' + (at ? '&start=' + at[0] + '&end=' + at[1] : '');
+    const f = document.createElement('iframe');
+    f.className = 'ipa-vid-frame'; f.src = 'https://www.youtube-nocookie.com/embed/' + id + '?' + q;
+    f.title = 'Video phát âm /' + sym + '/'; f.allow = 'autoplay; encrypted-media; picture-in-picture'; f.allowFullscreen = true;
+    f.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+    box.replaceWith(f);
+  });
+  sec.appendChild(box);
+  const note = prEl('div', 'ipa-vid-src');
+  note.appendChild(document.createTextNode('Nguồn: BBC Learning English · '));
+  const a = document.createElement('a'); a.href = 'https://www.youtube.com/watch?v=' + id; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'xem trên YouTube ↗';
+  note.appendChild(a); sec.appendChild(note);
+  return sec;
+}
 function ipaShow(sym, silent) {
   const sh = document.getElementById('ipasheet');
   const idx = IPA_SOUNDS.findIndex(s => s[0] === sym);
@@ -3657,6 +3817,7 @@ function ipaShow(sym, silent) {
   top.appendChild(meta);
   body.appendChild(top);
   ipaStepListen(s, body);
+  { const vd = ipaVideoEl(s[0]); if (vd) body.appendChild(vd); }
   const how = prEl('div', 'ipa-d-sec');
   const hh = prEl('div', 'ipa-d-h', '👄 Khẩu hình: cách đặt lưỡi, môi và luồng hơi');
   how.appendChild(hh);
@@ -4746,7 +4907,7 @@ function ipaStepListen(s, body) {
   const words = ipaWords(sym);
   const c = prEl('button', null, '💬 Nghe trong từ “' + words[0] + '”'); c.addEventListener('click', () => { prSay(words[0], 0.6); ipaMark(sym, 'pr'); }); row.appendChild(c);
   const d = prEl('button', null, '🔁 Âm → từ, 3 lần');
-  d.addEventListener('click', () => { let n = 0; const go = () => { if (n++ >= 3) return; ipaSoundOrSay(sym); setTimeout(() => { const u = prSay(words[0], 0.7); setTimeout(go, 1800); }, 1100); }; go(); ipaMark(sym, 'pr'); });
+  d.addEventListener('click', () => { let n = 0; const go = () => { if (n++ >= 3) return; ipaSoundOrSay(sym); const cs = !!IPA_CONS_SAY[sym]; setTimeout(() => { const u = prSay(words[0], 0.7); setTimeout(go, 1800); }, cs ? 2300 : 1100); }; go(); ipaMark(sym, 'pr'); });
   row.appendChild(d);
   sec.appendChild(row);
   sec.appendChild(prEl('div', 'p2-note', ipaRec[sym]
@@ -7852,8 +8013,9 @@ function srFree(o) {
   rec.onend = () => end();
   // mở micro mà chưa nói gì trong 8 giây → dừng
   idle = setTimeout(() => { if (!text()) { err = 'no-speech'; end(); } }, 8000);
-  micOpening();
-  try { rec.start(); } catch (e) { err = 'start'; end(); return null; }
+  const d = micOpening();
+  if (d) setTimeout(() => { if (!done) try { rec.start(); } catch (e) { err = 'start'; end(); } }, d);
+  else { try { rec.start(); } catch (e) { err = 'start'; end(); return null; } }
   return { stop: () => { if (!done) { clearTimeout(quiet); try { rec.stop(); } catch (e) {} setTimeout(end, 700); } }, abort: () => { err = ''; fin = tmp = ''; end(); } };
 }
 
@@ -7930,7 +8092,7 @@ function vspListen(target, onDone, onPartial, opts) {
   r.onaudiostart = ready; r.onstart = () => setTimeout(ready, 120);
   cap = setTimeout(() => { if (lastAlts) finish(scoreAlts(lastAlts), null); else { try { r.stop(); } catch (e) {} } }, nW <= 2 ? 7000 : 15000);
   // giọng mẫu đang đọc → chờ nó dừng hẳn rồi mới mở micro (tránh tiếng "bụp" và micro thu lại chính giọng máy)
-  const open = () => { if (done) return; micOpening(); try { r.start(); } catch (e) { finish(null, 'Không mở được micro. Hãy thử lại.'); } };
+  const open = () => { if (done) return; const d = micOpening(); const go = () => { if (done) return; try { r.start(); } catch (e) { finish(null, 'Không mở được micro. Hãy thử lại.'); } }; if (d) setTimeout(go, d); else go(); };
   if (wasTalking) setTimeout(open, TTS_IOS ? 250 : 150); else open();
 }
 

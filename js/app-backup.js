@@ -233,6 +233,14 @@
   const evSel = $('hs-every');
   if (evSel) { evSel.value = String(every()); evSel.addEventListener('change', () => { try { localStorage.setItem(EVK, evSel.value); } catch (e) {} say(+evSel.value ? `Sẽ nhắc tải file sao lưu nếu quá ${evSel.value} ngày chưa tải.` : 'Đã tắt nhắc sao lưu.', true); }); }
   window.hsSnapNow = () => autoSnap(true);
+  // v191: đăng xuất → xoá tiến độ của tài khoản khỏi máy (đã lưu trên tài khoản), kể cả bản sao tự động,
+  // để người dùng khác trên cùng máy bắt đầu sạch. Chỉ giữ vài cài đặt của máy.
+  const KEEP_ON_WIPE = new Set([P + 'voice', P + 'onboard', P + 'autofix-open', EVK]);
+  window.hsWipeAccountData = async () => {
+    keys().forEach(k => { if (!KEEP_ON_WIPE.has(k)) try { localStorage.removeItem(k); } catch (e) {} });
+    try { const db = await sdb(); const tx = db.transaction(['meta', 'data'], 'readwrite'); tx.objectStore('meta').clear(); tx.objectStore('data').clear(); await new Promise(r => { tx.oncomplete = r; tx.onerror = r; tx.onabort = r; }); } catch (e) {}
+    await new Promise(r => setTimeout(r, 700));   // đợi bản dự phòng IndexedDB ghi xong việc xoá
+  };
 
   $('hs-export').addEventListener('click', doExport);
   $('hs-import').addEventListener('click', () => { $('hs-file').value = ''; $('hs-file').click(); });

@@ -315,8 +315,9 @@ const FIREBASE_CONFIG = {
   const withAuth = fn => async () => { say(''); try { await loadFirebase(); pendingSignin = true; await fn(); } catch (e) { pendingSignin = false; fail(e); } };
   $('acct-google').addEventListener('click', withAuth(() => auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())));
   const creds = () => [$('acct-email').value.trim(), $('acct-pass').value];
-  $('acct-form').addEventListener('submit', e => { e.preventDefault(); withAuth(() => auth.signInWithEmailAndPassword(...creds()))(); });
-  $('acct-signup').addEventListener('click', withAuth(() => auth.createUserWithEmailAndPassword(...creds())));
+  const credsOk = () => { const [e, p] = creds(); if (!e) { say('Nhập email trước nhé.'); return false; } if (!p) { say('Nhập mật khẩu trước nhé.'); return false; } return true; };
+  $('acct-form').addEventListener('submit', e => { e.preventDefault(); if (credsOk()) withAuth(() => auth.signInWithEmailAndPassword(...creds()))(); });
+  $('acct-signup').addEventListener('click', () => { if (credsOk()) withAuth(() => auth.createUserWithEmailAndPassword(...creds()))(); });
   $('acct-forgot').addEventListener('click', async () => {
     const email = $('acct-email').value.trim();
     if (!email) { say('Nhập email của bạn vào ô Email trước.'); return; }
@@ -344,8 +345,26 @@ const FIREBASE_CONFIG = {
       else fail(e);
     }
   });
+  // v191: đăng xuất = lưu nốt lên tài khoản rồi xoá tiến độ khỏi máy này (người khác dùng máy sẽ bắt đầu sạch).
+  // Chưa lưu được (mất mạng…) thì không đăng xuất, để không mất dữ liệu.
   $('acct-out-btn').addEventListener('click', async () => {
-    try { await syncNow('manual'); await auth.signOut(); say('Đã đăng xuất. Tiến độ vẫn còn trên máy này.', true); } catch (e) { fail(e); }
+    const b = $('acct-out-btn');
+    if (b.disabled) return;
+    b.disabled = true; const old = b.textContent; b.textContent = 'Đang lưu lên tài khoản…';
+    try {
+      await syncNow('manual');
+      for (let i = 0; i < 60 && syncing; i++) await new Promise(r => setTimeout(r, 250));   // đợi lần đồng bộ đang chạy
+      if (status !== 'ok') { say('Chưa lưu được tiến độ lên tài khoản (kiểm tra mạng), nên chưa đăng xuất để không mất dữ liệu. Thử lại khi có mạng nhé.'); return; }
+      await auth.signOut();
+      applying = true;
+      try { localStorage.removeItem(UIDK); localStorage.removeItem(BASEK); localStorage.removeItem(META); } catch (e) {}
+      applying = false;
+      b.textContent = 'Đang dọn máy…';
+      if (window.hsWipeAccountData) await window.hsWipeAccountData();
+      say('Đã đăng xuất và xoá tiến độ khỏi máy này. Đăng nhập lại là có lại toàn bộ.', true);
+      setTimeout(() => location.reload(), 900);
+    } catch (e) { fail(e); }
+    finally { b.disabled = false; b.textContent = old; }
   });
   // coming back to the app: pick up progress made on another device
   document.addEventListener('visibilitychange', () => {

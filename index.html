@@ -153,14 +153,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="app.css?h=00d05ea61b">
+<link rel="stylesheet" href="app.css?h=c0200c3adf">
 </head>
 <body>
 
 <header class="hero">
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v190</span>
+      <span class="hero-badge">EN ⇄ VI · v195</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice" id="voice-btn" aria-label="Chọn giọng đọc">🔊 <span class="hv-label">Giọng đọc</span></button>
@@ -494,7 +494,7 @@
         <button class="btn-primary" id="acct-sync">🔄 Đồng bộ ngay</button>
         <button class="btn-ghost" id="acct-out-btn">Đăng xuất</button>
       </div>
-      <p class="acct-note">Tiến độ được lưu trong tài khoản của bạn trên Firebase (Google). Chỉ bạn xem được. Đăng xuất thì tiến độ vẫn còn trên máy này.</p>
+      <p class="acct-note">Tiến độ được lưu trong tài khoản của bạn trên Firebase (Google). Chỉ bạn xem được. Khi đăng xuất, app lưu nốt tiến độ lên tài khoản rồi xoá khỏi máy này (để người khác dùng máy không thấy); đăng nhập lại là có lại toàn bộ.</p>
       <button class="acct-link acct-del" id="acct-del">Xoá tài khoản và dữ liệu đã lưu…</button>
     </div>
     <div class="hs-box" id="hs-box">
@@ -732,9 +732,9 @@
 </script>
 <script src="js/data-core.js?h=5c068bf2d4"></script>
 <script src="js/data-vocab.js?h=923ca16f1c"></script>
-<script src="js/app-core.js?h=6bbca83c94"></script>
+<script src="js/app-core.js?h=7f7c754598"></script>
 
-<script src="js/app-sync.js?h=a3bbda8ea1"></script>
+<script src="js/app-sync.js?h=47d162bfe3"></script>
 
 <script src="js/app-feedback.js?h=f1bd3f9e55"></script>
 
@@ -1056,6 +1056,6 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
 })();
 </script>
 <!-- tab-para: nạp khi mở tab -->
-<script src="js/app-backup.js?h=e98a7421e8"></script>
+<script src="js/app-backup.js?h=e3b8e1ef17"></script>
 </body>
 </html>
