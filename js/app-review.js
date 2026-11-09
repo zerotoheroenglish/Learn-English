@@ -303,10 +303,22 @@
       const d = dayNo(), r = act[d] || (act[d] = {});
       r[sk] = (r[sk] || 0) + (n || 1);
       const ks = Object.keys(act); if (ks.length > 200) ks.map(Number).sort((a, b) => a - b).slice(0, ks.length - 200).forEach(k => delete act[k]);
-      clearTimeout(pend); pend = setTimeout(() => { try { localStorage.setItem(AK, JSON.stringify(act)); } catch (e) {} }, 400);
+      clearTimeout(pend); pend = setTimeout(() => { pend = 0; try { localStorage.setItem(AK, JSON.stringify(act)); } catch (e) {} }, 400);
     } catch (e) {}
   };
-  window.addEventListener('pagehide', () => { try { localStorage.setItem(AK, JSON.stringify(act)); } catch (e) {} });
+  // v202: chỉ lưu khi có thay đổi chưa ghi (trước đây lúc đóng app luôn ghi bản trong bộ nhớ, có thể là bản cũ)
+  window.addEventListener('pagehide', () => { if (!pend) return; clearTimeout(pend); pend = 0; try { localStorage.setItem(AK, JSON.stringify(act)); } catch (e) {} });
+  // v202: nhận tiến độ từ máy khác → cập nhật luôn bản trong bộ nhớ, chuỗi ngày học hiện đúng ngay
+  const mxIn = (dst, src) => { Object.keys(src || {}).forEach(d => { const a = dst[d], b = src[d];
+    if (a == null) dst[d] = b;
+    else if (Array.isArray(a) && Array.isArray(b)) b.forEach((n, i) => { a[i] = Math.max(a[i] || 0, n || 0); });
+    else if (typeof a === 'object' && b && typeof b === 'object') Object.keys(b).forEach(k => { a[k] = Math.max(a[k] || 0, b[k] || 0); }); }); };
+  window.addEventListener('hta-synced', e => {
+    const ks = (e && e.detail) || [];
+    try { if (ks.includes('activity')) mxIn(act, JSON.parse(localStorage.getItem(AK) || '{}')); } catch (x) {}
+    try { if (ks.includes('vocab-log') && typeof vlog !== 'undefined') mxIn(vlog, JSON.parse(localStorage.getItem('hoc-tieng-anh-vocab-log') || '{}')); } catch (x) {}
+    try { if (window.__dashRender) window.__dashRender(); } catch (x) {}
+  });
 
   const page = document.getElementById('page-dash'), root = document.getElementById('db-root'), btn = document.getElementById('dash-btn');
   if (!page || !root) return;
@@ -733,6 +745,7 @@
     });
     return bar;
   }
+  window.__dashRender = () => render();
   function render() {
     root.innerHTML = '';
     root.appendChild(viewBar());

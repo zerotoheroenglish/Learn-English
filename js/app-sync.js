@@ -43,7 +43,8 @@ const FIREBASE_CONFIG = {
     if (!applying && this === window.localStorage && k in stale) {
       const mine = String(v), cur = this.getItem(k), was = stale[k];
       stale[k] = mine;                                   // màn hình giờ giữ đúng giá trị nó vừa ghi
-      if (cur != null && was != null && cur !== was) { try { v = merge3(was, mine, cur, 1, 0); } catch (e) {} }
+      if (cur != null && ADD.has(k.slice(PREFIX.length))) { try { v = addMerge(mine, cur); } catch (e) {} }
+      else if (cur != null && was != null && cur !== was) { try { v = merge3(was, mine, cur, 1, 0); } catch (e) {} }
     }
     const track = !applying && this === window.localStorage && tracked(k) && this.getItem(k) !== String(v);
     oSet.call(this, k, v);
@@ -68,6 +69,17 @@ const FIREBASE_CONFIG = {
   // keep everything the other device added, plus what this device added, minus what this device removed.
   const parse = v => { try { return JSON.parse(v); } catch (e) { return undefined; } };
   const isList = x => Array.isArray(x) && x.every(y => typeof y !== 'object');
+  /* v202: nhật ký theo ngày (hoạt động, ôn thẻ, từ vựng) chỉ có THÊM, không bao giờ bớt.
+     Gộp theo kiểu "lấy hết các ngày của cả hai máy, mỗi ô lấy số lớn hơn" — không bao giờ để một máy
+     xoá ngày học của máy kia (lỗi làm chuỗi ngày học trên máy tính ít hơn điện thoại). */
+  const ADD = new Set(['activity', 'sr-log', 'vocab-log']);
+  function mx(x, y) {
+    if (typeof x === 'number' && typeof y === 'number') return Math.max(x, y);
+    if (Array.isArray(x) && Array.isArray(y)) { const n = Math.max(x.length, y.length), o = []; for (let i = 0; i < n; i++) o.push(i in x ? (i in y ? mx(x[i], y[i]) : x[i]) : y[i]); return o; }
+    if (x && y && typeof x === 'object' && typeof y === 'object') { const o = Object.assign({}, y); Object.keys(x).forEach(k => { o[k] = k in y ? mx(x[k], y[k]) : x[k]; }); return o; }
+    return x != null ? x : y;
+  }
+  const addMerge = (a, b) => { const A = parse(a), B = parse(b); return A && B && typeof A === 'object' && typeof B === 'object' ? JSON.stringify(mx(A, B)) : (a != null ? a : b); };
   function merge3(base, local, cloud, lt, ct) {
     const B = parse(base), L = parse(local), C = parse(cloud);
     if (isList(L) && isList(C)) {
@@ -176,7 +188,8 @@ const FIREBASE_CONFIG = {
           const lt = lTs[k] || 0, ct = cTs[k] || 0;
           let v, t;
           const bv = k in base ? base[k] : undefined;
-          if (otherUser) { v = cv === undefined ? null : cv; t = ct || now; }                      // another account on this device: use theirs
+          if (!otherUser && ADD.has(k) && lv != null && cv != null) { v = eq(lv, cv) ? lv : addMerge(lv, cv); t = eq(v, cv) ? ct : now; }
+          else if (otherUser) { v = cv === undefined ? null : cv; t = ct || now; }                      // another account on this device: use theirs
           else if (firstHere && lv != null && cv != null && lv !== cv) { v = union(lv, cv); t = now; }
           else if (lv === undefined) { v = cv; t = ct; }
           else if (cv === undefined) { v = lv; t = lt || now; }
@@ -216,7 +229,7 @@ const FIREBASE_CONFIG = {
       try { localStorage.setItem(UIDK, uid); if (merged) localStorage.setItem(BASEK, JSON.stringify(merged)); } catch (e) {}
       applying = false;
       lastSync = Date.now(); setStatus('ok');
-      if (changes.length) remoteChanged(reason, changes);
+      if (changes.length) { try { window.dispatchEvent(new CustomEvent('hta-synced', { detail: changes.map(c => c[0]) })); } catch (e) {} remoteChanged(reason, changes); }
     } catch (e) {
       applying = false;
       const big = e && (e.code === 'too-big' || (e.code === 'invalid-argument' && /size|maximum|bytes/i.test(e.message || '')));
