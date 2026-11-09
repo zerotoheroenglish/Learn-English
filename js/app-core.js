@@ -3015,7 +3015,7 @@ function cardFold(card, key) {
 const IPA_GROUPS = [
   { id: 'mono', title: 'Nguyên âm đơn', sub: 'Xếp theo cặp ngắn – dài' },
   { id: 'diph', title: 'Nguyên âm đôi', sub: 'Trượt từ âm đầu sang âm sau' },
-  { id: 'cons', title: 'Phụ âm', sub: 'Xếp theo cặp vô thanh – hữu thanh · bấm nghe: giọng đọc ghép với /ɑː/ (pah, bah…)' }
+  { id: 'cons', title: 'Phụ âm', sub: 'Hàng trên xếp theo cặp vô thanh – hữu thanh' }
 ];
 const IPA_FILTER_KEY = 'hoc-tieng-anh-ipa-filter';
 let ipaFilter = 'all';
@@ -3335,7 +3335,16 @@ const IPA_CONS_SAY = {
   s: 'sah', z: 'zah', 'ʃ': 'shah', 'ʒ': 'azure', 'tʃ': 'chah', 'dʒ': 'jah', m: 'mah', n: 'nah', 'ŋ': 'sing',
   h: 'hah', l: 'lah', r: 'rah', w: 'wah', j: 'yah'
 };
+/* v197: âm đã có video giáo viên đọc mẫu → không phát âm máy dựng / giọng máy nữa, bấm nghe là chạy video */
+function ipaVidPlay(sym) {
+  const box = document.querySelector('#ipasheet:not([hidden]) .ipa-vid-box');
+  if (!box || !IPA_VID[sym]) return false;
+  try { box.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (e) {}
+  box.click(); return true;
+}
 function ipaSoundOrSay(sym) {
+  if (IPA_VID[sym]) { ipaVidPlay(sym); return; }
+  try { if (typeof ipaVidStop === 'function') ipaVidStop(); } catch (e) {}   // v196: đang xem video mà bấm nghe âm → dừng video
   try { if (typeof ipaPlayRec === 'function' && ipaPlayRec(sym)) return; } catch (e) {}   /* lớp 1: bản ghi giọng người (nếu có) */
   if (IPA_CONS_SAY[sym] && 'speechSynthesis' in window && (typeof ttsVoices !== 'function' || ttsVoices().length)) {   /* lớp 2: phụ âm → giọng đọc của máy */
     const w = IPA_CONS_SAY[sym];
@@ -3732,7 +3741,7 @@ function ipaPlayWav(sym) {
 }
 /* dựng sẵn cả 44 âm khi máy rảnh để bấm là nghe ngay */
 function ipaPrerender() {
-  const list = IPA_SOUNDS.map(x => x[0]).filter(x => !IPA_CONS_SAY[x]);
+  const list = IPA_SOUNDS.map(x => x[0]).filter(x => !IPA_CONS_SAY[x] && !IPA_VID[x]);
   let i = 0;
   const step = () => { if (i >= list.length) return; ipaRender(list[i++]).catch(() => {}).then(() => setTimeout(step, 30)); };
   setTimeout(step, 400);
@@ -3768,6 +3777,7 @@ function ipaVideoEl(sym) {
     f.className = 'ipa-vid-frame'; f.src = 'https://www.youtube-nocookie.com/embed/' + id + '?' + q;
     f.title = 'Video phát âm /' + sym + '/'; f.allow = 'autoplay; encrypted-media; picture-in-picture'; f.allowFullscreen = true;
     f.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+    f.dataset.sym = sym;
     box.replaceWith(f);
   });
   sec.appendChild(box);
@@ -3789,7 +3799,7 @@ function ipaShow(sym, silent) {
   const symBtn = prEl('button', 'ipa-d-sym', '/' + s[0] + '/');
   symBtn.setAttribute('aria-label', 'Nghe âm /' + s[0] + '/');
   symBtn.title = 'Nghe âm /' + s[0] + '/';
-  symBtn.appendChild(prEl('span', 'ipa-say', '▶ nghe âm'));
+  symBtn.appendChild(prEl('span', 'ipa-say', IPA_VID[s[0]] ? '▶ xem video' : '▶ nghe âm'));
   symBtn.addEventListener('click', () => { prSeqStop(); ipaSoundOrSay(s[0]); });
   top.appendChild(symBtn);
   const meta = prEl('div', 'ipa-d-meta');
@@ -3912,11 +3922,25 @@ function ipaShow(sym, silent) {
   document.querySelectorAll('.vsheet:not([hidden])').forEach(x => { if (x !== sh) x.hidden = true; });
   sh.hidden = false; document.body.classList.add('vsheet-open');
   const p = sh.querySelector('.vsheet-panel'); if (p) p.scrollTop = 0;
-  if (!silent) ipaSoundOrSay(s[0]);
+  if (!silent && !IPA_VID[s[0]]) ipaSoundOrSay(s[0]);
+}
+/* v196: rời khỏi âm (đóng khung, chuyển tab, ẩn app) → dừng video ngay, trả lại ảnh xem trước */
+function ipaVidStop() {
+  document.querySelectorAll('.ipa-vid-frame').forEach(f => {
+    try { f.src = 'about:blank'; } catch (e) {}
+    const fresh = ipaVideoEl(f.dataset.sym || '');
+    const box = fresh && fresh.querySelector('.ipa-vid-box');
+    if (box) f.replaceWith(box); else f.remove();
+  });
 }
 (() => {
   const sh = document.getElementById('ipasheet');
   if (!sh) return;
+  try { new MutationObserver(() => { if (sh.hidden) ipaVidStop(); }).observe(sh, { attributes: true, attributeFilter: ['hidden'] }); } catch (e) {}
+  try { new MutationObserver(ipaVidStop).observe(document.body, { attributes: true, attributeFilter: ['data-grp', 'data-sec'] }); } catch (e) {}
+  document.addEventListener('click', e => { if (e.target.closest && e.target.closest('nav.tabbar button, .sec-bar .sec-chip')) ipaVidStop(); }, true);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') ipaVidStop(); });
+  window.addEventListener('pagehide', ipaVidStop);
   const close = () => { sh.hidden = true; document.body.classList.remove('vsheet-open'); };
   sh.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', close));
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && !sh.hidden) close(); });
@@ -4903,14 +4927,16 @@ function ipaStepListen(s, body) {
   sec.appendChild(prEl('div', 'ipa-d-h', 'Bước 1 · Nghe âm mẫu'));
   const row = prEl('div', 'pron-actions p2-layers');
   if (ipaRec[sym]) { const a = prEl('button', 'p2-l1', '🎙️ Bản ghi giọng người'); a.addEventListener('click', () => { ipaPlayRec(sym); ipaMark(sym, 'pr'); }); row.appendChild(a); }
-  const b = prEl('button', null, '🔊 Âm mô phỏng'); b.addEventListener('click', () => { ipaSim(sym); ipaMark(sym, 'pr'); }); row.appendChild(b);
+  const hasVid = !!IPA_VID[sym];
+  if (hasVid) { const b = prEl('button', 'p2-l1', '🎬 Xem video đọc mẫu'); b.addEventListener('click', () => { ipaVidPlay(sym); ipaMark(sym, 'pr'); }); row.appendChild(b); }
+  else { const b = prEl('button', null, '🔊 Âm mô phỏng'); b.addEventListener('click', () => { ipaSim(sym); ipaMark(sym, 'pr'); }); row.appendChild(b); }
   const words = ipaWords(sym);
   const c = prEl('button', null, '💬 Nghe trong từ “' + words[0] + '”'); c.addEventListener('click', () => { prSay(words[0], 0.6); ipaMark(sym, 'pr'); }); row.appendChild(c);
-  const d = prEl('button', null, '🔁 Âm → từ, 3 lần');
-  d.addEventListener('click', () => { let n = 0; const go = () => { if (n++ >= 3) return; ipaSoundOrSay(sym); const cs = !!IPA_CONS_SAY[sym]; setTimeout(() => { const u = prSay(words[0], 0.7); setTimeout(go, 1800); }, cs ? 2300 : 1100); }; go(); ipaMark(sym, 'pr'); });
+  const d = prEl('button', null, hasVid ? '🔁 Nghe từ ví dụ, 3 lần' : '🔁 Âm → từ, 3 lần');
+  d.addEventListener('click', () => { let n = 0; const go = () => { if (n++ >= 3) return; if (hasVid) { prSay(words[n - 1] || words[0], 0.7); setTimeout(go, 1600); return; } ipaSoundOrSay(sym); const cs = !!IPA_CONS_SAY[sym]; setTimeout(() => { const u = prSay(words[0], 0.7); setTimeout(go, 1800); }, cs ? 2300 : 1100); }; go(); ipaMark(sym, 'pr'); });
   row.appendChild(d);
   sec.appendChild(row);
-  sec.appendChild(prEl('div', 'p2-note', ipaRec[sym]
+  sec.appendChild(prEl('div', 'p2-note', hasVid ? 'Âm mẫu: xem giáo viên BBC đọc trong video bên dưới, chú ý khẩu hình. Từ ví dụ do giọng đọc của thiết bị phát.' : ipaRec[sym]
     ? 'Bản ghi là âm mẫu chính; âm mô phỏng tạo bằng máy giúp bạn hình dung đặc điểm của âm; từ ví dụ do giọng đọc của thiết bị phát.'
     : 'Âm mô phỏng được tạo bằng máy (tần số cộng hưởng) để bạn hình dung đặc điểm của âm, không thay thế giọng người. Hãy nghe thêm âm này trong từ ví dụ.'));
   if (prAccent === 'us' && IPA_US[sym]) sec.appendChild(prEl('div', 'p2-us', '🇺🇸 ' + IPA_US[sym]));
