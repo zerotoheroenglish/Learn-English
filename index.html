@@ -160,7 +160,7 @@
 <header class="hero">
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v197</span>
+      <span class="hero-badge">EN ⇄ VI · v198</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice" id="voice-btn" aria-label="Chọn giọng đọc">🔊 <span class="hv-label">Giọng đọc</span></button>
@@ -679,7 +679,7 @@
    - không tải sẵn hàng loạt. Chỉ tải trước ĐÚNG MỘT tab (tab nạp-khi-cần bạn mở gần nhất), khi trình duyệt thật sự rảnh,
      và không làm việc này nếu bật tiết kiệm dữ liệu, mạng chậm (2G/3G) hoặc máy ít RAM */
 (function () {
-  var LAZY = {"page-shadow":"js/tab-shadowing.js?h=5994ae33b4","page-qb":"js/tab-questions.js?h=dccfc4a30b","page-read":"js/tab-reading.js?h=99cae5f11b","page-talk":"js/tab-talk.js?h=8b70c0a6e8","page-para":"js/tab-para.js?h=f2f7a86a27"}, DATA = {"exvi":"js/data-vocab-vi.js?h=31cb69d052"}, DEPS = { 'page-vocab': ['exvi'] }, state = {};
+  var LAZY = {"page-shadow":"js/tab-shadowing.js?h=5994ae33b4","page-qb":"js/tab-questions.js?h=dccfc4a30b","page-read":"js/tab-reading.js?h=32a599fabe","page-talk":"js/tab-talk.js?h=8b70c0a6e8","page-para":"js/tab-para.js?h=f2f7a86a27"}, DATA = {"exvi":"js/data-vocab-vi.js?h=31cb69d052"}, DEPS = { 'page-vocab': ['exvi'] }, state = {};
   function inject(key, url) {
     if (!url) return Promise.resolve();
     if (state[key]) return state[key];
@@ -770,7 +770,7 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
 <!-- tab-questions: nạp khi mở tab -->
 <!-- tab-reading: nạp khi mở tab -->
 <!-- tab-talk: nạp khi mở tab -->
-<script src="js/app-review.js?h=5f70efde37"></script>
+<script src="js/app-review.js?h=cc3727d221"></script>
 <script src="js/app-gxlearn.js?h=ac1033d2d7"></script>
 <script src="js/app-onboard.js?h=c7e909afab"></script>
 <script>
