@@ -378,6 +378,22 @@ function ttsSplit(text) {
 let TTS_SEQ = 0;
 // bấm dừng ở bất cứ đâu (speechSynthesis.cancel) → cũng dừng luôn các đoạn còn lại của câu dài
 try { if (window.speechSynthesis && !speechSynthesis.__seqWrap) { const oc = speechSynthesis.cancel.bind(speechSynthesis); speechSynthesis.cancel = function () { TTS_SEQ++; return oc(); }; speechSynthesis.__seqWrap = true; } } catch (e) {}
+/* v206: khi máy đọc bị "kẹt" app huỷ câu rồi đọc lại (xem ttsPlay). Lệnh huỷ làm trình duyệt bắn lỗi "canceled" cho câu cũ,
+   khiến Listening/Shadowing tưởng câu đã xong → nhảy sang câu sau và cắt ngang câu đang đọc lại. Bỏ qua lỗi thật của câu đã được thay. */
+try {
+  const UP = window.SpeechSynthesisUtterance && SpeechSynthesisUtterance.prototype;
+  if (UP && !UP.__swapWrap) {
+    const oAdd = UP.addEventListener;
+    UP.addEventListener = function (type, fn, opt) {
+      if (type === 'error' && typeof fn === 'function') {
+        const self = this, w = function (e) { if (self.__swap && e && e.isTrusted) return; return fn.call(this, e); };
+        return oAdd.call(this, type, w, opt);
+      }
+      return oAdd.call(this, type, fn, opt);
+    };
+    UP.__swapWrap = true;
+  }
+} catch (e) {}
 function ttsPlay(u, retried, inChain) {
   const ss = window.speechSynthesis;
   if (!ss) return u;
@@ -451,11 +467,12 @@ function ttsPlay(u, retried, inChain) {
     if (!retried && !online) TTS.stuck = setTimeout(() => {
       if (started || TTS.keep !== u) return;
       TTS.last = { ok: false, at: Date.now() };
+      u.__swap = true;
       try { ss.cancel(); } catch (e) {}
       const r = new SpeechSynthesisUtterance(u.text);
       const f = u.voice ? ttsFresh(u.voice) : null;
       if (f) r.voice = f;
-      r.lang = u.lang; r.rate = u.rate; r.volume = u.volume;
+      r.lang = u.lang; r.rate = u.rate; r.volume = u.volume; r.pitch = u.pitch;
       // chuyển tiếp sự kiện về câu gốc để các phần đang chờ "đọc xong" vẫn chạy tiếp
       ['start', 'end', 'error'].forEach(ev => r.addEventListener(ev, () => { try { u.dispatchEvent(new Event(ev)); } catch (e) {} }));
       setTimeout(() => ttsPlay(r, true), 180);

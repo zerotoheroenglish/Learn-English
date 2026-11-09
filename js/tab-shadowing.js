@@ -151,7 +151,7 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
       const my = tok; let fin = false;
       const end = () => { if (fin) return; fin = true; clearTimeout(t); res(my === tok); };
       const u = sayLine(text, rate, alt);
-      const t = setTimeout(end, Math.max(2500, text.length * 120 / rate) + 2000);
+      const t = setTimeout(end, Math.max(2500, text.length * 120 / rate) + 4500);   // v206: chừa thời gian cho lần đọc lại khi máy đọc bị kẹt
       if (!u) { end(); return; }
       try { u.addEventListener('end', end); u.addEventListener('error', end); } catch (e) {}
     });

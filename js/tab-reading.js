@@ -662,14 +662,30 @@ const LS_DIALOGS = [{"id":"l-a1-cafe","lv":1,"icon":"☕","t":"At a Café","vi":
     try { if (!v && typeof pronVoice !== 'undefined') v = pronVoice; } catch (e) {}
     return v || null;
   }
+  /* v206: hai nhân vật trùng một giọng → tìm một giọng tiếng Anh THẬT khác (đúng giới tính nếu có), thay vì bóp méo cao độ
+     (trước đây hạ/nâng cao độ 0.75–1.25 làm giọng nghe như nghẹt mũi, méo tiếng) */
+  function otherVoice(not, g) {
+    try {
+      const all = (typeof ttsVoices === 'function' ? ttsVoices() : speechSynthesis.getVoices())
+        .filter(v => /^en/i.test(v.lang || '') && v.voiceURI !== not.voiceURI && !(typeof VOICE_NOVELTY !== 'undefined' && VOICE_NOVELTY.test(v.name)));
+      const gen = v => { try { return typeof vGender === 'function' ? vGender(v) : ''; } catch (e) { return ''; } };
+      const good = v => /enhanced|premium|natural|neural|siri/i.test(v.name);
+      const sameLang = v => (v.lang || '').replace('_', '-').slice(0, 5).toLowerCase() === (not.lang || '').replace('_', '-').slice(0, 5).toLowerCase();
+      const pool = all;
+      return pool.find(v => gen(v) === g && good(v) && sameLang(v)) || pool.find(v => gen(v) === g && sameLang(v))
+        || pool.find(v => gen(v) === g && good(v)) || pool.find(v => gen(v) === g) || null;
+    } catch (e) { return null; }
+  }
   function sayLine(l, i, rate, onEnd) {
     const [sp, text] = l.lines[i], g = (l.who[sp] || ['', 'f'])[1];
-    const vA = voiceFor(l.who.A[1]), vB = voiceFor(l.who.B[1]);
+    const vA = voiceFor(l.who.A[1]);
+    let vB = voiceFor(l.who.B[1]);
+    if (vA && vB && vA.voiceURI === vB.voiceURI) vB = otherVoice(vA, l.who.B[1]) || vB;
     const v = sp === 'A' ? vA : vB;
     const u = new SpeechSynthesisUtterance(text);
     if (v) { u.voice = v; u.lang = (v.lang || 'en-US').replace('_', '-'); } else u.lang = 'en-US';
     u.rate = typeof ttsRate === 'function' ? ttsRate(rate) : rate;
-    u.pitch = (vA && vB && vA.voiceURI === vB.voiceURI) ? (sp === 'B' ? (g === 'm' ? 0.75 : 1.25) : 1) : 1;
+    u.pitch = 1;   // v206: giữ cao độ tự nhiên
     let done = false; const fin = () => { if (done) return; done = true; if (onEnd) setTimeout(onEnd, 250); };
     u.addEventListener('end', fin); u.addEventListener('error', e => { if (e && (e.error === 'interrupted' || e.error === 'canceled')) { done = true; return; } fin(); });
     setTimeout(() => { if (!done && !speechSynthesis.speaking && !speechSynthesis.pending) fin(); }, 20000);
