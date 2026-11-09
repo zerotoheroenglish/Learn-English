@@ -304,7 +304,14 @@ const FIREBASE_CONFIG = {
       else { av.style.backgroundImage = ''; av.textContent = name.trim().charAt(0).toUpperCase(); }
     } else $('acct-label').textContent = 'Đăng nhập';
   }
-  const say = (t, ok) => { msg.textContent = t || ''; msg.className = 'acct-msg' + (ok ? ' ok' : ''); };
+  /* v203: lời báo hiện ngay dưới các nút vừa bấm (trước đây nằm tận cuối bảng, dưới mục "Dữ liệu trên máy này",
+     nên bấm "Tạo tài khoản" mà lỗi thì người dùng không thấy gì) */
+  const say = (t, ok) => {
+    const anchor = user ? document.querySelector('#acct-in .acct-row') : $('acct-form');
+    if (anchor && msg.previousElementSibling !== anchor) anchor.after(msg);
+    msg.textContent = t || ''; msg.className = 'acct-msg' + (ok ? ' ok' : '') + (t && !ok ? ' bad' : '');
+    if (t) { try { msg.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } catch (e) { msg.scrollIntoView(false); } }
+  };
   const ERR = {
     'auth/invalid-email': 'Email chưa đúng định dạng.', 'auth/missing-password': 'Bạn chưa nhập mật khẩu.',
     'auth/weak-password': 'Mật khẩu cần ít nhất 6 ký tự.', 'auth/email-already-in-use': 'Email này đã có tài khoản — bấm "Đăng nhập".',
@@ -369,12 +376,25 @@ const FIREBASE_CONFIG = {
   btn.addEventListener('click', open);
   sheet.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', close));
 
-  const withAuth = fn => async () => { say(''); try { await loadFirebase(); pendingSignin = true; await fn(); } catch (e) { pendingSignin = false; fail(e); } };
+  const busyBtns = on => ['acct-signin', 'acct-signup', 'acct-google', 'acct-forgot'].forEach(id => { const b = $(id); if (b) b.disabled = on; });
+  const withAuth = (fn, wait) => async () => {
+    say(wait || ''); busyBtns(true);
+    let loaded = false;
+    try { await loadFirebase(); loaded = true; pendingSignin = true; await fn(); say(''); }
+    catch (e) { pendingSignin = false; if (!loaded) say('Không tải được phần đăng nhập. Kiểm tra mạng rồi thử lại.'); else fail(e); }
+    busyBtns(false);
+  };
   $('acct-google').addEventListener('click', withAuth(() => auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())));
   const creds = () => [$('acct-email').value.trim(), $('acct-pass').value];
   const credsOk = () => { const [e, p] = creds(); if (!e) { say('Nhập email trước nhé.'); return false; } if (!p) { say('Nhập mật khẩu trước nhé.'); return false; } return true; };
-  $('acct-form').addEventListener('submit', e => { e.preventDefault(); if (credsOk()) withAuth(() => auth.signInWithEmailAndPassword(...creds()))(); });
-  $('acct-signup').addEventListener('click', () => { if (credsOk()) withAuth(() => auth.createUserWithEmailAndPassword(...creds()))(); });
+  $('acct-form').addEventListener('submit', e => { e.preventDefault(); if (credsOk()) withAuth(() => auth.signInWithEmailAndPassword(...creds()), 'Đang đăng nhập…')(); });
+  $('acct-signup').addEventListener('click', () => {
+    if (!credsOk()) return;
+    const [e, p] = creds();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) { say('Email chưa đúng định dạng (ví dụ: ten@gmail.com).'); return; }
+    if (p.length < 6) { say('Mật khẩu cần ít nhất 6 ký tự.'); return; }
+    withAuth(() => auth.createUserWithEmailAndPassword(e, p), 'Đang tạo tài khoản…')();
+  });
   $('acct-forgot').addEventListener('click', async () => {
     const email = $('acct-email').value.trim();
     if (!email) { say('Nhập email của bạn vào ô Email trước.'); return; }
