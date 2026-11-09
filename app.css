@@ -4601,4 +4601,10 @@
 .rm-row{ display:flex; align-items:center; gap:8px; }
 .rm-hour{ padding:8px 10px; border-radius:10px; border:1.5px solid var(--paper-line); background:var(--paper); color:var(--ink); font-size:15px; }
 .rm-note{ margin:0; font-size:14px; line-height:1.5; opacity:.85; }
-.rm-note.rm-bad{ color:var(--rust); opacity:1; }
+.rm-note.rm-bad{ color:var(--mark); opacity:1; }
+
+/* v205: nhắc khách đăng nhập để lưu tiến độ */
+.guest-bar{ margin-top:12px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:10px 12px; border-radius:12px;
+  border:1.5px solid var(--mark); background:color-mix(in srgb, var(--mark) 10%, transparent); color:var(--hero-ink, var(--ink)); font-size:14px; line-height:1.45; }
+.guest-bar > span{ flex:1 1 220px; min-width:0; }
+.guest-bar-btn{ min-height:38px; padding:0 14px; border-radius:999px; border:0; background:var(--mark); color:#fff; font:inherit; font-weight:700; cursor:pointer; }

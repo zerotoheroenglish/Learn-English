@@ -19,7 +19,7 @@ const FIREBASE_CONFIG = {
   if (!FIREBASE_CONFIG || !btn) return;
   btn.hidden = false;
   const PREFIX = 'hoc-tieng-anh-', META = PREFIX + 'sync-meta', UIDK = PREFIX + 'sync-uid', BASEK = PREFIX + 'sync-base';
-  const SKIP = new Set([PREFIX + 'voice', META, UIDK, BASEK, PREFIX + 'autofix-open', PREFIX + 'backup-at', PREFIX + 'backup-nag', PREFIX + 'backup-every', PREFIX + 'ipa-cache', PREFIX + 'talk-key', PREFIX + 'talk-model', PREFIX + 'talk-models', PREFIX + 'talk-prov', PREFIX + 'talk-key-groq', PREFIX + 'talk-model-groq', PREFIX + 'talk-models-groq', PREFIX + 'talk-key-openai', PREFIX + 'talk-model-openai', PREFIX + 'talk-models-openai', PREFIX + 'syncbar-at', PREFIX + 'syncbar-mute', PREFIX + 'sync-dev', PREFIX + 'push', PREFIX + 'ob-new']);   // v128: cache IPA tự tạo lại được, không cần đẩy lên tài khoản   // device-specific / bookkeeping
+  const SKIP = new Set([PREFIX + 'voice', META, UIDK, BASEK, PREFIX + 'autofix-open', PREFIX + 'backup-at', PREFIX + 'backup-nag', PREFIX + 'backup-every', PREFIX + 'ipa-cache', PREFIX + 'talk-key', PREFIX + 'talk-model', PREFIX + 'talk-models', PREFIX + 'talk-prov', PREFIX + 'talk-key-groq', PREFIX + 'talk-model-groq', PREFIX + 'talk-models-groq', PREFIX + 'talk-key-openai', PREFIX + 'talk-model-openai', PREFIX + 'talk-models-openai', PREFIX + 'syncbar-at', PREFIX + 'syncbar-mute', PREFIX + 'sync-dev', PREFIX + 'push', PREFIX + 'ob-new', PREFIX + 'guest-v205']);   // v128: cache IPA tự tạo lại được, không cần đẩy lên tài khoản   // device-specific / bookkeeping
   const FB = 'https://www.gstatic.com/firebasejs/10.12.2/';
   const $ = id => document.getElementById(id);
   const sheet = $('asheet'), msg = $('acct-msg');
@@ -300,7 +300,21 @@ const FIREBASE_CONFIG = {
       : st === 'ok' ? '✓ Đã đồng bộ lúc ' + new Date(lastSync).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
       : '⚠️ ' + (text || 'Chưa đồng bộ được');
   }
+  /* v205: chưa đăng nhập → tiến độ không được lưu. Nhắc rõ ngay đầu trang. */
+  const gbar = document.createElement('div');
+  gbar.className = 'guest-bar'; gbar.setAttribute('role', 'note');
+  { const t = document.createElement('span');
+    t.textContent = (window.HS && HS.guestGrace)
+      ? '⚠️ Từ nay, chưa đăng nhập thì tiến độ không được lưu. Đăng nhập ngay để giữ tiến độ hiện có — nếu không, lần mở app sau sẽ bị xoá.'
+      : '⚠️ Bạn chưa đăng nhập — tiến độ học sẽ mất khi mở lại app.';
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'guest-bar-btn'; b.textContent = 'Đăng nhập để lưu';
+    b.addEventListener('click', () => btn.click());
+    gbar.appendChild(t); gbar.appendChild(b);
+    const host = document.querySelector('.hero-inner'); if (host) host.appendChild(gbar); }
+  const paintGuest = () => { let has = false; try { has = !!localStorage.getItem(UIDK); } catch (e) {} gbar.hidden = !!user || has; };
+  paintGuest();
   function render() {
+    paintGuest();
     $('acct-out').hidden = !!user; $('acct-in').hidden = !user;
     btn.classList.toggle('on', !!user);
     if (user) {

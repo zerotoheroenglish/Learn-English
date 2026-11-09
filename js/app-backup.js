@@ -21,7 +21,7 @@
     L.push(HS.idb ? `🗂 Bản dự phòng trong IndexedDB: <b>đang bật</b> — nếu bộ nhớ chính bị trống, app tự chép lại.` : `🗂 Trình duyệt này không cho dùng IndexedDB (thường do chế độ ẩn danh).`);
     if (HS.persisted === true) L.push('🔒 Lưu bền vững: <b>đã bật</b> — trình duyệt sẽ không tự xoá khi máy thiếu dung lượng.');
     else if (HS.persisted === false) L.push('🔓 Lưu bền vững: <b>chưa được cấp</b> — trình duyệt có thể tự dọn khi máy đầy. Thêm app ra màn hình chính để an toàn hơn.');
-    L.push(signedIn() ? '☁️ Đã đăng nhập: tiến độ còn được lưu trên tài khoản.' : '☁️ Chưa đăng nhập: tiến độ chỉ nằm trên máy này.');
+    L.push(signedIn() ? '☁️ Đã đăng nhập: tiến độ còn được lưu trên tài khoản.' : '⚠️ Chưa đăng nhập: tiến độ không được lưu — mở lại app là mất. Đăng nhập để lưu.');
     L.push(last ? `🕒 Sao lưu gần nhất: <b>${fmtDate(last)}</b>` : '🕒 Bạn <b>chưa tải file sao lưu</b> lần nào.');
     if (HS.quotaHit || pct >= 80) L.push('⚠️ Bộ nhớ trình duyệt sắp đầy. Hãy tải file sao lưu, rồi xoá bớt bài nghe tự tạo hoặc lịch sử dịch cũ.');
     const hold = (HS.hold || []).length;
@@ -244,7 +244,16 @@
   };
 
   $('hs-export').addEventListener('click', doExport);
-  $('hs-import').addEventListener('click', () => { $('hs-file').value = ''; $('hs-file').click(); });
+  $('hs-import').addEventListener('click', () => {
+    // v205: chưa đăng nhập thì tiến độ không được giữ → khôi phục xong mở lại app là mất. Đăng nhập trước đã.
+    if (!signedIn()) {
+      say('Hãy đăng nhập (hoặc tạo tài khoản) ở phía trên trước, rồi bấm "Khôi phục từ file" — tiến độ sẽ được lưu vào tài khoản.');
+      const m = $('acct-msg'); if (m) try { m.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (e) {}
+      const em = $('acct-email'); if (em) setTimeout(() => { try { em.focus({ preventScroll: true }); } catch (e) {} }, 400);
+      return;
+    }
+    $('hs-file').value = ''; $('hs-file').click();
+  });
   $('hs-file').addEventListener('change', e => { const f = e.target.files && e.target.files[0]; if (f) doImport(f); });
   const acct = $('acct-btn'); if (acct) acct.addEventListener('click', () => setTimeout(() => { render(); renderSnaps(); if (evSel) evSel.value = String(every()); }, 0));
   window.addEventListener('hs-ready', render);
