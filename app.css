@@ -4591,3 +4591,14 @@
   .ipa-vid-frame{ display:block; width:100%; max-width:560px; aspect-ratio:16/9; margin-top:8px; border:0; border-radius:16px; background:#000; }
   .ipa-vid-src{ margin-top:6px; font-size:12.5px; color:var(--ink-soft); }
   .ipa-vid-src a{ color:inherit; font-weight:700; }
+
+/* v200: thông báo nhắc học */
+.rm-box{ border:1.5px solid var(--paper-line); border-radius:14px; padding:12px; margin:8px 0 12px; background:var(--paper); display:grid; gap:8px; }
+.rm-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; }
+.rm-sw{ min-height:40px; padding:0 16px; border-radius:999px; border:1.5px solid var(--ink); background:transparent; color:var(--ink); font:inherit; font-weight:700; cursor:pointer; }
+.rm-sw.on{ background:var(--ink); color:var(--paper); }
+.rm-sw:disabled{ opacity:.6; }
+.rm-row{ display:flex; align-items:center; gap:8px; }
+.rm-hour{ padding:8px 10px; border-radius:10px; border:1.5px solid var(--paper-line); background:var(--paper); color:var(--ink); font-size:15px; }
+.rm-note{ margin:0; font-size:14px; line-height:1.5; opacity:.85; }
+.rm-note.rm-bad{ color:var(--rust); opacity:1; }

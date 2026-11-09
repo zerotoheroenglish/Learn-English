@@ -1,0 +1,21 @@
+name: Nhắc học mỗi ngày
+on:
+  schedule:
+    - cron: '7 * * * *'   # mỗi giờ, phút thứ 7 (giờ UTC; script tự đổi sang múi giờ từng người)
+  workflow_dispatch:
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with: { sparse-checkout: scripts }
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm install --no-audit --no-fund
+        working-directory: scripts
+      - run: node send-reminders.mjs
+        working-directory: scripts
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}

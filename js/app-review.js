@@ -332,6 +332,8 @@
     while (t[k]) { n++; k--; }
     return n;
   }
+  // v200: cho thông báo nhắc học biết chuỗi hiện tại và hôm nay đã học chưa
+  window.htaStreakNow = () => { const t = dayTotals(); return { st: streakOf(t), today: !!t[dayNo()] }; };
   // v175: chuỗi dài nhất từng có (để hiện "Kỷ lục")
   function bestStreak(t) {
     const ks = Object.keys(t).map(Number).filter(k => t[k] > 0).sort((a, b) => a - b);
@@ -1234,6 +1236,7 @@
   function remindBox() {
     const s = E('div', 'tense-card rv-remind');
     s.appendChild(E('h3', null, '⏰ Nhắc ôn mỗi ngày'));
+    if (window.htaRemindBox) s.appendChild(window.htaRemindBox());
     s.appendChild(E('p', 'rv-note', 'Ôn đúng hẹn quan trọng hơn ôn nhiều. Chọn một giờ cố định, app tạo lời nhắc để thêm vào ứng dụng Lịch của điện thoại hoặc máy tính (iPhone, Google Calendar, Outlook).'));
     const row = E('div', 'rv-remind-row');
     const tm = E('input'); tm.type = 'time'; tm.value = set.at || '20:00';
