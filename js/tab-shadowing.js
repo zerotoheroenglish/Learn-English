@@ -617,7 +617,6 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     ht.appendChild(E('span', 'sd-head-ic', '🎙️'));
     const tt = E('div');
     tt.appendChild(E('div', 'sd-head-title', 'Luyện Shadowing'));
-    tt.appendChild(E('div', 'sd-head-sub', 'Mỗi bài luyện 4 bước: nghe hiểu → nghe & lặp lại → shadowing → tự nói lại'));
     ht.appendChild(tt);
     head.appendChild(ht);
     const stats = E('div', 'sd-stats');
@@ -626,7 +625,7 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     stats.appendChild(E('span', null, `📚 ${L.length} bài`));
     head.appendChild(stats);
 
-    const cats = E('div', 'colloc-chips sd-chips');
+    const cats = E('div', 'colloc-chips sd-chips sd-1row');
     const counts = id => id === 'all' ? L.length : id === 'fav' ? L.filter(l => fav.has(l.id)).length : grpOf(id) ? L.filter(l => grpOf(id).ids.includes(l.id)).length : L.filter(l => l.cat === id).length;
     [['all', 'Tất cả', ''], ...CATS.map(c => [c[0], c[1], c[2]]), ['fav', 'Yêu thích', '★'], ...groups.map(g => ['g:' + g.id, g.name, '📁'])].forEach(([id, label, ic]) => {
       const n = counts(id);
@@ -636,7 +635,7 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
       cats.appendChild(c);
     });
     head.appendChild(cats);
-    const lvs = E('div', 'colloc-chips sd-chips sd-lvchips');
+    const lvs = E('div', 'colloc-chips sd-chips sd-lvchips sd-1row');
     [[0, 'Tất cả cấp độ'], [1, 'A1'], [2, 'A2'], [3, 'B1'], [4, 'B2'], [5, 'C1']].forEach(([n, label]) => {
       const c = E('button', 'colloc-chip' + (view.lv === n ? ' active' : ''), label);
       c.addEventListener('click', () => { view.lv = n; renderHome(); });
@@ -665,7 +664,7 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
   }
   function bbcCard(x) {
     const seen = bbcSeen.has(x.id), st = bbcSt(x.id);
-    const b = E('button', 'bc-card' + (seen ? ' done' : ''));
+    const b = E('button', 'bc-card bc-mini' + (seen ? ' done' : ''));
     const th = E('div', 'bc-thumb');
     const img = E('img'); img.loading = 'lazy'; img.alt = ''; img.src = 'https://i.ytimg.com/vi/' + x.id + '/mqdefault.jpg';
     img.addEventListener('error', () => img.remove());
@@ -676,9 +675,7 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     const info = E('div', 'bc-info');
     info.appendChild(E('div', 'bc-title', x.t));
     const l = bbcLesson(x);
-    info.appendChild(E('div', 'bc-meta', `${x.lv.name} · ${x.col.name}` + (l.s.length ? ` · ${pct(l)}% đã luyện` : '')));
-    const inf = BBC_INFO[x.col.name];
-    if (inf) info.appendChild(E('div', 'bc-desc', inf[0]));
+    if (l.s.length && pct(l)) info.appendChild(E('div', 'bc-meta', `${pct(l)}% đã luyện`));
     if (seen) info.appendChild(E('div', 'bc-state ok', '✓ Đã xem'));
     else if (ytPos[x.id] > 5) info.appendChild(E('div', 'bc-state', '⏯ Đang xem dở · ' + fmtT(ytPos[x.id])));
     b.appendChild(info);
@@ -690,11 +687,14 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     view.page = 'home';
     root.innerHTML = '';
     root.appendChild(srcSwitch());
-    const intro = E('div', 'bc-intro');
-    intro.appendChild(E('div', 'bc-intro-t', '📺 Video BBC Learning English & Listening Time'));
-    intro.appendChild(E('div', 'bc-intro-s', `${BBC_FLAT.length} video miễn phí từ các kênh YouTube BBC Learning English và Listening Time (podcast A1 của Conner Pe), xếp theo trình độ. Video phát bằng trình phát chính thức của YouTube, bản quyền thuộc chủ kênh. App này không liên kết và không được các kênh trên bảo trợ.`));
+    const intro = E('details', 'bc-intro bc-intro-mini');
+    const isum = E('summary');
+    isum.appendChild(E('span', 'bc-intro-t', `📺 ${BBC_FLAT.length} video YouTube`));
+    isum.appendChild(E('span', 'bc-intro-src', 'BBC Learning English · Listening Time ⓘ'));
+    intro.appendChild(isum);
+    intro.appendChild(E('div', 'bc-intro-s', `Video miễn phí từ các kênh YouTube BBC Learning English và Listening Time (podcast A1 của Conner Pe), xếp theo trình độ. Video phát bằng trình phát chính thức của YouTube, bản quyền thuộc chủ kênh. App này không liên kết và không được các kênh trên bảo trợ.`));
     root.appendChild(intro);
-    const chips = E('div', 'colloc-chips bc-levels');
+    const chips = E('div', 'colloc-chips bc-levels sd-1row');
     SH_BBC.forEach(L => {
       const n = L.cols.reduce((k, c) => k + c.v.length, 0);
       const c = E('button', 'colloc-chip' + (L.id === view.blv && !view.bq ? ' active' : ''), `${L.name} · ${n}`);
@@ -748,13 +748,32 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     top.appendChild(E('div', 'bc-lvcount', `Đã xem ${seen}/${all.length}`));
     head.appendChild(top);
     head.appendChild(vcBar(all.length ? seen / all.length : 0));
-    head.appendChild(E('p', 'ls-level-desc', L.desc));
     body.appendChild(head);
-    L.cols.forEach(c => {
-      body.appendChild(E('div', 'tense-group-title', `${c.icon} ${c.name} · ${c.v.length}`));
+    // v208: mỗi loạt video là một mục thu gọn được; mở ra thấy 8 video đầu, bấm "Xem thêm" để hiện tiếp
+    view.bopen = view.bopen || {};
+    L.cols.forEach((c, ci) => {
+      const vids = BBC_FLAT.filter(x => x.col === c), sn = vids.filter(x => bbcSeen.has(x.id)).length;
+      const key = L.id + ':' + c.name;
+      const d = E('details', 'bc-col');
+      d.open = key in view.bopen ? view.bopen[key] : ci === 0;
+      const sm = E('summary');
+      sm.appendChild(E('span', 'bc-col-t', `${c.icon} ${c.name}`));
+      sm.appendChild(E('span', 'bc-col-n', sn ? `${sn}/${vids.length} ✓` : String(vids.length)));
+      d.appendChild(sm);
+      const inf = BBC_INFO[c.name]; if (inf) d.appendChild(E('p', 'bc-col-d', inf[0]));
       const g = E('div', 'bc-grid');
-      BBC_FLAT.filter(x => x.col === c).forEach(x => g.appendChild(bbcCard(x)));
-      body.appendChild(g);
+      let shown = 0;
+      const more = E('button', 'btn-ghost bc-col-more');
+      const step = () => {
+        vids.slice(shown, shown + 8).forEach(x => g.appendChild(bbcCard(x)));
+        shown = Math.min(vids.length, shown + 8);
+        more.hidden = shown >= vids.length; more.textContent = `Xem thêm ${vids.length - shown} video`;
+      };
+      more.addEventListener('click', step);
+      d.addEventListener('toggle', () => { view.bopen[key] = d.open; if (d.open && !shown) step(); });
+      if (d.open) step();
+      d.appendChild(g); d.appendChild(more);
+      body.appendChild(d);
     });
   }
   function renderBody() {
@@ -784,10 +803,22 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
       const last = doing[0] ? doing[0].lv : 2;
       const fresh = L.filter(l => status(l) === 'new' && l.cat !== 'mine').sort((a, b) => Math.abs(a.lv - last) - Math.abs(b.lv - last) || a.lv - b.lv).slice(0, 12);
       if (fresh.length) body.appendChild(row('Gợi ý cho bạn', fresh));
+      // v208: các chủ đề hiện thành ô gọn (2 cột) thay vì mỗi chủ đề một hàng thẻ trượt dài
+      const sec = E('section', 'sd-sec');
+      const h = E('div', 'sd-sec-h'); const ht = E('div', 'sd-sec-t', 'Chủ đề'); ht.appendChild(E('span', 'sd-count', String(CATS.length))); h.appendChild(ht); sec.appendChild(h);
+      const tg = E('div', 'sd-tiles');
       CATS.forEach(([id, label, ic]) => {
-        const ls = L.filter(l => l.cat === id).sort((a, b) => a.lv - b.lv);
-        if (ls.length) body.appendChild(row(`${ic} ${label}`, ls, () => { view.cat = id; renderHome(); irrTopSafe(); }));
+        const ls = L.filter(l => l.cat === id);
+        if (!ls.length) return;
+        const dn = ls.filter(l => ['done', 'master'].includes(status(l))).length;
+        const t = E('button', 'sd-tile');
+        t.appendChild(E('span', 'sd-tile-ic', ic));
+        const tx = E('span', 'sd-tile-tx'); tx.appendChild(E('b', null, label)); tx.appendChild(E('small', null, `${ls.length} bài` + (dn ? ` · ✓ ${dn}` : '')));
+        t.appendChild(tx);
+        t.addEventListener('click', () => { view.cat = id; renderHome(); irrTopSafe(); });
+        tg.appendChild(t);
       });
+      sec.appendChild(tg); body.appendChild(sec);
     } else {
       const h = E('div', 'sd-sec-h');
       const G = grpOf(view.cat);
