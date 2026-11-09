@@ -19,6 +19,8 @@
   const ref = () => { const f = fb(); return f && f.db && f.user ? f.db.collection('reminders').doc(f.user.uid) : null; };
   const streak = () => { try { return window.htaStreakNow ? window.htaStreakNow() : { st: 0, today: false }; } catch (e) { return { st: 0, today: false }; } };
 
+  // serviceWorker.ready không bao giờ xong nếu trình duyệt chặn service worker → luôn đặt hạn chờ
+  const swReady = ms => Promise.race([navigator.serviceWorker.ready, new Promise((_, rej) => setTimeout(() => rej(new Error('unsupported')), ms))]);
   function b64(s) {
     const pad = '='.repeat((4 - s.length % 4) % 4), raw = atob((s + pad).replace(/-/g, '+').replace(/_/g, '/'));
     const out = new Uint8Array(raw.length); for (let i = 0; i < raw.length; i++) out[i] = raw.charCodeAt(i); return out;
@@ -29,7 +31,7 @@
     if (!ref()) throw new Error('login');
     const perm = Notification.permission === 'granted' ? 'granted' : await Notification.requestPermission();
     if (perm !== 'granted') throw new Error('denied');
-    const reg = await navigator.serviceWorker.ready;
+    const reg = await swReady(8000);
     let sub = await reg.pushManager.getSubscription();
     if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64(VAPID) });
     const s = streak();
@@ -37,9 +39,10 @@
     st.on = true; st.hour = hour; if (s.today) st.last = today(); save();
   }
   async function disable() {
-    st.on = false; save();
-    try { const r = ref(); if (r) await r.set({ on: false, updated: Date.now() }, { merge: true }); } catch (e) {}
-    try { const reg = await navigator.serviceWorker.ready, sub = await reg.pushManager.getSubscription(); if (sub) await sub.unsubscribe(); } catch (e) {}
+    const was = st.on; st.on = false; save();
+    if (!was) return;
+    try { const r = ref(); if (r) await Promise.race([r.set({ on: false, updated: Date.now() }, { merge: true }), new Promise(ok => setTimeout(ok, 4000))]); } catch (e) {}
+    try { const reg = await swReady(2000), sub = await reg.pushManager.getSubscription(); if (sub) await sub.unsubscribe(); } catch (e) {}
   }
   async function setHour(hour) {
     st.hour = hour; save();

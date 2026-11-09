@@ -19,11 +19,18 @@ const FIREBASE_CONFIG = {
   if (!FIREBASE_CONFIG || !btn) return;
   btn.hidden = false;
   const PREFIX = 'hoc-tieng-anh-', META = PREFIX + 'sync-meta', UIDK = PREFIX + 'sync-uid', BASEK = PREFIX + 'sync-base';
-  const SKIP = new Set([PREFIX + 'voice', META, UIDK, BASEK, PREFIX + 'autofix-open', PREFIX + 'backup-at', PREFIX + 'backup-nag', PREFIX + 'backup-every', PREFIX + 'ipa-cache', PREFIX + 'talk-key', PREFIX + 'talk-model', PREFIX + 'talk-models', PREFIX + 'talk-prov', PREFIX + 'talk-key-groq', PREFIX + 'talk-model-groq', PREFIX + 'talk-models-groq', PREFIX + 'talk-key-openai', PREFIX + 'talk-model-openai', PREFIX + 'talk-models-openai', PREFIX + 'syncbar-at', PREFIX + 'syncbar-mute']);   // v128: cache IPA tự tạo lại được, không cần đẩy lên tài khoản   // device-specific / bookkeeping
+  const SKIP = new Set([PREFIX + 'voice', META, UIDK, BASEK, PREFIX + 'autofix-open', PREFIX + 'backup-at', PREFIX + 'backup-nag', PREFIX + 'backup-every', PREFIX + 'ipa-cache', PREFIX + 'talk-key', PREFIX + 'talk-model', PREFIX + 'talk-models', PREFIX + 'talk-prov', PREFIX + 'talk-key-groq', PREFIX + 'talk-model-groq', PREFIX + 'talk-models-groq', PREFIX + 'talk-key-openai', PREFIX + 'talk-model-openai', PREFIX + 'talk-models-openai', PREFIX + 'syncbar-at', PREFIX + 'syncbar-mute', PREFIX + 'sync-dev', PREFIX + 'push']);   // v128: cache IPA tự tạo lại được, không cần đẩy lên tài khoản   // device-specific / bookkeeping
   const FB = 'https://www.gstatic.com/firebasejs/10.12.2/';
   const $ = id => document.getElementById(id);
   const sheet = $('asheet'), msg = $('acct-msg');
   let auth = null, db = null, user = null, syncing = false, again = false, lastSync = 0, pushTimer = null, applying = false, pendingSignin = false, status = '';
+  // v201: mỗi máy một mã riêng, để biết bản ghi trên tài khoản do máy nào vừa ghi
+  let DEV = '';
+  try { DEV = localStorage.getItem(PREFIX + 'sync-dev') || ''; if (!DEV) { DEV = Math.random().toString(36).slice(2, 10) + Date.now().toString(36); localStorage.setItem(PREFIX + 'sync-dev', DEV); } } catch (e) { DEV = 'x' + Math.random().toString(36).slice(2, 10); }
+  /* v201: tiến độ từ máy khác được chép vào máy này trong lúc app đang mở, nhưng các màn hình vẫn giữ bản cũ trong bộ nhớ.
+     Lần ghi kế tiếp của màn hình đó sẽ đè mất phần của máy kia. Vì vậy ta nhớ "bản cũ mà màn hình đang giữ" (stale)
+     và khi màn hình ghi, gộp ba chiều: thay đổi của màn hình này + phần máy kia đã thêm. */
+  const stale = {};
 
   // ---- remember when each key last changed on this device ----
   const readMeta = () => { try { return JSON.parse(localStorage.getItem(META) || '{}') || {}; } catch (e) { return {}; } };
@@ -31,11 +38,19 @@ const FIREBASE_CONFIG = {
   const tracked = k => typeof k === 'string' && k.startsWith(PREFIX) && !SKIP.has(k);
   const proto = Storage.prototype, oSet = proto.setItem, oRemove = proto.removeItem;
   proto.setItem = function (k, v) {
+    // v201: vừa đăng xuất và dọn máy → chặn mọi lần ghi muộn (vd. lưu hoạt động khi tải lại trang) để tiến độ cũ không quay lại
+    if (window.__htaWiped && this === window.localStorage && tracked(k)) return;
+    if (!applying && this === window.localStorage && k in stale) {
+      const mine = String(v), cur = this.getItem(k), was = stale[k];
+      stale[k] = mine;                                   // màn hình giờ giữ đúng giá trị nó vừa ghi
+      if (cur != null && was != null && cur !== was) { try { v = merge3(was, mine, cur, 1, 0); } catch (e) {} }
+    }
     const track = !applying && this === window.localStorage && tracked(k) && this.getItem(k) !== String(v);
     oSet.call(this, k, v);
     if (track) { const m = readMeta(); m[k] = Date.now(); writeMeta(m); schedulePush(); }
   };
   proto.removeItem = function (k) {
+    if (!applying && this === window.localStorage) delete stale[k];
     const track = !applying && this === window.localStorage && tracked(k) && this.getItem(k) !== null;
     oRemove.call(this, k);
     if (track) { const m = readMeta(); m[k] = Date.now(); writeMeta(m); schedulePush(); }
@@ -173,17 +188,25 @@ const FIREBASE_CONFIG = {
           out[k] = v; outTs[k] = t;
           if (!eq(v, lv === undefined ? null : lv) && !(v == null && lv == null)) changes.push([k, v, t]);
         });
-        const doc = await packCloud(out, outTs);
-        doc.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
-        tx.set(ref, doc);
+        // v201: không có gì mới so với tài khoản → khỏi ghi (đỡ tốn lượt ghi, và máy khác không bị báo nhầm)
+        const same = snap.exists && Object.keys(out).every(k => (out[k] == null && cData[k] == null) || eq(out[k], cData[k]))
+          && Object.keys(cData).every(k => k in out);
+        if (!same) {
+          const doc = await packCloud(out, outTs);
+          doc.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
+          doc.dev = DEV;
+          tx.set(ref, doc);
+        }
         merged = out;
       });
       // apply what came from the cloud, without marking it as a local change
       const meta = readMeta();
+      const live = reason !== 'startup' && reason !== 'signin';   // app đang mở: màn hình có thể đang giữ bản cũ
       applying = true;
       changes.forEach(([k, v, t]) => {
         const full = PREFIX + k;
         if ((meta[full] || 0) > t) return;      // changed here while syncing: keep the newer local value
+        if (live && !(full in stale)) { try { stale[full] = localStorage.getItem(full); } catch (e) {} }
         try { if (v === null) localStorage.removeItem(full); else localStorage.setItem(full, v); } catch (e) {}
         meta[full] = t;
       });
@@ -211,15 +234,17 @@ const FIREBASE_CONFIG = {
   // progress from another device arrived: the screens read storage at start-up, so refresh them
   // cài đặt giao diện / vị trí đang xem: cập nhật ngầm, không cần báo
   const QUIET = /^(folded|season2?|autofix|shadow-(ytpos|ytdur|segpos|set|bbc-seen)|yt-seg|ipa-filter|ipa-cache|tr-ctx|tr-keep|qb-lv|qb-g|ex-level|ex-bank|ex-step|ex-v2|grammar-(track|level)|tense-level|irr-(level|cdir)|para-lv|vocab-(front|goal)|sr-set|talk-set|talk-ai|pron-(accent|rate)|backup-(at|nag))$/;
-  const BAR_GAP = 30 * 60000, BAR_MUTE = 3 * 3600000;
+  const BAR_GAP = 5 * 60000, BAR_MUTE = 3 * 3600000;
   function remoteChanged(reason, changes) {
     const real = (changes || []).filter(c => !QUIET.test(c[0]));
     if (!real.length) return;                                   // chỉ đổi cài đặt giao diện → không báo
     let recent = 0;
     try { recent = +sessionStorage.getItem('hta-sync-reload') || 0; } catch (e) {}
-    if ((reason === 'startup' || reason === 'signin') && Date.now() - recent > 15000) {
+    const away = reason === 'focus' && hiddenFor > 120000;      // v201: quay lại app sau ≥ 2 phút → tải lại luôn cho đúng
+    if ((reason === 'startup' || reason === 'signin' || away) && Date.now() - recent > 15000) {
       try { sessionStorage.setItem('hta-sync-reload', String(Date.now())); } catch (e) {}
       showBar(reason === 'signin' ? 'Đã tải tiến độ từ tài khoản…' : 'Đã cập nhật tiến độ từ máy khác…', false);
+      leaving = true;
       setTimeout(() => location.reload(), 700);
       return;
     }
@@ -294,12 +319,31 @@ const FIREBASE_CONFIG = {
         auth.onAuthStateChanged(u => {
           const was = user; user = u || null; render();
           userCbs.forEach(cb => { try { cb(user); } catch (e) {} });
-          if (user && (!was || was.uid !== user.uid)) { syncNow(pendingSignin ? 'signin' : 'startup'); pendingSignin = false; }
+          if (user && (!was || was.uid !== user.uid)) { syncNow(pendingSignin ? 'signin' : 'startup'); pendingSignin = false; listen(user.uid); }
+          if (!user) listen(null);
         });
       });
     ready.catch(() => { ready = null; });
     return ready;
   }
+  /* v201: nghe thay đổi trên tài khoản. Máy khác vừa lưu tiến độ → máy này đồng bộ ngay,
+     không cần đợi chuyển tab hay mở lại app (máy tính để tab mở cả ngày vẫn nhận được). */
+  let unlisten = null, remoteTimer = 0, leaving = false, hiddenAt = 0, hiddenFor = 0;
+  function listen(uid) {
+    if (unlisten) { try { unlisten(); } catch (e) {} unlisten = null; }
+    if (!uid || !db) return;
+    try {
+      unlisten = db.collection('users').doc(uid).onSnapshot(sn => {
+        if (!sn || (sn.metadata && sn.metadata.hasPendingWrites) || !sn.exists) return;
+        const d = sn.data() || {};
+        if (d.dev === DEV || leaving) return;
+        clearTimeout(remoteTimer);
+        remoteTimer = setTimeout(() => { if (user && user.uid === uid) syncNow('remote'); }, 1200);
+      }, () => {});
+    } catch (e) {}
+  }
+  // dự phòng: mạng chập chờn làm rơi tín hiệu → cứ 5 phút (khi đang xem app) kiểm tra lại một lần
+  setInterval(() => { if (user && document.visibilityState === 'visible' && !syncing && Date.now() - lastSync > 5 * 60000) syncNow('poll'); }, 60000);
   // shared with the feedback module
   const userCbs = [];
   window.HTA_FB = { load: loadFirebase, get db() { return db; }, get user() { return user; }, onUser: cb => { userCbs.push(cb); } };
@@ -356,6 +400,7 @@ const FIREBASE_CONFIG = {
       for (let i = 0; i < 60 && syncing; i++) await new Promise(r => setTimeout(r, 250));   // đợi lần đồng bộ đang chạy
       if (status !== 'ok') { say('Chưa lưu được tiến độ lên tài khoản (kiểm tra mạng), nên chưa đăng xuất để không mất dữ liệu. Thử lại khi có mạng nhé.'); return; }
       try { if (window.htaRemindOff) await window.htaRemindOff(); } catch (e) {}
+      listen(null);
       await auth.signOut();
       applying = true;
       try { localStorage.removeItem(UIDK); localStorage.removeItem(BASEK); localStorage.removeItem(META); } catch (e) {}
@@ -369,6 +414,8 @@ const FIREBASE_CONFIG = {
   });
   // coming back to the app: pick up progress made on another device
   document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') hiddenAt = Date.now();
+    else hiddenFor = hiddenAt ? Date.now() - hiddenAt : 0;
     if (document.visibilityState === 'visible' && user && Date.now() - lastSync > 30000) syncNow('focus');
     if (document.visibilityState === 'hidden' && user && pushTimer) { clearTimeout(pushTimer); pushTimer = null; syncNow('change'); }
   });

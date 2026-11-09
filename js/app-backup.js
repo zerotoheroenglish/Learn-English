@@ -237,6 +237,7 @@
   // để người dùng khác trên cùng máy bắt đầu sạch. Chỉ giữ vài cài đặt của máy.
   const KEEP_ON_WIPE = new Set([P + 'voice', P + 'onboard', P + 'autofix-open', EVK]);
   window.hsWipeAccountData = async () => {
+    window.__htaWiped = true;
     keys().forEach(k => { if (!KEEP_ON_WIPE.has(k)) try { localStorage.removeItem(k); } catch (e) {} });
     try { const db = await sdb(); const tx = db.transaction(['meta', 'data'], 'readwrite'); tx.objectStore('meta').clear(); tx.objectStore('data').clear(); await new Promise(r => { tx.oncomplete = r; tx.onerror = r; tx.onabort = r; }); } catch (e) {}
     await new Promise(r => setTimeout(r, 700));   // đợi bản dự phòng IndexedDB ghi xong việc xoá
