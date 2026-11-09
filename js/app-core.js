@@ -11124,6 +11124,11 @@ function bcWatched() {
   return BC_STATE.watched;
 }
 function bcSaveWatched() { try { localStorage.setItem(BC_KEY, JSON.stringify([...bcWatched()])); } catch (e) {} }
+/* v207: podcast "A1 English Listening Practice" của kênh YouTube Listening Time (Conner Pe, giọng Mỹ, nói chậm và rõ).
+   Chỉ nhúng trình phát chính thức của YouTube, có ghi nguồn; app không tải hay sao chép video / lời thoại. */
+const LT_A1 = [["erjMgola4fQ", "Language Learning", "3:43"], ["uVGV8LG3HHM", "Cooking", "5:59"], ["eYAaLWdx_h0", "Weather", "5:04"], ["2XRnB4wy4yA", "Pets", "4:28"], ["98pYyFdHw38", "New Year's Resolutions", "4:11"], ["aQ0w2I0Eb9I", "Daily Routine", "4:46"], ["Y6CERK3AXCw", "Social Media Apps", "4:31"], ["uxbG_tFS0Jw", "Exercise", "4:47"], ["ApzkloKc3Lc", "Homes", ""], ["jbdoyphEcsc", "Soccer", ""], ["v95eemWZ-4s", "Jobs", ""], ["Wlehc1l50bk", "Transportation", "4:25"], ["96SnY-0Ofw0", "Technology", ""], ["XWq58Abc7zk", "Supermarket", ""], ["h6sAX1y35Zg", "Money", ""], ["SXR3KPLyyt0", "Education", ""], ["2hFGsSB02JY", "Free Time", ""], ["CSj8Y_s_38c", "American Sports", ""], ["U39JONkW2FE", "The Internet", ""], ["cRemof9m4BQ", "Productivity", "7:40"], ["PMuwE810XGk", "The English Language", ""], ["osfpfrKapZU", "Music", "6:52"], ["SbKOqfbsnd4", "Summer", "6:24"], ["qLR9QD8vxK8", "Countries", ""], ["vvnTnvSuF6o", "Working from Home", ""], ["BKK3QuZ0nFM", "Staying Organized", ""]];
+const LT_PLAYLIST = 'https://www.youtube.com/playlist?list=PLhNRdHEdUQewzYZ0X6gt3x9_CVen_HldI';
+try { const a1 = BC_LEVELS.find(l => l.id === 'a1'); if (a1 && !a1.cols.some(c => c.src === 'lt')) a1.cols.unshift({ icon: '🎧', name: 'Listening Time · Podcast A1', src: 'lt', v: LT_A1.map(([id, t, d]) => [id, t, d || '~5:00']) }); } catch (e) {}
 const BC_FLAT = [];
 BC_LEVELS.forEach(lv => lv.cols.forEach(c => c.v.forEach(v => BC_FLAT.push({ id: v[0], t: v[1], d: v[2], lv, col: c }))));
 function bcEl() { return document.getElementById('ls-bc'); }
@@ -11163,8 +11168,8 @@ function bcRenderList() {
   const root = bcEl();
   root.innerHTML = '';
   const intro = lsEl('div', 'bc-intro');
-  intro.appendChild(lsEl('div', 'bc-intro-t', '📺 Video của British Council'));
-  intro.appendChild(lsEl('div', 'bc-intro-s', `${BC_FLAT.length} video miễn phí từ kênh YouTube LearnEnglish, xếp theo trình độ. Video phát bằng trình phát chính thức của YouTube, bản quyền thuộc British Council. App này không liên kết và không được British Council bảo trợ.`));
+  intro.appendChild(lsEl('div', 'bc-intro-t', '📺 Video của British Council và Listening Time'));
+  intro.appendChild(lsEl('div', 'bc-intro-s', `${BC_FLAT.length} video miễn phí, xếp theo trình độ: các kênh YouTube LearnEnglish (British Council) và Listening Time (podcast A1 của Conner Pe). Video phát bằng trình phát chính thức của YouTube, bản quyền thuộc chủ kênh. App này không liên kết và không được các kênh trên bảo trợ.`));
   root.appendChild(intro);
 
   const chips = lsEl('div', 'colloc-chips bc-levels');
@@ -11382,7 +11387,9 @@ function bcRenderPlayer() {
   const yt = lsEl('a', 'btn-ghost bc-yt', '↗ Mở trên YouTube');
   yt.href = `https://www.youtube.com/watch?v=${id}`; yt.target = '_blank'; yt.rel = 'noopener';
   root.appendChild(yt);
-  root.appendChild(lsEl('p', 'bc-credit', 'Video © British Council, phát qua YouTube (app không liên kết với British Council). Mẹo: nói nhanh quá thì bật 🐢 Chậm (0.75×). Video không phát trong bản xem trước, hãy mở app qua GitHub Pages.'));
+  root.appendChild(lsEl('p', 'bc-credit', (item.col.src === 'lt'
+    ? 'Video © Listening Time (Conner Pe), phát qua YouTube (app không liên kết với Listening Time). Mẹo'
+    : 'Video © British Council, phát qua YouTube (app không liên kết với British Council). Mẹo') + ': nói nhanh quá thì bật 🐢 Chậm (0.75×). Video không phát trong bản xem trước, hãy mở app qua GitHub Pages.'));
 }
 
 
