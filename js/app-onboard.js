@@ -129,7 +129,7 @@
   const standalone = () => (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone;
   const isIOS = () => /iP(hone|ad|od)/.test(navigator.userAgent) || (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
 
-  function onboard(force) {
+  function onboard(force, welcome) {
     if (document.querySelector('.hta-ob')) return;
     const ans = { goal: 20, lv: 'test', at: '20:00' };
     try { ans.goal = Math.max(5, +get(P + 'dash-goal') || 20); } catch (e) {}
@@ -165,7 +165,9 @@
       box.appendChild(top);
       if (step === 0) {
         const hero = E('div', 'hta-ob-hero'); hero.appendChild(E('span', 'hta-ob-logo', 'En'));
-        hero.appendChild(E('span', null, 'Chào bạn! Mình giúp bạn bắt đầu trong 1 phút.')); box.appendChild(hero);
+        hero.appendChild(E('span', null, welcome != null
+          ? `Chào mừng${welcome ? ' ' + welcome : ''}! Tài khoản của bạn đã sẵn sàng — mình giúp bạn bắt đầu trong 1 phút.`
+          : 'Chào bạn! Mình giúp bạn bắt đầu trong 1 phút.')); box.appendChild(hero);
         box.appendChild(E('h2', null, 'Mỗi ngày bạn muốn học bao lâu?')).id = 'hta-ob-h';
         box.appendChild(E('p', 'hta-ob-p', 'Ít mà đều quan trọng hơn nhiều mà bỏ dở. Đổi lại được bất cứ lúc nào ở tab Hôm nay.'));
         const list = E('div', 'hta-ob-list');
@@ -223,6 +225,15 @@
     if (!isNew()) put(FLAG, 'existing');
     else setTimeout(() => { if (!get(FLAG) && isNew()) onboard(false); }, 600);
   }
+  /* v204: tài khoản mới → chào mừng + gợi ý làm bài kiểm tra trình độ.
+     Cờ ob-new được đặt khi đăng nhập lần đầu vào tài khoản chưa có dữ liệu; giữ qua lần tải lại trang. */
+  const newAcct = name => {
+    try { localStorage.removeItem(P + 'ob-new'); } catch (e) {}
+    const old = document.querySelector('.hta-ob'); if (old) { old.remove(); document.body.classList.remove('hta-ob-open'); }
+    setTimeout(() => onboard(true, name || ''), 300);
+  };
+  window.addEventListener('hta-new-account', e => newAcct(e && e.detail && e.detail.name));
+  { const f = get(P + 'ob-new'); if (f) setTimeout(() => newAcct(f === '1' ? '' : f), 700); }
   // chân trang: mở lại hướng dẫn bắt đầu
   const links = document.querySelector('.legal-links');
   if (links) {

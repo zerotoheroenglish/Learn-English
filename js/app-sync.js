@@ -19,7 +19,7 @@ const FIREBASE_CONFIG = {
   if (!FIREBASE_CONFIG || !btn) return;
   btn.hidden = false;
   const PREFIX = 'hoc-tieng-anh-', META = PREFIX + 'sync-meta', UIDK = PREFIX + 'sync-uid', BASEK = PREFIX + 'sync-base';
-  const SKIP = new Set([PREFIX + 'voice', META, UIDK, BASEK, PREFIX + 'autofix-open', PREFIX + 'backup-at', PREFIX + 'backup-nag', PREFIX + 'backup-every', PREFIX + 'ipa-cache', PREFIX + 'talk-key', PREFIX + 'talk-model', PREFIX + 'talk-models', PREFIX + 'talk-prov', PREFIX + 'talk-key-groq', PREFIX + 'talk-model-groq', PREFIX + 'talk-models-groq', PREFIX + 'talk-key-openai', PREFIX + 'talk-model-openai', PREFIX + 'talk-models-openai', PREFIX + 'syncbar-at', PREFIX + 'syncbar-mute', PREFIX + 'sync-dev', PREFIX + 'push']);   // v128: cache IPA tự tạo lại được, không cần đẩy lên tài khoản   // device-specific / bookkeeping
+  const SKIP = new Set([PREFIX + 'voice', META, UIDK, BASEK, PREFIX + 'autofix-open', PREFIX + 'backup-at', PREFIX + 'backup-nag', PREFIX + 'backup-every', PREFIX + 'ipa-cache', PREFIX + 'talk-key', PREFIX + 'talk-model', PREFIX + 'talk-models', PREFIX + 'talk-prov', PREFIX + 'talk-key-groq', PREFIX + 'talk-model-groq', PREFIX + 'talk-models-groq', PREFIX + 'talk-key-openai', PREFIX + 'talk-model-openai', PREFIX + 'talk-models-openai', PREFIX + 'syncbar-at', PREFIX + 'syncbar-mute', PREFIX + 'sync-dev', PREFIX + 'push', PREFIX + 'ob-new']);   // v128: cache IPA tự tạo lại được, không cần đẩy lên tài khoản   // device-specific / bookkeeping
   const FB = 'https://www.gstatic.com/firebasejs/10.12.2/';
   const $ = id => document.getElementById(id);
   const sheet = $('asheet'), msg = $('acct-msg');
@@ -170,13 +170,14 @@ const FIREBASE_CONFIG = {
     if (syncing) { again = true; return; }
     syncing = true; setStatus('syncing');
     const uid = user.uid, prevUid = localStorage.getItem(UIDK);
-    let changes = [], merged = null;
+    let changes = [], merged = null, fresh = false;
     try {
       const ref = db.collection('users').doc(uid);
       await db.runTransaction(async tx => {
         changes = [];
         const snap = await tx.get(ref);
         const cloud = snap.exists ? snap.data() : {};
+        fresh = !snap.exists;
         const cData = await readCloud(cloud), cTs = cloud.ts || {};
         const { data: lData, ts: lTs } = localSnapshot();
         const firstHere = !prevUid, otherUser = prevUid && prevUid !== uid;
@@ -229,6 +230,13 @@ const FIREBASE_CONFIG = {
       try { localStorage.setItem(UIDK, uid); if (merged) localStorage.setItem(BASEK, JSON.stringify(merged)); } catch (e) {}
       applying = false;
       lastSync = Date.now(); setStatus('ok');
+      // v204: tài khoản mới tinh (chưa có gì trên mây) vừa đăng nhập/tạo → mở màn chào mừng + bài kiểm tra trình độ
+      if (fresh && reason === 'signin') {
+        const nm = (user.displayName || (user.email || '').split('@')[0] || '').trim();
+        try { localStorage.setItem(PREFIX + 'ob-new', nm || '1'); } catch (e) {}
+        close();
+        try { window.dispatchEvent(new CustomEvent('hta-new-account', { detail: { name: nm } })); } catch (e) {}
+      }
       if (changes.length) { try { window.dispatchEvent(new CustomEvent('hta-synced', { detail: changes.map(c => c[0]) })); } catch (e) {} remoteChanged(reason, changes); }
     } catch (e) {
       applying = false;
