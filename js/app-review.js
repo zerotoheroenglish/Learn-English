@@ -1149,7 +1149,7 @@
       [['v', x.v.length], ['g', x.g.length], ['i', x.i.length], ['m', x.m.length]].forEach(([k, m]) => { if (m) chips.appendChild(E('span', 'rv-chip', `${SRC[k][0]} ${SRC[k][1]}: ${m}${k === 'g' ? ' bài' : ''}`)); });
       c.appendChild(chips);
       const cap = Math.min(n, set.max);
-      const mins = Math.max(1, Math.round((Math.min(x.v.length + x.i.length + x.m.length, cap) * 8 + Math.min(x.g.length, 4) * 2 * 25) / 60));
+      const mins = Math.max(1, Math.round((Math.min(x.v.length + x.i.length + x.m.length, cap) * 12 + Math.min(x.g.length, 4) * 2 * 25) / 60));
       const go = E('button', 'btn-primary rv-go', `▶ Bắt đầu ôn ${cap < n ? cap + ' thẻ' : ''} (khoảng ${mins} phút)`.replace('  ', ' ')); go.type = 'button';
       go.addEventListener('click', () => { if (go.disabled) return; go.disabled = true; go.textContent = 'Đang chuẩn bị thẻ…'; start(x); });
       c.appendChild(go);
@@ -1299,9 +1299,9 @@
     d.appendChild(E('summary', null, '💡 App tính lịch ôn thế nào?'));
     [
       'App dùng FSRS, thuật toán ôn tập giãn cách mã nguồn mở (Anki cũng dùng). Mỗi thẻ có độ khó riêng và “độ bền trí nhớ” riêng.',
-      'Mỗi lần ôn, bạn tự chấm: Quên · Khó · Nhớ · Dễ. Số ngày dưới mỗi nút là lúc thẻ quay lại nếu bạn chọn nút đó.',
+      'Sau khi kiểm tra, bạn chọn Khó · Nhớ · Dễ (hoặc Quên). Số ngày dưới mỗi nút là lúc thẻ quay lại nếu bạn chọn nút đó.',
       'Thẻ bạn hay quên sẽ quay lại sớm; thẻ bạn nhớ dễ dàng được giãn dần: vài ngày → vài tuần → vài tháng (tối đa 1 năm). Lịch được đặt để lúc ôn bạn vẫn nhớ khoảng 90%.',
-      'Chấm thật lòng giúp lịch chính xác hơn: chỉ chọn “Nhớ” khi bạn nhớ được trước khi lật thẻ.',
+      'Mỗi thẻ bạn tự gõ đáp án tiếng Anh, app chấm đúng/sai. Gõ đúng thì bạn chọn Khó · Nhớ · Dễ tuỳ mức bạn phải nghĩ; gõ sai thì gõ lại đáp án một lần và thẻ quay lại cuối phiên.',
       'Tiến độ ôn ở tab Từ vựng, Ngữ pháp, Bất quy tắc và ở đây là một: ôn ở đâu cũng được tính.'
     ].forEach(t => d.appendChild(E('p', null, t)));
     return d;
@@ -1353,7 +1353,187 @@
     const c = S.q[S.i];
     S.box.innerHTML = '';
     if (c.k === 'g') return gramCard(c);
+    if (typeCard(c) !== false) return;
     flipCard(c);
+  }
+
+  /* ===== v209: ÔN BẰNG CÁCH VIẾT =====
+     Không lật thẻ nữa: người học nhìn nghĩa tiếng Việt rồi tự gõ từ/cụm tiếng Anh (động từ bất quy tắc: gõ V2, V3).
+     Viết ra buộc não nhớ lại chủ động và nhớ cả chính tả → nhớ lâu hơn nhận diện.
+     App tự chấm: đúng → chọn Khó/Nhớ/Dễ · gần đúng (sai 1 chữ) → Khó · sai/không nhớ → xem đáp án, gõ lại đúng một lần, thẻ quay lại cuối phiên. */
+  const tNorm = x => String(x || '').toLowerCase().replace(/[’‘`´]/g, "'").replace(/[.,!?;:"“”()\[\]]/g, ' ').replace(/\s+/g, ' ').trim();
+  function tAlts(w) {
+    const out = new Set();
+    String(w || '').split(/\s*[\/,;]\s*/).forEach(a => {
+      if (!a.trim()) return;
+      out.add(tNorm(a.replace(/\(([^)]*)\)/g, '$1')));      // look (at) → look at
+      out.add(tNorm(a.replace(/\([^)]*\)/g, ' ')));           // look (at) → look
+      out.add(tNorm(a.replace(/\b(sb|sth|somebody|something|someone|one's)\b/gi, ' ')));
+    });
+    out.delete('');
+    return [...out];
+  }
+  function lev(a, b) {
+    if (Math.abs(a.length - b.length) > 2) return 9;
+    const d = Array.from({ length: a.length + 1 }, (_, i) => [i]);
+    for (let j = 1; j <= b.length; j++) d[0][j] = j;
+    for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++)
+      d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+    return d[a.length][b.length];
+  }
+  // 2 = đúng · 1 = gần đúng (sai một chữ, thiếu "to"/mạo từ) · 0 = sai
+  function tJudge(typed, alts) {
+    const t = tNorm(typed).replace(/^(to|a|an|the) /, '');
+    if (!t) return 0;
+    for (const a of alts) { const b = a.replace(/^(to|a|an|the) /, ''); if (t === a || t === b) return 2; }
+    for (const a of alts) { const b = a.replace(/^(to|a|an|the) /, ''); if (b.length >= 4 && lev(t, b) <= 1) return 1; }
+    if (window.gxlSame) for (const a of alts) { if (a.split(' ').length >= 4 && gxlSame(typed, a)) return 2; }
+    return 0;
+  }
+  function tInput(ph, label) {
+    const inp = E('input', 'rv-tin'); inp.type = 'text'; inp.placeholder = ph; inp.setAttribute('aria-label', label || ph);
+    inp.autocomplete = 'off'; inp.setAttribute('autocapitalize', 'off'); inp.setAttribute('autocorrect', 'off'); inp.spellcheck = false;
+    inp.setAttribute('enterkeyhint', 'done');
+    return inp;
+  }
+  function planFor(c, rec, g) {
+    const d = today();
+    if (c.k === 'v') { const r = Object.assign({}, rec || {}); if (rec && (rec.n || rec.w)) srSeed(r, rec.t ? Math.max(1, rec.due - rec.t) : 1, rec.w > rec.n, rec.t || undefined); return g === 1 ? 1 : srPlan(r, g, d).ivl; }
+    if (c.k === 'i') { const r = Object.assign({}, rec || {}); if (rec && (rec.n || rec.b)) srSeed(r, IRR_INT[Math.max(0, (rec.b || 1) - 1)], (rec.w || 0) * 2 > (rec.n || 0), rec.last); return g === 1 ? 0 : srPlan(r, g, d).ivl; }
+    return g === 1 ? 1 : srPlan(rec, g, d).ivl;
+  }
+  function typeCard(c) {
+    // dữ liệu của thẻ: lời nhắc (tiếng Việt) và các ô cần gõ
+    let rec, ask, prompt, sub = '', fields, after = [], speakAfter = '', hintSrc = '';
+    if (c.k === 'v') {
+      const it = c.it; rec = srs[vcK(it)];
+      if (!it.vi || !it.w) return false;
+      ask = 'Viết từ tiếng Anh có nghĩa:'; prompt = it.vi; sub = (typeof VC_POS !== 'undefined' && VC_POS[it.pos]) || '';
+      fields = [{ ph: 'Gõ từ tiếng Anh…', ans: it.w, alts: tAlts(it.w) }];
+      hintSrc = it.w; speakAfter = it.w;
+      after.push(() => wordLine(it.w, it.ipa));
+      if (it.ex) after.push(() => { const ex = E('div', 'rv-ex'); ex.appendChild(E('span', null, it.ex)); ex.appendChild(play(it.ex)); return ex; });
+      if (it.exvi) after.push(() => E('div', 'rv-exvi', it.exvi));
+    } else if (c.k === 'i') {
+      const v = c.v; rec = irrSrs[v.v1];
+      ask = 'Viết V2 và V3 của động từ:'; prompt = v.v1; sub = v.meaning || '';
+      fields = [{ ph: 'V2 (quá khứ)', ans: v.v2, alts: tAlts(v.v2), lab: 'V2' }, { ph: 'V3 (quá khứ phân từ)', ans: v.v3, alts: tAlts(v.v3), lab: 'V3' }];
+      const all = [v.v1, v.v2.split('/')[0], v.v3.split('/')[0]].join(' – ');
+      speakAfter = all;
+      after.push(() => { const forms = E('div', 'rv-forms'); [['V1', v.v1], ['V2', v.v2], ['V3', v.v3]].forEach(([l, w]) => { const f = E('div', 'rv-form'); f.appendChild(E('span', null, l)); f.appendChild(E('b', null, w)); forms.appendChild(f); }); return forms; });
+    } else {
+      const m = cards[c.id]; rec = m;
+      if (!m || m.src === 'fx') return false;
+      const viFront = VI_RE.test(m.f), en = viFront ? m.b : m.f, vi = viFront ? m.f : m.b;
+      if (!en || !vi || VI_RE.test(en)) return false;
+      ask = en.trim().split(/\s+/).length > 3 ? 'Viết câu tiếng Anh có nghĩa:' : 'Viết bằng tiếng Anh:'; prompt = vi;
+      fields = [{ ph: 'Gõ tiếng Anh…', ans: en, alts: tAlts(en).concat([tNorm(en)]) }];
+      hintSrc = en.trim().split(/\s+/).length <= 3 ? en : ''; speakAfter = en;
+      after.push(() => { const b = E('div', 'rv-ex'); b.appendChild(E('b', null, en)); b.appendChild(play(en)); return b; });
+    }
+    const card = E('div', 'tense-card rv-card rv-type');
+    const tag = E('div', 'rv-tag', SRC[c.k][0] + ' ' + SRC[c.k][1]); card.appendChild(tag);
+    if (c.k === 'm' && isNew(cards[c.id])) tag.appendChild(E('span', 'rv-new', 'MỚI'));
+    card.appendChild(E('div', 'rv-ask', ask));
+    const pw = E('div', 'rv-word' + (c.k === 'i' ? '' : ' vi')); pw.textContent = prompt; card.appendChild(pw);
+    if (c.k === 'i') pw.appendChild(play(prompt));
+    if (sub) card.appendChild(E('div', 'rv-sub', sub));
+    const form = E('form', 'rv-tform'); form.setAttribute('novalidate', '');
+    fields.forEach(f => {
+      const row = E('label', 'rv-trow');
+      if (f.lab) row.appendChild(E('span', 'rv-tlab', f.lab));
+      f.inp = tInput(f.ph); row.appendChild(f.inp); form.appendChild(row);
+    });
+    card.appendChild(form);
+    // gợi ý: hiện dần từng chữ (a _ _ _ _) — dùng gợi ý thì tối đa chỉ được "Khó"
+    let hints = 0;
+    const hintEl = E('div', 'rv-thint'); hintEl.hidden = true; card.appendChild(hintEl);
+    const showHint = () => {
+      hints++;
+      const w = hintSrc.replace(/\([^)]*\)/g, '').split('/')[0].trim();
+      let k = 0;
+      hintEl.textContent = '💡 ' + [...w].map(ch => /[a-z]/i.test(ch) ? (k++ < hints ? ch : '_') : ch).join(' ').replace(/ {3}/g, '   ');
+      hintEl.hidden = false;
+    };
+    const res = E('div', 'rv-tres'); res.hidden = true; card.appendChild(res);
+    const back = E('div', 'rv-back'); back.hidden = true; card.appendChild(back);
+    const acts = E('div', 'rv-tacts');
+    const check = E('button', 'btn-primary rv-tcheck', 'Kiểm tra'); check.type = 'button';
+    const hintB = E('button', 'btn-ghost rv-thintb', '💡 Gợi ý'); hintB.type = 'button';
+    const giveUp = E('button', 'btn-ghost rv-tgive', 'Không nhớ'); giveUp.type = 'button';
+    if (hintSrc) acts.appendChild(hintB);
+    acts.appendChild(giveUp); acts.appendChild(check);
+    card.appendChild(acts);
+    const grades = E('div', 'rv-grades'); grades.hidden = true; card.appendChild(grades);
+    S.box.appendChild(card);
+    S.reveal = null; S.grades = grades;
+    setTimeout(() => { try { fields[0].inp.focus({ preventScroll: true }); } catch (e) { fields[0].inp.focus(); } }, 60);
+
+    const showBack = () => { after.forEach(fn => back.appendChild(fn())); back.hidden = false; if (speakAfter) say(speakAfter); };
+    const showGrades = list => {
+      grades.innerHTML = '';
+      grades.style.gridTemplateColumns = `repeat(${list.length}, 1fr)`;
+      const L = { 1: ['Quên', 'bad'], 2: ['Khó', 'mid'], 3: ['Nhớ', 'ok'], 4: ['Dễ', 'easy'] };
+      list.forEach(g => {
+        const b = E('button', 'rv-g ' + L[g][1]); b.type = 'button'; b.dataset.g = g;
+        const iv = planFor(c, rec, g);
+        b.appendChild(E('b', null, L[g][0])); b.appendChild(E('span', null, iv <= 0 ? 'ôn lại ngay' : srFmt(iv)));
+        b.addEventListener('click', () => grade(c, g));
+        grades.appendChild(b);
+      });
+      grades.hidden = false;
+      const def = grades.querySelector('.rv-g.ok') || grades.querySelector('.rv-g.mid') || grades.firstChild;
+      setTimeout(() => { try { def.focus({ preventScroll: true }); } catch (e) {} }, 30);
+    };
+    // sai → phải gõ lại đúng một lần (viết để ghi nhớ) rồi mới đi tiếp, thẻ chấm "Quên"
+    const retype = wrong => {
+      acts.innerHTML = '';
+      res.appendChild(E('div', 'rv-tre', '✍️ Gõ lại đáp án đúng một lần để ghi nhớ:'));
+      wrong.forEach(f => { f.inp.disabled = false; f.inp.value = ''; f.inp.classList.remove('bad'); f.inp.placeholder = 'Gõ lại đáp án…'; });
+      const go = E('button', 'btn-primary rv-tcheck', 'Tiếp →'); go.type = 'button'; go.disabled = true;
+      acts.appendChild(go);
+      const ok = () => wrong.every(f => tJudge(f.inp.value, f.alts) === 2);
+      wrong.forEach(f => f.inp.addEventListener('input', () => { const g = tJudge(f.inp.value, f.alts) === 2; f.inp.classList.toggle('good', g); go.disabled = !ok(); }));
+      form.onsubmit = e => { e.preventDefault(); if (ok()) grade(c, 1); };
+      go.addEventListener('click', e => { e.preventDefault(); if (ok()) grade(c, 1); });
+      setTimeout(() => { try { wrong[0].inp.focus({ preventScroll: true }); } catch (e) {} }, 30);
+    };
+    const finish = gaveUp => {
+      const scores = fields.map(f => gaveUp ? 0 : tJudge(f.inp.value, f.alts));
+      fields.forEach((f, i) => { f.inp.disabled = true; f.inp.classList.add(scores[i] === 2 ? 'good' : scores[i] === 1 ? 'near' : 'bad'); });
+      hintEl.hidden = true;
+      const min = Math.min(...scores);
+      res.hidden = false; res.innerHTML = '';
+      if (min === 2) {
+        res.appendChild(E('div', 'rv-fxr ok', hints ? '✓ Đúng (có dùng gợi ý)' : '✓ Chính xác!'));
+        showBack(); acts.hidden = true; showGrades(hints ? [1, 2] : [2, 3, 4]);
+      } else if (min === 1) {
+        res.appendChild(E('div', 'rv-fxr mid', '≈ Gần đúng, chú ý chính tả: ' + fields.filter((f, i) => scores[i] === 1).map(f => f.ans).join(' · ')));
+        showBack(); acts.hidden = true; showGrades([1, 2]);
+      } else {
+        res.appendChild(E('div', 'rv-fxr bad', (gaveUp ? 'Đáp án: ' : '✗ Chưa đúng. Đáp án: ') + fields.map(f => (f.lab ? f.lab + ' ' : '') + f.ans).join(' · ')));
+        showBack();
+        retype(fields.filter((f, i) => scores[i] !== 2));
+      }
+    };
+    form.onsubmit = e => {
+      e.preventDefault();
+      const empty = fields.find(f => !f.inp.value.trim());
+      if (empty) { empty.inp.focus(); return; }
+      finish(false);
+    };
+    check.addEventListener('click', e => { e.preventDefault(); form.onsubmit(e); });
+    // Enter: ô V2 còn trống ô V3 → sang ô V3; còn lại → kiểm tra (form nhiều ô không tự gửi khi bấm Enter)
+    fields.forEach((f, i) => f.inp.addEventListener('keydown', e => {
+      if (e.key !== 'Enter' || e.isComposing) return;
+      e.preventDefault();
+      const nx = fields[i + 1];
+      if (nx && f.inp.value.trim() && !nx.inp.value.trim() && !nx.inp.disabled) { nx.inp.focus(); return; }
+      if (typeof form.onsubmit === 'function') form.onsubmit(e);
+    }));
+    hintB.addEventListener('click', () => { showHint(); fields[0].inp.focus(); });
+    giveUp.addEventListener('click', () => finish(true));
+    if (set.auto && c.k === 'i') say(prompt);
   }
   // thẻ lật: mặt trước → tự nhớ → lật → chấm 4 mức
   function flipCard(c) {
@@ -1512,12 +1692,12 @@
     S.prog.textContent = 'Xong';
     refresh();
   }
-  // phím tắt trong phiên: Space lật thẻ · 1–4 chấm
+  // phím tắt trong phiên: Space lật thẻ · 1–4 chấm (thẻ gõ chữ: Enter kiểm tra; sau đó 1–4 khi con trỏ không ở ô gõ)
   document.addEventListener('keydown', e => {
     if (!page.classList.contains('active') || !S || e.ctrlKey || e.metaKey || e.altKey) return;
     const t = e.target; if (t && /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return;
     if (e.key === ' ' && S.reveal && !S.reveal.hidden && S.reveal.isConnected) { S.reveal.click(); e.preventDefault(); e.stopImmediatePropagation(); }
-    else if (/^[1-4]$/.test(e.key) && S.grades && !S.grades.hidden && S.grades.isConnected) { S.grades.children[+e.key - 1].click(); e.preventDefault(); e.stopImmediatePropagation(); }
+    else if (/^[1-4]$/.test(e.key) && S.grades && !S.grades.hidden && S.grades.isConnected) { const b = S.grades.querySelector(`[data-g="${e.key}"]`) || (S.grades.querySelector('[data-g]') ? null : S.grades.children[+e.key - 1]); if (b) { b.click(); e.preventDefault(); e.stopImmediatePropagation(); } }
   }, true);
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') refresh(); });
   document.querySelectorAll('nav.tabbar button').forEach(b => b.addEventListener('click', () => { if (S) { finishGrammar(); S = null; } setTimeout(refresh, 0); }));
