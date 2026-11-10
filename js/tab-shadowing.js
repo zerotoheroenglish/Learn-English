@@ -2007,11 +2007,48 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     main.appendChild(box);
     main.appendChild(controls(() => playAll(view.idx)));
   }
+  /* v211: video YouTube có mốc thời gian → phát LIỀN MỘT MẠCH từ câu đang chọn tới hết bài, chữ tự chạy theo thời gian của video.
+     Trước đây mỗi câu: tua tới đầu câu → phát → dừng ở cuối câu → nghỉ 0,45 s → tua lại, nên video khựng một nhịp giữa các câu. */
+  function ytWhenReady() {
+    return new Promise(res => {
+      if (yt.failed || !yt.id) return res(false);
+      if (yt.player && yt.ready) return res(true);
+      ytNow(yt.holder);
+      const t1 = Date.now(), w = setInterval(() => { if (yt.player && yt.ready) { clearInterval(w); res(true); } else if (yt.failed || Date.now() - t1 > 12000) { clearInterval(w); res(false); } }, 150);
+    });
+  }
+  async function playAllVideo(l, from, my) {
+    if (!(await ytWhenReady()) || my !== tok) return false;
+    const pl = yt.player, tm = l.tm, last = Math.min(tm.length, l.s.length) - 1;
+    try { speechSynthesis.cancel(); } catch (e) {}
+    try { pl.setPlaybackRate(set.speed || 1); pl.seekTo(Math.max(0, tm[from][0] - 0.1), true); pl.playVideo(); } catch (e) { return false; }
+    const segAt = t => { let k = 0; while (k < last && tm[k + 1][0] <= t + 0.05) k++; return k; };
+    return new Promise(res => {
+      let seen = false; const t0 = Date.now();
+      yt.pending = ok => { clearInterval(yt.timer); yt.timer = 0; res(ok ? true : 'stop'); };
+      clearInterval(yt.timer);
+      yt.timer = setInterval(() => {
+        if (my !== tok) { clearInterval(yt.timer); yt.timer = 0; yt.pending = null; return res('stop'); }
+        let t = 0, st = -1; try { t = pl.getCurrentTime(); st = pl.getPlayerState(); } catch (e) { return; }
+        if (!seen) { if (t >= tm[from][0] - 1) seen = true; else if (Date.now() - t0 > 8000) { clearInterval(yt.timer); yt.timer = 0; yt.pending = null; return res(false); } return; }
+        const k = segAt(t);
+        if (k !== view.idx) { view.idx = k; touch(l); renderSide(); renderMain(); }
+        if (t >= tm[last][1] + 0.3 || st === 0) { clearInterval(yt.timer); yt.timer = 0; yt.pending = null; try { pl.pauseVideo(); } catch (e) {} res(true); }
+      }, 120);
+    });
+  }
   async function playAll(from) {
     const l = view.lesson;
     stopAll();
     const my = tok;
     playing = true;
+    if (l.yt && l.tm && l.tm[from] && !yt.failed) {
+      view.idx = from; touch(l); renderSide(); renderMain();
+      const r = await playAllVideo(l, from, my);
+      if (r === true && my === tok) { playing = false; renderMain(); return; }
+      if (r === 'stop' || my !== tok) return;
+      // không phát được video → đọc bằng giọng máy như cũ
+    }
     for (let k = from; k < l.s.length; k++) {
       if (my !== tok) return;
       view.idx = k; touch(l);
