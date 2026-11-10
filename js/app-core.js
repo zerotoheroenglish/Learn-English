@@ -8063,7 +8063,8 @@ function srFree(o) {
 
 /* v141: nghe nhanh hơn. Trước đây app chờ trình duyệt tự xác định bạn đã nói xong (thường 1–3 giây im lặng, iPhone có khi lâu hơn).
    Giờ app nhận chữ ngay trong lúc bạn nói (interim): nói đúng hết câu mẫu → chấm ngay; ngừng nói ~0.8–1.2 giây → tự chốt. */
-let VSP_END = 0, VSP_R = null, VSP_R_BUSY = false;
+const VSP_RELOAD_TIP = '(Trên iPhone đôi khi micro chỉ nhận ở lần nói đầu. Bấm "↻ Mở lại micro" bên dưới: app tải lại đúng chỗ này và bạn nói tiếp được.)';
+let VSP_END = 0, VSP_R = null, VSP_R_BUSY = false, VSP_WAKE_STOP = () => {};
 /* v222: nhật ký kỹ thuật của lần mở micro gần nhất — hiện trong "Chi tiết kỹ thuật" dưới lời báo lỗi, để chụp màn hình gửi người làm app */
 const VSP_DIAG = { n: 0, log: [] };
 window.vspDiag = () => VSP_DIAG.log.join(' · ');   // v221: lúc phiên nhận giọng trước kết thúc — iPhone cần ~1 giây để trả micro trước khi mở phiên mới
@@ -8118,6 +8119,8 @@ function vspListen(target, onDone, onPartial, opts) {
        ("nói được lần đầu, lần 2 không được"). Có kết quả thì kết thúc nhẹ nhàng bằng stop(), chỉ abort khi huỷ. */
     try { r.onresult = r.onerror = r.onsoundstart = r.onspeechstart = r.onaudiostart = r.onstart = null; r.onend = () => { VSP_END = Date.now(); if (r === VSP_R) VSP_R_BUSY = false; }; if (best) r.stop(); else r.abort(); } catch (e) {}
     setTimeout(() => { if (r === VSP_R) VSP_R_BUSY = false; }, 1500);   // phòng khi máy không báo "end"
+    try { VSP_WAKE_STOP(); } catch (e) {}
+    if (err && TTS_IOS && !nRes) err = (err || '') + ' ' + VSP_RELOAD_TIP;
 
     VSP_END = Date.now();
     ttsMicEnded();
@@ -8181,6 +8184,15 @@ function vspListen(target, onDone, onPartial, opts) {
      đợi phiên trước nhả micro) đều làm lệnh mở rơi ra ngoài cú bấm → hệ thống ngắt ngay ("aborted"). Lần bấm đầu thường không phải chờ
      nên chạy được, các lần sau rơi vào nhánh chờ nên hỏng. Giờ luôn mở micro ngay, đồng bộ với cú bấm. */
   micOpening();
+  /* v224: nhật ký iPhone cho thấy từ lần nói thứ 2 micro "mở" nhưng không có tiếng nào vào (không có mốc "có tiếng").
+     Thử: (1) đặt hẳn chế độ thu âm "play-and-record" trong lúc nghe, (2) mở song song một luồng micro để đánh thức bộ thu.
+     Cả hai chỉ làm từ lần thứ 2 trên iPhone; nghe xong trả về "auto" và đóng luồng micro. */
+  let wake = null;
+  if (TTS_IOS && VSP_DIAG.n > 1) {
+    try { if (navigator.audioSession) { navigator.audioSession.type = 'play-and-record'; D('ép thu âm'); } } catch (e) {}
+    try { navigator.mediaDevices.getUserMedia({ audio: true }).then(st => { if (done) st.getTracks().forEach(t => t.stop()); else { wake = st; D('luồng micro'); } }).catch(e => D('luồng lỗi:' + (e && e.name))); } catch (e) {}
+  }
+  VSP_WAKE_STOP = () => { try { wake && wake.getTracks().forEach(t => t.stop()); } catch (e) {} wake = null; };
   t0 = Date.now();
   D('gọi start');
   try { r.start(); } catch (e) {
