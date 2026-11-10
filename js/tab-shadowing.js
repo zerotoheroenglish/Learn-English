@@ -123,7 +123,7 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
   // v189: bản chép lời gói sẵn cho video (v218: đổi tên data/subs.json; vẫn đọc tên cũ data/bbc-subs.json nếu còn)
   let bbcBuilt = {}, bbcBuiltP = null; const bbcBuiltCache = {};
   const getSubs = f => fetch(f).then(r => r.ok ? r.json() : {}).then(j => (j && j.v) || {}).catch(() => ({}));
-  const loadBuilt = () => bbcBuiltP || (bbcBuiltP = Promise.all([getSubs('data/bbc-subs.json'), getSubs('data/subs.json')]).then(([o, n]) => { bbcBuilt = Object.assign({}, o, n); return bbcBuilt; }));
+  const loadBuilt = () => bbcBuiltP || (bbcBuiltP = getSubs('data/subs.json').then(n => { bbcBuilt = n; return bbcBuilt; }));
   const builtSt = id => { if (id in bbcBuiltCache) return bbcBuiltCache[id]; const raw = bbcBuilt[id]; if (typeof raw !== 'string') return null; return (bbcBuiltCache[id] = ytParse(raw)); };
   const bbcSt = id => bbcStore[id] || builtSt(id);
   const bbcLesson = x => { const st = bbcSt(x.id) || {}; return { id: 'bbc-' + x.id, cat: 'bbc', lv: x.lv.n, icon: x.col.icon, yt: x.id, title: x.t, vi: x.col.name, sum: '', s: st.s || [], tm: st.tm || null, bbc: x }; };
@@ -727,22 +727,7 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     root.appendChild(body);
     renderVideoBody(body);
     loadBuilt().then(() => { if (body.isConnected && Object.keys(bbcBuilt).length) renderVideoBody(body); });
-    // v190: gom các bản chép lời đã dán thành file chung → tải lên data/ để mọi người học cùng dùng
-    const mineN = Object.keys(bbcStore).filter(k => bbcStore[k] && bbcStore[k].s && bbcStore[k].s.length).length;
-    if (mineN) {
-      const ex = E('div', 'tense-card sd-export');
-      ex.appendChild(E('div', 'vc-q-label', '📤 Chia sẻ bản chép lời cho mọi người'));
-      ex.appendChild(E('p', 'sd-create-p', `Bạn đã dán bản chép lời cho ${mineN} video. Tải file dưới đây rồi đưa lên thư mục data của kho GitHub (Add file → Upload files): mọi người mở các video đó sẽ có chữ sẵn.`));
-      const b = E('button', 'btn-primary', `⬇️ Tải file subs.json (${mineN + Object.keys(bbcBuilt).filter(k => !bbcStore[k]).length} video)`);
-      b.addEventListener('click', () => {
-        const v = Object.assign({}, bbcBuilt);
-        const t = x => { const h = Math.floor(x / 3600), m = Math.floor(x % 3600 / 60), sec = (x % 60).toFixed(3).padStart(6, '0'); return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${sec}`; };
-        Object.keys(bbcStore).forEach(k => { const st = bbcStore[k]; if (!st || !st.s || !st.s.length || !st.tm) return; v[k] = st.s.map((x, i) => `${t(st.tm[i][0])} --> ${t(st.tm[i][1])}\n${x[0]}\n`).join('\n'); });
-        const blob = new Blob([JSON.stringify({ made: new Date().toISOString().slice(0, 10), v })], { type: 'application/json' });
-        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'subs.json'; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
-      });
-      ex.appendChild(b); root.appendChild(ex);
-    }
+    // v219: bỏ khung "Chia sẻ bản chép lời cho mọi người" — lời thoại thuộc bản quyền của kênh, mỗi người tự dán để học riêng.
   }
   function renderVideoBody(body) {
     body.innerHTML = '';
