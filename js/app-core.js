@@ -8076,8 +8076,18 @@ function vspListen(target, onDone, onPartial, opts) {
   const LONG = nW >= 4;
   const TGT = new Set(lsNorm(vspText(target)));
   r.interimResults = true; r.continuous = LONG; r.maxAlternatives = LONG ? 3 : 5;
-  let done = false, lastAlts = null, quiet = 0, cap = 0, lastTxt = '';
+  let done = false, lastAlts = null, quiet = 0, cap = 0, lastTxt = '', t0 = 0;
   prRecog = r;
+  /* v220: trên iPhone, micro hay bị hệ thống ngắt ngay sau khi mở (lỗi "aborted" hoặc kết thúc tức thì) khi vừa có âm thanh/video
+     phát trước đó. Trước đây app im lặng quay về nút "Nhấn để nói" → bấm mãi không nói được. Nay tự mở lại micro một lần. */
+  const retry = () => {
+    if (done || opts._retried) return false;
+    done = true; clearTimeout(quiet); clearTimeout(cap);
+    try { r.onresult = r.onerror = r.onend = null; r.abort(); } catch (e) {}
+    if (prRecog === r) prRecog = null;
+    setTimeout(() => vspListen(target, onDone, onPartial, Object.assign({}, opts, { _retried: true })), TTS_IOS ? 600 : 300);
+    return true;
+  };
   const scoreAlts = alts => {
     let best = null;
     alts.forEach(t => { if (!t || !t.trim()) return; const sc = vspScore(target, t); if (!best || sc.score > best.score) best = { ...sc, heard: t.trim() }; });
@@ -8120,22 +8130,27 @@ function vspListen(target, onDone, onPartial, opts) {
     quiet = setTimeout(() => finish(scoreAlts(lastAlts), null), wait);
   };
   r.onerror = ev => {
+    if (!lastAlts && (ev.error === 'aborted' || ev.error === 'audio-capture') && Date.now() - t0 < 4000 && retry()) return;
     if (lastAlts && ev.error !== 'not-allowed' && ev.error !== 'service-not-allowed') return finish(scoreAlts(lastAlts), null);
     finish(null, ev.error === 'not-allowed' || ev.error === 'service-not-allowed'
       ? 'Bạn cần cho phép micro và nhận dạng giọng nói cho trình duyệt (iPhone: Cài đặt → Safari → Micrô).'
       : ev.error === 'no-speech' ? 'Không nghe thấy gì. Hãy nói to và gần micro hơn nhé.'
       : ev.error === 'network' ? 'Nhận dạng giọng nói cần có mạng. Kiểm tra kết nối rồi thử lại.'
       : ev.error === 'audio-capture' ? 'Không tìm thấy micro, hoặc micro đang được app khác dùng. Hãy đóng app đó rồi thử lại.'
-      : ev.error === 'aborted' ? '' : 'Không nhận dạng được (' + ev.error + '). Hãy thử lại.');
+      : ev.error === 'aborted' ? 'Micro bị ngắt giữa chừng. Đợi video/giọng mẫu dừng hẳn rồi bấm nói lại.' : 'Không nhận dạng được (' + ev.error + '). Hãy thử lại.');
   };
-  r.onend = () => { if (lastAlts) finish(scoreAlts(lastAlts), null); else finish(null, 'Không nghe rõ. Bấm nói lại và đọc to hơn nhé.'); };
+  r.onend = () => {
+    if (lastAlts) return finish(scoreAlts(lastAlts), null);
+    if (t0 && Date.now() - t0 < 1500 && retry()) return;     // micro vừa mở đã tắt → mở lại một lần
+    finish(null, 'Không nghe rõ. Bấm nói lại và đọc to hơn nhé.');
+  };
   // báo cho giao diện biết micro đã thật sự mở (trước đó nói sẽ bị mất chữ đầu)
   let started = false;
   const ready = () => { if (started || done) return; started = true; try { opts.onStart && opts.onStart(); } catch (e) {} };
   r.onaudiostart = ready; r.onstart = () => setTimeout(ready, 120);
   cap = setTimeout(() => { if (lastAlts) finish(scoreAlts(lastAlts), null); else { try { r.stop(); } catch (e) {} } }, nW <= 2 ? 7000 : 15000);
   // giọng mẫu đang đọc → chờ nó dừng hẳn rồi mới mở micro (tránh tiếng "bụp" và micro thu lại chính giọng máy)
-  const open = () => { if (done) return; const d = micOpening(); const go = () => { if (done) return; try { r.start(); } catch (e) { finish(null, 'Không mở được micro. Hãy thử lại.'); } }; if (d) setTimeout(go, d); else go(); };
+  const open = () => { if (done) return; const d = micOpening(); const go = () => { if (done) return; t0 = Date.now(); try { r.start(); } catch (e) { if (!retry()) finish(null, 'Không mở được micro. Hãy thử lại.'); } }; if (d) setTimeout(go, d); else go(); };
   if (wasTalking) setTimeout(open, TTS_IOS ? 250 : 150); else open();
 }
 

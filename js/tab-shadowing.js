@@ -1888,8 +1888,11 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     const box = E('div', 'sd-mic-w');
     const start = along => {
       if (listening) { try { prRecog && prRecog.stop(); } catch (e) {} return; }
+      // v220: video YouTube đang phát → dừng rồi chờ một nhịp cho iPhone trả micro (mở ngay sẽ bị hệ thống ngắt)
+      let vidOn = false; try { vidOn = !!(yt.player && yt.ready && [1, 3].includes(yt.player.getPlayerState())); } catch (e) {}
       stopAll(); listening = true; micReady = false; last.err = '';
       renderMain();
+      if (vidOn && TTS_IOS && !start._waited) { start._waited = true; setTimeout(() => { listening = false; start(along); start._waited = false; }, 500); return; }
       const target = r[0];
       const setMic = (ic, t) => { const m = document.getElementById('sd-mic'); if (!m) return; const a = m.querySelector('.sd-mic-ic'), b = m.querySelector('.sd-mic-t b'); if (a) a.textContent = ic; if (b) b.textContent = t; };
       vspListen(target, (best, err) => {
