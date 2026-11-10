@@ -8064,6 +8064,7 @@ function srFree(o) {
 
 /* v141: nghe nhanh hơn. Trước đây app chờ trình duyệt tự xác định bạn đã nói xong (thường 1–3 giây im lặng, iPhone có khi lâu hơn).
    Giờ app nhận chữ ngay trong lúc bạn nói (interim): nói đúng hết câu mẫu → chấm ngay; ngừng nói ~0.8–1.2 giây → tự chốt. */
+let VSP_END = 0;   // v221: lúc phiên nhận giọng trước kết thúc — iPhone cần ~1 giây để trả micro trước khi mở phiên mới
 function vspListen(target, onDone, onPartial, opts) {
   opts = opts || {};
   if (prRecog) { try { prRecog.abort(); } catch (e) {} prRecog = null; }
@@ -8097,7 +8098,10 @@ function vspListen(target, onDone, onPartial, opts) {
     if (done) return; done = true;
     clearTimeout(quiet); clearTimeout(cap);
     if (prRecog === r) prRecog = null;
-    try { r.onresult = r.onerror = r.onend = null; r.abort(); } catch (e) {}
+    /* v221: trên iPhone, "abort()" một phiên nhận giọng đang chạy làm hệ thống chưa trả micro kịp → lần nói sau bị ngắt ngay
+       ("nói được lần đầu, lần 2 không được"). Có kết quả thì kết thúc nhẹ nhàng bằng stop(), chỉ abort khi huỷ. */
+    try { r.onresult = r.onerror = null; r.onend = () => { VSP_END = Date.now(); }; if (best) r.stop(); else r.abort(); } catch (e) {}
+    VSP_END = Date.now();
     ttsMicEnded();
     try { if (best && window.actLog) actLog('s'); } catch (e) {}
     onDone(best, err);
@@ -8151,7 +8155,8 @@ function vspListen(target, onDone, onPartial, opts) {
   cap = setTimeout(() => { if (lastAlts) finish(scoreAlts(lastAlts), null); else { try { r.stop(); } catch (e) {} } }, nW <= 2 ? 7000 : 15000);
   // giọng mẫu đang đọc → chờ nó dừng hẳn rồi mới mở micro (tránh tiếng "bụp" và micro thu lại chính giọng máy)
   const open = () => { if (done) return; const d = micOpening(); const go = () => { if (done) return; t0 = Date.now(); try { r.start(); } catch (e) { if (!retry()) finish(null, 'Không mở được micro. Hãy thử lại.'); } }; if (d) setTimeout(go, d); else go(); };
-  if (wasTalking) setTimeout(open, TTS_IOS ? 250 : 150); else open();
+  const gap = TTS_IOS ? Math.max(0, 1000 - (Date.now() - VSP_END)) : 0;
+  if (wasTalking || gap) setTimeout(open, Math.max(gap, wasTalking ? (TTS_IOS ? 250 : 150) : 0)); else open();
 }
 
 function vcStartSpeak(only) {
