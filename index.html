@@ -105,22 +105,6 @@
     });
   };
   HS.mirrorAll = function () { HS.localKeys().forEach(function (k) { mark(k, nGet.call(localStorage, k)); }); };
-  /* v205: CHƯA ĐĂNG NHẬP thì không giữ tiến độ: học bình thường trong lúc app đang mở,
-     nhưng mỗi lần mở lại app, tiến độ của lần trước bị xoá (cả bản dự phòng IndexedDB).
-     Chỉ giữ cài đặt của máy (giọng đọc, mục tiêu mỗi ngày, khoá API tự nhập…). Đăng nhập là tiến độ được lưu. */
-  var KEEP = /^hoc-tieng-anh-(voice|onboard|autofix-open|backup-every|dash-goal|sync-dev|push|syncbar-(at|mute)|ipa-cache|pron-(accent|rate)|talk-(key|model|models|prov)(-groq|-openai)?|folded)$/;
-  HS.guest = false;
-  try {
-    if (!nGet.call(localStorage, P + 'sync-uid')) {
-      HS.guest = true;
-      var gk = [];
-      for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (mine(k) && !KEEP.test(k) && k !== P + 'guest-v205') gk.push(k); }
-      // người đang dùng app mà chưa đăng nhập: lần đầu gặp bản này thì GIỮ tiến độ cũ thêm một lần, để kịp đăng nhập lưu lại
-      if (!nGet.call(localStorage, P + 'guest-v205')) { nSet.call(localStorage, P + 'guest-v205', '1'); if (gk.length > 3) { HS.guestGrace = true; gk = []; } }
-      gk.forEach(function (k) { try { localStorage.removeItem(k); } catch (e) {} });   // qua hook → bản dự phòng cũng xoá theo
-      HS.guestWiped = gk.length;
-    }
-  } catch (e) {}
   if (!window.indexedDB) return;
   var rq;
   try { rq = indexedDB.open(DBN, 1); } catch (e) { return; }
@@ -137,8 +121,7 @@
       // v137: những mục lần trước chưa khôi phục được vì bộ nhớ đầy — vẫn giữ trong IndexedDB, không xoá
       var hold = Array.isArray(all[HOLD]) ? all[HOLD].filter(function (k) { return k in all && lk.indexOf(k) < 0; }) : [];
       HS.hold = hold;
-      if (HS.guest) hold = HS.hold = [];      // v205: khách không khôi phục gì
-      if (!HS.guest && lost.length >= 3 && lost.length >= ik.length * 0.3 && Date.now() - guard > 60000) {
+      if (lost.length >= 3 && lost.length >= ik.length * 0.3 && Date.now() - guard > 60000) {
         // chép lại toàn bộ bản dự phòng (giá trị mặc định app vừa ghi lúc khởi động bị thay bằng tiến độ thật), rồi tải lại
         var r = HS.restore(all, ik);
         try { sessionStorage.setItem('hta-idb-restore', String(Date.now())); sessionStorage.setItem('hta-idb-restored', JSON.stringify({ ok: r.ok, fail: r.fail, total: r.total, failKeys: r.failKeys, tight: r.tight })); } catch (e) {}
@@ -170,14 +153,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="app.css?h=70e30bf0dc">
+<link rel="stylesheet" href="app.css?h=bbc2737750">
 </head>
 <body>
 
 <header class="hero">
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v212</span>
+      <span class="hero-badge">EN ⇄ VI · v213</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice" id="voice-btn" aria-label="Chọn giọng đọc">🔊 <span class="hv-label">Giọng đọc</span></button>
@@ -499,7 +482,7 @@
         </div>
         <button type="button" class="acct-link" id="acct-forgot">Quên mật khẩu?</button>
       </form>
-      <p class="acct-note">Không đăng nhập vẫn học được, nhưng <b>tiến độ không được lưu</b>: đóng hoặc mở lại app là mất. Đăng nhập (miễn phí) để lưu tiến độ và dùng trên nhiều máy.</p>
+      <p class="acct-note">Không đăng nhập vẫn dùng đầy đủ: tiến độ được lưu ngay trên máy này. Đăng nhập (không bắt buộc) để đồng bộ giữa nhiều thiết bị; tiến độ đang có trên máy sẽ được <b>gộp</b> vào tài khoản, không bị ghi đè.</p>
     </div>
     <div id="acct-in" hidden>
       <div class="acct-user">
@@ -511,7 +494,14 @@
         <button class="btn-primary" id="acct-sync">🔄 Đồng bộ ngay</button>
         <button class="btn-ghost" id="acct-out-btn">Đăng xuất</button>
       </div>
-      <p class="acct-note">Tiến độ được lưu trong tài khoản của bạn trên Firebase (Google). Chỉ bạn xem được. Khi đăng xuất, app lưu nốt tiến độ lên tài khoản rồi xoá khỏi máy này (để người khác dùng máy không thấy); đăng nhập lại là có lại toàn bộ.</p>
+      <div class="acct-ask" id="acct-out-ask" hidden>
+        <p><b>Đăng xuất khỏi máy này?</b> App sẽ lưu nốt tiến độ lên tài khoản trước. Bạn muốn làm gì với tiến độ đang có trên máy?</p>
+        <button class="btn-primary" id="acct-out-keep">Đăng xuất, giữ tiến độ trên máy này</button>
+        <button class="btn-ghost acct-danger" id="acct-out-wipe">Đăng xuất và xoá tiến độ khỏi máy này</button>
+        <button class="acct-link" id="acct-out-cancel">Huỷ</button>
+        <p class="acct-note">Giữ: tiếp tục học trên máy này như khách. Nếu sau này đăng nhập một tài khoản khác, tiến độ này sẽ được gộp vào tài khoản đó. Xoá: nên chọn khi dùng máy chung; đăng nhập lại là có lại toàn bộ từ tài khoản.</p>
+      </div>
+      <p class="acct-note">Tiến độ được lưu trên máy này và trong tài khoản của bạn trên Firebase (Google). Chỉ bạn xem được. Khi đăng xuất, bạn chọn giữ hay xoá tiến độ trên máy.</p>
       <button class="acct-link acct-del" id="acct-del">Xoá tài khoản và dữ liệu đã lưu…</button>
     </div>
     <div class="hs-box" id="hs-box">
@@ -760,7 +750,7 @@
 <script src="js/data-vocab.js?h=923ca16f1c"></script>
 <script src="js/app-core.js?h=93795d88ff"></script>
 
-<script src="js/app-sync.js?h=e30168fee3"></script>
+<script src="js/app-sync.js?h=79e8f95282"></script>
 
 <script src="js/app-feedback.js?h=f1bd3f9e55"></script>
 
@@ -1092,6 +1082,6 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
 })();
 </script>
 <!-- tab-para: nạp khi mở tab -->
-<script src="js/app-backup.js?h=7dbd94539b"></script>
+<script src="js/app-backup.js?h=31e5637feb"></script>
 </body>
 </html>

@@ -301,21 +301,7 @@ const FIREBASE_CONFIG = {
       : st === 'ok' ? '✓ Đã đồng bộ lúc ' + new Date(lastSync).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
       : '⚠️ ' + (text || 'Chưa đồng bộ được');
   }
-  /* v205: chưa đăng nhập → tiến độ không được lưu. Nhắc rõ ngay đầu trang. */
-  const gbar = document.createElement('div');
-  gbar.className = 'guest-bar'; gbar.setAttribute('role', 'note');
-  { const t = document.createElement('span');
-    t.textContent = (window.HS && HS.guestGrace)
-      ? '⚠️ Từ nay, chưa đăng nhập thì tiến độ không được lưu. Đăng nhập ngay để giữ tiến độ hiện có — nếu không, lần mở app sau sẽ bị xoá.'
-      : '⚠️ Bạn chưa đăng nhập — tiến độ học sẽ mất khi mở lại app.';
-    const b = document.createElement('button'); b.type = 'button'; b.className = 'guest-bar-btn'; b.textContent = 'Đăng nhập để lưu';
-    b.addEventListener('click', () => btn.click());
-    gbar.appendChild(t); gbar.appendChild(b);
-    const host = document.querySelector('.hero-inner'); if (host) host.appendChild(gbar); }
-  const paintGuest = () => { let has = false; try { has = !!localStorage.getItem(UIDK); } catch (e) {} gbar.hidden = !!user || has; };
-  paintGuest();
   function render() {
-    paintGuest();
     $('acct-out').hidden = !!user; $('acct-in').hidden = !user;
     btn.classList.toggle('on', !!user);
     if (user) {
@@ -445,12 +431,18 @@ const FIREBASE_CONFIG = {
       else fail(e);
     }
   });
-  // v191: đăng xuất = lưu nốt lên tài khoản rồi xoá tiến độ khỏi máy này (người khác dùng máy sẽ bắt đầu sạch).
-  // Chưa lưu được (mất mạng…) thì không đăng xuất, để không mất dữ liệu.
-  $('acct-out-btn').addEventListener('click', async () => {
-    const b = $('acct-out-btn');
+  /* v213: đăng xuất = lưu nốt lên tài khoản, rồi NGƯỜI DÙNG CHỌN: giữ tiến độ trên máy (mặc định) hoặc xoá khỏi máy.
+     Chưa lưu được (mất mạng…) thì không đăng xuất, để không mất dữ liệu. */
+  const ask = $('acct-out-ask');
+  $('acct-out-btn').addEventListener('click', () => { ask.hidden = !ask.hidden; say(''); if (!ask.hidden) try { ask.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } catch (e) {} });
+  $('acct-out-cancel').addEventListener('click', () => { ask.hidden = true; });
+  $('acct-out-keep').addEventListener('click', () => logout(false));
+  $('acct-out-wipe').addEventListener('click', () => logout(true));
+  async function logout(wipe) {
+    const b = wipe ? $('acct-out-wipe') : $('acct-out-keep'), others = [$('acct-out-keep'), $('acct-out-wipe'), $('acct-out-btn')];
     if (b.disabled) return;
-    b.disabled = true; const old = b.textContent; b.textContent = 'Đang lưu lên tài khoản…';
+    others.forEach(x => { x.disabled = true; });
+    const old = b.textContent; b.textContent = 'Đang lưu lên tài khoản…';
     try {
       await syncNow('manual');
       for (let i = 0; i < 60 && syncing; i++) await new Promise(r => setTimeout(r, 250));   // đợi lần đồng bộ đang chạy
@@ -460,13 +452,18 @@ const FIREBASE_CONFIG = {
       applying = true;
       try { localStorage.removeItem(UIDK); localStorage.removeItem(BASEK); localStorage.removeItem(META); } catch (e) {}
       applying = false;
-      b.textContent = 'Đang dọn máy…';
-      if (window.hsWipeAccountData) await window.hsWipeAccountData();
-      say('Đã đăng xuất và xoá tiến độ khỏi máy này. Đăng nhập lại là có lại toàn bộ.', true);
-      setTimeout(() => location.reload(), 900);
+      ask.hidden = true;
+      if (wipe) {
+        b.textContent = 'Đang dọn máy…';
+        if (window.hsWipeAccountData) await window.hsWipeAccountData();
+        say('Đã đăng xuất và xoá tiến độ khỏi máy này. Đăng nhập lại là có lại toàn bộ.', true);
+        setTimeout(() => location.reload(), 900);
+      } else {
+        say('Đã đăng xuất. Tiến độ vẫn còn trên máy này, bạn học tiếp bình thường.', true);
+      }
     } catch (e) { fail(e); }
-    finally { b.disabled = false; b.textContent = old; }
-  });
+    finally { others.forEach(x => { x.disabled = false; }); b.textContent = old; }
+  }
   // coming back to the app: pick up progress made on another device
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'hidden') hiddenAt = Date.now();

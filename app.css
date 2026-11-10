@@ -4592,12 +4592,6 @@
   .ipa-vid-src{ margin-top:6px; font-size:12.5px; color:var(--ink-soft); }
   .ipa-vid-src a{ color:inherit; font-weight:700; }
 
-/* v205: nhắc khách đăng nhập để lưu tiến độ */
-.guest-bar{ margin-top:12px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:10px 12px; border-radius:12px;
-  border:1.5px solid var(--mark); background:color-mix(in srgb, var(--mark) 10%, transparent); color:var(--hero-ink, var(--ink)); font-size:14px; line-height:1.45; }
-.guest-bar > span{ flex:1 1 220px; min-width:0; }
-.guest-bar-btn{ min-height:38px; padding:0 14px; border-radius:999px; border:0; background:var(--mark); color:#fff; font:inherit; font-weight:700; cursor:pointer; }
-
 /* v208: Shadowing gọn hơn */
 .sd-1row{ flex-wrap:nowrap !important; overflow-x:auto !important; }
 .sd-tiles{ display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:8px; margin-top:8px; }
@@ -4663,3 +4657,10 @@
 .rv-tacts .rv-tcheck{ flex:1 1 140px; }
 .rv-tacts .btn-ghost{ flex:0 0 auto; }
 .rv-type .rv-back{ margin-top:10px; }
+
+/* v213: hỏi giữ hay xoá tiến độ khi đăng xuất */
+.acct-ask{ margin-top:10px; padding:12px; border-radius:14px; border:1.5px solid var(--paper-line); display:grid; gap:8px; }
+.acct-ask[hidden]{ display:none; }
+.acct-ask p{ margin:0; font-size:14px; line-height:1.5; }
+.acct-ask .btn-primary, .acct-ask .btn-ghost{ width:100%; }
+.acct-danger{ color:var(--mark); border-color:var(--mark); }
