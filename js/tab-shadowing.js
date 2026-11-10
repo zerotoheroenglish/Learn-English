@@ -1194,6 +1194,8 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     const side = document.getElementById('sd-side');
     if (!side) return;
     const l = view.lesson;
+    // v215: giữ nguyên vị trí cuộn của danh sách câu khi vẽ lại (trước đây danh sách mới luôn bắt đầu từ đầu rồi mới trượt xuống)
+    const oldList = side.querySelector('.sd-list'), oldTop = oldList ? oldList.scrollTop : null;
     side.innerHTML = '';
     const tabs = E('div', 'sd-tabs');
     [['subs', '☰ Phụ đề'], ['tips', '✨ Gợi ý bài học']].forEach(([k, label]) => {
@@ -1297,8 +1299,15 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
       list.appendChild(it);
     });
     side.appendChild(list);
+    if (oldTop != null) list.scrollTop = oldTop;
     const cur = list.querySelector('.sd-seg.now');
-    if (cur) setTimeout(() => { try { const top = cur.offsetTop - list.offsetTop - 60; list.scrollTo({ top: Math.max(0, top), behavior: 'smooth' }); } catch (e) {} }, 30);
+    if (cur) {
+      // trượt nhẹ tới câu đang học, giữ một câu phía trên để thấy mạch; câu đã nằm gọn trong khung thì không cuộn
+      const top = Math.max(0, cur.offsetTop - list.offsetTop - 60), vis = cur.offsetTop - list.offsetTop;
+      const inView = vis >= list.scrollTop + 40 && vis + cur.offsetHeight <= list.scrollTop + list.clientHeight - 20;
+      if (oldTop == null) list.scrollTop = top;
+      else if (!inView) requestAnimationFrame(() => { try { list.scrollTo({ top, behavior: 'smooth' }); } catch (e) { list.scrollTop = top; } });
+    }
   }
 
   /* ----- câu hiện tại ----- */
