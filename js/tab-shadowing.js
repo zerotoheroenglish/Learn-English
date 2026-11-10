@@ -1941,15 +1941,6 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     if (last.err) {
       box.appendChild(E('div', 'pr-speak-out warn', last.err));
       // v222: chi tiết kỹ thuật để chụp gửi người làm app khi micro lỗi
-      // v224: iPhone đôi khi chỉ nhận micro ở lần nói đầu sau khi mở app → nút tải lại app ngay tại câu này
-      if (typeof TTS_IOS !== 'undefined' && TTS_IOS) {
-        const rb = E('button', 'btn-primary sd-mic-reload', '↻ Mở lại micro');
-        rb.addEventListener('click', () => {
-          try { sessionStorage.setItem('hta-sd-resume', JSON.stringify({ id: l.id, yt: l.yt || '', mode: view.mode, t: Date.now() })); } catch (e) {}
-          touch(l); stopAll(); location.reload();
-        });
-        box.appendChild(rb);
-      }
       try { const dg = window.vspDiag && vspDiag(); if (dg) { const d = E('details', 'sd-info'); d.appendChild(E('summary', null, 'Chi tiết kỹ thuật')); d.appendChild(E('p', null, dg)); box.appendChild(d); } } catch (e) {}
     }
     if (last.res) {
