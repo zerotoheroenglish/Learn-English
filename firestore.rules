@@ -1,0 +1,36 @@
+// Firestore Security Rules cho app Học Tiếng Anh (project learn-english-4d913)
+// Bản này chỉ để lưu trong repo cho dễ đối chiếu: Firebase KHÔNG tự đọc file này.
+// Muốn áp dụng: Firebase Console → Firestore Database → Rules → dán toàn bộ → Publish.
+//
+// App chỉ dùng 2 chỗ trong Firestore:
+//   users/{uid}      tiến độ học của từng người (đồng bộ nhiều thiết bị)
+//   feedback/{id}    góp ý gửi từ nút "💬 Gửi góp ý"
+// Mọi đường dẫn khác bị chặn (Firestore mặc định từ chối nếu không có dòng allow nào khớp).
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Tiến độ học: chỉ chính chủ đọc/ghi/xoá được tài liệu của mình.
+    match /users/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // Góp ý: ai cũng gửi được (kể cả chưa đăng nhập), nhưng chỉ đúng các trường app gửi, độ dài có giới hạn,
+    // và không được giả danh người khác. Chỉ tài khoản chủ app đọc / đánh dấu đã đọc / xoá được.
+    match /feedback/{id} {
+      allow create: if request.resource.data.keys().hasOnly(['type', 'rating', 'text', 'page', 'ver', 'ua', 'createdAt', 'read', 'contact', 'uid', 'email'])
+        && request.resource.data.type in ['idea', 'bug', 'praise', 'other']
+        && request.resource.data.rating is int && request.resource.data.rating >= 0 && request.resource.data.rating <= 5
+        && request.resource.data.text is string && request.resource.data.text.size() >= 3 && request.resource.data.text.size() <= 2000
+        && request.resource.data.read == false
+        && request.resource.data.createdAt == request.time
+        && (!('uid' in request.resource.data) || (request.auth != null && request.resource.data.uid == request.auth.uid));
+
+      // THAY OWNER_UID bằng User UID tài khoản của bạn (Firebase Console → Authentication → Users → cột "User UID").
+      allow read, delete: if request.auth != null && request.auth.uid == 'OWNER_UID';
+      allow update: if request.auth != null && request.auth.uid == 'OWNER_UID'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read']);
+    }
+  }
+}
