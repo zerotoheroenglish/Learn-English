@@ -8063,7 +8063,7 @@ function srFree(o) {
 
 /* v141: nghe nhanh hơn. Trước đây app chờ trình duyệt tự xác định bạn đã nói xong (thường 1–3 giây im lặng, iPhone có khi lâu hơn).
    Giờ app nhận chữ ngay trong lúc bạn nói (interim): nói đúng hết câu mẫu → chấm ngay; ngừng nói ~0.8–1.2 giây → tự chốt. */
-let VSP_END = 0;
+let VSP_END = 0, VSP_R = null, VSP_R_BUSY = false;
 /* v222: nhật ký kỹ thuật của lần mở micro gần nhất — hiện trong "Chi tiết kỹ thuật" dưới lời báo lỗi, để chụp màn hình gửi người làm app */
 const VSP_DIAG = { n: 0, log: [] };
 window.vspDiag = () => VSP_DIAG.log.join(' · ');   // v221: lúc phiên nhận giọng trước kết thúc — iPhone cần ~1 giây để trả micro trước khi mở phiên mới
@@ -8072,7 +8072,12 @@ function vspListen(target, onDone, onPartial, opts) {
   if (prRecog) { try { prRecog.abort(); } catch (e) {} prRecog = null; }
   let wasTalking = false;
   try { wasTalking = speechSynthesis.speaking || speechSynthesis.pending; clearTimeout(TTS.timer); TTS.keep = null; speechSynthesis.cancel(); } catch (e) {}
-  const r = new PR_SR();
+  /* v223: iPhone (iOS 18) — mỗi lần bấm tạo bộ nhận giọng MỚI thì từ lần 2 micro mở nhưng thu toàn im lặng (nhật ký: audio mở, không có chữ,
+     ~10 s sau bị ngắt). Dùng lại MỘT bộ nhận giọng cho mọi lần nói khi bộ cũ đã kết thúc hẳn. */
+  const reuse = TTS_IOS && VSP_R && !VSP_R_BUSY;
+  const r = reuse ? VSP_R : new PR_SR();
+  if (TTS_IOS) VSP_R = r;
+  VSP_R_BUSY = true;
   r.lang = (typeof pronVoice !== 'undefined' && pronVoice && /^en/i.test(pronVoice.lang)) ? pronVoice.lang.replace('_', '-') : 'en-US';
   const nW = lsNorm(vspText(target)).length, QUIET = nW <= 2 ? 800 : nW <= 6 ? 1000 : 1200;
   // v167: câu từ 4 từ trở lên nghe liên tục — không bị cắt khi người học ngừng lấy hơi giữa câu
@@ -8088,7 +8093,7 @@ function vspListen(target, onDone, onPartial, opts) {
     let ua = ''; try { ua = (navigator.userAgent.match(/OS (\d+[_\d]*)/) || [])[1] || ''; } catch (e) {}
     VSP_DIAG.log = ['lần ' + VSP_DIAG.n, 'iOS ' + ua.replace(/_/g, '.'), (matchMedia('(display-mode: standalone)').matches || navigator.standalone) ? 'app MH chính' : 'trình duyệt',
       'session=' + sess, 'tts=' + (speechSynthesis.speaking ? 'nói' : '') + (speechSynthesis.pending ? 'chờ' : '') + (wasTalking ? '/đã-huỷ' : ''),
-      'act=' + (navigator.userActivation ? navigator.userActivation.isActive : '?'), 'cách lần trước ' + (VSP_END ? Math.round((T0 - VSP_END) / 100) / 10 + 's' : '-')];
+      'act=' + (navigator.userActivation ? navigator.userActivation.isActive : '?'), reuse ? 'dùng lại bộ cũ' : 'bộ mới', 'cách lần trước ' + (VSP_END ? Math.round((T0 - VSP_END) / 100) / 10 + 's' : '-')];
   } else D('mở lại');
   /* v220: trên iPhone, micro hay bị hệ thống ngắt ngay sau khi mở (lỗi "aborted" hoặc kết thúc tức thì) khi vừa có âm thanh/video
      phát trước đó. Trước đây app im lặng quay về nút "Nhấn để nói" → bấm mãi không nói được. Nay tự mở lại micro một lần. */
@@ -8097,7 +8102,7 @@ function vspListen(target, onDone, onPartial, opts) {
     done = true; clearTimeout(quiet); clearTimeout(cap);
     try { r.onresult = r.onerror = r.onend = null; r.abort(); } catch (e) {}
     if (prRecog === r) prRecog = null;
-    setTimeout(() => vspListen(target, onDone, onPartial, Object.assign({}, opts, { _retried: true })), TTS_IOS ? 600 : 300);
+    setTimeout(() => { if (r === VSP_R) VSP_R_BUSY = false; vspListen(target, onDone, onPartial, Object.assign({}, opts, { _retried: true })); }, TTS_IOS ? 600 : 300);
     return true;
   };
   const scoreAlts = alts => {
@@ -8111,13 +8116,18 @@ function vspListen(target, onDone, onPartial, opts) {
     if (prRecog === r) prRecog = null;
     /* v221: trên iPhone, "abort()" một phiên nhận giọng đang chạy làm hệ thống chưa trả micro kịp → lần nói sau bị ngắt ngay
        ("nói được lần đầu, lần 2 không được"). Có kết quả thì kết thúc nhẹ nhàng bằng stop(), chỉ abort khi huỷ. */
-    try { r.onresult = r.onerror = null; r.onend = () => { VSP_END = Date.now(); }; if (best) r.stop(); else r.abort(); } catch (e) {}
+    try { r.onresult = r.onerror = r.onsoundstart = r.onspeechstart = r.onaudiostart = r.onstart = null; r.onend = () => { VSP_END = Date.now(); if (r === VSP_R) VSP_R_BUSY = false; }; if (best) r.stop(); else r.abort(); } catch (e) {}
+    setTimeout(() => { if (r === VSP_R) VSP_R_BUSY = false; }, 1500);   // phòng khi máy không báo "end"
+
     VSP_END = Date.now();
     ttsMicEnded();
     try { if (best && window.actLog) actLog('s'); } catch (e) {}
     onDone(best, err);
   };
+  let nRes = 0;
+  r.onsoundstart = () => D('có tiếng'); r.onspeechstart = () => D('có giọng');
   r.onresult = ev => {
+    if (!nRes++) D('chữ đầu');
     // ghép các đoạn kết quả; với đoạn đầu lấy thêm các phương án khác máy đoán
     let head = '', fin = true;
     // v170: với từng đoạn máy nghe được, chọn phương án có nhiều từ trùng với câu mẫu nhất (nhận đúng hơn khi phát âm chưa chuẩn)
