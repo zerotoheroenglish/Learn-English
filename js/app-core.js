@@ -8195,9 +8195,9 @@ function vspListen(target, onDone, onPartial, opts) {
       if (C) {
         VSP_AC = VSP_AC || new C();
         if (VSP_AC.state === 'suspended') VSP_AC.resume();
-        const o = VSP_AC.createOscillator(), g = VSP_AC.createGain();
-        g.gain.value = 0.004; o.frequency.value = 440; o.connect(g); g.connect(VSP_AC.destination);
-        o.start(); o.stop(VSP_AC.currentTime + 0.12);
+        // v228: phát đoạn IM LẶNG (toàn số 0) thay cho tiếng 440 Hz — vẫn kích hoạt âm thanh của iPhone nhưng không nghe thấy gì
+        const buf = VSP_AC.createBuffer(1, Math.round(VSP_AC.sampleRate * 0.12), VSP_AC.sampleRate);
+        const src = VSP_AC.createBufferSource(); src.buffer = buf; src.connect(VSP_AC.destination); src.start();
         D('kích hoạt âm thanh');
       }
     } catch (e) { D('kích hoạt lỗi'); }
