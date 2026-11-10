@@ -177,7 +177,7 @@
 <header class="hero">
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v211</span>
+      <span class="hero-badge">EN ⇄ VI · v212</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice" id="voice-btn" aria-label="Chọn giọng đọc">🔊 <span class="hv-label">Giọng đọc</span></button>
@@ -760,7 +760,7 @@
 <script src="js/data-vocab.js?h=923ca16f1c"></script>
 <script src="js/app-core.js?h=93795d88ff"></script>
 
-<script src="js/app-sync.js?h=c64306704a"></script>
+<script src="js/app-sync.js?h=e30168fee3"></script>
 
 <script src="js/app-feedback.js?h=f1bd3f9e55"></script>
 
@@ -920,11 +920,17 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
   const mo = new MutationObserver(() => sync());
   document.querySelectorAll('main .page').forEach(p => mo.observe(p, { attributes: true, attributeFilter: ['class'] }));
 
+  // v212: nhớ đang ở trang nào trong phiên này → app có tải lại (đồng bộ, khôi phục…) thì mở lại đúng trang đó, không nhảy về Hôm nay
+  const NK = 'hta-nav-now';
+  const navSave = () => { try { sessionStorage.setItem(NK, JSON.stringify({ g: cur.g, s: cur.s, y: Math.round(window.scrollY || 0), t: Date.now() })); } catch (e) {} };
+  window.addEventListener('pagehide', navSave);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') navSave(); });
   function secOpen(g, sid) {
     const grp = G[g]; if (!grp) return;
     const sc = grp.secs.find(x => x.id === sid) || grp.secs[0];
     cur = { g, s: sc.id }; last[g] = sc.id;
     try { localStorage.setItem(LK, JSON.stringify(last)); } catch (e) {}
+    navSave();
     if (sc.run) sc.run();
     else {
       const b = nav.querySelector(`button[data-page="${sc.page}"]:not([data-grp])`);
@@ -940,7 +946,11 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
     // Hôm nay luôn mở “Việc hôm nay”; các tab khác mở lại phần dùng gần nhất
     secOpen(g, g === 'home' ? 'today' : (last[g] || G[g].secs[0].id));
   }));
-  secOpen('home', 'today');
+  { let nv = null; try { nv = JSON.parse(sessionStorage.getItem(NK) || 'null'); } catch (e) {}
+    if (nv && G[nv.g] && Date.now() - (nv.t || 0) < 30 * 60000 && !(nv.g === 'home' && nv.s === 'today')) {
+      secOpen(nv.g, nv.s);
+      if (nv.y) setTimeout(() => { try { window.scrollTo({ top: nv.y }); } catch (e) {} }, 400);
+    } else secOpen('home', 'today'); }
 })();
 </script>
 <script>
