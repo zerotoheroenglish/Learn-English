@@ -120,9 +120,10 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
   }
   function paintSeen(b, l) { const on = bbcSeen.has(l.yt); b.textContent = on ? '✓ Đã xem (bấm để bỏ)' : '☐ Đánh dấu đã xem'; b.classList.toggle('on', on); }
   function markSeen(l, on) { if (on) bbcSeen.add(l.yt); else bbcSeen.delete(l.yt); save(K.bbcSeen, [...bbcSeen]); const b = root.querySelector('.sd-seen-btn'); if (b) paintSeen(b, l); }
-  // v189: bản chép lời gói sẵn cho video BBC (data/bbc-subs.json, tạo bằng công cụ tools/lay_ban_chep_loi.py)
+  // v189: bản chép lời gói sẵn cho video (v218: đổi tên data/subs.json; vẫn đọc tên cũ data/bbc-subs.json nếu còn)
   let bbcBuilt = {}, bbcBuiltP = null; const bbcBuiltCache = {};
-  const loadBuilt = () => bbcBuiltP || (bbcBuiltP = fetch('data/bbc-subs.json').then(r => r.ok ? r.json() : {}).then(j => { bbcBuilt = (j && j.v) || {}; return bbcBuilt; }).catch(() => ({})));
+  const getSubs = f => fetch(f).then(r => r.ok ? r.json() : {}).then(j => (j && j.v) || {}).catch(() => ({}));
+  const loadBuilt = () => bbcBuiltP || (bbcBuiltP = Promise.all([getSubs('data/bbc-subs.json'), getSubs('data/subs.json')]).then(([o, n]) => { bbcBuilt = Object.assign({}, o, n); return bbcBuilt; }));
   const builtSt = id => { if (id in bbcBuiltCache) return bbcBuiltCache[id]; const raw = bbcBuilt[id]; if (typeof raw !== 'string') return null; return (bbcBuiltCache[id] = ytParse(raw)); };
   const bbcSt = id => bbcStore[id] || builtSt(id);
   const bbcLesson = x => { const st = bbcSt(x.id) || {}; return { id: 'bbc-' + x.id, cat: 'bbc', lv: x.lv.n, icon: x.col.icon, yt: x.id, title: x.t, vi: x.col.name, sum: '', s: st.s || [], tm: st.tm || null, bbc: x }; };
@@ -732,13 +733,13 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
       const ex = E('div', 'tense-card sd-export');
       ex.appendChild(E('div', 'vc-q-label', '📤 Chia sẻ bản chép lời cho mọi người'));
       ex.appendChild(E('p', 'sd-create-p', `Bạn đã dán bản chép lời cho ${mineN} video. Tải file dưới đây rồi đưa lên thư mục data của kho GitHub (Add file → Upload files): mọi người mở các video đó sẽ có chữ sẵn.`));
-      const b = E('button', 'btn-primary', `⬇️ Tải file bbc-subs.json (${mineN + Object.keys(bbcBuilt).filter(k => !bbcStore[k]).length} video)`);
+      const b = E('button', 'btn-primary', `⬇️ Tải file subs.json (${mineN + Object.keys(bbcBuilt).filter(k => !bbcStore[k]).length} video)`);
       b.addEventListener('click', () => {
         const v = Object.assign({}, bbcBuilt);
         const t = x => { const h = Math.floor(x / 3600), m = Math.floor(x % 3600 / 60), sec = (x % 60).toFixed(3).padStart(6, '0'); return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${sec}`; };
         Object.keys(bbcStore).forEach(k => { const st = bbcStore[k]; if (!st || !st.s || !st.s.length || !st.tm) return; v[k] = st.s.map((x, i) => `${t(st.tm[i][0])} --> ${t(st.tm[i][1])}\n${x[0]}\n`).join('\n'); });
         const blob = new Blob([JSON.stringify({ made: new Date().toISOString().slice(0, 10), v })], { type: 'application/json' });
-        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'bbc-subs.json'; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'subs.json'; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
       });
       ex.appendChild(b); root.appendChild(ex);
     }
