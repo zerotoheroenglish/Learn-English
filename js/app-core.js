@@ -8075,7 +8075,7 @@ function vspListen(target, onDone, onPartial, opts) {
   try { wasTalking = speechSynthesis.speaking || speechSynthesis.pending; clearTimeout(TTS.timer); TTS.keep = null; speechSynthesis.cancel(); } catch (e) {}
   /* v223: iPhone (iOS 18) — mỗi lần bấm tạo bộ nhận giọng MỚI thì từ lần 2 micro mở nhưng thu toàn im lặng (nhật ký: audio mở, không có chữ,
      ~10 s sau bị ngắt). Dùng lại MỘT bộ nhận giọng cho mọi lần nói khi bộ cũ đã kết thúc hẳn. */
-  const reuse = TTS_IOS && VSP_R && !VSP_R_BUSY;
+  const reuse = false;   // v226: dùng lại bộ cũ không giúp được (nhật ký v223–v225) → mỗi lần một bộ mới như trước
   const r = reuse ? VSP_R : new PR_SR();
   if (TTS_IOS) VSP_R = r;
   VSP_R_BUSY = true;
@@ -8084,7 +8084,10 @@ function vspListen(target, onDone, onPartial, opts) {
   // v167: câu từ 4 từ trở lên nghe liên tục — không bị cắt khi người học ngừng lấy hơi giữa câu
   const LONG = nW >= 4;
   const TGT = new Set(lsNorm(vspText(target)));
-  r.interimResults = true; r.continuous = LONG; r.maxAlternatives = LONG ? 3 : 5;
+  /* v226: thử tắt chế độ nghe liên tục trên iPhone. Nghi vấn: sau một phiên "continuous" iOS 18 không đưa tiếng vào các phiên sau
+     (câu ≥ 4 từ đều dùng continuous). Đổi lại: trên iPhone câu dài có thể bị chốt sớm khi bạn ngừng lấy hơi. */
+  const CONT = LONG && !TTS_IOS;
+  r.interimResults = true; r.continuous = CONT; r.maxAlternatives = LONG ? 3 : 5;
   let done = false, lastAlts = null, quiet = 0, cap = 0, lastTxt = '', t0 = 0;
   prRecog = r;
   const T0 = Date.now(), D = m => { try { VSP_DIAG.log.push(m + '@' + (Date.now() - T0)); if (VSP_DIAG.log.length > 40) VSP_DIAG.log.shift(); } catch (e) {} };
@@ -8094,7 +8097,7 @@ function vspListen(target, onDone, onPartial, opts) {
     let ua = ''; try { ua = (navigator.userAgent.match(/OS (\d+[_\d]*)/) || [])[1] || ''; } catch (e) {}
     VSP_DIAG.log = ['lần ' + VSP_DIAG.n, 'iOS ' + ua.replace(/_/g, '.'), (matchMedia('(display-mode: standalone)').matches || navigator.standalone) ? 'app MH chính' : 'trình duyệt',
       'session=' + sess, 'tts=' + (speechSynthesis.speaking ? 'nói' : '') + (speechSynthesis.pending ? 'chờ' : '') + (wasTalking ? '/đã-huỷ' : ''),
-      'act=' + (navigator.userActivation ? navigator.userActivation.isActive : '?'), reuse ? 'dùng lại bộ cũ' : 'bộ mới', 'cách lần trước ' + (VSP_END ? Math.round((T0 - VSP_END) / 100) / 10 + 's' : '-')];
+      'act=' + (navigator.userActivation ? navigator.userActivation.isActive : '?'), reuse ? 'dùng lại bộ cũ' : 'bộ mới', 'liên tục=' + (CONT ? 'có' : 'không'), 'cách lần trước ' + (VSP_END ? Math.round((T0 - VSP_END) / 100) / 10 + 's' : '-')];
   } else D('mở lại');
   /* v220: trên iPhone, micro hay bị hệ thống ngắt ngay sau khi mở (lỗi "aborted" hoặc kết thúc tức thì) khi vừa có âm thanh/video
      phát trước đó. Trước đây app im lặng quay về nút "Nhấn để nói" → bấm mãi không nói được. Nay tự mở lại micro một lần. */
