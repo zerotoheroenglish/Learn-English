@@ -8064,6 +8064,7 @@ function srFree(o) {
 /* v141: nghe nhanh hơn. Trước đây app chờ trình duyệt tự xác định bạn đã nói xong (thường 1–3 giây im lặng, iPhone có khi lâu hơn).
    Giờ app nhận chữ ngay trong lúc bạn nói (interim): nói đúng hết câu mẫu → chấm ngay; ngừng nói ~0.8–1.2 giây → tự chốt. */
 const VSP_RELOAD_TIP = '(Trên iPhone đôi khi micro chỉ nhận ở lần nói đầu. Bấm "↻ Mở lại micro" bên dưới: app tải lại đúng chỗ này và bạn nói tiếp được.)';
+let VSP_AC = null;
 let VSP_END = 0, VSP_R = null, VSP_R_BUSY = false, VSP_WAKE_STOP = () => {};
 /* v222: nhật ký kỹ thuật của lần mở micro gần nhất — hiện trong "Chi tiết kỹ thuật" dưới lời báo lỗi, để chụp màn hình gửi người làm app */
 const VSP_DIAG = { n: 0, log: [] };
@@ -8095,7 +8096,7 @@ function vspListen(target, onDone, onPartial, opts) {
     VSP_DIAG.n++;
     let sess = '-'; try { sess = navigator.audioSession ? navigator.audioSession.type : 'none'; } catch (e) {}
     let ua = ''; try { ua = (navigator.userAgent.match(/OS (\d+[_\d]*)/) || [])[1] || ''; } catch (e) {}
-    VSP_DIAG.log = ['lần ' + VSP_DIAG.n, 'iOS ' + ua.replace(/_/g, '.'), (matchMedia('(display-mode: standalone)').matches || navigator.standalone) ? 'app MH chính' : 'trình duyệt',
+    VSP_DIAG.log = ['lần ' + VSP_DIAG.n, (matchMedia('(display-mode: standalone)').matches || navigator.standalone) ? 'app MH chính' : 'trình duyệt',
       'session=' + sess, 'tts=' + (speechSynthesis.speaking ? 'nói' : '') + (speechSynthesis.pending ? 'chờ' : '') + (wasTalking ? '/đã-huỷ' : ''),
       'act=' + (navigator.userActivation ? navigator.userActivation.isActive : '?'), reuse ? 'dùng lại bộ cũ' : 'bộ mới', 'liên tục=' + (CONT ? 'có' : 'không'), 'cách lần trước ' + (VSP_END ? Math.round((T0 - VSP_END) / 100) / 10 + 's' : '-')];
   } else D('mở lại');
@@ -8186,6 +8187,21 @@ function vspListen(target, onDone, onPartial, opts) {
      đợi phiên trước nhả micro) đều làm lệnh mở rơi ra ngoài cú bấm → hệ thống ngắt ngay ("aborted"). Lần bấm đầu thường không phải chờ
      nên chạy được, các lần sau rơi vào nhánh chờ nên hỏng. Giờ luôn mở micro ngay, đồng bộ với cú bấm. */
   micOpening();
+  /* v227: giả thuyết từ máy thật (iOS 27): micro chỉ nhận tiếng khi máy vừa phát âm thanh (lần nói đầu thường ngay sau câu mẫu).
+     Ngay trong cú bấm, phát một tiếng rất nhỏ ~0,12 giây để iPhone kích hoạt âm thanh rồi mới mở micro. */
+  if (TTS_IOS) {
+    try {
+      const C = window.AudioContext || window.webkitAudioContext;
+      if (C) {
+        VSP_AC = VSP_AC || new C();
+        if (VSP_AC.state === 'suspended') VSP_AC.resume();
+        const o = VSP_AC.createOscillator(), g = VSP_AC.createGain();
+        g.gain.value = 0.004; o.frequency.value = 440; o.connect(g); g.connect(VSP_AC.destination);
+        o.start(); o.stop(VSP_AC.currentTime + 0.12);
+        D('kích hoạt âm thanh');
+      }
+    } catch (e) { D('kích hoạt lỗi'); }
+  }
   // v225: gỡ phần ép "play-and-record" + mở thêm luồng micro của v224 (làm micro kẹt cả ở lần nói đầu)
   t0 = Date.now();
   D('gọi start');
