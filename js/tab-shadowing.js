@@ -252,6 +252,16 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
       else { ytNow(yt.holder); const t1 = Date.now(); const w = setInterval(() => { if (yt.player && yt.ready) { clearInterval(w); begin(); } else if (yt.failed || Date.now() - t1 > 12000) { clearInterval(w); res(null); } }, 150); }
     });
   }
+  /* v216: ở chế độ Chính tả, dù bấm ▶ ngay trên khung YouTube, video cũng chỉ phát trong câu đang chép rồi dừng
+     (không chạy sang câu sau làm lộ đáp án / mất chỗ). */
+  setInterval(() => {
+    const l = view.lesson;
+    if (view.mode !== 'dict' || !l || !l.yt || !l.tm || !l.tm[view.idx] || !yt.player || !yt.ready || yt.timer) return;
+    let st = -1, t = 0; try { st = yt.player.getPlayerState(); t = yt.player.getCurrentTime(); } catch (e) { return; }
+    if (st !== 1) return;
+    const [a, b] = l.tm[view.idx];
+    if (t > b + 0.25 || t < a - 1.5) { try { yt.player.pauseVideo(); yt.player.seekTo(Math.max(0, a - 0.1), true); } catch (e) {} }
+  }, 150);
   // nghe một câu: đoạn video thật nếu có mốc thời gian, không thì giọng máy
   async function hear(l, i, rate) {
     if (l.yt && l.tm && l.tm[i] && !yt.failed) {
@@ -994,7 +1004,7 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     // v180: thứ tự theo yêu cầu — Shadowing · Nghe cả bài · Quiz · True/False · Chính tả
     [['shadow', '🎙️ Shadowing'], ['listen', '🎧 Nghe cả bài'], ...(l.s.length >= 3 ? [['quiz', '🧩 Quiz'], ['tf', '✅ True/False']] : []), ['dict', '⌨️ Chính tả']].forEach(([m, label]) => {
       const b = E('button', 'ls-mode' + (view.mode === m ? ' active' : ''), label);
-      b.addEventListener('click', () => { stopAll(); if (m === 'quiz') quiz = null; if (m === 'tf') tfState = null; view.mode = m; renderLesson(); });
+      b.addEventListener('click', () => { stopAll(); if (m === 'quiz') quiz = null; if (m === 'tf') tfState = null; view.mode = m; renderLesson(); if (m === 'dict') { setTimeout(() => { if (view.mode === 'dict') playCur(); }, 500); } });
       modes.appendChild(b);
     });
     if (!l.s.length) { root.appendChild(freeView(l)); return; }
@@ -1442,6 +1452,7 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     stopAll(); view.idx = i; touch(l);
     renderSide(); renderMain();
     if (view.mode === 'shadow' && set.auto && set.step !== 4) playCur();
+    if (view.mode === 'dict') setTimeout(() => { if (view.mode === 'dict' && view.idx === i) playCur(); }, 350);   // v216: chính tả tự phát câu mới
   }
   async function playCur() {
     const l = view.lesson; if (!l) return;
@@ -1986,8 +1997,14 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
       record(l, i, 'd', last.res.pct);
       touch(l);
       renderMain();
+      // v216: đúng từ 80% trở lên → tự sang câu tiếp theo và phát; dưới 80% → ở lại câu này để nghe lại (↻) và sửa
+      if (last.res.pct >= 80 && i < l.s.length - 1) {
+        const my = l.id + ':' + i;
+        setTimeout(() => { if (view.mode === 'dict' && view.lesson === l && view.idx === i && my === l.id + ':' + view.idx) go(i + 1); }, 1600);
+      }
     };
     ta.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); check(); } });
+    if (last && last.res && last.res.pct < 80 && last.res.ok.some(x => x !== null)) setTimeout(() => { try { ta.focus({ preventScroll: true }); } catch (e) {} }, 0);
     box.appendChild(ta);
     const btns = E('div', 'ls-sum-btns');
     const show = E('button', 'btn-ghost', '👀 Xem đáp án');
@@ -1998,7 +2015,10 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     box.appendChild(btns);
     if (last.res && last.res.ok.some(x => x !== null)) {
       const p = last.res.pct;
-      box.appendChild(E('div', 'sd-result ' + cls(p), `Bạn nghe đúng ${p}% số từ (kết quả chính tả được tính vào tiến độ Hoàn thành). Từ đỏ là chỗ bạn nghe sót hoặc viết sai.`));
+      const lastOne = i >= l.s.length - 1;
+      box.appendChild(E('div', 'sd-result ' + cls(p), p >= 80
+        ? (lastOne ? `✓ Đúng ${p}% số từ. Bạn đã chép xong câu cuối của bài!` : `✓ Đúng ${p}% số từ — sang câu tiếp theo…`)
+        : `Đúng ${p}% số từ. Cần từ 80% để sang câu tiếp: bấm ↻ nghe lại rồi sửa câu và Kiểm tra lại. Từ đỏ là chỗ nghe sót hoặc viết sai.`));
     }
     if (!last.res) setTimeout(() => { try { ta.focus({ preventScroll: true }); } catch (e) {} }, 0);
     return box;
