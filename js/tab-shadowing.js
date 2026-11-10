@@ -959,18 +959,28 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     // v189: video BBC chưa có bản chép lời → lấy bản gói sẵn (nếu có) rồi vẽ lại
     if (l.cat === 'bbc' && !l.s.length) loadBuilt().then(() => { const b = builtSt(l.yt); if (b && b.s.length && view.lesson === l && !l.s.length) { l.s = b.s; l.tm = b.tm; view.idx = 0; renderLesson(); } });
     view.lesson = l; view.page = 'lesson';
-    const p = P(l);
-    view.idx = p && p.cur < l.s.length ? p.cur : 0;
     if (view.mode === 'listen' || view.mode === 'quiz' || view.mode === 'tf') view.mode = 'shadow';
+    view.idx = idxFor(l, view.mode);
     quiz = null; tfState = null;
     renderLesson();
     irrTopSafe();
     if (set.auto && view.mode === 'shadow' && set.step !== 4 && l.s.length) setTimeout(() => playCur(), l.yt ? 1500 : 250);
   }
+  /* v217: Shadowing, Nghe cả bài và Chính tả mỗi chế độ nhớ CÂU RIÊNG của mình (cm), chuyển qua lại không kéo nhau theo.
+     cur vẫn là câu của Shadowing (dùng cho "Tiếp tục học"). */
+  const OWN_IDX = { shadow: 1, listen: 1, dict: 1 };
+  function idxFor(l, mode) {
+    const p = P(l), n = l.s.length;
+    const v = p && p.cm && p.cm[mode] != null ? p.cm[mode] : (mode === 'shadow' && p ? p.cur : 0);
+    return v >= 0 && v < n ? v : 0;
+  }
   function touch(l) {
     if (l.map) return;
     if (!prog[l.id]) prog[l.id] = { b: {}, cur: 0 };
-    prog[l.id].t = Date.now(); prog[l.id].cur = view.idx;
+    const p = prog[l.id];
+    p.t = Date.now();
+    if (OWN_IDX[view.mode]) { p.cm = p.cm || {}; p.cm[view.mode] = view.idx; }
+    if (view.mode === 'shadow' || !OWN_IDX[view.mode]) p.cur = view.idx;
     saveProg();
   }
   function renderLesson() {
@@ -1004,7 +1014,7 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     // v180: thứ tự theo yêu cầu — Shadowing · Nghe cả bài · Quiz · True/False · Chính tả
     [['shadow', '🎙️ Shadowing'], ['listen', '🎧 Nghe cả bài'], ...(l.s.length >= 3 ? [['quiz', '🧩 Quiz'], ['tf', '✅ True/False']] : []), ['dict', '⌨️ Chính tả']].forEach(([m, label]) => {
       const b = E('button', 'ls-mode' + (view.mode === m ? ' active' : ''), label);
-      b.addEventListener('click', () => { stopAll(); if (m === 'quiz') quiz = null; if (m === 'tf') tfState = null; view.mode = m; renderLesson(); if (m === 'dict') { setTimeout(() => { if (view.mode === 'dict') playCur(); }, 500); } });
+      b.addEventListener('click', () => { stopAll(); if (m === 'quiz') quiz = null; if (m === 'tf') tfState = null; if (OWN_IDX[view.mode]) touch(l); view.mode = m; if (OWN_IDX[m]) view.idx = idxFor(l, m); renderLesson(); if (m === 'dict') { setTimeout(() => { if (view.mode === 'dict') playCur(); }, 500); } });
       modes.appendChild(b);
     });
     if (!l.s.length) { root.appendChild(freeView(l)); return; }
