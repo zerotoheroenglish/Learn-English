@@ -454,7 +454,6 @@ const FIREBASE_CONFIG = {
       await syncNow('manual');
       for (let i = 0; i < 60 && syncing; i++) await new Promise(r => setTimeout(r, 250));   // đợi lần đồng bộ đang chạy
       if (status !== 'ok') { say('Chưa lưu được tiến độ lên tài khoản (kiểm tra mạng), nên chưa đăng xuất để không mất dữ liệu. Thử lại khi có mạng nhé.'); return; }
-      try { if (window.htaRemindOff) await window.htaRemindOff(); } catch (e) {}
       listen(null);
       await auth.signOut();
       applying = true;

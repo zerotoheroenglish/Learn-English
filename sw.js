@@ -1,7 +1,7 @@
 // Offline support: keep the app shell cached; translation/IPA requests always go to the network.
-const CACHE = 'hoc-tieng-anh-v209';
+const CACHE = 'hoc-tieng-anh-v210';
 const PREFIX = 'hoc-tieng-anh-';
-const SHELL = ["./","./index.html","./manifest.json","./icon-192.png","./icon-512.png","./apple-touch-icon.png","./app.css?h=2e0691768b","./js/data-core.js?h=5c068bf2d4","./js/data-vocab.js?h=923ca16f1c","./js/app-core.js?h=93795d88ff","./js/app-sync.js?h=f82c2b639c","./js/app-feedback.js?h=f1bd3f9e55","./js/data-exercises.js?h=dcbe86d1d8","./js/app-exercises.js?h=7304dd661c","./js/app-review.js?h=28a2cb9b7b","./js/app-gxlearn.js?h=ac1033d2d7","./js/app-remind.js?h=b87d8376b5","./js/app-onboard.js?h=576d26a7a6","./js/app-backup.js?h=7dbd94539b"];
+const SHELL = ["./","./index.html","./manifest.json","./icon-192.png","./icon-512.png","./apple-touch-icon.png","./app.css?h=70e30bf0dc","./js/data-core.js?h=5c068bf2d4","./js/data-vocab.js?h=923ca16f1c","./js/app-core.js?h=93795d88ff","./js/app-sync.js?h=c64306704a","./js/app-feedback.js?h=f1bd3f9e55","./js/data-exercises.js?h=dcbe86d1d8","./js/app-exercises.js?h=7304dd661c","./js/app-review.js?h=0f7711c758","./js/app-gxlearn.js?h=ac1033d2d7","./js/app-onboard.js?h=576d26a7a6","./js/app-backup.js?h=7dbd94539b"];
 // Tab / dữ liệu nạp khi cần: KHÔNG tải sẵn lúc cài (đỡ tốn mạng và pin); được lưu offline khi bạn mở lần đầu.
 // Khi cập nhật phiên bản, file nào không đổi (cùng mã băm) được chép từ bộ nhớ cũ sang, nên vẫn dùng offline được.
 const LAZY_FILES = ["./js/data-vocab-vi.js?h=31cb69d052","./js/tab-shadowing.js?h=bff694b301","./js/tab-questions.js?h=dccfc4a30b","./js/tab-reading.js?h=83cb25dbaf","./js/tab-talk.js?h=8b70c0a6e8","./js/tab-para.js?h=f2f7a86a27"];
@@ -62,24 +62,4 @@ self.addEventListener('fetch', e => {
       return new Response('', { status: 504, statusText: 'Offline' });
     }))
   );
-});
-
-// v200: thông báo nhắc học (gửi từ GitHub Actions qua Web Push)
-self.addEventListener('push', e => {
-  let d = {};
-  try { d = e.data ? e.data.json() : {}; } catch (err) { d = { body: e.data ? e.data.text() : '' }; }
-  const title = d.title || 'Học Tiếng Anh';
-  e.waitUntil(self.registration.showNotification(title, {
-    body: d.body || 'Đến giờ học rồi — 5 phút thôi cũng giữ được chuỗi ngày học!',
-    icon: './icon-192.png', badge: './icon-192.png', tag: 'nhac-hoc', renotify: true,
-    data: { url: d.url || './' }
-  }));
-});
-self.addEventListener('notificationclick', e => {
-  e.notification.close();
-  const url = new URL((e.notification.data && e.notification.data.url) || './', self.registration.scope).href;
-  e.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
-    for (const c of list) if (c.url.startsWith(self.registration.scope) && 'focus' in c) return c.focus();
-    return self.clients.openWindow(url);
-  }));
 });
