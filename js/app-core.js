@@ -8056,15 +8056,17 @@ function srFree(o) {
   rec.onend = () => end();
   // mở micro mà chưa nói gì trong 8 giây → dừng
   idle = setTimeout(() => { if (!text()) { err = 'no-speech'; end(); } }, 8000);
-  const d = micOpening();
-  if (d) setTimeout(() => { if (!done) try { rec.start(); } catch (e) { err = 'start'; end(); } }, d);
-  else { try { rec.start(); } catch (e) { err = 'start'; end(); return null; } }
+  micOpening();   // v222: luôn mở micro ngay trong cú bấm (iPhone ngắt nếu mở trễ)
+  try { rec.start(); } catch (e) { err = 'start'; end(); return null; }
   return { stop: () => { if (!done) { clearTimeout(quiet); try { rec.stop(); } catch (e) {} setTimeout(end, 700); } }, abort: () => { err = ''; fin = tmp = ''; end(); } };
 }
 
 /* v141: nghe nhanh hơn. Trước đây app chờ trình duyệt tự xác định bạn đã nói xong (thường 1–3 giây im lặng, iPhone có khi lâu hơn).
    Giờ app nhận chữ ngay trong lúc bạn nói (interim): nói đúng hết câu mẫu → chấm ngay; ngừng nói ~0.8–1.2 giây → tự chốt. */
-let VSP_END = 0;   // v221: lúc phiên nhận giọng trước kết thúc — iPhone cần ~1 giây để trả micro trước khi mở phiên mới
+let VSP_END = 0;
+/* v222: nhật ký kỹ thuật của lần mở micro gần nhất — hiện trong "Chi tiết kỹ thuật" dưới lời báo lỗi, để chụp màn hình gửi người làm app */
+const VSP_DIAG = { n: 0, log: [] };
+window.vspDiag = () => VSP_DIAG.log.join(' · ');   // v221: lúc phiên nhận giọng trước kết thúc — iPhone cần ~1 giây để trả micro trước khi mở phiên mới
 function vspListen(target, onDone, onPartial, opts) {
   opts = opts || {};
   if (prRecog) { try { prRecog.abort(); } catch (e) {} prRecog = null; }
@@ -8079,6 +8081,15 @@ function vspListen(target, onDone, onPartial, opts) {
   r.interimResults = true; r.continuous = LONG; r.maxAlternatives = LONG ? 3 : 5;
   let done = false, lastAlts = null, quiet = 0, cap = 0, lastTxt = '', t0 = 0;
   prRecog = r;
+  const T0 = Date.now(), D = m => { try { VSP_DIAG.log.push(m + '@' + (Date.now() - T0)); if (VSP_DIAG.log.length > 40) VSP_DIAG.log.shift(); } catch (e) {} };
+  if (!opts._retried) {
+    VSP_DIAG.n++;
+    let sess = '-'; try { sess = navigator.audioSession ? navigator.audioSession.type : 'none'; } catch (e) {}
+    let ua = ''; try { ua = (navigator.userAgent.match(/OS (\d+[_\d]*)/) || [])[1] || ''; } catch (e) {}
+    VSP_DIAG.log = ['lần ' + VSP_DIAG.n, 'iOS ' + ua.replace(/_/g, '.'), (matchMedia('(display-mode: standalone)').matches || navigator.standalone) ? 'app MH chính' : 'trình duyệt',
+      'session=' + sess, 'tts=' + (speechSynthesis.speaking ? 'nói' : '') + (speechSynthesis.pending ? 'chờ' : '') + (wasTalking ? '/đã-huỷ' : ''),
+      'act=' + (navigator.userActivation ? navigator.userActivation.isActive : '?'), 'cách lần trước ' + (VSP_END ? Math.round((T0 - VSP_END) / 100) / 10 + 's' : '-')];
+  } else D('mở lại');
   /* v220: trên iPhone, micro hay bị hệ thống ngắt ngay sau khi mở (lỗi "aborted" hoặc kết thúc tức thì) khi vừa có âm thanh/video
      phát trước đó. Trước đây app im lặng quay về nút "Nhấn để nói" → bấm mãi không nói được. Nay tự mở lại micro một lần. */
   const retry = () => {
@@ -8134,6 +8145,7 @@ function vspListen(target, onDone, onPartial, opts) {
     quiet = setTimeout(() => finish(scoreAlts(lastAlts), null), wait);
   };
   r.onerror = ev => {
+    D('lỗi:' + ev.error);
     if (!lastAlts && (ev.error === 'aborted' || ev.error === 'audio-capture') && Date.now() - t0 < 4000 && retry()) return;
     if (lastAlts && ev.error !== 'not-allowed' && ev.error !== 'service-not-allowed') return finish(scoreAlts(lastAlts), null);
     finish(null, ev.error === 'not-allowed' || ev.error === 'service-not-allowed'
@@ -8141,9 +8153,10 @@ function vspListen(target, onDone, onPartial, opts) {
       : ev.error === 'no-speech' ? 'Không nghe thấy gì. Hãy nói to và gần micro hơn nhé.'
       : ev.error === 'network' ? 'Nhận dạng giọng nói cần có mạng. Kiểm tra kết nối rồi thử lại.'
       : ev.error === 'audio-capture' ? 'Không tìm thấy micro, hoặc micro đang được app khác dùng. Hãy đóng app đó rồi thử lại.'
-      : ev.error === 'aborted' ? 'Micro bị ngắt giữa chừng. Đợi video/giọng mẫu dừng hẳn rồi bấm nói lại.' : 'Không nhận dạng được (' + ev.error + '). Hãy thử lại.');
+      : ev.error === 'aborted' ? 'Micro bị ngắt (aborted). Bấm nói lại nhé.' : 'Không nhận dạng được (' + ev.error + '). Hãy thử lại.');
   };
   r.onend = () => {
+    D('end');
     if (lastAlts) return finish(scoreAlts(lastAlts), null);
     if (t0 && Date.now() - t0 < 1500 && retry()) return;     // micro vừa mở đã tắt → mở lại một lần
     finish(null, 'Không nghe rõ. Bấm nói lại và đọc to hơn nhé.');
@@ -8151,12 +8164,17 @@ function vspListen(target, onDone, onPartial, opts) {
   // báo cho giao diện biết micro đã thật sự mở (trước đó nói sẽ bị mất chữ đầu)
   let started = false;
   const ready = () => { if (started || done) return; started = true; try { opts.onStart && opts.onStart(); } catch (e) {} };
-  r.onaudiostart = ready; r.onstart = () => setTimeout(ready, 120);
+  r.onaudiostart = () => { D('audio'); ready(); }; r.onstart = () => { D('start'); setTimeout(ready, 120); };
   cap = setTimeout(() => { if (lastAlts) finish(scoreAlts(lastAlts), null); else { try { r.stop(); } catch (e) {} } }, nW <= 2 ? 7000 : 15000);
   // giọng mẫu đang đọc → chờ nó dừng hẳn rồi mới mở micro (tránh tiếng "bụp" và micro thu lại chính giọng máy)
-  const open = () => { if (done) return; const d = micOpening(); const go = () => { if (done) return; t0 = Date.now(); try { r.start(); } catch (e) { if (!retry()) finish(null, 'Không mở được micro. Hãy thử lại.'); } }; if (d) setTimeout(go, d); else go(); };
-  const gap = TTS_IOS ? Math.max(0, 1000 - (Date.now() - VSP_END)) : 0;
-  if (wasTalking || gap) setTimeout(open, Math.max(gap, wasTalking ? (TTS_IOS ? 250 : 150) : 0)); else open();
+  /* v222: iPhone chỉ cho mở nhận giọng NGAY TRONG lúc người dùng bấm. Mọi khoảng chờ (đợi giọng mẫu tắt, đợi đổi chế độ âm thanh,
+     đợi phiên trước nhả micro) đều làm lệnh mở rơi ra ngoài cú bấm → hệ thống ngắt ngay ("aborted"). Lần bấm đầu thường không phải chờ
+     nên chạy được, các lần sau rơi vào nhánh chờ nên hỏng. Giờ luôn mở micro ngay, đồng bộ với cú bấm. */
+  micOpening();
+  t0 = Date.now();
+  D('gọi start');
+  try { r.start(); } catch (e) {
+    D('start lỗi:' + (e && e.name)); if (!retry()) finish(null, 'Không mở được micro. Hãy thử lại.'); }
 }
 
 function vcStartSpeak(only) {

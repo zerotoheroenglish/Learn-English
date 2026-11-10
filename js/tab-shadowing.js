@@ -1888,11 +1888,8 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     const box = E('div', 'sd-mic-w');
     const start = along => {
       if (listening) { try { prRecog && prRecog.stop(); } catch (e) {} return; }
-      // v220: video YouTube đang phát → dừng rồi chờ một nhịp cho iPhone trả micro (mở ngay sẽ bị hệ thống ngắt)
-      let vidOn = false; try { vidOn = !!(yt.player && yt.ready && [1, 3].includes(yt.player.getPlayerState())); } catch (e) {}
       stopAll(); listening = true; micReady = false; last.err = '';
       renderMain();
-      if (vidOn && TTS_IOS && !start._waited) { start._waited = true; setTimeout(() => { listening = false; start(along); start._waited = false; }, 500); return; }
       const target = r[0];
       const setMic = (ic, t) => { const m = document.getElementById('sd-mic'); if (!m) return; const a = m.querySelector('.sd-mic-ic'), b = m.querySelector('.sd-mic-t b'); if (a) a.textContent = ic; if (b) b.textContent = t; };
       vspListen(target, (best, err) => {
@@ -1941,7 +1938,11 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
       pk.addEventListener('click', () => { last.peek = true; renderMain(); });
       box.appendChild(pk);
     }
-    if (last.err) box.appendChild(E('div', 'pr-speak-out warn', last.err));
+    if (last.err) {
+      box.appendChild(E('div', 'pr-speak-out warn', last.err));
+      // v222: chi tiết kỹ thuật để chụp gửi người làm app khi micro lỗi
+      try { const dg = window.vspDiag && vspDiag(); if (dg) { const d = E('details', 'sd-info'); d.appendChild(E('summary', null, 'Chi tiết kỹ thuật')); d.appendChild(E('p', null, dg)); box.appendChild(d); } } catch (e) {}
+    }
     if (last.res) {
       const res = last.res;
       const sc = E('div', 'sd-result ' + cls(res.pct));
