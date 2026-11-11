@@ -1,5 +1,5 @@
 // Offline support: keep the app shell cached; translation/IPA requests always go to the network.
-const CACHE = 'hoc-tieng-anh-v231';
+const CACHE = 'hoc-tieng-anh-v232';
 const PREFIX = 'hoc-tieng-anh-';
 const SHELL = ["./","./index.html","./manifest.json","./icon-192.png","./icon-512.png","./apple-touch-icon.png","./app.css?h=506641fa41","./js/data-core.js?h=5c068bf2d4","./js/data-vocab.js?h=923ca16f1c","./js/app-core.js?h=81302ce603","./js/app-sync.js?h=78b85a839c","./js/app-feedback.js?h=f1bd3f9e55","./js/data-exercises.js?h=dcbe86d1d8","./js/app-exercises.js?h=f90d88ce9c","./js/app-review.js?h=0eb7ea8976","./js/app-gxlearn.js?h=687d5aea98","./js/app-onboard.js?h=107697c1c7","./js/app-backup.js?h=31e5637feb"];
 // Tab / dữ liệu nạp khi cần: KHÔNG tải sẵn lúc cài (đỡ tốn mạng và pin); được lưu offline khi bạn mở lần đầu.

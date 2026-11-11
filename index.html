@@ -160,7 +160,7 @@
 <header class="hero">
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v231</span>
+      <span class="hero-badge">EN ⇄ VI · v232</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice" id="voice-btn" aria-label="Chọn giọng đọc">🔊 <span class="hv-label">Giọng đọc</span></button>
@@ -541,15 +541,15 @@
       <button class="vsheet-close" data-close aria-label="Đóng">✕</button>
     </div>
     <div class="legal-body" id="legal-privacy">
-      <p class="legal-date">Cập nhật: 07/11/2026</p>
+      <p class="legal-date">Cập nhật: 11/11/2026</p>
       <h4>1. Về app</h4>
-      <p>“Học Tiếng Anh” là app học tiếng Anh cá nhân, miễn phí, không quảng cáo và không bán dữ liệu. Nội dung học (từ vựng, câu ví dụ, ngữ pháp, cụm từ, mẹo phát âm) do người làm app tự biên soạn, chỉ dùng cho mục đích học tập. App được cung cấp “nguyên trạng”: chúng tôi cố gắng để nội dung chính xác nhưng không bảo đảm tuyệt đối, và không chịu trách nhiệm cho thiệt hại phát sinh từ việc sử dụng app.</p>
+      <p>“Học Tiếng Anh” là app học tiếng Anh cá nhân, miễn phí, không quảng cáo, không bán dữ liệu, không dùng công cụ theo dõi hay thống kê hành vi và không gửi thông báo đẩy. Nội dung học (từ vựng, câu ví dụ, ngữ pháp, cụm từ, mẹo phát âm) do người làm app tự biên soạn, chỉ dùng cho mục đích học tập. App được cung cấp “nguyên trạng”: chúng tôi cố gắng để nội dung chính xác nhưng không bảo đảm tuyệt đối, và không chịu trách nhiệm cho thiệt hại phát sinh từ việc sử dụng app.</p>
       <h4>2. Dữ liệu lưu trên máy bạn</h4>
-      <p>Tiến độ học (sổ lỗi, từ và cụm từ đã thuộc, bài Shadowing đã học, bài tập dịch đã làm, video đã xem, ghi chú, bài nghe tự tạo, điểm luyện nghe) và các cài đặt (giọng đọc, tốc độ…) được lưu trong bộ nhớ trình duyệt (localStorage, kèm một bản dự phòng trong IndexedDB) trên chính thiết bị của bạn. Xoá dữ liệu trang web trong trình duyệt sẽ xoá các dữ liệu này. Bạn có thể tự tải file sao lưu (.json) trong mục “👤 Tài khoản” để cất ở nơi bạn chọn; file này chỉ nằm ở chỗ bạn lưu, app không gửi đi đâu.</p>
+      <p>Tiến độ học (sổ lỗi, từ và cụm từ đã thuộc, bài Shadowing đã học, bài tập dịch đã làm, video đã xem, ghi chú, bài nghe tự tạo, điểm luyện nghe) và các cài đặt (giọng đọc, tốc độ…) được lưu trong bộ nhớ trình duyệt (localStorage, kèm một bản dự phòng trong IndexedDB) trên chính thiết bị của bạn, kể cả khi bạn không đăng nhập. Không cần tài khoản để dùng app. Xoá dữ liệu trang web trong trình duyệt sẽ xoá các dữ liệu này. Bạn có thể tự tải file sao lưu (.json) trong mục “👤 Tài khoản” để cất ở nơi bạn chọn; file này chỉ nằm ở chỗ bạn lưu, app không gửi đi đâu.</p>
       <h4>3. Khi bạn đăng nhập (không bắt buộc)</h4>
-      <p>Nếu bạn đăng nhập bằng Google hoặc email, app lưu email, tên hiển thị và ảnh đại diện (do Google cung cấp) cùng tiến độ học của bạn trên Firebase của Google để đồng bộ giữa các thiết bị. Mỗi người chỉ đọc và ghi được dữ liệu của chính mình. Giọng đọc đã chọn không được đồng bộ. Bạn có thể xoá tài khoản và toàn bộ dữ liệu bất cứ lúc nào trong mục “👤 Tài khoản” → “Xoá tài khoản và dữ liệu”.</p>
+      <p>Nếu bạn đăng nhập bằng Google hoặc email, app lưu email, tên hiển thị và ảnh đại diện (do Google cung cấp) cùng tiến độ học của bạn trên Firebase của Google để đồng bộ giữa các thiết bị. Khi bạn đăng nhập trên một máy đã có tiến độ, tiến độ trên máy được gộp vào tài khoản chứ không bị ghi đè. Quy tắc bảo mật của Firebase chỉ cho tài khoản đã đăng nhập đọc và ghi đúng dữ liệu của chính mình. Giọng đọc đã chọn không được đồng bộ. Khi đăng xuất, app hỏi bạn muốn giữ tiến độ trên máy hay xoá khỏi máy; app không tự xoá. Dữ liệu trên tài khoản vẫn còn để lần sau đăng nhập. Bạn có thể xoá tài khoản và toàn bộ dữ liệu bất cứ lúc nào trong mục “👤 Tài khoản” → “Xoá tài khoản và dữ liệu”.</p>
       <h4>4. Khi bạn gửi góp ý</h4>
-      <p>App lưu nội dung góp ý, loại góp ý, số sao, thông tin liên hệ bạn tự nhập (nếu có), tên tab đang mở, phiên bản app và loại máy/trình duyệt. Nếu bạn đang đăng nhập, góp ý kèm email tài khoản. Chỉ người làm app đọc được góp ý, dùng để sửa lỗi và cải thiện app. Muốn xoá góp ý đã gửi, hãy gửi một góp ý mới nêu yêu cầu.</p>
+      <p>App lưu nội dung góp ý, loại góp ý, số sao, thông tin liên hệ bạn tự nhập (nếu có), tên tab đang mở, phiên bản app và loại máy/trình duyệt. Không cần đăng nhập để gửi góp ý; nếu bạn đang đăng nhập, góp ý kèm email tài khoản. Chỉ tài khoản của người làm app đọc được góp ý, dùng để sửa lỗi và cải thiện app. Muốn xoá góp ý đã gửi, hãy gửi một góp ý mới nêu yêu cầu.</p>
       <h4>5. Dịch vụ bên ngoài app sử dụng</h4>
       <p>Để các tính năng hoạt động, nội dung bạn nhập được gửi tới các dịch vụ sau, theo điều khoản riêng của từng dịch vụ:</p>
       <ul>
