@@ -64,7 +64,7 @@
   const fmtD = ts => { const d = new Date(ts); return d.getDate() + '/' + (d.getMonth() + 1); };
   const ASK = { mc: 'Chọn đáp án đúng', blank: 'Điền từ còn thiếu', sent: 'Viết câu tiếng Anh đúng', fix: 'Sửa lại câu cho đúng', word: 'Viết từ tiếng Anh có nghĩa này', irr: 'Viết V2 và V3 (cách nhau bằng dấu cách)', say: 'Nói to từ / câu này' };
 
-  // ---------------- trang Sổ lỗi ----------------
+  // ---------------- trang Mistakes ----------------
   const V = { f: 'all', fixed: false, more: 0 };
   function open(root, onBack) {
     root.innerHTML = '';
@@ -73,7 +73,7 @@
     root.appendChild(back);
     const all = Object.values(db), openL = all.filter(x => !x.fx), fixedL = all.filter(x => x.fx);
     const head = E('div', 'tense-card mk-head');
-    head.appendChild(E('h2', 'mk-title', '📕 Sổ lỗi của tôi'));
+    head.appendChild(E('h2', 'mk-title', '📕 Mistakes'));
     head.appendChild(E('p', 'rv-note', 'Câu bạn làm sai ở các tab tự được ghi vào đây, kèm câu đúng và lý do. Luyện lại đúng ' + NEED + ' lần là lỗi chuyển sang “Đã khắc phục”.'));
     const k = E('div', 'rv-kpis');
     [[String(openL.length), 'lỗi cần luyện'], [String(fixedL.length), 'đã khắc phục'], [String(all.reduce((s, x) => s + (x.n || 0), 0)), 'lần sai đã ghi']].forEach(([a, b]) => { const d = E('div', 'rv-kpi'); d.appendChild(E('b', null, a)); d.appendChild(E('span', null, b)); k.appendChild(d); });
@@ -82,7 +82,7 @@
     if (!all.length) {
       const c = E('div', 'tense-card');
       c.appendChild(E('div', 'rv-big', '✨'));
-      c.appendChild(E('div', 'rv-big-l', 'Sổ lỗi đang trống'));
+      c.appendChild(E('div', 'rv-big-l', 'Mistakes đang trống'));
       c.appendChild(E('p', 'rv-note', 'Làm bài tập ngữ pháp, bài tập dịch, đặt câu hỏi, kiểm tra từ vựng hay trò chuyện với AI. Câu nào sai sẽ tự vào đây để bạn luyện lại.'));
       root.appendChild(c);
       return;
@@ -172,12 +172,12 @@
         c.appendChild(E('div', 'rv-big', S.ok === set.length ? '🎉' : String(S.ok) + '/' + set.length));
         c.appendChild(E('div', 'rv-big-l', S.ok === set.length ? 'Đúng hết!' : 'câu luyện đúng'));
         if (S.fixedNow) c.appendChild(E('div', 'rv-note', `✅ ${S.fixedNow} lỗi vừa được khắc phục.`));
-        const b = E('button', 'btn-primary', 'Về Sổ lỗi'); b.type = 'button'; b.addEventListener('click', onEnd);
+        const b = E('button', 'btn-primary', 'Về Mistakes'); b.type = 'button'; b.addEventListener('click', onEnd);
         c.appendChild(b); root.appendChild(c);
         return;
       }
       const it = set[S.i];
-      const back = E('button', 'gr-back', '← Sổ lỗi'); back.type = 'button'; back.addEventListener('click', onEnd);
+      const back = E('button', 'gr-back', '← Mistakes'); back.type = 'button'; back.addEventListener('click', onEnd);
       root.appendChild(back);
       const c = E('div', 'tense-card mk-q');
       const top = E('div', 'gx-q-top');
@@ -511,7 +511,7 @@
     if (k === 's') {
       const s2 = J('hoc-tieng-anh-speak2') || {};
       const it = TSP.find(x => x[1] === L && !(s2[x[0]] && s2[x[0]].n));
-      if (it) return { ic: '🎤', t: 'Nói theo đề: ' + it[2], sub: `Đề ${LV[it[1] - 1]} · nói liên tục, AI nhận xét`, go: () => openIn('page-talk', () => { if (window.spOpen) window.spOpen(it[0]); }) };
+      if (it) return { ic: '🎤', t: 'Speaking topics: ' + it[2], sub: `Đề ${LV[it[1] - 1]} · nói liên tục, AI nhận xét`, go: () => openIn('page-talk', () => { if (window.spOpen) window.spOpen(it[0]); }) };
     }
     if (k === 's' || k === 'l') {
       const sp = J('hoc-tieng-anh-shadow-prog') || {};
@@ -529,7 +529,7 @@
     if (due) add({ ic: '🔁', t: `Ôn ${due} thẻ đến hạn`, sub: 'Ôn đúng lúc sắp quên giúp nhớ lâu nhất', why: 'Đến hạn hôm nay', go: () => { if (window.srOpen) window.srOpen(); } });
     // 1b. tiếp tục lộ trình
     try { const np = nextPathTask(); if (np) add({ ic: '🗺️', t: np.it.kind + ': ' + np.it.t, sub: `Lộ trình ${LV[np.L - 1]} · chặng ${np.u.n} (${np.u.done}/${np.u.items.length} việc)`, why: 'Tiếp tục lộ trình', go: np.it.go }); } catch (e) {}
-    // 2. điểm yếu từ Sổ lỗi
+    // 2. điểm yếu từ Mistakes
     const L = typeof window.mkList === 'function' ? window.mkList() : [];
     const gx = {}; L.filter(x => x.src === 'gx').forEach(x => { const id = String(x.k).split('|')[1]; (gx[id] = gx[id] || { n: 0, c: 0, cat: x.cat }); gx[id].n += x.n || 1; gx[id].c++; });
     const worst = Object.keys(gx).sort((a, b) => gx[b].n - gx[a].n)[0];
@@ -540,7 +540,7 @@
       const by = {}; L.forEach(x => { by[x.src] = (by[x.src] || 0) + 1; });
       const SRCN = { gx: 'ngữ pháp', ex: 'bài tập dịch', qb: 'đặt câu hỏi', vc: 'từ vựng', irr: 'bất quy tắc', say: 'phát âm', talk: 'hội thoại', rd: 'đọc hiểu', wr: 'bài viết' };
       const top = Object.keys(by).sort((a, b) => by[b] - by[a])[0];
-      add({ ic: '📕', t: `Luyện lại ${Math.min(10, L.length)} lỗi trong Sổ lỗi`, sub: `${L.length} lỗi chưa khắc phục · nhiều nhất ở ${SRCN[top] || top} (${by[top]})`, why: 'Sửa lỗi cũ', go: () => { if (window.srOpen) window.srOpen(); setTimeout(() => { const b = document.querySelector('.mk-entry button'); if (b) b.click(); }, 0); } });
+      add({ ic: '📕', t: `Luyện lại ${Math.min(10, L.length)} lỗi trong Mistakes`, sub: `${L.length} lỗi chưa khắc phục · nhiều nhất ở ${SRCN[top] || top} (${by[top]})`, why: 'Sửa lỗi cũ', go: () => { if (window.srOpen) window.srOpen(); setTimeout(() => { const b = document.querySelector('.mk-entry button'); if (b) b.click(); }, 0); } });
     }
     // 3. kỹ năng yếu nhất (điểm thấp nhất; bằng nhau thì kỹ năng ít luyện tuần này)
     const wk = weekBySkill();
@@ -559,7 +559,7 @@
     const R = recs(S, due);
     const box = E('div', 'tense-card db-recs');
     box.appendChild(E('h3', null, R.length ? `Hôm nay nên học · ${R.length} việc` : 'Hôm nay nên học'));
-    box.appendChild(E('p', 'rv-note', 'Gợi ý dựa trên thẻ đến hạn, Sổ lỗi và kỹ năng còn yếu của bạn. Bấm để mở đúng bài.'));
+    box.appendChild(E('p', 'rv-note', 'Gợi ý dựa trên thẻ đến hạn, Mistakes và kỹ năng còn yếu của bạn. Bấm để mở đúng bài.'));
     R.forEach((r, i) => {
       const b = E('button', 'db-rec c' + (i % 4) + (i === 0 ? ' first' : '')); b.type = 'button';
       b.appendChild(E('span', 'db-rec-ic', r.ic));
@@ -673,7 +673,7 @@
       const lsL = TLS.filter(x => x[1] === L), lsi = [0, 2, 4].indexOf(u);
       if (lsi >= 0 && lsL[lsi]) { const d0 = lsL[lsi], l2 = J('hoc-tieng-anh-listen2') || {}; items.push({ ic: '🎧', t: d0[2], kind: 'Nghe hội thoại', done: !!(l2[d0[0]] && l2[d0[0]].best >= 70), go: () => openIn('page-read', () => { if (window.rdHome) window.rdHome('listen'); if (window.lsOpen) window.lsOpen(d0[0]); }) }); }
       const spL = TSP.filter(x => x[1] === L), spi = [1, 3, 5].indexOf(u);
-      if (spi >= 0 && spL[spi]) { const d1 = spL[spi], s2 = J('hoc-tieng-anh-speak2') || {}; items.push({ ic: '🎤', t: d1[2], kind: 'Nói theo đề', done: !!(s2[d1[0]] && (s2[d1[0]].best >= 6 || s2[d1[0]].n >= 2)), go: () => openIn('page-talk', () => { if (window.spOpen) window.spOpen(d1[0]); }) }); }
+      if (spi >= 0 && spL[spi]) { const d1 = spL[spi], s2 = J('hoc-tieng-anh-speak2') || {}; items.push({ ic: '🎤', t: d1[2], kind: 'Speaking topics', done: !!(s2[d1[0]] && (s2[d1[0]].best >= 6 || s2[d1[0]].n >= 2)), go: () => openIn('page-talk', () => { if (window.spOpen) window.spOpen(d1[0]); }) }); }
       const ti = tAt.indexOf(u); if (ti >= 0 && T[ti]) { const tk = T[ti]; items.push({ ic: '💬', t: tk[2], kind: 'Nói chuyện', done: !!(tp[tk[0]] && tp[tk[0]].best >= 70), go: () => openIn('page-talk', () => { if (window.talkOpen) window.talkOpen(tk[0]); }) }); }
       const wi = wAt.indexOf(u); if (wi >= 0 && W[wi]) { const w = W[wi]; items.push({ ic: '✍️', t: w[2], kind: 'Viết', done: !!(wp[w[0]] && wp[w[0]].best >= 6), go: () => openIn('page-read', () => { if (window.rdHome) window.rdHome('write'); if (window.wrOpen) window.wrOpen(w[0]); }) }); }
       const gs = G.slice(u * per, (u + 1) * per).map(g => g.title);
@@ -787,7 +787,7 @@
     q1.appendChild(E('b', null, due ? String(due) : '✓')); q1.appendChild(E('span', null, due ? 'thẻ cần ôn hôm nay' : 'Đã ôn xong hôm nay'));
     q1.addEventListener('click', () => { if (window.srOpen) window.srOpen(); });
     const q2 = E('button', 'db-q' + (mkN ? ' hot' : ''), ''); q2.type = 'button';
-    q2.appendChild(E('b', null, String(mkN))); q2.appendChild(E('span', null, mkN ? 'lỗi cần luyện lại' : 'Sổ lỗi đang trống'));
+    q2.appendChild(E('b', null, String(mkN))); q2.appendChild(E('span', null, mkN ? 'lỗi cần luyện lại' : 'Mistakes đang trống'));
     q2.addEventListener('click', () => { if (window.srOpen) window.srOpen(); setTimeout(() => { const b = document.querySelector('.mk-entry button'); if (b) b.click(); }, 0); });
     qa.appendChild(q1); qa.appendChild(q2);
     root.appendChild(qa);
@@ -1025,7 +1025,7 @@
       c.appendChild(E('b', null, 'Từ hay hơn'));
       const ul = E('ul', 'wr-errs'); bt.forEach(x => { const li = E('li'); li.appendChild(document.createTextNode(x.word + ' → ')); li.appendChild(E('b', null, x.alt)); if (x.why) li.appendChild(E('div', 'wr-why', x.why)); ul.appendChild(li); }); c.appendChild(ul);
     }
-    if (errs.length) c.appendChild(E('div', 'rv-note', 'Các lỗi đã được ghi vào 📕 Sổ lỗi.'));
+    if (errs.length) c.appendChild(E('div', 'rv-note', 'Các lỗi đã được ghi vào 📕 Mistakes.'));
   });
 })();
 
@@ -1044,7 +1044,7 @@
   const say = t => { try { if (typeof speak === 'function' && t) speak(t, 0.85); } catch (e) {} };
   const play = t => { const b = E('button', 'play-mini', '▶'); b.type = 'button'; b.setAttribute('aria-label', 'Nghe'); b.addEventListener('click', e => { e.stopPropagation(); say(t); }); return b; };
   const VI_RE = /[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]/i;
-  const SRC = { v: ['📚', 'Từ vựng'], g: ['📐', 'Ngữ pháp'], i: ['🔀', 'Bất quy tắc'], m: ['📖', 'Sổ từ của bạn'] };
+  const SRC = { v: ['📚', 'Từ vựng'], g: ['📐', 'Ngữ pháp'], i: ['🔀', 'Bất quy tắc'], m: ['📖', 'Word book'] };
 
   /* ---------- sổ từ: từ đã lưu ở tab Translate tự vào đây ---------- */
   function syncCards() {
@@ -1162,15 +1162,15 @@
     const st = streak();
     if (st) c.appendChild(E('div', 'rv-streak', `🔥 Chuỗi ${st} ngày học liên tiếp`));
     root.appendChild(c);
-    // v143: Sổ lỗi
+    // v143: Mistakes
     if (typeof window.mkOpen === 'function') {
       const mc = window.mkCount();
       const m = E('div', 'tense-card mk-entry');
       const tx = E('div', 'mk-entry-t');
-      tx.appendChild(E('h3', null, '📕 Sổ lỗi của tôi' + (mc ? ' · ' + mc : '')));
+      tx.appendChild(E('h3', null, '📕 Mistakes' + (mc ? ' · ' + mc : '')));
       tx.appendChild(E('p', 'rv-note', mc ? 'Những câu bạn từng làm sai, kèm câu đúng và lý do. Luyện lại để khắc phục.' : 'Câu nào bạn làm sai ở các tab sẽ tự vào đây để luyện lại.'));
       m.appendChild(tx);
-      const b = E('button', mc ? 'btn-primary' : 'btn-ghost', mc ? 'Mở sổ lỗi →' : 'Xem sổ lỗi'); b.type = 'button';
+      const b = E('button', mc ? 'btn-primary' : 'btn-ghost', mc ? 'Mở sổ lỗi →' : 'Xem Mistakes'); b.type = 'button';
       b.addEventListener('click', () => { window.mkOpen(root, () => { home(); try { page.scrollIntoView({ block: 'start' }); } catch (e) {} }); try { page.scrollIntoView({ block: 'start' }); } catch (e) {} });
       m.appendChild(b);
       root.appendChild(m);
@@ -1207,7 +1207,7 @@
   function deckBox() {
     const s = E('div', 'tense-card rv-deck');
     const ids = Object.keys(cards);
-    s.appendChild(E('h3', null, `📖 Sổ từ của bạn · ${ids.length}`));
+    s.appendChild(E('h3', null, `📖 Word book · ${ids.length}`));
     s.appendChild(E('p', 'rv-note', 'Từ bạn lưu ở tab Translate (📖 Chạm vào từ…) tự vào đây. Bạn cũng có thể tự thêm từ, cụm từ hay câu muốn nhớ. Mỗi ngày tối đa ' + set.newDay + ' thẻ mới được đưa vào ôn.'));
     const f = E('form', 'rv-add');
     const a = E('input'); a.placeholder = 'Tiếng Anh (vd. deadline)'; a.autocomplete = 'off';

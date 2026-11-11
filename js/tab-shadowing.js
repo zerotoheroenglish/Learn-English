@@ -21,7 +21,7 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     ['daily', 'Hội thoại hằng ngày', '🗣️', 200], ['story', 'Đời sống & kể chuyện', '📖', 30], ['travel', 'Du lịch & văn hóa', '✈️', 170],
     ['work', 'Công việc', '💼', 220], ['interview', 'Phỏng vấn xin việc', '🤝', 260], ['health', 'Sức khỏe', '🩺', 140],
     ['tech', 'Công nghệ & khoa học', '🔬', 250], ['ideas', 'Góc nhìn & thuyết trình', '🎤', 330], ['ielts', 'IELTS Speaking', '🎯', 0],
-    ['toeic', 'TOEIC', '📊', 20], ['3d', 'Tiếng Anh ngành 3D', '🧊', 190], ['mine', 'Bài của tôi', '✍️', 290]
+    ['toeic', 'TOEIC', '📊', 20], ['3d', 'Tiếng Anh ngành 3D', '🧊', 190], ['mine', 'My lessons', '✍️', 290]
   ];
   const CAT = Object.fromEntries(CATS.map(c => [c[0], { id: c[0], vi: c[1], icon: c[2], hue: c[3] }]));
   const LV = ['', 'A1', 'A2', 'B1', 'B2', 'C1'];
@@ -671,7 +671,7 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
   }
   function srcSwitch() {
     const m = E('div', 'ls-modes sd-srcs');
-    [['lib', '📚 Bài luyện'], ['video', '📺 Video'], ['mine', '✍️ Bài của tôi']].forEach(([k, label]) => {
+    [['lib', '📚 Lessons'], ['video', '📺 Videos'], ['mine', '✍️ My lessons']].forEach(([k, label]) => {
       const b = E('button', 'ls-mode' + (view.src === k ? ' active' : ''), label);
       b.addEventListener('click', () => { view.src = k; renderHome(); });
       m.appendChild(b);
@@ -976,7 +976,7 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     const l = view.lesson;
     root.innerHTML = '';
     const top = E('div', 'sd-top');
-    const back = E('button', 'gr-back sd-back', l.cat === 'bbc' ? '← Danh sách video' : '← Thư viện');
+    const back = E('button', 'gr-back sd-back', l.cat === 'bbc' ? '← Videos' : '← Lessons');
     back.addEventListener('click', () => { renderHome(); irrTopSafe(); });
     top.appendChild(back);
     const tt = E('div', 'sd-top-t');
@@ -1000,7 +1000,7 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     }
     const modes = E('div', 'ls-modes sd-modes');
     // v180: thứ tự theo yêu cầu — Shadowing · Nghe cả bài · Quiz · True/False · Chính tả
-    [['shadow', '🎙️ Shadowing'], ['listen', '🎧 Nghe cả bài'], ...(l.s.length >= 3 ? [['quiz', '🧩 Quiz'], ['tf', '✅ True/False']] : []), ['dict', '⌨️ Chính tả']].forEach(([m, label]) => {
+    [['shadow', '🎙️ Shadowing'], ['listen', '🎧 Listen all'], ...(l.s.length >= 3 ? [['quiz', '🧩 Quiz'], ['tf', '✅ True/False']] : []), ['dict', '⌨️ Dictation']].forEach(([m, label]) => {
       const b = E('button', 'ls-mode' + (view.mode === m ? ' active' : ''), label);
       b.addEventListener('click', () => { stopAll(); if (m === 'quiz') quiz = null; if (m === 'tf') tfState = null; if (OWN_IDX[view.mode]) touch(l); view.mode = m; if (OWN_IDX[m]) view.idx = idxFor(l, m); renderLesson(); if (m === 'dict') { setTimeout(() => { if (view.mode === 'dict') playCur(); }, 500); } });
       modes.appendChild(b);
@@ -1241,10 +1241,10 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
       side.appendChild(lkl);
       side.appendChild(E('div', 'sd-tip-t', 'Cách luyện hiệu quả'));
       const ol = E('ol', 'sd-tip-ol');
-      ['Bước 1 · Nghe & hiểu: nghe 2–3 lần, đọc nghĩa và các cụm ý. Chưa cần nói.',
-       'Bước 2 · Nghe & lặp lại: nghe chậm 0.5x–0.75x, lặp lại từng cụm rồi cả câu.',
+      ['Bước 1 · Listen: nghe 2–3 lần, đọc nghĩa và các cụm ý. Chưa cần nói.',
+       'Bước 2 · Repeat: nghe chậm 0.5x–0.75x, lặp lại từng cụm rồi cả câu.',
        'Bước 3 · Shadowing: ẩn bản dịch (có thể ẩn cả câu), nói cùng lúc với giọng mẫu, bắt chước nhịp và ngữ điệu.',
-       'Bước 4 · Tự nói lại: chỉ nhìn nghĩa tiếng Việt, tự nói lại câu; app chỉ ra từ còn thiếu.',
+       'Bước 4 · Retell: chỉ nhìn nghĩa tiếng Việt, tự nói lại câu; app chỉ ra từ còn thiếu.',
        'Từ màu đỏ là chỗ máy chưa nghe ra: chạm để nghe riêng. So sánh "Giọng mẫu" và "Giọng của bạn" để tự đánh giá phát âm.',
        'Học lại vào một ngày khác: bài đạt "Thành thạo" khi mọi câu ≥ 80% và đã luyện ít nhất 2 ngày.'].forEach(t => ol.appendChild(E('li', null, t)));
       side.appendChild(ol);
@@ -1467,10 +1467,10 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
   let recKey = '';   // câu đang có bản ghi âm "Giọng của bạn"
   /* v113: Shadowing theo 4 bước, mỗi bước một mục đích */
   const STEPS = [
-    [1, '👂', 'Nghe & hiểu', 'Bước 1 · Nghe câu mẫu, đọc nghĩa và các cụm ý cho đến khi hiểu. Chưa cần nói.'],
-    [2, '🔁', 'Nghe & lặp lại', 'Bước 2 · Nghe chậm (0.5x – 1x), lặp lại từng cụm rồi cả câu. App đo độ khớp nhận diện.'],
+    [1, '👂', 'Listen', 'Bước 1 · Nghe câu mẫu, đọc nghĩa và các cụm ý cho đến khi hiểu. Chưa cần nói.'],
+    [2, '🔁', 'Repeat', 'Bước 2 · Nghe chậm (0.5x – 1x), lặp lại từng cụm rồi cả câu. App đo độ khớp nhận diện.'],
     [3, '🎧', 'Shadowing', 'Bước 3 · Ẩn bản dịch (có thể ẩn cả câu tiếng Anh), nói cùng lúc với giọng mẫu, theo kịp nhịp và ngữ điệu.'],
-    [4, '🧠', 'Tự nói lại', 'Bước 4 · Không nhìn câu: dựa vào nghĩa tiếng Việt để tự nói lại, app chỉ ra từ còn thiếu.']
+    [4, '🧠', 'Retell', 'Bước 4 · Không nhìn câu: dựa vào nghĩa tiếng Việt để tự nói lại, app chỉ ra từ còn thiếu.']
   ];
   function stepBar() {
     const w = E('div', 'sd-steps');

@@ -293,10 +293,10 @@ const QBB = (() => {
   const S = QB_DATA.st.map(([g, s, q, alt, ex, hint]) => ({ g, s, en: q, alt, ex: [ex], hint, key: s }));
   const F = QB_DATA.er.map(([g, w, r, alt, ex]) => ({ g, w, en: r, alt, ex: [ex], key: w }));
   const MODES = [
-    { id: 'order', icon: '🧩', title: 'Sắp xếp từ thành câu hỏi', sub: 'Chạm vào các từ bị xáo trộn để ghép lại thành câu hỏi đúng.', bank: T },
-    { id: 'trans', icon: '🔁', title: 'Đổi câu khẳng định thành câu hỏi', sub: 'Đặt câu hỏi cho phần in đậm, hoặc đổi thành câu hỏi Yes/No.', bank: S },
-    { id: 'vi', icon: '💬', title: 'Tạo câu hỏi từ tiếng Việt', sub: 'Tự gõ câu hỏi tiếng Anh, app chấm và phân tích từng bước.', bank: T, star: true },
-    { id: 'fix', icon: '🔍', title: 'Tìm lỗi trong câu hỏi', sub: 'Câu hỏi có một lỗi sai. Tìm ra và viết lại cho đúng.', bank: F }
+    { id: 'order', icon: '🧩', title: 'Word order', sub: 'Chạm vào các từ bị xáo trộn để ghép lại thành câu hỏi đúng.', bank: T },
+    { id: 'trans', icon: '🔁', title: 'Statement → question', sub: 'Đặt câu hỏi cho phần in đậm, hoặc đổi thành câu hỏi Yes/No.', bank: S },
+    { id: 'vi', icon: '💬', title: 'Vietnamese → question', sub: 'Tự gõ câu hỏi tiếng Anh, app chấm và phân tích từng bước.', bank: T, star: true },
+    { id: 'fix', icon: '🔍', title: 'Find the mistake', sub: 'Câu hỏi có một lỗi sai. Tìm ra và viết lại cho đúng.', bank: F }
   ];
   const MI = Object.fromEntries(MODES.map(m => [m.id, m]));
   const KEY = 'hoc-tieng-anh-qb', GK = 'hoc-tieng-anh-qb-g';
@@ -433,9 +433,9 @@ const QBB = (() => {
         'Không lặp lại động từ chính: ✗ “Yes, I like.” → ✓ “Yes, I do.”'] });
   });
   MODES.push(
-    { id: 'aux', icon: '🎯', title: 'Chọn trợ động từ đúng', sub: 'Lỗi số 1 khi đặt câu hỏi: do hay does, is hay are, did hay was? Chọn nhanh, giải thích ngay.', bank: AUXQ, isNew: true },
-    { id: 'short', icon: '↩️', title: 'Trả lời ngắn', sub: 'Yes, I do. · No, she doesn’t. Chọn câu trả lời ngắn đúng cho câu hỏi Yes/No.', bank: SHORT, isNew: true },
-    { id: 'speak', icon: '🗣', title: 'Nói câu hỏi thành tiếng', sub: 'Đọc câu tiếng Việt, nói câu hỏi tiếng Anh vào micro. App chấm câu và nhắc lên / xuống giọng.', bank: T, isNew: true }
+    { id: 'aux', icon: '🎯', title: 'Choose the auxiliary', sub: 'Lỗi số 1 khi đặt câu hỏi: do hay does, is hay are, did hay was? Chọn nhanh, giải thích ngay.', bank: AUXQ, isNew: true },
+    { id: 'short', icon: '↩️', title: 'Short answers', sub: 'Yes, I do. · No, she doesn’t. Chọn câu trả lời ngắn đúng cho câu hỏi Yes/No.', bank: SHORT, isNew: true },
+    { id: 'speak', icon: '🗣', title: 'Say it aloud', sub: 'Đọc câu tiếng Việt, nói câu hỏi tiếng Anh vào micro. App chấm câu và nhắc lên / xuống giọng.', bank: T, isNew: true }
   );
   MODES.forEach(m => { MI[m.id] = m; });
 
@@ -826,7 +826,7 @@ const QBB = (() => {
     setTimeout(() => { try { if (matchMedia('(hover:hover)').matches) inp.focus(); } catch (e) {} }, 50);
   }
 
-  // v143: câu sai → Sổ lỗi
+  // v143: câu sai → Mistakes
   function qbMk(mid, it, r, user) {
     if (typeof window.mkAdd !== 'function' || !it || !it.en || !/^(vi|trans|fix|order)$/.test(mid)) return;
     const k = 'qb|' + mid + '|' + it.en;

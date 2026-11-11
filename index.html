@@ -160,7 +160,7 @@
 <header class="hero">
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v233</span>
+      <span class="hero-badge">EN ⇄ VI · v234</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice" id="voice-btn" aria-label="Chọn giọng đọc">🔊 <span class="hv-label">Giọng đọc</span></button>
@@ -389,7 +389,7 @@
   <!-- PAGE: TENSES -->
   <section class="page" id="page-shadow">
     <div class="section-title">Shadowing</div>
-    <div class="section-sub">Nghe từng câu rồi nói theo như cái bóng, theo 4 bước: nghe hiểu → lặp lại → shadowing → tự nói lại. Có phiên âm, cách đọc, chính tả, quiz và tốc độ 0.5x – 1.5x.</div>
+    <div class="section-sub">Nghe từng câu rồi nói theo như cái bóng, theo 4 bước: Listen → Repeat → Shadowing → Retell. Có phiên âm, cách đọc, chính tả, quiz và tốc độ 0.5x – 1.5x.</div>
     <div id="sh-root"></div>
   </section>
 
@@ -559,7 +559,7 @@
         <li><b>Máy chủ trung gian:</b> allorigins.win, codetabs.com: chỉ dùng khi bạn mở app từ file lưu trên máy (không qua trang web). Khi dùng app trên web hoặc từ màn hình chính, chữ bạn gõ không đi qua các máy chủ này.</li>
         <li><b>Video:</b> YouTube (Google) phát video, nên YouTube có thể ghi nhận việc xem theo chính sách của họ.</li>
         <li><b>Chấm phát âm:</b> nhận dạng giọng nói có sẵn của trình duyệt (Google trên Chrome, Apple trên Safari). Bản ghi âm ở “Ghi âm & nghe lại” và tab Shadowing chỉ phát trên máy, không lưu và không gửi đi.</li>
-        <li><b>Nói chuyện (Speaking Partner):</b> phần Nhập vai chấm câu trên máy và qua LanguageTool. Phần “Trò chuyện tự do với AI” chỉ chạy khi bạn tự dán khoá của mình (Google Gemini, Groq hoặc OpenAI ChatGPT): câu bạn nói được gửi tới nhà cung cấp bạn chọn theo điều khoản của họ (bản Gemini miễn phí có thể được Google dùng để cải thiện dịch vụ). Khoá chỉ lưu trên máy bạn, không đồng bộ và không có trong file sao lưu.</li>
+        <li><b>Nói chuyện (Speaking Partner):</b> phần Role-play chấm câu trên máy và qua LanguageTool. Phần “Free chat with AI” chỉ chạy khi bạn tự dán khoá của mình (Google Gemini, Groq hoặc OpenAI ChatGPT): câu bạn nói được gửi tới nhà cung cấp bạn chọn theo điều khoản của họ (bản Gemini miễn phí có thể được Google dùng để cải thiện dịch vụ). Khoá chỉ lưu trên máy bạn, không đồng bộ và không có trong file sao lưu.</li>
         <li><b>Đăng nhập, đồng bộ, góp ý:</b> Firebase (Google).</li>
         <li><b>Phông chữ:</b> Google Fonts.</li>
       </ul>
@@ -695,7 +695,7 @@
    - không tải sẵn hàng loạt. Chỉ tải trước ĐÚNG MỘT tab (tab nạp-khi-cần bạn mở gần nhất), khi trình duyệt thật sự rảnh,
      và không làm việc này nếu bật tiết kiệm dữ liệu, mạng chậm (2G/3G) hoặc máy ít RAM */
 (function () {
-  var LAZY = {"page-exercise":"js/app-exercises.js?h=26882cc1d8","page-shadow":"js/tab-shadowing.js?h=561e92e9dd","page-qb":"js/tab-questions.js?h=fcff4b5d0a","page-read":"js/tab-reading.js?h=e771a941c5","page-talk":"js/tab-talk.js?h=fd15659f4a","page-para":"js/tab-para.js?h=f2f7a86a27"}, DATA = {"exvi":"js/data-vocab-vi.js?h=31cb69d052","exd":"js/data-exercises.js?h=dcbe86d1d8","vocab":"js/data-vocab.js?h=923ca16f1c"}, DEPS = { 'page-vocab': ['exvi'] }, PRE = { 'page-exercise': ['exd'] }, state = {};
+  var LAZY = {"page-exercise":"js/app-exercises.js?h=26882cc1d8","page-shadow":"js/tab-shadowing.js?h=89b52f94db","page-qb":"js/tab-questions.js?h=0d9ced07ba","page-read":"js/tab-reading.js?h=ffd1ae51ff","page-talk":"js/tab-talk.js?h=2660b4cfc1","page-para":"js/tab-para.js?h=f2f7a86a27"}, DATA = {"exvi":"js/data-vocab-vi.js?h=31cb69d052","exd":"js/data-exercises.js?h=dcbe86d1d8","vocab":"js/data-vocab.js?h=923ca16f1c"}, DEPS = { 'page-vocab': ['exvi'] }, PRE = { 'page-exercise': ['exd'] }, state = {};
   function inject(key, url) {
     if (!url) return Promise.resolve();
     if (state[key]) return state[key];
@@ -757,7 +757,7 @@
 })();
 </script>
 <script src="js/data-core.js?h=85310589ec"></script>
-<script src="js/app-core.js?h=7eb63db9b1"></script>
+<script src="js/app-core.js?h=ac2c875d67"></script>
 
 <script src="js/app-sync.js?h=78b85a839c"></script>
 
@@ -794,7 +794,7 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
 <!-- tab-questions: nạp khi mở tab -->
 <!-- tab-reading: nạp khi mở tab -->
 <!-- tab-talk: nạp khi mở tab -->
-<script src="js/app-review.js?h=56bb49aa54"></script>
+<script src="js/app-review.js?h=92718085f0"></script>
 <script src="js/app-gxlearn.js?h=687d5aea98"></script>
 <script src="js/app-onboard.js?h=107697c1c7"></script>
 <script>
@@ -1091,6 +1091,6 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
 })();
 </script>
 <!-- tab-para: nạp khi mở tab -->
-<script src="js/app-backup.js?h=31e5637feb"></script>
+<script src="js/app-backup.js?h=9cb8726de3"></script>
 </body>
 </html>

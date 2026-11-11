@@ -123,7 +123,7 @@ const RD_LESSONS = [{"id":"a1-family","lv":1,"icon":"👨‍👩‍👧","t":"My
     const avgL = RD_LESSONS.map(l => prog[l.id] && prog[l.id].best).filter(x => x != null);
     const sum = E('div', 'tense-card rd-sum');
     sum.appendChild(E('div', 'rd-sum-t', `Đã đọc ${doneN}/${RD_LESSONS.length} bài` + (avgL.length ? ` · điểm trung bình ${Math.round(avgL.reduce((a, b) => a + b, 0) / avgL.length)}%` : '')));
-    sum.appendChild(E('div', 'rv-note', 'Chạm vào từ bất kỳ để xem nghĩa. Mỗi bài có 5 câu hỏi; trả lời sai sẽ được ghi vào Sổ lỗi.'));
+    sum.appendChild(E('div', 'rv-note', 'Chạm vào từ bất kỳ để xem nghĩa. Mỗi bài có 5 câu hỏi; trả lời sai sẽ được ghi vào Mistakes.'));
     root.appendChild(sum);
     const chips = E('div', 'colloc-chips rd-chips');
     [['Tất cả', 0], ...LV.map((x, i) => [x, i + 1])].forEach(([name, v]) => {
@@ -347,7 +347,7 @@ const WR_TASKS = [{"id":"w-a1-me","lv":1,"icon":"🙋","type":"Giới thiệu","
 /* ============================================================
    VIẾT THEO ĐỀ A1–C1 (v146) — 20 đề tự soạn: dàn ý, cụm từ, bài mẫu
    ✨ AI chấm bằng khoá của chính bạn (Gemini / Groq / ChatGPT, cài ở tab AI Speaking)
-   🔍 Kiểm tra nhanh miễn phí bằng LanguageTool. Lỗi AI tìm được → Sổ lỗi.
+   🔍 Kiểm tra nhanh miễn phí bằng LanguageTool. Lỗi AI tìm được → Mistakes.
 ============================================================ */
 (function () {
   const root = document.getElementById('rd-root');
@@ -599,7 +599,7 @@ const WR_TASKS = [{"id":"w-a1-me","lv":1,"icon":"🙋","type":"Giới thiệu","
         li.appendChild(E('s', null, x.wrong)); li.appendChild(document.createTextNode(' → ')); li.appendChild(E('b', null, x.right));
         if (x.why) li.appendChild(E('div', 'wr-why', x.why));
         ol.appendChild(li);
-        // Sổ lỗi: câu chứa lỗi → câu đã sửa
+        // Mistakes: câu chứa lỗi → câu đã sửa
         try {
           if (window.mkAdd) {
             const sents = text.match(/[^.!?\n]+[.!?]*/g) || [text];
@@ -609,7 +609,7 @@ const WR_TASKS = [{"id":"w-a1-me","lv":1,"icon":"🙋","type":"Giới thiệu","
         } catch (e) {}
       });
       ec.appendChild(ol);
-      ec.appendChild(E('div', 'rv-note', 'Các lỗi này đã được ghi vào 📕 Sổ lỗi để bạn luyện lại.'));
+      ec.appendChild(E('div', 'rv-note', 'Các lỗi này đã được ghi vào 📕 Mistakes để bạn luyện lại.'));
       box.appendChild(ec);
     }
     if (r.improved) {

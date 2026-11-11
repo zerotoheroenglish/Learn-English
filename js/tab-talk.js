@@ -388,14 +388,14 @@ const TALK_SCENES = [
     hero.appendChild(E('p', 'tk-hero-s', 'Biến những gì đã học thành câu nói thật: nghe nhân vật hỏi, trả lời bằng giọng nói, app chấm cấu trúc và ngữ pháp ngay sau mỗi câu.'));
     const modes = E('div', 'tk-modes');
     const m1 = E('button', 'tk-mode'); m1.type = 'button';
-    m1.innerHTML = '<b>🎭 Nhập vai theo tình huống</b><span>Kịch bản soạn sẵn A1 → B2 · miễn phí · không cần tài khoản</span>';
+    m1.innerHTML = '<b>🎭 Role-play</b><span>Kịch bản soạn sẵn A1 → B2 · miễn phí · không cần tài khoản</span>';
     m1.addEventListener('click', () => { const l = root.querySelector('.tk-list'); if (l) l.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
     const m2 = E('button', 'tk-mode'); m2.type = 'button';
     const hasKey = !!aiKey();
-    m2.innerHTML = '<b>🤖 Trò chuyện tự do với AI</b><span>' + (hasKey ? PROV[prov()].name + ' · đã cài khoá · nói về bất cứ chủ đề nào' : 'Dùng khoá AI của bạn (Gemini, Groq miễn phí hoặc ChatGPT) · cài một lần') + '</span>';
+    m2.innerHTML = '<b>🤖 Free chat with AI</b><span>' + (hasKey ? PROV[prov()].name + ' · đã cài khoá · nói về bất cứ chủ đề nào' : 'Dùng khoá AI của bạn (Gemini, Groq miễn phí hoặc ChatGPT) · cài một lần') + '</span>';
     m2.addEventListener('click', () => { aiHome(); top(); });
     const m3 = E('button', 'tk-mode'); m3.type = 'button';
-    m3.innerHTML = '<b>🎤 Nói theo đề</b><span>20 đề A1 → C1 · nói liên tục 30 giây – 2 phút · chép lại lời nói, AI nhận xét</span>';
+    m3.innerHTML = '<b>🎤 Speaking topics</b><span>20 đề A1 → C1 · nói liên tục 30 giây – 2 phút · chép lại lời nói, AI nhận xét</span>';
     m3.addEventListener('click', () => { spHome(); top(); });
     modes.appendChild(m1); modes.appendChild(m2); modes.appendChild(m3);
     hero.appendChild(modes);
@@ -946,7 +946,7 @@ const TALK_SCENES = [
     root.innerHTML = '';
     root.appendChild(back('← Nói chuyện', home));
     const c = E('div', 'tense-card tk-ai');
-    c.appendChild(E('h2', 'gr-title', '🤖 Trò chuyện tự do với AI'));
+    c.appendChild(E('h2', 'gr-title', '🤖 Free chat with AI'));
     c.appendChild(E('p', 'tk-hero-s', 'Nói về bất cứ điều gì. AI trả lời ngắn theo trình độ của bạn, sửa từng câu bạn nói, gợi ý cách nói tự nhiên hơn và nhận xét khi kết thúc.'));
     if (inClaude()) c.appendChild(E('div', 'tk-warn', 'Bản xem trước trong Claude không gọi được AI bên ngoài. Hãy mở app trên trang web của bạn để dùng phần này.'));
     const pv = prov(), PV = PROV[pv];
@@ -1213,7 +1213,7 @@ const TALK_SCENES = [
     const back = E('button', 'gr-back', '← Nói chuyện'); back.type = 'button'; back.addEventListener('click', () => { spStop(); home(); top(); });
     root.appendChild(back);
     const hero = E('div', 'tense-card tk-hero');
-    hero.appendChild(E('div', 'tk-hero-t', '🎤 Nói theo đề'));
+    hero.appendChild(E('div', 'tk-hero-t', '🎤 Speaking topics'));
     hero.appendChild(E('p', 'tk-hero-s', 'Đọc đề, chuẩn bị vài giây rồi nói liên tục trong thời gian quy định (A1: 30 giây → C1: 2 phút). App chép lại lời bạn nói, đếm số từ, tốc độ nói. Có khoá AI thì được nhận xét chi tiết; chưa có vẫn luyện được và nghe bài nói mẫu.'));
     const done = SP_TASKS.filter(t => spProg[t.id] && spProg[t.id].n).length;
     if (done) hero.appendChild(E('div', 'tk-stat', `Đã luyện ${done}/${SP_TASKS.length} đề`));
@@ -1242,7 +1242,7 @@ const TALK_SCENES = [
     stopAll(); spStop();
     root.innerHTML = '';
     const P = spProg[t.id] || (spProg[t.id] = { n: 0, h: [] });
-    const back = E('button', 'gr-back', '← Nói theo đề'); back.type = 'button'; back.addEventListener('click', () => { spStop(); spHome(); top(); });
+    const back = E('button', 'gr-back', '← Speaking topics'); back.type = 'button'; back.addEventListener('click', () => { spStop(); spHome(); top(); });
     root.appendChild(back);
     const head = E('div', 'gr-head');
     head.appendChild(E('div', 'gr-en', `${SPLV[t.lv - 1]} · nói ${t.sec >= 60 ? (t.sec / 60) + ' phút' : t.sec + ' giây'}`));
@@ -1411,7 +1411,7 @@ const TALK_SCENES = [
         const ol = E('ol', 'wr-errs');
         errs.forEach(x => { const li = E('li'); li.appendChild(E('s', null, x.wrong)); li.appendChild(document.createTextNode(' → ')); li.appendChild(E('b', null, x.right)); if (x.why) li.appendChild(E('div', 'wr-why', x.why)); ol.appendChild(li);
           try { if (window.mkAdd) window.mkAdd({ k: 'spk|' + t.id + '|' + String(x.wrong).toLowerCase().slice(0, 80), src: 'talk', cat: 'Nói theo đề · ' + t.t, mode: 'fix', p: x.wrong, a: [x.right], why: x.why || '' }); } catch (e) {} });
-        ec.appendChild(ol); ec.appendChild(E('div', 'rv-note', 'Các lỗi đã được ghi vào 📕 Sổ lỗi.'));
+        ec.appendChild(ol); ec.appendChild(E('div', 'rv-note', 'Các lỗi đã được ghi vào 📕 Mistakes.'));
         out.appendChild(ec);
       }
       if (r.improved) { const ic = E('div', 'tense-card'); const h = E('div', 'wr-sh'); h.appendChild(E('h3', null, '✨ Cách nói tự nhiên hơn')); const p3 = E('button', 'btn-ghost', '🔊 Nghe'); p3.type = 'button'; p3.addEventListener('click', () => say(String(r.improved))); h.appendChild(p3); ic.appendChild(h); ic.appendChild(E('p', 'wr-sp', String(r.improved))); out.appendChild(ic); }

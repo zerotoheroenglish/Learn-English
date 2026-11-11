@@ -126,7 +126,7 @@
       ['📚 Từ đang theo dõi', n(srs)],
       ['📐 Bài ngữ pháp đã làm', Object.values(gx).filter(r => r && r.n).length],
       ['🔀 Động từ bất quy tắc đã ôn', n(irr)],
-      ['📖 Sổ từ của bạn', n(cards)],
+      ['📖 Word book', n(cards)],
       ['📕 Lỗi chưa khắc phục', Object.values(mk).filter(x => x && !x.fx).length],
       ['📖 Bài đọc đã làm', Object.values(rd).filter(x => x && x.best != null).length],
       ['🎧 Hội thoại đã nghe', Object.values(ls).filter(x => x && x.best != null).length],

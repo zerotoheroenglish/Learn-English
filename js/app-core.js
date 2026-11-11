@@ -2049,7 +2049,7 @@ function trRenderExtra() {
     let r = 'ok';
     if (sents.length > 1 && p.en.length > 160) { trToast('Câu dài: hãy dùng “Đối chiếu từng câu” rồi lưu từng câu.'); return; }
     r = trToShadow(p);
-    trToast(r === 'ok' ? '✓ Đã thêm vào Shadowing › Bài của tôi › “Câu đã lưu từ tab Translate”' : r === 'dup' ? 'Câu này đã có trong bài shadowing.' : 'Bài đã đủ 80 câu. Hãy xoá bớt trong tab Shadowing.');
+    trToast(r === 'ok' ? '✓ Đã thêm vào Shadowing › My lessons › “Câu đã lưu từ tab Translate”' : r === 'dup' ? 'Câu này đã có trong bài shadowing.' : 'Bài đã đủ 80 câu. Hãy xoá bớt trong tab Shadowing.');
   });
   const al = trEl('button', 'btn-ghost', '↔ Đối chiếu từng câu');
   al.addEventListener('click', () => trAlign(al));
@@ -2076,7 +2076,7 @@ function trRenderExtra() {
         if (!h.vi && typeof fetchMeaningOnline === 'function') fetchMeaningOnline(w).then(m => { mean.textContent = m || 'Chưa tra được nghĩa.'; }).catch(() => { mean.textContent = 'Chưa tra được nghĩa (cần mạng).'; });
         let inVocab = false; try { inVocab = VC_ALL.some(x => x.w.toLowerCase() === w.toLowerCase() && !x.sense); } catch (e) {}
         const sv = trEl('button', 'btn-primary', inVocab ? '＋ Thêm vào tab Vocabulary (yêu thích + ôn tập)' : '＋ Lưu vào sổ từ của tab Translate');
-        sv.addEventListener('click', () => { const r = trSaveWord(w, mean.textContent.replace(/^Đang tra nghĩa…$/, '')); sv.disabled = true; sv.textContent = r === 'vocab' ? '✓ Đã thêm vào Từ vựng › Yêu thích, có trong lịch ôn' : '✓ Đã lưu vào sổ từ (xem ở mục “Sổ từ” bên dưới)'; trRenderSaved(); });
+        sv.addEventListener('click', () => { const r = trSaveWord(w, mean.textContent.replace(/^Đang tra nghĩa…$/, '')); sv.disabled = true; sv.textContent = r === 'vocab' ? '✓ Đã thêm vào Từ vựng › Yêu thích, có trong lịch ôn' : '✓ Đã lưu vào sổ từ (xem ở mục “Word book” bên dưới)'; trRenderSaved(); });
         info.appendChild(sv);
       });
       row.appendChild(b);
@@ -2141,7 +2141,7 @@ function trRenderSaved() {
   const box = document.getElementById('tr-saved'); if (!box) return;
   box.innerHTML = '';
   const tabs = trEl('div', 'colloc-chips tr-stabs');
-  [['hist', `🕘 Lịch sử · ${trHist.length}`], ['fav', `★ Yêu thích · ${trFav.length}`], ['words', `📖 Sổ từ · ${trWords.length}`], ['gloss', `🧊 Từ điển 3D · ${TR_GLOSS.length + trMyGloss.length}`]].forEach(([k, t]) => {
+  [['hist', `🕘 History · ${trHist.length}`], ['fav', `★ Favorites · ${trFav.length}`], ['words', `📖 Word book · ${trWords.length}`], ['gloss', `🧊 3D dictionary · ${TR_GLOSS.length + trMyGloss.length}`]].forEach(([k, t]) => {
     const b = trEl('button', 'colloc-chip' + (trSavedTab === k ? ' active' : ''), t);
     b.addEventListener('click', () => { trSavedTab = k; trRenderSaved(); });
     tabs.appendChild(b);
@@ -2180,7 +2180,7 @@ function trRenderSaved() {
     });
   } else if (trSavedTab === 'words') {
     list.appendChild(trEl('div', 'tr-x-sub', 'Từ có trong tab Vocabulary được thêm thẳng vào đó (mục Yêu thích + lịch ôn). Từ chưa có trong bộ 11.000 từ được giữ ở sổ này.'));
-    if (!trWords.length) list.appendChild(trEl('div', 'tr-empty', 'Sổ từ đang trống. Dưới bản dịch, mở “📖 Chạm vào từ…” để lưu từ.'));
+    if (!trWords.length) list.appendChild(trEl('div', 'tr-empty', 'Word book đang trống. Dưới bản dịch, mở “📖 Chạm vào từ…” để lưu từ.'));
     trWords.forEach(x => {
       const r = trEl('div', 'tr-sitem tr-favitem');
       const tx = trEl('div', 'tr-s-txt'); tx.appendChild(trEl('span', 'tr-s-a', x.w)); tx.appendChild(trEl('span', 'tr-s-b', x.vi || '')); r.appendChild(tx);
@@ -3000,7 +3000,7 @@ function cardFold(card, key) {
   const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'fold-btn';
   const set = closed => {
     card.classList.toggle('folded', closed);
-    btn.textContent = closed ? 'Open ▾' : 'Close ▴';
+    btn.textContent = closed ? 'Mở ▾' : 'Thu gọn ▴';
     btn.setAttribute('aria-expanded', closed ? 'false' : 'true');
     btn.setAttribute('aria-label', (closed ? 'Mở ' : 'Thu gọn ') + h.textContent);
   };
@@ -5033,7 +5033,7 @@ function ipaStepTest(s, body) {
 let pairBest = p2Load(P2.pairs, {}); if (!pairBest || typeof pairBest !== 'object') pairBest = {};
 function prOpenPairs(id) {
   if (!id) {
-    const v = p2View('⚖️', 'Phân biệt âm dễ nhầm', `${PAIR_GROUPS.length} nhóm cặp âm · nghe & chọn · nghe & phân loại · luyện nói`);
+    const v = p2View('⚖️', 'Minimal pairs', `${PAIR_GROUPS.length} nhóm cặp âm · nghe & chọn · nghe & phân loại · luyện nói`);
     v.appendChild(prEl('p', 'ls-level-desc', 'Có thể bạn nói một âm khá tốt nhưng vẫn chưa nghe ra khác biệt. Mỗi nhóm có danh sách cặp từ và hai bài kiểm tra nghe.'));
     [1, 2, 3].forEach(lv => {
       v.appendChild(prEl('div', 'tense-group-title', PAIR_LV[lv]));
@@ -5095,7 +5095,7 @@ function prOpenPairs(id) {
 /* ---------- trọng âm và ngữ điệu ---------- */
 let stressBest = p2Load(P2.stress, {}) || {};
 function prOpenStress() {
-  const v = p2View('🎯', 'Trọng âm và ngữ điệu', 'Trọng âm từ · trọng âm câu · ngữ điệu lên xuống');
+  const v = p2View('🎯', 'Stress & intonation', 'Trọng âm từ · trọng âm câu · ngữ điệu lên xuống');
   // trọng âm từ
   v.appendChild(prEl('div', 'tense-group-title', '1. Trọng âm từ'));
   const c1 = prEl('div', 'tense-card p2-sec');
@@ -5163,7 +5163,7 @@ function prOpenStress() {
 /* ---------- kiểm tra tổng hợp ---------- */
 let prTestBest = p2Load(P2.test, null);
 function prOpenTest() {
-  const v = p2View('📝', 'Kiểm tra tổng hợp', '12 câu: nghe phân biệt cặp âm, nhận ra âm trong từ, trọng âm và ngữ điệu');
+  const v = p2View('📝', 'Pronunciation test', '12 câu: nghe phân biệt cặp âm, nhận ra âm trong từ, trọng âm và ngữ điệu');
   if (prTestBest != null) v.appendChild(prEl('p', 'ls-level-desc', `Kết quả tốt nhất: ${prTestBest}%.`));
   const weak = ipaWeak();
   const box = prEl('div', 'p2-testbox');
@@ -5224,12 +5224,12 @@ function p2HomeTop() {
   }
   wrap.appendChild(card);
   const secs = [
-    ['01', '/æ/', 'Bảng 44 âm IPA', 'Nguyên âm đơn · Nguyên âm đôi · Phụ âm', () => prOpenIpa()],
-    ['02', '👄', 'Luyện phát âm từng âm', 'Nghe mẫu · Khẩu hình · Ví dụ · Phân biệt · Kiểm tra', () => { prOpenIpa(); const first = IPA_SOUNDS.find(s => ipaSt(s[0]) !== 'master') || IPA_SOUNDS[0]; setTimeout(() => ipaShow(first[0]), 50); }],
-    ['03', '⚖️', 'Phân biệt âm dễ nhầm', `${PAIR_GROUPS.length} nhóm · nghe & chọn · nghe & phân loại`, () => prOpenPairs()],
-    ['04', '🎯', 'Trọng âm và ngữ điệu', 'Trọng âm từ · Trọng âm câu · Ngữ điệu', () => prOpenStress()],
-    ['05', 'a‿b', 'Nối âm trong giao tiếp', 'Linking · Weak forms · Elision · Assimilation', () => prOpenLink()],
-    ['06', '📝', 'Kiểm tra tổng hợp', 'Nghe, nhận diện, trọng âm, ngữ điệu' + (prTestBest != null ? ` · tốt nhất ${prTestBest}%` : ''), () => prOpenTest()]
+    ['01', '/æ/', 'IPA chart · 44 sounds', 'Nguyên âm đơn · Nguyên âm đôi · Phụ âm', () => prOpenIpa()],
+    ['02', '👄', 'Sound by sound', 'Nghe mẫu · Khẩu hình · Ví dụ · Phân biệt · Kiểm tra', () => { prOpenIpa(); const first = IPA_SOUNDS.find(s => ipaSt(s[0]) !== 'master') || IPA_SOUNDS[0]; setTimeout(() => ipaShow(first[0]), 50); }],
+    ['03', '⚖️', 'Minimal pairs', `${PAIR_GROUPS.length} nhóm · nghe & chọn · nghe & phân loại`, () => prOpenPairs()],
+    ['04', '🎯', 'Stress & intonation', 'Trọng âm từ · Trọng âm câu · Ngữ điệu', () => prOpenStress()],
+    ['05', 'a‿b', 'Connected speech', 'Linking · Weak forms · Elision · Assimilation', () => prOpenLink()],
+    ['06', '📝', 'Pronunciation test', 'Nghe, nhận diện, trọng âm, ngữ điệu' + (prTestBest != null ? ` · tốt nhất ${prTestBest}%` : ''), () => prOpenTest()]
   ];
   const grid = prEl('div', 'p2-secs');
   secs.forEach(([no, ic, t, sub, fn]) => {
@@ -6085,7 +6085,7 @@ function gxReviewSet(ids) {
   return out;
 }
 
-/* v143: ghi câu sai vào Sổ lỗi (đúng lại thì tính một lần luyện đúng) */
+/* v143: ghi câu sai vào Mistakes (đúng lại thì tính một lần luyện đúng) */
 function gxMk(Q, ok, user) {
   if (typeof window.mkAdd !== 'function') return;
   const k = 'gx|' + Q.id + '|' + Q.qid;
@@ -6122,7 +6122,7 @@ function gxQuiz(box, qs, opts) {
     next.addEventListener('click', () => { S.i++; draw(); });
     const finish = (ok, detail, user) => {
       S.res.push({ id: Q.id, qid: Q.qid, ok });
-      try { if (!opts.noMk) gxMk(Q, ok, user); if (window.actLog) actLog('g'); } catch (e) {}   // v162: bài kiểm tra trình độ không ghi Sổ lỗi
+      try { if (!opts.noMk) gxMk(Q, ok, user); if (window.actLog) actLog('g'); } catch (e) {}   // v162: bài kiểm tra trình độ không ghi Mistakes
       fb.hidden = false; fb.className = 'gx-fb ' + (ok ? 'ok' : 'bad');
       fb.innerHTML = '';
       fb.appendChild(grEl('div', 'gx-fb-t', ok ? '✓ Chính xác!' : '✗ Chưa đúng'));
@@ -6764,7 +6764,7 @@ function gxPlacementResult(res, box, trackOf, timeUp) {
   });
   rec.appendChild(tb);
   rec.appendChild(grEl('p', 'gx-place-note', `App đã đặt Lộ trình ở cấp ${lvCode}, tab Grammar ở chặng ${T.key} và tab Irregular verbs ở cấp ${lvCode}. Gợi ý thêm: tab Vocabulary học các bài cấp ${lvCode}, tab Shadowing chọn lọc cấp ${lvCode} (hoặc thấp hơn một cấp cho dễ nói).`));
-  rec.appendChild(grEl('p', 'gx-place-note', `Câu sai trong bài kiểm tra không vào Sổ lỗi vì có thể bạn chưa học tới. Đây là ước lượng từ ${res.length} câu ngữ pháp, chưa đo kỹ năng nghe và nói. Nếu thấy bài quá dễ hoặc quá khó, cứ đổi chặng ở danh sách cấp độ trên trang Grammar.`));
+  rec.appendChild(grEl('p', 'gx-place-note', `Câu sai trong bài kiểm tra không vào Mistakes vì có thể bạn chưa học tới. Đây là ước lượng từ ${res.length} câu ngữ pháp, chưa đo kỹ năng nghe và nói. Nếu thấy bài quá dễ hoặc quá khó, cứ đổi chặng ở danh sách cấp độ trên trang Grammar.`));
   const btns = grEl('div', 'ls-sum-btns');
   const first = GX_ALL.find(x => x.track === T.key && gxStatus(x.id) !== 'done');
   // v177: nút gọn 2 dòng — việc cần làm ở trên, tên bài ở dưới
@@ -8311,7 +8311,7 @@ function vcRenderSpeak() {
         q.tries++; q.last = best;
         if (!q.best || best.pct > q.best.pct) q.best = best;
         vspSave(it, S.what, best.pct);
-        try {   // v143: đọc chưa khớp (< 60%) → Sổ lỗi; đọc tốt (≥ 80%) → tính một lần luyện đúng
+        try {   // v143: đọc chưa khớp (< 60%) → Mistakes; đọc tốt (≥ 80%) → tính một lần luyện đúng
           const mk = 'say|' + String(target).toLowerCase();
           if (best.pct >= 80) { if (window.mkOk) window.mkOk(mk); }
           else if (best.pct < 60 && window.mkAdd) window.mkAdd({ k: mk, src: 'say', cat: S.what === 'ex' ? 'Câu ví dụ' : 'Từ vựng', mode: 'say', p: vspText(target), a: [vspText(target)], right: vspText(target), hint: it.ipa ? it.ipa + ' · ' + it.vi : it.vi, wrong: best.heard ? 'Máy nghe thành: “' + best.heard + '”' : '', pct: best.pct });
@@ -8683,7 +8683,7 @@ function vcRenderHomeBody() {
   if (vc.cat !== 'all' && !ORG.some(o => o[0] === vc.cat)) vc.cat = 'all';
   const box = lsEl('div', 'tense-card vc-tfilter');
   const row0 = lsEl('div', 'colloc-chips vw-org');
-  [['cat', '📂 Theo danh mục'], ['goal', '🎯 Theo mục tiêu giao tiếp']].forEach(([k, l]) => {
+  [['cat', '📂 By category'], ['goal', '🎯 By goal']].forEach(([k, l]) => {
     const c = lsEl('button', 'colloc-chip' + (vc.org === k ? ' active' : ''), l);
     c.addEventListener('click', () => { vc.org = k; vc.cat = 'all'; try { localStorage.setItem('hoc-tieng-anh-vocab-org', k); } catch (e) {} vcRenderHomeBody(); });
     row0.appendChild(c);
@@ -9728,11 +9728,11 @@ function irrRenderHome() {
   }
   if (!irr.q && !irr.stf && !irr.pat) {
     const tools = lsEl('div', 'irr-tools');
-    [['📚', 'Danh sách 305 động từ', 'Xem tất cả, lọc và phân trang', () => { irr.stf = 'all'; irr.lim = 80; irrRenderHome(); }],
-     ['🧩', 'Bảng 4 nhóm biến đổi', 'A-A-A · A-B-B · A-B-A · A-B-C', () => { irrRenderPatTable(); irrTop(); }],
-     ['⚠️', 'Động từ dễ nhầm', 'lie/lay, rise/raise, read…', () => { irrRenderConf(); irrTop(); }],
-     ['👂', 'Nghe & nhận diện', 'Nghe một dạng, chọn V1 / V2 / V3', () => { const todo = IRREGULAR_VERBS.filter(v => v.lv <= Math.max(2, irr.lv) && v.pat !== 'AAA'); irrOpenUnit({ mix: true, icon: '👂', vi: 'Nghe & nhận diện', en: '20 động từ ngẫu nhiên', items: lsShuffle(todo).slice(0, 20) }, 'hear'); }],
-     ['★', 'Yêu thích', `${irrFav.size} động từ`, () => { irr.stf = 'fav'; irr.lim = 80; irrRenderHome(); }]
+    [['📚', 'Verb list · 305', 'Xem tất cả, lọc và phân trang', () => { irr.stf = 'all'; irr.lim = 80; irrRenderHome(); }],
+     ['🧩', 'Patterns', 'A-A-A · A-B-B · A-B-A · A-B-C', () => { irrRenderPatTable(); irrTop(); }],
+     ['⚠️', 'Confusing verbs', 'lie/lay, rise/raise, read…', () => { irrRenderConf(); irrTop(); }],
+     ['👂', 'Listen & identify', 'Nghe một dạng, chọn V1 / V2 / V3', () => { const todo = IRREGULAR_VERBS.filter(v => v.lv <= Math.max(2, irr.lv) && v.pat !== 'AAA'); irrOpenUnit({ mix: true, icon: '👂', vi: 'Nghe & nhận diện', en: '20 động từ ngẫu nhiên', items: lsShuffle(todo).slice(0, 20) }, 'hear'); }],
+     ['★', 'Favorites', `${irrFav.size} động từ`, () => { irr.stf = 'fav'; irr.lim = 80; irrRenderHome(); }]
     ].forEach(([ic, t, sub, fn]) => { const b = lsEl('button', 'irr-tool'); b.appendChild(lsEl('span', 'irr-tool-ic', ic)); const tx = lsEl('span'); tx.appendChild(lsEl('b', null, t)); tx.appendChild(lsEl('span', null, sub)); b.appendChild(tx); b.addEventListener('click', fn); tools.appendChild(b); });
     irrRoot.appendChild(tools);
     irrRoot.appendChild(irrTestBox());
@@ -10558,7 +10558,7 @@ function irrSeen(v) { if (!irrSrs[v.v1]) { irrSrs[v.v1] = { b: 0, n: 0, w: 0, du
 // chấm một lần trả lời: đúng → lên một bậc và hẹn ôn sau 1, 3, 7, 14, 30 ngày; sai → về bậc thấp, ôn ngay
 function irrGrade(v, ok, kind, val, grade) {
   try { if (window.actLog && kind !== 'rv') actLog('v'); } catch (e) {}
-  try {   // v143: Sổ lỗi (không tính thẻ tự chấm)
+  try {   // v143: Mistakes (không tính thẻ tự chấm)
     if (kind !== 'card' && kind !== 'rv' && v && v.v1) {
       const k = 'irr|' + v.v1;
       if (ok) { if (window.mkOk) window.mkOk(k); }
@@ -10870,7 +10870,7 @@ function irrRenderConf(id) {
   back.addEventListener('click', () => { if (id) irrRenderConf(); else irrRenderHome(); irrTop(); });
   irrRoot.appendChild(back);
   if (!id) {
-    irrRoot.appendChild(vcHead('⚠️', 'Động từ dễ nhầm lẫn', `${IRR_CONF.length} cặp hay nhầm: dạng, nghĩa, cách đọc và bài tập phân biệt`));
+    irrRoot.appendChild(vcHead('⚠️', 'Confusing verbs', `${IRR_CONF.length} cặp hay nhầm: dạng, nghĩa, cách đọc và bài tập phân biệt`));
     const list = lsEl('div', 'vc-units');
     IRR_CONF.forEach((c, i) => {
       const b = lsEl('button', 'vc-unit');
@@ -10932,7 +10932,7 @@ function irrRenderPatTable() {
   irrSpStop(); irr.view = 'pats';
   irrRoot.innerHTML = '';
   const back = lsEl('button', 'gr-back', '← Tất cả động từ'); back.addEventListener('click', () => { irrRenderHome(); irrTop(); }); irrRoot.appendChild(back);
-  irrRoot.appendChild(vcHead('🧩', 'Bảng 4 nhóm biến đổi', 'Học theo quy luật thay vì thuộc danh sách dài'));
+  irrRoot.appendChild(vcHead('🧩', 'Patterns', 'Học theo quy luật thay vì thuộc danh sách dài'));
   const EXS = { AAA: ['cut', 'put', 'let', 'hit', 'cost', 'set'], ABB: ['buy', 'make', 'have', 'find', 'tell', 'keep'], ABA: ['come', 'run', 'become', 'overcome'], ABC: ['go', 'see', 'write', 'take', 'speak', 'eat'] };
   const grid = lsEl('div', 'irr-pt-grid');
   ['AAA', 'ABB', 'ABA', 'ABC'].forEach(p => {
@@ -10965,7 +10965,7 @@ function irrPickTest(n, lv) {
 }
 function irrTestBox() {
   const box = lsEl('div', 'tense-card irr-test');
-  box.appendChild(lsEl('div', 'vc-q-label', '📝 Kiểm tra tổng hợp'));
+  box.appendChild(lsEl('div', 'vc-q-label', '📝 Mixed test'));
   box.appendChild(lsEl('p', 'ls-level-desc', 'Câu hỏi chọn ngẫu nhiên, ưu tiên từ cần ôn, từ hay sai và từ chưa học. Gồm hỏi V2, V3, nghĩa và chọn dạng đúng trong câu.'));
   let lv = 0;
   const lvs = lsEl('div', 'colloc-chips');
