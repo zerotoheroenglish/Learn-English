@@ -640,7 +640,7 @@ const GRAMMAR_TOPICS = [
   ],
   "tips": [
    "Chỉ động từ có tân ngữ mới chuyển sang bị động được: không nói \"It was happened\".",
-   "Động từ bất quy tắc dùng dạng V3: write → written, make → made (xem tab Bất quy tắc)."
+   "Động từ bất quy tắc dùng dạng V3: write → written, make → made (xem tab Irregular verbs)."
   ],
   "group": "basics"
  },
@@ -6762,7 +6762,7 @@ const GRAMMAR_TOPICS = [
    },
    {
     "name": "Động từ có quy tắc hay dùng",
-    "usage": "Học thuộc nhóm này là kể được phần lớn chuyện đã qua. Động từ không theo quy tắc nằm ở tab Bất quy tắc.",
+    "usage": "Học thuộc nhóm này là kể được phần lớn chuyện đã qua. Động từ không theo quy tắc nằm ở tab Irregular verbs.",
     "table": {
      "head": [
       "Nguyên thể",
@@ -6947,7 +6947,7 @@ const GRAMMAR_TOPICS = [
    "Phụ âm + y mới đổi thành i: study → studied, nhưng play → played (nguyên âm + y).",
    "Chỉ \"wanted, needed, visited…\" mới đọc thêm một âm tiết /ɪd/; \"worked, played\" vẫn một âm tiết.",
    "Đừng gấp đôi phụ âm khi trọng âm ở đầu: \"visitted\" ✗ → \"visited\" ✓.",
-   "Động từ bất quy tắc không thêm -ed: go → went, buy → bought. Xem tab Bất quy tắc."
+   "Động từ bất quy tắc không thêm -ed: go → went, buy → bought. Xem tab Irregular verbs."
   ]
  },
  {

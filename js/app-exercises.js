@@ -50,7 +50,7 @@ EX_DATA['questions'] = [["Are you tired?", "Bạn có mệt không?", []], ["Is 
 
 
 /* ============================================================
-   CHẤM THÔNG MINH (v107) — dùng chung cho tab Bài tập và Luyện dịch
+   CHẤM THÔNG MINH (v107) — dùng chung cho tab Grammar exercises và Translation practice
    Không chỉ so với đáp án mẫu mà tách thành 4 tiêu chí:
      1. Ngữ pháp  2. Tự nhiên  3. Đủ ý so với yêu cầu  4. Giống đáp án mẫu
    Ngữ pháp/tự nhiên: luật riêng cho lỗi người Việt hay mắc (chạy offline)

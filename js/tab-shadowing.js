@@ -1072,7 +1072,7 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     tools.appendChild(E('div', 'vc-q-label', '🎙️ Shadowing theo đoạn'));
     tools.appendChild(E('p', 'sd-create-p', 'Phụ đề tiếng Anh của YouTube được bật sẵn. Bấm "Nghe đoạn" để nghe một đoạn ngắn rồi nói lại theo đúng nhịp, hoặc bật chế độ tự động: app phát một đoạn, dừng cho bạn nói lại, rồi sang đoạn sau.'));
     const pl = () => yt.player && yt.ready ? yt.player : null;
-    // nghe từng đoạn ngắn rồi nói lại (giống tab Luyện nghe, nhưng để nói theo)
+    // nghe từng đoạn ngắn rồi nói lại (giống tab Listening, nhưng để nói theo)
     const segKey = 'hoc-tieng-anh-shadow-seg';
     let segLen = +(load(segKey, 5)) || 5;
     const notes = load('hoc-tieng-anh-shadow-segpos', {}) || {};

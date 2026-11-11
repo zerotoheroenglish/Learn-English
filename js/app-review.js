@@ -68,7 +68,7 @@
   const V = { f: 'all', fixed: false, more: 0 };
   function open(root, onBack) {
     root.innerHTML = '';
-    const back = E('button', 'gr-back', '← Ôn tập hôm nay'); back.type = 'button';
+    const back = E('button', 'gr-back', '← Due cards'); back.type = 'button';
     back.addEventListener('click', () => { if (onBack) onBack(); });
     root.appendChild(back);
     const all = Object.values(db), openL = all.filter(x => !x.fx), fixedL = all.filter(x => x.fx);
@@ -623,6 +623,7 @@
   function unitWords(L, size) {
     if (uwCache[L]) return uwCache[L];
     let G = [], T = []; try { G = GX_ALL.filter(x => x.lv === L); T = VOCAB_TOPICS; } catch (e) { return []; }
+    if (!T.length) return [];   // v233: từ vựng chưa nạp xong → chưa ghi nhớ kết quả rỗng
     const per = Math.ceil(G.length / UNITS), used = new Set(), out = [];
     const pool = spec => {
       const [tid, kw] = spec.split(':'), t = T.find(x => x.id === tid); if (!t) return null;
@@ -748,7 +749,7 @@
     root.innerHTML = '';
     root.appendChild(viewBar());
     { const tt = document.getElementById('db-title'), ss = document.getElementById('db-sub');
-      if (tt) tt.textContent = view === 'path' ? 'Lộ trình học' : 'Hôm nay';
+      if (tt) tt.textContent = view === 'path' ? 'Learning path' : 'Today';
       if (ss) ss.textContent = view === 'path' ? 'Mỗi cấp 6 chặng, mỗi chặng nối ngữ pháp, từ vựng, đọc, nghe, nói, viết. Làm xong ở đâu, việc đó tự được đánh dấu ✓.' : 'Việc cần làm hôm nay, chuỗi ngày học, điểm từng kỹ năng và mức hoàn thành theo cấp độ.'; }
     if (view === 'path') { renderPath(); return; }
     const t = dayTotals(), d = dayNo(), st = streakOf(t), todayN = t[d] || 0;
@@ -943,7 +944,7 @@
 
 /* ============================================================
    ✨ AI NHẬN XÉT Ở TAB DỊCH (v146) — giải thích lỗi bằng tiếng Việt, viết lại tự nhiên, gợi ý từ hay hơn.
-   Dùng khoá AI của người học (cài ở tab Nói chuyện); LanguageTool vẫn chạy như cũ khi chưa có khoá.
+   Dùng khoá AI của người học (cài ở tab AI Speaking); LanguageTool vẫn chạy như cũ khi chưa có khoá.
 ============================================================ */
 (function () {
   const inp = document.getElementById('tr-input'), card = document.getElementById('fx-card');
@@ -1283,7 +1284,7 @@
     const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z');
     const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Hoc Tieng Anh//On tap//VI', 'CALSCALE:GREGORIAN', 'BEGIN:VEVENT',
       'UID:hoc-tieng-anh-on-tap-' + Date.now() + '@local', 'DTSTAMP:' + stamp, 'DTSTART:' + loc, 'DURATION:PT15M', 'RRULE:FREQ=DAILY',
-      'SUMMARY:🔁 Ôn tập tiếng Anh (15 phút)', 'DESCRIPTION:Mở app Học Tiếng Anh → Ôn tập hôm nay.' + (url ? '\\n' + url : ''), url ? 'URL:' + url : '',
+      'SUMMARY:🔁 Ôn tập tiếng Anh (15 phút)', 'DESCRIPTION:Mở app Học Tiếng Anh → Review → Due cards.' + (url ? '\\n' + url : ''), url ? 'URL:' + url : '',
       'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:Đến giờ ôn tập tiếng Anh', 'TRIGGER:PT0M', 'END:VALARM', 'END:VEVENT', 'END:VCALENDAR'].filter(Boolean);
     const blob = new Blob([lines.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'nhac-on-tap-tieng-anh.ics';
@@ -1333,7 +1334,7 @@
     S = { q, i: 0, ok: 0, n: 0, again: new Set(), gres: [], by: { v: 0, g: 0, i: 0, m: 0 }, t0: Date.now() };
     root.innerHTML = '';
     const head = E('div', 'tk-top');
-    const back = E('button', 'gr-back', '← Ôn tập hôm nay'); back.type = 'button';
+    const back = E('button', 'gr-back', '← Due cards'); back.type = 'button';
     back.addEventListener('click', () => { finishGrammar(); S = null; home(); });
     head.appendChild(back);
     S.prog = E('div', 'tk-prog'); head.appendChild(S.prog);
@@ -1702,4 +1703,6 @@
   window.srAddFx = (k, f, b, ask, x, a) => { const id = 'fx|' + k; if (cards[id]) { if (a && cards[id].a !== a) { Object.assign(cards[id], { f, b, ask: ask || '', a }); save(K.cards, cards); } return false; } cards[id] = { f, b, ask: ask || '', x: x || '', a: a || '', src: 'fx', add: today() }; save(K.cards, cards); refresh(); return true; };
   window.srAddCard = (en, vi) => { const id = 'me|' + String(en).toLowerCase(); if (!cards[id]) { cards[id] = { f: en, b: vi || '', src: 'me', add: today() }; save(K.cards, cards); refresh(); } };
   refresh();
+  // v233: từ vựng nạp sau khi app hiện ra → cập nhật số thẻ, và trang Ôn tập nếu đang mở ở màn hình chính
+  window.addEventListener('hta-vocab-ready', () => { try { refresh(); if (window.__dashRender) window.__dashRender(); if (!S && page.classList.contains('active') && !document.querySelector('#page-review .rv-type, #page-review .sr-card')) home(); } catch (e) {} });
 })();

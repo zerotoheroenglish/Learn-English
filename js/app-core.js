@@ -2,7 +2,7 @@
    Nếu trang đã được vẽ bằng đường khác (ví dụ mở thẳng một bài từ "Hôm nay") thì không vẽ đè. */
 function whenPageShown(pageId, root, fn) {
   const pg = document.getElementById(pageId);
-  const run = () => { if (!root || !root.firstElementChild) fn(); };
+  const run = () => { const f = root && root.firstElementChild; if (!f || f.classList.contains('lazy-wait')) fn(); };   // v233: chữ “Đang tải…” không tính là đã vẽ
   if (!pg || pg.classList.contains('active')) { run(); return; }
   const mo = new MutationObserver(() => { if (pg.classList.contains('active')) { mo.disconnect(); run(); } });
   mo.observe(pg, { attributes: true, attributeFilter: ['class'] });
@@ -5664,7 +5664,7 @@ const GR_PLAN = [
 /* v110: bài tổng hợp “Cách đặt câu hỏi trong tiếng Anh” */
 GRAMMAR_TOPICS.push({ id: 'questions', title: 'Cách đặt câu hỏi trong tiếng Anh', en: 'How to make questions',
   intro: 'Bài tổng hợp các kiểu câu hỏi: Yes/No với to be, với động từ thường (do/does/did), với can/will…, câu hỏi Wh- và How-, và câu hỏi về chủ ngữ. Quy tắc chung: đưa trợ động từ lên trước chủ ngữ.',
-  tips: ['Có to be hoặc động từ khuyết thiếu (can, will, should…) thì đảo chúng lên trước chủ ngữ, không dùng do.', 'Động từ thường thì mượn do/does/did; khi đã có trợ động từ, động từ chính trở về nguyên mẫu (Does he work…? không nói Does he works…?).', 'Câu hỏi chủ ngữ (Who called you?) không dùng do/does/did.', 'Câu hỏi gián tiếp giữ trật tự câu khẳng định: Do you know where the station is?', 'Luyện thêm ở tab Câu hỏi: sắp xếp từ, đổi câu khẳng định, dịch và tìm lỗi.'],
+  tips: ['Có to be hoặc động từ khuyết thiếu (can, will, should…) thì đảo chúng lên trước chủ ngữ, không dùng do.', 'Động từ thường thì mượn do/does/did; khi đã có trợ động từ, động từ chính trở về nguyên mẫu (Does he work…? không nói Does he works…?).', 'Câu hỏi chủ ngữ (Who called you?) không dùng do/does/did.', 'Câu hỏi gián tiếp giữ trật tự câu khẳng định: Do you know where the station is?', 'Luyện thêm ở tab Asking questions: sắp xếp từ, đổi câu khẳng định, dịch và tìm lỗi.'],
   sections: [
     { name: '1. Câu hỏi Yes/No với to be', formula: 'Am / Is / Are + S + …? · Was / Were + S + …?', usage: 'Đảo động từ to be lên trước chủ ngữ. Không dùng do/does/did với to be.',
       examples: [{ en: 'Are you tired?', vi: 'Bạn có mệt không?' }, { en: 'Is she a teacher?', vi: 'Cô ấy là giáo viên phải không?' }, { en: 'Were they at home yesterday?', vi: 'Hôm qua họ có ở nhà không?' }] },
@@ -6047,7 +6047,7 @@ function gxResult(id, pct, wrong) {
 mxIsDone = it => gxStatus(it.id) === 'done';
 
 /* ---------- câu hỏi ---------- */
-const gxNorm = s => scExpand(String(s)).replace(/[.,!?;:“”"]/g, ' ').replace(/\s+/g, ' ').trim();
+const gxNorm = s => (typeof scExpand === 'function' ? scExpand(String(s)) : ' ' + String(s).toLowerCase() + ' ').replace(/[.,!?;:“”"]/g, ' ').replace(/\s+/g, ' ').trim();
 const gxAns = q => String(q[1]).split('|');
 const gxFill = (sent, w) => sent.replace('___', w === '—' ? '' : w).replace(/\s+/g, ' ').replace(/\s+([,.?!])/g, '$1').replace(/^\s+/, '').replace(/^./, c => c.toUpperCase());
 function gxExItems(id) {
@@ -6318,7 +6318,7 @@ function gxReviewIds() {
 function renderGrammarHome(keepScroll) {
   const y = window.scrollY;
   grRoot.innerHTML = '';
-  grRoot.appendChild(grEl('div', 'section-title', 'Ngữ pháp tiếng Anh'));
+  grRoot.appendChild(grEl('div', 'section-title', 'Grammar'));
   grRoot.appendChild(grEl('div', 'section-sub', 'Học theo trình độ · Luyện tập · Ôn tập · Theo dõi tiến độ. Mỗi bài gồm 7 bước: khái niệm, công thức, cách dùng, ví dụ, lỗi thường gặp, luyện tập và kiểm tra cuối bài.'));
   // tiến độ
   const total = GX_ALL.length, cnt = { new: 0, learning: 0, weak: 0, done: 0 };
@@ -6594,10 +6594,10 @@ function gxLesson(id) {
   tbox.appendChild(tstart);
   grRoot.appendChild(gxStep(7, 'Kiểm tra cuối bài', [tbox], 'gx|' + id + '|7', true));
   const pr = tnPracticeBtn(id, 'Luyện thêm: bài tập dịch 5 cấp của bài này →'); if (pr) grRoot.appendChild(pr);
-  // v131: luyện nói với cấu trúc của bài (tab Nói chuyện)
+  // v131: luyện nói với cấu trúc của bài (tab AI Speaking)
   const talkBox = grEl('div', 'gx-talk-slot'); grRoot.appendChild(talkBox);
   const fillTalk = () => { if (typeof window.talkSlot === 'function' && talkBox.isConnected) window.talkSlot(talkBox, id); };
-  // v137: chỉ tải tab Nói chuyện khi bạn cuộn tới cuối bài (không tải ngay lúc mở bài)
+  // v137: chỉ tải tab AI Speaking khi bạn cuộn tới cuối bài (không tải ngay lúc mở bài)
   if (window.talkSlot) fillTalk();
   else if (window.appLoadTab && 'IntersectionObserver' in window) {
     const io = new IntersectionObserver(es => { if (es.some(x => x.isIntersecting)) { io.disconnect(); window.appLoadTab('page-talk').then(fillTalk, () => {}); } }, { rootMargin: '200px' });
@@ -6654,7 +6654,7 @@ function gxReview() {
     const t = grEl('table', 'gx-res-t');
     Object.keys(by).forEach(id => { const tr = grEl('tr'); const p = Math.round(by[id].ok / by[id].n * 100); tr.appendChild(grEl('td', null, gxFind(id).title)); tr.appendChild(grEl('td', p >= 80 ? 'ok' : 'bad', `${by[id].ok}/${by[id].n}`)); tr.appendChild(grEl('td', null, p >= 80 ? `ôn lại sau ${gxStore[id].due - gxToday()} ngày` : 'cần ôn tiếp')); t.appendChild(tr); });
     box.appendChild(t);
-    const hb = grEl('button', 'btn-primary', 'Về trang Ngữ pháp'); hb.addEventListener('click', () => { renderGrammarHome(); grScrollTop(); }); box.appendChild(hb);
+    const hb = grEl('button', 'btn-primary', 'Về trang Grammar'); hb.addEventListener('click', () => { renderGrammarHome(); grScrollTop(); }); box.appendChild(hb);
   });
 }
 function gxLevelTest(key) {
@@ -6671,7 +6671,7 @@ function gxLevelTest(key) {
       const g = grEl('div', 'gr-grid'); weak.forEach(id => { const x = gxFind(id); g.appendChild(gxCard(x, gxNum(x))); }); box.appendChild(g);
       weak.forEach(id => { const rr = gxRec(id); rr.wrong = Array.from(new Set([...by[id].wrong, ...(rr.wrong || [])])).slice(0, 12); }); gxSave();
     }
-    const hb = grEl('button', 'btn-ghost', 'Về trang Ngữ pháp'); hb.addEventListener('click', () => { renderGrammarHome(); grScrollTop(); }); box.appendChild(hb);
+    const hb = grEl('button', 'btn-ghost', 'Về trang Grammar'); hb.addEventListener('click', () => { renderGrammarHome(); grScrollTop(); }); box.appendChild(hb);
   });
 }
 
@@ -6763,16 +6763,16 @@ function gxPlacementResult(res, box, trackOf, timeUp) {
     tb.appendChild(r);
   });
   rec.appendChild(tb);
-  rec.appendChild(grEl('p', 'gx-place-note', `App đã đặt Lộ trình ở cấp ${lvCode}, tab Grammar ở chặng ${T.key} và tab Bất quy tắc ở cấp ${lvCode}. Gợi ý thêm: tab Vocabulary học các bài cấp ${lvCode}, tab Shadowing chọn lọc cấp ${lvCode} (hoặc thấp hơn một cấp cho dễ nói).`));
-  rec.appendChild(grEl('p', 'gx-place-note', `Câu sai trong bài kiểm tra không vào Sổ lỗi vì có thể bạn chưa học tới. Đây là ước lượng từ ${res.length} câu ngữ pháp, chưa đo kỹ năng nghe và nói. Nếu thấy bài quá dễ hoặc quá khó, cứ đổi chặng ở danh sách cấp độ trên trang Ngữ pháp.`));
+  rec.appendChild(grEl('p', 'gx-place-note', `App đã đặt Lộ trình ở cấp ${lvCode}, tab Grammar ở chặng ${T.key} và tab Irregular verbs ở cấp ${lvCode}. Gợi ý thêm: tab Vocabulary học các bài cấp ${lvCode}, tab Shadowing chọn lọc cấp ${lvCode} (hoặc thấp hơn một cấp cho dễ nói).`));
+  rec.appendChild(grEl('p', 'gx-place-note', `Câu sai trong bài kiểm tra không vào Sổ lỗi vì có thể bạn chưa học tới. Đây là ước lượng từ ${res.length} câu ngữ pháp, chưa đo kỹ năng nghe và nói. Nếu thấy bài quá dễ hoặc quá khó, cứ đổi chặng ở danh sách cấp độ trên trang Grammar.`));
   const btns = grEl('div', 'ls-sum-btns');
   const first = GX_ALL.find(x => x.track === T.key && gxStatus(x.id) !== 'done');
   // v177: nút gọn 2 dòng — việc cần làm ở trên, tên bài ở dưới
   const go = grEl('button', 'btn-primary gx-place-go');
-  go.appendChild(grEl('b', null, first ? '▶ Học bài đầu tiên' : '▶ Về trang Ngữ pháp'));
+  go.appendChild(grEl('b', null, first ? '▶ Học bài đầu tiên' : '▶ Về trang Grammar'));
   if (first) go.appendChild(grEl('small', null, first.title));
   go.addEventListener('click', () => { if (first) gxLesson(first.id); else { renderGrammarHome(); grScrollTop(); } });
-  const home = grEl('button', 'btn-ghost', 'Về trang Ngữ pháp'); home.addEventListener('click', () => { renderGrammarHome(); grScrollTop(); });
+  const home = grEl('button', 'btn-ghost', 'Về trang Grammar'); home.addEventListener('click', () => { renderGrammarHome(); grScrollTop(); });
   const again = grEl('button', 'btn-ghost', '🔄 Làm lại'); again.addEventListener('click', gxPlacementTest);
   btns.appendChild(go);
   if (typeof window.htaShare === 'function') {
@@ -7730,6 +7730,12 @@ lsShowLessonList();
 /* VB_EXVI: xem file dữ liệu */
 /* Động từ bổ sung (v80–v81) — [từ, loại, IPA, nghĩa, ví dụ, cấp độ, nghĩa ví dụ] */
 /* VB_VERBS: xem file dữ liệu */
+/* v233: dữ liệu từ vựng (data-vocab.js, ~400 KB) không còn chặn lúc mở app: file được nạp ngay sau khi trang hiện ra,
+   rồi vcBoot() dựng danh sách từ. Trước lúc đó VOCAB_TOPICS / VC_ALL là mảng rỗng. */
+const VOCAB_TOPICS = [];
+const VC_EXTRA = {};   // 'chủ đề|từ' → { col: [[en, vi]], sit: [en, vi] }
+let vcReady = false;
+function vcBuildTopics() {
 Object.keys(VB_VERBS).forEach(tid => {
   const t = VB.find(x => x.id === tid);
   if (t) t.groups.push({ vi: 'Động từ bổ sung', en: 'More verbs', words: VB_VERBS[tid] });
@@ -7744,7 +7750,6 @@ Object.keys(VB_MORE).forEach(tid => {
 VB.unshift(VB_BASICS);
 /* v109: Từ vựng chuyên ngành 3D — mỗi từ kèm cụm từ thường dùng và một tình huống thực tế trong công việc */
 /* VB_3D_RAW: xem file dữ liệu */
-const VC_EXTRA = {};   // 'chủ đề|từ' → { col: [[en, vi]], sit: [en, vi] }
 (() => {
   const have = new Set();
   VB.forEach(t => t.groups.forEach(g => g.words.forEach(r => have.add(String(r[0]).toLowerCase()))));
@@ -7753,7 +7758,8 @@ const VC_EXTRA = {};   // 'chủ đề|từ' → { col: [[en, vi]], sit: [en, vi
     return [r[0], r[1], r[2], r[3], r[4], r[5], r[6], have.has(r[0].toLowerCase()) ? '3d' : undefined];
   }) })) });
 })();
-const VOCAB_TOPICS = VB;
+VOCAB_TOPICS.push(...VB);
+}
 
 /* ============================================================
    VOCABULARY BY TOPIC — topics → lessons → list / flashcards / quiz
@@ -7775,6 +7781,7 @@ const VC_LEVELS = [{ n: 1, code: 'A1', vi: 'Mới bắt đầu' }, { n: 2, code:
                    { n: 4, code: 'B2', vi: 'Trung cao cấp' }, { n: 5, code: 'C1', vi: 'Nâng cao' }];
 const vcLvCode = n => (VC_LEVELS[n - 1] || VC_LEVELS[2]).code;
 const VC_ALL = [];
+function vcBuildAll() {
 VOCAB_TOPICS.forEach(t => {
   t.items = [];
   t.groups.forEach((g, gi) => {
@@ -7815,17 +7822,18 @@ VOCAB_TOPICS.forEach(t => {
   t.lessonCount = t.levels.reduce((k, x) => k + x.lessons.length, 0);
   VC_ALL.push(...t.items);
 });
+}
 // v137: bản dịch câu ví dụ (VB_EXVI) nằm ở file riêng, chỉ nạp khi mở tab Vocabulary / Ôn tập → điền vào từ khi nạp xong
 function vcFillExvi() {
   if (typeof VB_EXVI === 'undefined') return false;
   VC_ALL.forEach(it => { if (!it.exvi && VB_EXVI[it.w]) it.exvi = VB_EXVI[it.w]; });
   return true;
 }
-try {
+function vcSubText() { try {
   const sub = document.getElementById('vc-sub');
   if (sub) sub.textContent = VC_ALL.length.toLocaleString('vi-VN') + ' từ không trùng nhau · ' + VOCAB_TOPICS.length +
     ' chủ đề, mỗi chủ đề chia theo 5 cấp độ A1 → C1, mỗi cấp gồm các bài khoảng 12 từ. Chạm ▶ để nghe, ✓ để đánh dấu từ đã thuộc';
-} catch (e) {}
+} catch (e) {} }
 const VC_KEY = 'hoc-tieng-anh-vocab-learned';
 let vcLearned = new Set();
 try { const a = JSON.parse(localStorage.getItem(VC_KEY) || '[]'); if (Array.isArray(a)) vcLearned = new Set(a); } catch (e) {}
@@ -7835,7 +7843,8 @@ const vcK = it => {   // v171: nhớ sẵn khoá trên từng từ (thuộc tín
   return k;
 };  // sense: nghĩa thứ hai (vd. động từ của một danh từ cùng chủ đề)
 // Each word now lives in exactly one topic: move "learned" marks of words that changed topic, drop marks of removed words
-(() => {
+function vcMigrate() {
+  if (!VC_ALL.length) return;
   const home = new Map(VC_ALL.filter(it => !it.sense).map(it => [it.w.toLowerCase(), vcK(it)]));
   const valid = new Set(VC_ALL.map(vcK));
   let changed = false; const next = new Set();
@@ -7846,7 +7855,7 @@ const vcK = it => {   // v171: nhớ sẵn khoá trên từng từ (thuộc tín
     changed = true;
   });
   if (changed) { vcLearned = next; try { localStorage.setItem(VC_KEY, JSON.stringify([...vcLearned])); } catch (e) {} }
-})();
+}
 const vcIs = it => vcLearned.has(vcK(it));
 // v109: từ yêu thích
 const VFAV_KEY = 'hoc-tieng-anh-vocab-fav';
@@ -8554,6 +8563,7 @@ function vcRow(it, showTopic) {
 function vcRenderHome() {
   vc.view = 'home'; vc.topic = null; vc.unit = null;
   vcRoot.innerHTML = '';
+  if (!vcReady) { vcRoot.appendChild(lsEl('p', 'lazy-wait', 'Đang tải từ vựng…')); return; }
   vcRoot.appendChild(vcDashboard());
 
   const sr = lsEl('div', 'verb-search-row');
@@ -9499,6 +9509,19 @@ function vcRenderQuiz() {
 document.querySelectorAll('nav.tabbar button[data-page="page-vocab"]').forEach(b =>
   b.addEventListener('click', () => { if (vc.view === 'home') vcRenderHome(); else if (vc.view === 'topic') vcRenderTopicPage(); }));
 whenPageShown('page-vocab', vcRoot, vcRenderHome);
+// v233: dựng từ vựng khi file dữ liệu đã nạp; vẽ lại những chỗ đang hiển thị
+function vcBoot() {
+  if (vcReady || typeof VB === 'undefined') return vcReady;
+  try { vcBuildTopics(); vcBuildAll(); } catch (e) { console.error(e); return false; }
+  vcReady = true; PR_IDX = null;
+  vcFillExvi(); vcMigrate(); vcSubText();
+  try { const pg = document.getElementById('page-vocab'); if (pg && pg.classList.contains('active') && vc.view === 'home') vcRenderHome(); } catch (e) {}
+  try { window.dispatchEvent(new Event('hta-vocab-ready')); } catch (e) {}
+  return true;
+}
+window.vcBoot = vcBoot;
+window.vcIsReady = () => vcReady;
+vcBoot();
 
 /* IRR_EX: xem file dữ liệu */
 /* ============================================================
@@ -11728,6 +11751,10 @@ vUpdateButton();
         const num = document.createElement('span'); num.className = 'n'; num.textContent = n;
         const lab = document.createElement('span'); lab.className = 'l'; lab.textContent = label;
         box.appendChild(num); box.appendChild(lab); el.appendChild(box);
+        if (label === 'từ vựng') {   // v233: số từ có khi dữ liệu từ vựng nạp xong
+          if (!n) num.textContent = '…';
+          window.addEventListener('hta-vocab-ready', () => { num.textContent = VC_ALL.length; });
+        }
       });
   }
   const bar = document.querySelector('nav.tabbar');

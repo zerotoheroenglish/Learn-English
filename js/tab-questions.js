@@ -51,7 +51,8 @@ const QBB = (() => {
     ['work', 'live', 'play', 'study', 'watch', 'cook', 'visit', 'like', 'love', 'want', 'need', 'help', 'call', 'talk', 'listen', 'start', 'finish', 'travel', 'stay', 'walk', 'use', 'look', 'clean', 'open', 'close', 'wait', 'move', 'try', 'learn', 'practise', 'practice', 'enjoy', 'plan', 'stop', 'arrive', 'decide', 'hope', 'join', 'miss', 'order', 'prefer', 'remember', 'save', 'share', 'shop', 'smile', 'change', 'check', 'create', 'design', 'model', 'render', 'texture', 'export', 'import', 'animate', 'paint', 'draw', 'edit', 'fix', 'upload', 'download', 'test', 'review', 'send', 'deliver'].forEach(addBase);
     ['be', 'do', 'have'].forEach(b => L.base.delete(b));
     delete L.s3.does; delete L.s3.has; delete L.s3.is; delete L.past.did; delete L.past.had; delete L.past.was; delete L.past.were;
-    return (LEX = L);
+    if (typeof VC_ALL !== 'undefined' && VC_ALL.length) LEX = L;   // v233: từ vựng chưa nạp xong thì chưa nhớ bảng này
+    return L;
   }
 
   /* ---------- tách câu ---------- */

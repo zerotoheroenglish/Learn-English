@@ -1403,7 +1403,7 @@ const TALK_SCENES = [
         const b2 = E('div', 'db-bar wr-bar'); const f = E('span', 'db-fill'); f.style.width = v * 10 + '%'; b2.appendChild(f); row.appendChild(b2);
         if (n3) row.appendChild(E('div', 'db-sk-d', n3)); cr.appendChild(row);
       });
-      cr.appendChild(E('div', 'rv-note', 'AI chỉ đọc lời đã được chép lại nên không chấm phát âm. Để luyện phát âm, dùng tab Phát âm hoặc Shadowing.'));
+      cr.appendChild(E('div', 'rv-note', 'AI chỉ đọc lời đã được chép lại nên không chấm phát âm. Để luyện phát âm, dùng tab Pronunciation hoặc Shadowing.'));
       out.appendChild(cr);
       const errs = (Array.isArray(r.errors) ? r.errors : []).filter(x => x && x.wrong && x.right && String(x.wrong).trim() !== String(x.right).trim() && txt.includes(String(x.wrong)));
       if (errs.length) {
