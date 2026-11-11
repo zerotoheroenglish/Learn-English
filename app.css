@@ -4662,3 +4662,7 @@
 .acct-ask p{ margin:0; font-size:14px; line-height:1.5; }
 .acct-ask .btn-primary, .acct-ask .btn-ghost{ width:100%; }
 .acct-danger{ color:var(--mark); border-color:var(--mark); }
+
+/* v229: ghi công dưới mỗi video YouTube */
+.yt-credit{ margin:8px 2px 0; font-size:13px; line-height:1.5; color:var(--ink-soft); overflow-wrap:anywhere; }
+.yt-credit a{ color:var(--rust); font-weight:700; text-decoration:underline; text-underline-offset:2px; }

@@ -11203,6 +11203,30 @@ const MH_LV = {"a1": [["TnZrQthIWAQ", "Learn English While I Chat With You | BEG
 const MH_PLAYLISTS = { a1: 'https://www.youtube.com/playlist?list=PL8f0I_2tet-f2hkTKFPgWS7koHkY4_Pw1', a2: 'https://www.youtube.com/playlist?list=PL8f0I_2tet-dJp0Dlyv0Wr_ZQXbEWyJyL' };
 try { Object.keys(MH_LV).forEach(id => { const L = BC_LEVELS.find(l => l.id === id); if (L && !L.cols.some(c => c.src === 'mh')) L.cols.splice(L.cols.findIndex(c => c.src !== 'lt') < 0 ? L.cols.length : L.cols.findIndex(c => c.src !== 'lt'), 0, { icon: '🍯', name: 'Miss Honey · Slow English', src: 'mh', v: MH_LV[id] }); }); } catch (e) {}
 try { const a1 = BC_LEVELS.find(l => l.id === 'a1'); if (a1 && !a1.cols.some(c => c.src === 'lt')) a1.cols.unshift({ icon: '🎧', name: 'Listening Time · Podcast A1', src: 'lt', v: LT_A1.map(([id, t, d]) => [id, t, d || '~5:00']) }); } catch (e) {}
+/* v229: gỡ toàn bộ video British Council (theo yêu cầu chủ app). Mục Nghe → Video chỉ còn Listening Time và Miss Honey;
+   cấp nào không còn video thì bỏ khỏi danh sách. */
+try {
+  BC_LEVELS.forEach(L => { L.cols = L.cols.filter(c => c.src); });
+  for (let i = BC_LEVELS.length - 1; i >= 0; i--) if (!BC_LEVELS[i].cols.length) BC_LEVELS.splice(i, 1);
+  if (!BC_LEVELS.some(l => l.id === BC_STATE.lv) && BC_LEVELS[0]) BC_STATE.lv = BC_LEVELS[0].id;
+} catch (e) {}
+/* v229: ghi công từng video — tên kênh, link tới video gốc trên YouTube và trang kênh */
+const YT_SRC = {
+  bbc: { name: 'BBC Learning English', who: 'BBC', url: 'https://www.youtube.com/@bbclearningenglish' },
+  lt: { name: 'Listening Time', who: 'Conner Pe', url: LT_PLAYLIST, urlLabel: 'Danh sách phát' },
+  mh: { name: 'Miss Honey · Slow English Podcast', who: 'Tayanna Ortiz', url: 'https://www.youtube.com/@Slow_English_Podcast' }
+};
+function ytCredit(src, id, tag) {
+  const S = YT_SRC[src] || YT_SRC.bbc;
+  const p = document.createElement(tag || 'p'); p.className = 'yt-credit';
+  p.appendChild(document.createTextNode('Video © ' + S.name + (S.who && S.who !== 'BBC' ? ' (' + S.who + ')' : '') + ' · '));
+  const a = document.createElement('a'); a.href = 'https://www.youtube.com/watch?v=' + id; a.target = '_blank'; a.rel = 'noopener'; a.textContent = '▶ Xem trên YouTube';
+  p.appendChild(a); p.appendChild(document.createTextNode(' · '));
+  const c = document.createElement('a'); c.href = S.url; c.target = '_blank'; c.rel = 'noopener'; c.textContent = S.urlLabel || 'Kênh';
+  p.appendChild(c);
+  return p;
+}
+window.ytCredit = ytCredit;
 const BC_FLAT = [];
 BC_LEVELS.forEach(lv => lv.cols.forEach(c => c.v.forEach(v => BC_FLAT.push({ id: v[0], t: v[1], d: v[2], lv, col: c }))));
 function bcEl() { return document.getElementById('ls-bc'); }
@@ -11242,8 +11266,8 @@ function bcRenderList() {
   const root = bcEl();
   root.innerHTML = '';
   const intro = lsEl('div', 'bc-intro');
-  intro.appendChild(lsEl('div', 'bc-intro-t', '📺 Video British Council, Listening Time & Miss Honey'));
-  intro.appendChild(lsEl('div', 'bc-intro-s', `${BC_FLAT.length} video miễn phí, xếp theo trình độ: các kênh YouTube LearnEnglish (British Council), Listening Time (podcast A1 của Conner Pe) và Miss Honey · Slow English Podcast (A1–A2). Video phát bằng trình phát chính thức của YouTube, bản quyền thuộc chủ kênh. App này không liên kết và không được các kênh trên bảo trợ.`));
+  intro.appendChild(lsEl('div', 'bc-intro-t', '📺 Video Listening Time & Miss Honey'));
+  intro.appendChild(lsEl('div', 'bc-intro-s', `${BC_FLAT.length} video miễn phí, xếp theo trình độ: các kênh YouTube Listening Time (podcast A1 của Conner Pe) và Miss Honey · Slow English Podcast (A1–A2). Video phát bằng trình phát chính thức của YouTube, bản quyền thuộc chủ kênh. App này không liên kết và không được các kênh trên bảo trợ.`));
   root.appendChild(intro);
 
   const chips = lsEl('div', 'colloc-chips bc-levels');
@@ -11461,11 +11485,8 @@ function bcRenderPlayer() {
   const yt = lsEl('a', 'btn-ghost bc-yt', '↗ Mở trên YouTube');
   yt.href = `https://www.youtube.com/watch?v=${id}`; yt.target = '_blank'; yt.rel = 'noopener';
   root.appendChild(yt);
-  root.appendChild(lsEl('p', 'bc-credit', (item.col.src === 'lt'
-    ? 'Video © Listening Time (Conner Pe), phát qua YouTube (app không liên kết với Listening Time). Mẹo'
-    : item.col.src === 'mh'
-    ? 'Video © Miss Honey · Slow English Podcast (Tayanna Ortiz), phát qua YouTube (app không liên kết với kênh). Mẹo'
-    : 'Video © British Council, phát qua YouTube (app không liên kết với British Council). Mẹo') + ': nói nhanh quá thì bật 🐢 Chậm (0.75×). Video không phát trong bản xem trước, hãy mở app qua GitHub Pages.'));
+  root.appendChild(ytCredit(item.col.src, item.id));
+  root.appendChild(lsEl('p', 'bc-credit', 'Mẹo: nói nhanh quá thì bật 🐢 Chậm (0.75×). Video không phát trong bản xem trước, hãy mở app qua GitHub Pages.'));
 }
 
 

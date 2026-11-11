@@ -210,6 +210,8 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     const holder = E('div');
     frame.appendChild(holder);
     box.appendChild(frame);
+    // v229: ghi công ngay dưới video — tên kênh, link video gốc, link kênh
+    if (window.ytCredit && l.bbc) { try { box.appendChild(ytCredit((l.bbc.col && l.bbc.col.src) || 'bbc', l.yt)); } catch (e) {} }
     try { if (yt.player && yt.player.destroy) yt.player.destroy(); } catch (e) {}   // v129: không giữ trình phát cũ khi vẽ lại
     yt.player = null; yt.holder = holder;
     yt.frame = frame; yt.id = l.yt; yt.ready = false; yt.failed = false;
