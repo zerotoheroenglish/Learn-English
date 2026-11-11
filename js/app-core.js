@@ -7393,7 +7393,7 @@ function lsParseTimed(text) {
   out.sort((x, y) => x.start - y.start);
   return out.length ? out : null;
 }
-function lsGroupSegments(segs) {
+function lsGroupSegments(segs, max) {
   segs.forEach((sg, i) => {
     const next = segs[i + 1];
     if (sg.end == null || sg.end <= sg.start) sg.end = next ? next.start : sg.start + Math.max(2, sg.text.split(/\s+/).length * 0.45);
@@ -7410,7 +7410,7 @@ function lsGroupSegments(segs) {
     const close = (punct ? (/[.!?…]["'”’)]*$/.test(last) && n >= 3) : n >= 6) || n >= 22 || i === segs.length - 1;
     if (close) { groups.push({ en: g.words.join(' '), vi: '', start: +g.start.toFixed(2), end: +g.end.toFixed(2) }); g = null; }
   });
-  return groups.filter(x => lsNorm(x.en).length).slice(0, 80);
+  return groups.filter(x => lsNorm(x.en).length).slice(0, max || 80);
 }
 
 function lsYtFetchTitle(lesson) {

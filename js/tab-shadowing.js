@@ -89,6 +89,65 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
   SH_BBC.forEach(L => L.cols.forEach(c => c.v.forEach(([id, t]) => BBC_FLAT.push({ id, t, lv: L, col: c }))));
   K.bbc = 'hoc-tieng-anh-shadow-bbc'; K.bbcSeen = 'hoc-tieng-anh-shadow-bbc-seen';
   let bbcStore = load(K.bbc, {}) || {}, bbcSeen = new Set(load(K.bbcSeen, []));
+  /* v235: câu trong bản chép lời quá dài (nhiều câu dính nhau) → tách tại dấu chấm / ? / ! thành từng câu riêng.
+     Mỗi đoạn mới ≥ 3 từ (câu quá ngắn như "Yes." được ghép với câu sau). Thời gian chia theo độ dài chữ.
+     Chỉ tách câu chưa có bản dịch tiếng Việt (tách sẽ làm lệch bản dịch). map[i] = [vị trí câu mới đầu tiên, số câu mới]. */
+  const SD_ABBR = /^(mr|mrs|ms|dr|st|vs|etc|e\.g|i\.e|a\.m|p\.m|u\.s|u\.k|no|jr|sr|prof)\.$/i;
+  function sdSplitText(en) {
+    const w = String(en || '').trim().split(/\s+/).filter(Boolean), out = []; let cur = [];
+    w.forEach(x => { cur.push(x); if (cur.length >= 3 && /[.!?…]["'”’)\]]*$/.test(x) && !SD_ABBR.test(x)) { out.push(cur); cur = []; } });
+    if (cur.length) { if (cur.length < 3 && out.length) out[out.length - 1].push(...cur); else out.push(cur); }
+    return out.map(p => p.join(' '));
+  }
+  function sdSplit(st) {
+    const s = [], tm = st.tm ? [] : null, map = [];
+    (st.s || []).forEach((row, i) => {
+      const parts = row[1] ? [row[0]] : sdSplitText(row[0]);
+      if (!parts.length) parts.push(row[0]);
+      map.push([s.length, parts.length]);
+      const t = st.tm && st.tm[i], tot = parts.reduce((a, p) => a + p.length, 0) || 1; let acc = 0;
+      parts.forEach(p => {
+        s.push(parts.length > 1 ? [p, ''] : row);
+        if (tm) {
+          if (!t) { tm.push(t); return; }
+          const a0 = t[0] + (t[1] - t[0]) * acc / tot; acc += p.length;
+          const a1 = t[0] + (t[1] - t[0]) * acc / tot;
+          tm.push(parts.length > 1 ? [+a0.toFixed(2), +a1.toFixed(2)] : t);
+        }
+      });
+    });
+    return { s, tm, map, changed: s.length !== (st.s || []).length };
+  }
+  // dời tiến độ theo câu (điểm nói, chính tả, tự nói lại, đã hiểu, câu đang học) sang chỉ số mới; mỗi câu con nhận điểm của câu dài cũ
+  function sdRemap(id, map) {
+    const p = prog[id]; if (!p || p.sv === 2) return false;
+    ['b', 'd', 'r', 'h'].forEach(x => {
+      if (!p[x] || typeof p[x] !== 'object') return;
+      const o = {}; Object.keys(p[x]).forEach(k => { const m = map[+k]; if (m) for (let c = 0; c < m[1]; c++) o[m[0] + c] = p[x][k]; }); p[x] = o;
+    });
+    const at = v => (map[v] ? map[v][0] : 0);
+    if (p.cur != null) p.cur = at(p.cur);
+    if (p.cm) Object.keys(p.cm).forEach(k => { p.cm[k] = at(p.cm[k]); });
+    p.sv = 2; return true;
+  }
+  (() => {
+    let sB = false, sM = false, sP = false;
+    Object.keys(bbcStore).forEach(id => {
+      const st = bbcStore[id]; if (!st || st.v === 2 || !Array.isArray(st.s)) return;
+      const r = sdSplit(st);
+      if (r.changed && sdRemap('bbc-' + id, r.map)) sP = true;
+      bbcStore[id] = { s: r.s, tm: r.tm, v: 2 }; sB = true;
+    });
+    mine.forEach(m => {
+      if (!m || m.v === 2 || !Array.isArray(m.s) || !m.s.length) return;
+      const r = sdSplit(m);
+      if (r.changed && sdRemap(m.id, r.map)) sP = true;
+      m.s = r.s; if (m.tm) m.tm = r.tm; m.v = 2; sM = true;
+    });
+    if (sB) save(K.bbc, bbcStore);
+    if (sM) save(K.mine, mine);
+    if (sP) saveProg();
+  })();
   CAT.bbc = { id: 'bbc', vi: 'BBC Learning English', icon: '📺', hue: 0 };
   const BBC_INFO = {
     'Miss Honey': ['Tayanna (Miss Honey) nói chậm, rõ, kể chuyện đời thường và hội thoại — kênh Slow English Podcast.', 10],
@@ -1167,8 +1226,9 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
       if (!r) { msg.textContent = 'Chưa thấy mốc thời gian (dạng 0:05). Hãy sao chép bản chép lời kèm mốc thời gian.'; return; }
       if (subsLooksVi(r)) { msg.textContent = SUBS_VI_MSG; return; }
       const m = mine.find(x => x.id === l.id);
-      if (m) { m.s = r.s; m.tm = r.tm; save(K.mine, mine); }
-      if (l.cat === 'bbc') { bbcStore[l.yt] = { s: r.s, tm: r.tm }; save(K.bbc, bbcStore); }
+      if (m) { m.s = r.s; m.tm = r.tm; m.v = 2; save(K.mine, mine); }
+      if (l.cat === 'bbc') { bbcStore[l.yt] = { s: r.s, tm: r.tm, v: 2 }; save(K.bbc, bbcStore); }
+      if (prog[l.id]) { prog[l.id].sv = 2; saveProg(); }
       l.s = r.s; l.tm = r.tm;
       view.idx = 0; renderLesson();
     });
@@ -1193,9 +1253,10 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     if (typeof lsParseTimed !== 'function') return null;
     const segs = lsParseTimed(raw || '');
     if (!segs) return null;
-    const g = lsGroupSegments(segs).filter(x => x.en && x.end > x.start);
+    const g = lsGroupSegments(segs, 400).filter(x => x.en && x.end > x.start);
     if (!g.length) return null;
-    return { s: g.map(x => [x.en, '']), tm: g.map(x => [x.start, x.end]) };
+    const r = sdSplit({ s: g.map(x => [x.en, '']), tm: g.map(x => [x.start, x.end]) });   // v235: tách câu dài
+    return { s: r.s, tm: r.tm };
   }
 
   function renderSide() {
