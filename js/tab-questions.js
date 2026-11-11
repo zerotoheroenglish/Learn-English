@@ -564,7 +564,7 @@ const QBB = (() => {
     if (bState.text) renderBuild(out, bState.text);
     return c;
   }
-  const ERRS = { empty: 'Hãy gõ một câu kể tiếng Anh.', vi: 'Hãy gõ câu tiếng Anh nhé. (Muốn dịch câu tiếng Việt, dùng tab Dịch trước.)', question: 'Đây đã là câu hỏi rồi. Hãy gõ câu kể (câu khẳng định hoặc phủ định) để app đổi thành câu hỏi.',
+  const ERRS = { empty: 'Hãy gõ một câu kể tiếng Anh.', vi: 'Hãy gõ câu tiếng Anh nhé. (Muốn dịch câu tiếng Việt, dùng tab Translate trước.)', question: 'Đây đã là câu hỏi rồi. Hãy gõ câu kể (câu khẳng định hoặc phủ định) để app đổi thành câu hỏi.',
     multi: 'Mỗi lần chỉ một câu nhé. Hãy tách thành từng câu ngắn.', short: 'Câu quá ngắn. Hãy viết câu đủ chủ ngữ và động từ, ví dụ: She works at a bank.', noverb: 'App chưa tìm thấy động từ trong câu. Hãy kiểm tra lại chính tả, hoặc viết câu đơn giản hơn: chủ ngữ + động từ + …' };
   const WH_ORDER = ['Who', 'What', 'Where', 'When', 'What time', 'How often', 'How long', 'How many', 'How much', 'How', 'Why'];
   function renderBuild(out, text) {
@@ -907,7 +907,7 @@ const QBB = (() => {
         const ad = E('button', 'btn-ghost qb-to-sr', `＋ Đưa ${R.wrong.length} câu này vào Ôn tập hôm nay`);
         ad.addEventListener('click', () => {
           R.wrong.forEach(it => { const q = it.vi || it.w || it.q || String(it.s || '').replace(/[[\]]/g, ''); window.srAddCard(R.m.id === 'short' ? 'Trả lời ngắn: ' + q : q, it.en); });
-          ad.textContent = '✓ Đã thêm vào Ôn tập (sổ từ của bạn)'; ad.disabled = true;
+          ad.textContent = '✓ Đã thêm vào Review (sổ từ của bạn)'; ad.disabled = true;
         });
         box.appendChild(ad);
       }

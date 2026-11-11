@@ -1,6 +1,6 @@
 /* ============================================================
    ÔN TẬP NGẮT QUÃNG — trang "Ôn tập hôm nay" (v132)
-   Gom mọi thứ đến hạn ôn: từ vựng, bài ngữ pháp, động từ bất quy tắc và sổ từ của bạn (từ lưu ở tab Dịch + thẻ tự thêm)
+   Gom mọi thứ đến hạn ôn: từ vựng, bài ngữ pháp, động từ bất quy tắc và sổ từ của bạn (từ lưu ở tab Translate + thẻ tự thêm)
    vào một phiên trộn. Hạn ôn tính bằng FSRS (srPlan / srApply).
 ============================================================ */
 /* ============================================================
@@ -883,7 +883,7 @@
     render();
     const m = document.querySelector('main'); window.scrollTo({ top: m ? Math.max(0, m.offsetTop - 8) : 0 });
   }
-  // v162: lối vào Kiểm tra xếp trình độ ngay đầu trang Hôm nay
+  // v162: lối vào Kiểm tra xếp trình độ ngay đầu trang Today
   function placeCard() {
     let P = null; try { P = JSON.parse(localStorage.getItem('hoc-tieng-anh-placement') || 'null'); } catch (e) {}
     const b = E('button', 'tense-card db-place' + (P ? ' done' : '')); b.type = 'button';
@@ -1005,7 +1005,7 @@
       const ol = E('ol', 'wr-errs');
       errs.forEach(x => {
         const li = E('li'); li.appendChild(E('s', null, x.wrong)); li.appendChild(document.createTextNode(' → ')); li.appendChild(E('b', null, x.right)); if (x.why) li.appendChild(E('div', 'wr-why', x.why)); ol.appendChild(li);
-        try { if (window.mkAdd) { const sents = t.match(/[^.!?\n]+[.!?]*/g) || [t]; const s0 = (sents.find(s => s.includes(x.wrong)) || x.wrong).trim(); window.mkAdd({ k: 'aic|' + String(x.wrong).toLowerCase().slice(0, 80), src: 'wr', cat: 'Câu tự viết (tab Dịch)', mode: 'fix', p: s0, a: [s0.replace(x.wrong, x.right)], why: x.why || '' }); } } catch (e) {}
+        try { if (window.mkAdd) { const sents = t.match(/[^.!?\n]+[.!?]*/g) || [t]; const s0 = (sents.find(s => s.includes(x.wrong)) || x.wrong).trim(); window.mkAdd({ k: 'aic|' + String(x.wrong).toLowerCase().slice(0, 80), src: 'wr', cat: 'Câu tự viết (tab Translate)', mode: 'fix', p: s0, a: [s0.replace(x.wrong, x.right)], why: x.why || '' }); } } catch (e) {}
       });
       c.appendChild(ol);
     } else c.appendChild(E('div', 'wr-why', '✓ Không thấy lỗi nào.'));
@@ -1045,7 +1045,7 @@
   const VI_RE = /[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]/i;
   const SRC = { v: ['📚', 'Từ vựng'], g: ['📐', 'Ngữ pháp'], i: ['🔀', 'Bất quy tắc'], m: ['📖', 'Sổ từ của bạn'] };
 
-  /* ---------- sổ từ: từ đã lưu ở tab Dịch tự vào đây ---------- */
+  /* ---------- sổ từ: từ đã lưu ở tab Translate tự vào đây ---------- */
   function syncCards() {
     let words = [];
     try { words = JSON.parse(localStorage.getItem('hoc-tieng-anh-tr-words') || '[]') || []; } catch (e) {}
@@ -1156,7 +1156,7 @@
       c.appendChild(E('div', 'rv-big', '🎉'));
       c.appendChild(E('div', 'rv-big-l', 'Hôm nay bạn đã ôn xong!'));
       const f = forecast();
-      c.appendChild(E('div', 'rv-note', f[1] ? `Ngày mai có ${f[1]} thẻ đến hạn.` : 'Ngày mai chưa có thẻ nào đến hạn. Học thêm từ mới ở tab Từ vựng nhé.'));
+      c.appendChild(E('div', 'rv-note', f[1] ? `Ngày mai có ${f[1]} thẻ đến hạn.` : 'Ngày mai chưa có thẻ nào đến hạn. Học thêm từ mới ở tab Vocabulary nhé.'));
     }
     const st = streak();
     if (st) c.appendChild(E('div', 'rv-streak', `🔥 Chuỗi ${st} ngày học liên tiếp`));
@@ -1207,7 +1207,7 @@
     const s = E('div', 'tense-card rv-deck');
     const ids = Object.keys(cards);
     s.appendChild(E('h3', null, `📖 Sổ từ của bạn · ${ids.length}`));
-    s.appendChild(E('p', 'rv-note', 'Từ bạn lưu ở tab Dịch (📖 Chạm vào từ…) tự vào đây. Bạn cũng có thể tự thêm từ, cụm từ hay câu muốn nhớ. Mỗi ngày tối đa ' + set.newDay + ' thẻ mới được đưa vào ôn.'));
+    s.appendChild(E('p', 'rv-note', 'Từ bạn lưu ở tab Translate (📖 Chạm vào từ…) tự vào đây. Bạn cũng có thể tự thêm từ, cụm từ hay câu muốn nhớ. Mỗi ngày tối đa ' + set.newDay + ' thẻ mới được đưa vào ôn.'));
     const f = E('form', 'rv-add');
     const a = E('input'); a.placeholder = 'Tiếng Anh (vd. deadline)'; a.autocomplete = 'off';
     const b = E('input'); b.placeholder = 'Nghĩa tiếng Việt'; b.autocomplete = 'off';
@@ -1230,7 +1230,7 @@
       const d = today();
       ids.sort((x, y) => (cards[y].add || 0) - (cards[x].add || 0)).forEach(id => {
         const c = cards[id], row = E('div', 'rv-row');
-        const t = E('div', 'rv-row-t'); t.appendChild(E('b', null, c.f)); t.appendChild(E('span', null, c.b || '(chưa có nghĩa — thêm nghĩa ở tab Dịch)'));
+        const t = E('div', 'rv-row-t'); t.appendChild(E('b', null, c.f)); t.appendChild(E('span', null, c.b || '(chưa có nghĩa — thêm nghĩa ở tab Translate)'));
         row.appendChild(t);
         row.appendChild(E('span', 'rv-row-due', isNew(c) ? 'mới' : c.due <= d ? 'hôm nay' : 'sau ' + srFmt(c.due - d)));
         const del = E('button', 'rv-del', '✕'); del.type = 'button'; del.setAttribute('aria-label', 'Xoá thẻ');
@@ -1299,7 +1299,7 @@
       'Sau khi kiểm tra, bạn chọn Khó · Nhớ · Dễ (hoặc Quên). Số ngày dưới mỗi nút là lúc thẻ quay lại nếu bạn chọn nút đó.',
       'Thẻ bạn hay quên sẽ quay lại sớm; thẻ bạn nhớ dễ dàng được giãn dần: vài ngày → vài tuần → vài tháng (tối đa 1 năm). Lịch được đặt để lúc ôn bạn vẫn nhớ khoảng 90%.',
       'Mỗi thẻ bạn tự gõ đáp án tiếng Anh, app chấm đúng/sai. Gõ đúng thì bạn chọn Khó · Nhớ · Dễ tuỳ mức bạn phải nghĩ; gõ sai thì gõ lại đáp án một lần và thẻ quay lại cuối phiên.',
-      'Tiến độ ôn ở tab Từ vựng, Ngữ pháp, Bất quy tắc và ở đây là một: ôn ở đâu cũng được tính.'
+      'Tiến độ ôn ở tab Vocabulary, Ngữ pháp, Bất quy tắc và ở đây là một: ôn ở đâu cũng được tính.'
     ].forEach(t => d.appendChild(E('p', null, t)));
     return d;
   }

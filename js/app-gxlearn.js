@@ -3,7 +3,7 @@
    Thay bảng công thức để đọc bằng 4 bước giúp nhớ lâu:
    ① Khám phá  – xem câu ví dụ tô màu, tự đoán quy tắc rồi mới thấy công thức
    ② Lắp câu   – chạm các mảnh chữ để ghép câu; ghép sai được giải thích ngay
-   ③ Tự nhớ lại – công thức có chỗ trống, nghĩ ra rồi lật xem; "Chưa nhớ" → vào Ôn tập
+   ③ Tự nhớ lại – công thức có chỗ trống, nghĩ ra rồi lật xem; "Chưa nhớ" → vào Review
    ④ Viết về bạn – tự viết câu về mình, app kiểm tra cách chia động từ
    Bảng công thức đầy đủ vẫn còn, thu gọn ở cuối để tra khi cần.
 ============================================================ */
@@ -671,7 +671,7 @@
   window.gxlFormulaKey = key => { const [lid, j] = String(key).split('#'); const it = D[lid] && D[lid].recall[+j]; return it && it.lines ? it : null; };
   window.gxlSame = (a, b) => norm(a.replace(/\b(do|does|is|are|am) not\b/gi, (m, x) => x + "n't")) === norm(b.replace(/\b(do|does|is|are|am) not\b/gi, (m, x) => x + "n't"));
 
-  /* ---------------- thẻ vào Ôn tập ---------------- */
+  /* ---------------- thẻ vào Review ---------------- */
   const toReview = (k, f, b, ask, x, a) => { try { if (window.srAddFx) return window.srAddFx(k, f, b, ask, x, a); } catch (e) {} return false; };
 
   /* ---------------- dựng giao diện ---------------- */
@@ -794,7 +794,7 @@
         done('b');
         const r = E('div', 'gxl-rule');
         r.appendChild(E('div', 'gxl-big', `${right}/${d.build.length}`));
-        r.appendChild(E('p', null, right === d.build.length ? 'Đúng hết ngay lần đầu, rất tốt!' : 'Những câu sai lần đầu đã được đưa vào tab Ôn tập để bạn gặp lại vào những ngày tới.'));
+        r.appendChild(E('p', null, right === d.build.length ? 'Đúng hết ngay lần đầu, rất tốt!' : 'Những câu sai lần đầu đã được đưa vào tab Review để bạn gặp lại vào những ngày tới.'));
         wrap.appendChild(r);
         const again = E('button', 'btn-ghost', '↺ Lắp lại'); again.type = 'button'; again.addEventListener('click', () => { i = 0; right = 0; one(); });
         wrap.appendChild(again);
@@ -805,13 +805,13 @@
 
     /* ③ Tự nhớ lại */
     function recall() {
-      body.appendChild(E('p', 'gxl-help', 'Không nhìn bảng, tự viết lại cả công thức bạn vừa học, ghi đủ các chủ ngữ (I, you, he, she, it, we, they). Nhóm chủ ngữ nào đi với trợ động từ khác thì viết dòng riêng. Không cần đúng từng dấu: does not hay doesn\'t, V-ing hay Ving đều được. Sai lần đầu, app chỉ gợi ý phần còn thiếu. Sai lần hai mới hiện công thức đúng, và công thức đó vào tab Ôn tập.'));
+      body.appendChild(E('p', 'gxl-help', 'Không nhìn bảng, tự viết lại cả công thức bạn vừa học, ghi đủ các chủ ngữ (I, you, he, she, it, we, they). Nhóm chủ ngữ nào đi với trợ động từ khác thì viết dòng riêng. Không cần đúng từng dấu: does not hay doesn\'t, V-ing hay Ving đều được. Sai lần đầu, app chỉ gợi ý phần còn thiếu. Sai lần hai mới hiện công thức đúng, và công thức đó vào tab Review.'));
       const list = E('div', 'gxl-rc'); body.appendChild(list);
       const sum = E('div', 'gxl-rsum'); body.appendChild(sum);
       let n = 0, miss = 0;
       const finishOne = () => {
         n++;
-        if (n === d.recall.length) { done('r'); sum.innerHTML = ''; sum.appendChild(E('p', null, miss ? `Bạn tự viết đúng ${n - miss}/${n} công thức. ${miss} công thức đã vào Ôn tập, app sẽ hỏi lại đúng lúc bạn sắp quên.` : `Bạn tự viết đúng cả ${n} công thức!`)); sum.appendChild(E('p', 'gxl-note', '🎉 Xong phần học công thức. Kéo xuống các bước tiếp theo để xem cách dùng và làm bài tập.')); }
+        if (n === d.recall.length) { done('r'); sum.innerHTML = ''; sum.appendChild(E('p', null, miss ? `Bạn tự viết đúng ${n - miss}/${n} công thức. ${miss} công thức đã vào Review, app sẽ hỏi lại đúng lúc bạn sắp quên.` : `Bạn tự viết đúng cả ${n} công thức!`)); sum.appendChild(E('p', 'gxl-note', '🎉 Xong phần học công thức. Kéo xuống các bước tiếp theo để xem cách dùng và làm bài tập.')); }
       };
       d.recall.forEach((item, j) => {
         const lbl = item.q, ex = item.ex, ans = item.lines.map(l => l[0]).join(' · ');
@@ -829,7 +829,7 @@
           fw.reveal(ok); acts.remove(); card.classList.add(ok ? 'ok' : 'miss');
           if (!ok) { miss++; toReview(id + '|r|' + j, lbl, ans, 'Tự viết lại công thức (đủ mọi chủ ngữ)', ex, 'F:' + id + '#' + j); }
           fb.innerHTML = '';
-          fb.appendChild(E('div', 'gxl-gd ' + (ok ? 'ok' : 'bad'), ok ? (tries > 1 ? '✓ Đúng ở lần thử thứ hai' : '✓ Chính xác!') : '↻ Công thức này sẽ quay lại trong tab Ôn tập để bạn viết lại.'));
+          fb.appendChild(E('div', 'gxl-gd ' + (ok ? 'ok' : 'bad'), ok ? (tries > 1 ? '✓ Đúng ở lần thử thứ hai' : '✓ Chính xác!') : '↻ Công thức này sẽ quay lại trong tab Review để bạn viết lại.'));
           const exl = E('div', 'gxl-cex'); exl.appendChild(document.createTextNode('Ví dụ: ' + ex + ' ')); const pl = E('button', 'gxl-play', '▶'); pl.type = 'button'; pl.setAttribute('aria-label', 'Nghe ví dụ'); pl.addEventListener('click', () => say(ex)); exl.appendChild(pl);
           fb.appendChild(exl);
           finishOne();
@@ -879,7 +879,7 @@
           out.appendChild(row);
         });
         if (w.mode === 'svc' && !(kinds.has('ps') && kinds.has('pc'))) out.appendChild(E('div', 'gxl-wl warn', kinds.has('pc') ? 'Thêm một câu về thói quen (hiện tại đơn) nữa nhé.' : 'Thêm một câu về việc đang làm lúc này (am / is / are + V-ing) nữa nhé.'));
-        out.appendChild(E('p', 'gxl-note', 'App kiểm tra cách chia động từ theo chủ ngữ, không kiểm tra từ vựng hay chính tả. Muốn sửa kỹ hơn, dùng ô “Viết” ở tab Luyện.'));
+        out.appendChild(E('p', 'gxl-note', 'App kiểm tra cách chia động từ theo chủ ngữ, không kiểm tra từ vựng hay chính tả. Muốn sửa kỹ hơn, dùng ô “Viết” ở tab Practice.'));
         if (good) { done('w'); try { if (window.actLog) actLog('w', good); } catch (e) {} }
       });
     }

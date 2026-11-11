@@ -262,7 +262,7 @@ const FIREBASE_CONFIG = {
     let recent = 0;
     try { recent = +sessionStorage.getItem('hta-sync-reload') || 0; } catch (e) {}
     // v212: chỉ tải lại trang ngay lúc mở app / vừa đăng nhập. Đang học thì KHÔNG tải lại (trước đây quay lại app sau ≥ 2 phút
-    // là bị tải lại và nhảy về trang Hôm nay). Tiến độ máy khác vẫn được gộp an toàn, chuỗi ngày học tự cập nhật.
+    // là bị tải lại và nhảy về trang Today). Tiến độ máy khác vẫn được gộp an toàn, chuỗi ngày học tự cập nhật.
     if ((reason === 'startup' || reason === 'signin') && Date.now() - recent > 15000) {
       try { sessionStorage.setItem('hta-sync-reload', String(Date.now())); } catch (e) {}
       showBar(reason === 'signin' ? 'Đã tải tiến độ từ tài khoản…' : 'Đã cập nhật tiến độ từ máy khác…', false);

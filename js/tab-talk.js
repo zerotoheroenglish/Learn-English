@@ -280,7 +280,7 @@ const TALK_SCENES = [
 /* ============================================================
    NÓI CHUYỆN — AI Speaking Partner (v131)
    1) Nhập vai soạn sẵn: miễn phí, không cần tài khoản. App chấm câu nói theo cấu trúc của lượt
-      (đã học ở tab Ngữ pháp) + ngữ pháp (LanguageTool, miễn phí) rồi nhân vật nói tiếp.
+      (đã học ở tab Grammar) + ngữ pháp (LanguageTool, miễn phí) rồi nhân vật nói tiếp.
    2) Trò chuyện tự do với AI: dùng khoá của CHÍNH người học: Gemini, Groq (miễn phí) hoặc ChatGPT (OpenAI, trả phí). (v140)
       Khoá chỉ lưu trên máy này: không đồng bộ lên tài khoản, không nằm trong file sao lưu.
 ============================================================ */
@@ -407,7 +407,7 @@ const TALK_SCENES = [
     if (rec.length) {
       const box = E('div', 'tk-sec');
       box.appendChild(E('div', 'tk-sec-h', '⭐ Gợi ý cho bạn (' + LV[userLv()] + ')'));
-      box.appendChild(E('div', 'tk-sec-s', 'Ưu tiên tình huống dùng những cấu trúc bạn đã học trong tab Ngữ pháp.'));
+      box.appendChild(E('div', 'tk-sec-s', 'Ưu tiên tình huống dùng những cấu trúc bạn đã học trong tab Grammar.'));
       rec.forEach(s => box.appendChild(card(s)));
       root.appendChild(box);
     }

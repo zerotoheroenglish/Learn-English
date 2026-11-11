@@ -420,7 +420,7 @@ function smartReport(r, opts) {
     });
     (typeof GR_LESSONS !== 'undefined' ? GR_LESSONS : []).forEach(t => {
       if (t.lv !== L.n || !EX_DATA[t.id]) return;
-      // v127: lấy đủ công thức như Bước 2 trong tab Ngữ pháp (khối công thức riêng + mọi mục có công thức)
+      // v127: lấy đủ công thức như Bước 2 trong tab Grammar (khối công thức riêng + mọi mục có công thức)
       const extra = (typeof GX_EXTRA_FX !== 'undefined' && GX_EXTRA_FX[t.id] || []).map(([name, rows]) => ({ name, fx: rows }));
       const secs = extra.concat((t.sections || []).filter(s => s.formula || s.fx));
       EX_LESSONS.push({
@@ -786,7 +786,7 @@ function smartReport(r, opts) {
       if (l.note.note) n.appendChild(E('div', 'ex-note-t', l.note.note));
       rc.appendChild(n);
     }
-    const go = E('button', 'btn-ghost ex-go', 'Xem lại bài trong tab Ngữ pháp →');
+    const go = E('button', 'btn-ghost ex-go', 'Xem lại bài trong tab Grammar →');
     go.addEventListener('click', () => {
       const tab = document.querySelector('nav.tabbar button[data-page="page-grammar"]');
       if (tab) tab.click();

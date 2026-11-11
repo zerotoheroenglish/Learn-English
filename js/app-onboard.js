@@ -169,7 +169,7 @@
           ? `Chào mừng${welcome ? ' ' + welcome : ''}! Tài khoản của bạn đã sẵn sàng — mình giúp bạn bắt đầu trong 1 phút.`
           : 'Chào bạn! Mình giúp bạn bắt đầu trong 1 phút.')); box.appendChild(hero);
         box.appendChild(E('h2', null, 'Mỗi ngày bạn muốn học bao lâu?')).id = 'hta-ob-h';
-        box.appendChild(E('p', 'hta-ob-p', 'Ít mà đều quan trọng hơn nhiều mà bỏ dở. Đổi lại được bất cứ lúc nào ở tab Hôm nay.'));
+        box.appendChild(E('p', 'hta-ob-p', 'Ít mà đều quan trọng hơn nhiều mà bỏ dở. Đổi lại được bất cứ lúc nào ở tab Today.'));
         const list = E('div', 'hta-ob-list');
         [[10, '5 phút', 'Nhẹ nhàng · 10 lượt luyện'], [20, '10 phút', 'Đều đặn · 20 lượt luyện · nên chọn'], [40, '20 phút', 'Nghiêm túc · 40 lượt luyện'], [60, '30 phút trở lên', 'Tăng tốc · 60 lượt luyện']]
           .forEach(([g, l, s]) => list.appendChild(opt(l, s, ans.goal === g, () => { ans.goal = g; })));

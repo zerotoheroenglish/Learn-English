@@ -1802,7 +1802,7 @@ fxMore.addEventListener('toggle', () => { try { localStorage.setItem(FX_KEY + '-
 /* ============================================================
    v117 · Tab Dịch: bản gốc / đề xuất sửa / bản dịch tách riêng · người học chọn dịch câu nào
    · ngữ cảnh (chung, giao tiếp, công việc, email, chuyên ngành 3D) · từ điển thuật ngữ 3D
-   · đối chiếu từng câu · lịch sử, yêu thích, sổ từ · lưu sang tab Từ vựng và Shadowing
+   · đối chiếu từng câu · lịch sử, yêu thích, sổ từ · lưu sang tab Vocabulary và Shadowing
 ============================================================ */
 const TRX = { ctx: 'hoc-tieng-anh-tr-ctx', hist: 'hoc-tieng-anh-tr-hist', fav: 'hoc-tieng-anh-tr-fav', words: 'hoc-tieng-anh-tr-words', gloss: 'hoc-tieng-anh-tr-gloss', keep: 'hoc-tieng-anh-tr-keep' };
 const trxLoad = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } };
@@ -1946,11 +1946,11 @@ function trHistAdd(s, o) {
 const trPair = (src, out, sl) => sl === 'en' ? { en: src, vi: out } : { en: out, vi: src };
 function trFavHas(en) { return trFav.some(f => f.en === en); }
 function trFavToggle(p) { const i = trFav.findIndex(f => f.en === p.en); if (i >= 0) trFav.splice(i, 1); else trFav.unshift(Object.assign({ t: Date.now() }, p)); trFav = trFav.slice(0, 200); trxSave(TRX.fav, trFav); return i < 0; }
-// lưu câu sang tab Shadowing: một bài "Câu đã lưu từ tab Dịch" (tối đa 80 câu)
+// lưu câu sang tab Shadowing: một bài "Câu đã lưu từ tab Translate" (tối đa 80 câu)
 function trToShadow(p) {
   let mine = trxLoad('hoc-tieng-anh-shadow-custom', []); if (!Array.isArray(mine)) mine = [];
   let l = mine.find(x => x.id === 'my-tr-saved');
-  if (!l) { l = { id: 'my-tr-saved', lv: 3, icon: '🌐', title: 'Câu đã lưu từ tab Dịch', vi: 'Bài tự tạo', sum: 'Các câu bạn lưu từ tab Dịch để luyện nói theo.', s: [] }; mine.unshift(l); }
+  if (!l) { l = { id: 'my-tr-saved', lv: 3, icon: '🌐', title: 'Câu đã lưu từ tab Translate', vi: 'Bài tự tạo', sum: 'Các câu bạn lưu từ tab Translate để luyện nói theo.', s: [] }; mine.unshift(l); }
   if (l.s.some(r => r[0] === p.en)) return 'dup';
   if (l.s.length >= 80) return 'full';
   l.s.push([p.en, p.vi || '']);
@@ -1958,7 +1958,7 @@ function trToShadow(p) {
   try { window.dispatchEvent(new Event('hoc-shadow-mine')); } catch (e) {}
   return 'ok';
 }
-// lưu từ: có trong tab Từ vựng → thêm vào yêu thích + bắt đầu ôn; không có → sổ từ của tab Dịch
+// lưu từ: có trong tab Vocabulary → thêm vào yêu thích + bắt đầu ôn; không có → sổ từ của tab Translate
 function trSaveWord(w, vi) {
   const k = w.toLowerCase();
   let it = null; try { it = VC_ALL.find(x => x.w.toLowerCase() === k && !x.sense); } catch (e) {}
@@ -2049,7 +2049,7 @@ function trRenderExtra() {
     let r = 'ok';
     if (sents.length > 1 && p.en.length > 160) { trToast('Câu dài: hãy dùng “Đối chiếu từng câu” rồi lưu từng câu.'); return; }
     r = trToShadow(p);
-    trToast(r === 'ok' ? '✓ Đã thêm vào Shadowing › Bài của tôi › “Câu đã lưu từ tab Dịch”' : r === 'dup' ? 'Câu này đã có trong bài shadowing.' : 'Bài đã đủ 80 câu. Hãy xoá bớt trong tab Shadowing.');
+    trToast(r === 'ok' ? '✓ Đã thêm vào Shadowing › Bài của tôi › “Câu đã lưu từ tab Translate”' : r === 'dup' ? 'Câu này đã có trong bài shadowing.' : 'Bài đã đủ 80 câu. Hãy xoá bớt trong tab Shadowing.');
   });
   const al = trEl('button', 'btn-ghost', '↔ Đối chiếu từng câu');
   al.addEventListener('click', () => trAlign(al));
@@ -2060,7 +2060,7 @@ function trRenderExtra() {
   const ws = [...new Set((en.match(/[A-Za-z][A-Za-z'’-]*/g) || []).map(w => w.replace(/[’]/g, "'")).filter(w => w.length > 2 && !/^(the|and|for|you|are|was|were|but|not|this|that|with|from|have|has|had|will|would|can|could|its|it's|our|your|their|they|them|then|than|there|here|what|when|which|who|how|why|into|onto|about|been|being|also|just|very|some|any)$/i.test(w)))].slice(0, 30);
   if (ws.length) {
     const c = trEl('details', 'input-card tr-x tr-wbox');
-    c.appendChild(trEl('summary', null, '📖 Chạm vào từ để xem nghĩa và lưu vào tab Từ vựng'));
+    c.appendChild(trEl('summary', null, '📖 Chạm vào từ để xem nghĩa và lưu vào tab Vocabulary'));
     const row = trEl('div', 'tr-wrow');
     const info = trEl('div', 'tr-winfo');
     ws.forEach(w => {
@@ -2075,7 +2075,7 @@ function trRenderExtra() {
         const mean = trEl('div', 'tr-wi-m', h.vi || 'Đang tra nghĩa…'); info.appendChild(mean);
         if (!h.vi && typeof fetchMeaningOnline === 'function') fetchMeaningOnline(w).then(m => { mean.textContent = m || 'Chưa tra được nghĩa.'; }).catch(() => { mean.textContent = 'Chưa tra được nghĩa (cần mạng).'; });
         let inVocab = false; try { inVocab = VC_ALL.some(x => x.w.toLowerCase() === w.toLowerCase() && !x.sense); } catch (e) {}
-        const sv = trEl('button', 'btn-primary', inVocab ? '＋ Thêm vào tab Từ vựng (yêu thích + ôn tập)' : '＋ Lưu vào sổ từ của tab Dịch');
+        const sv = trEl('button', 'btn-primary', inVocab ? '＋ Thêm vào tab Vocabulary (yêu thích + ôn tập)' : '＋ Lưu vào sổ từ của tab Translate');
         sv.addEventListener('click', () => { const r = trSaveWord(w, mean.textContent.replace(/^Đang tra nghĩa…$/, '')); sv.disabled = true; sv.textContent = r === 'vocab' ? '✓ Đã thêm vào Từ vựng › Yêu thích, có trong lịch ôn' : '✓ Đã lưu vào sổ từ (xem ở mục “Sổ từ” bên dưới)'; trRenderSaved(); });
         info.appendChild(sv);
       });
@@ -2112,7 +2112,7 @@ async function trAlign(btn) {
     const fv = trEl('button', 'tr-icon sm' + (trFavHas(p.en) ? ' on' : ''), trFavHas(p.en) ? '★' : '☆'); fv.setAttribute('aria-label', 'Lưu yêu thích');
     fv.addEventListener('click', () => { const on = trFavToggle(p); fv.textContent = on ? '★' : '☆'; fv.classList.toggle('on', on); trRenderSaved(); });
     const sh = trEl('button', 'tr-icon sm', '🎙️'); sh.setAttribute('aria-label', 'Thêm vào Shadowing');
-    sh.addEventListener('click', () => { const r = trToShadow(p); trToast(r === 'ok' ? '✓ Đã thêm vào bài shadowing “Câu đã lưu từ tab Dịch”' : r === 'dup' ? 'Câu này đã có trong bài shadowing.' : 'Bài đã đủ 80 câu.'); });
+    sh.addEventListener('click', () => { const r = trToShadow(p); trToast(r === 'ok' ? '✓ Đã thêm vào bài shadowing “Câu đã lưu từ tab Translate”' : r === 'dup' ? 'Câu này đã có trong bài shadowing.' : 'Bài đã đủ 80 câu.'); });
     if (out) { acts.appendChild(sp); acts.appendChild(fv); acts.appendChild(sh); }
   }
 }
@@ -2179,7 +2179,7 @@ function trRenderSaved() {
       list.appendChild(r);
     });
   } else if (trSavedTab === 'words') {
-    list.appendChild(trEl('div', 'tr-x-sub', 'Từ có trong tab Từ vựng được thêm thẳng vào đó (mục Yêu thích + lịch ôn). Từ chưa có trong bộ 11.000 từ được giữ ở sổ này.'));
+    list.appendChild(trEl('div', 'tr-x-sub', 'Từ có trong tab Vocabulary được thêm thẳng vào đó (mục Yêu thích + lịch ôn). Từ chưa có trong bộ 11.000 từ được giữ ở sổ này.'));
     if (!trWords.length) list.appendChild(trEl('div', 'tr-empty', 'Sổ từ đang trống. Dưới bản dịch, mở “📖 Chạm vào từ…” để lưu từ.'));
     trWords.forEach(x => {
       const r = trEl('div', 'tr-sitem tr-favitem');
@@ -4116,7 +4116,7 @@ function linkLearn(body, ruleId) {
   body.appendChild(prEl('div', 'pr-set-tip pr-set-tip2',
     'Người bản xứ không đọc từng từ rời rạc mà nối chúng thành một dòng âm — vì vậy nhiều câu nghe như "một từ dài" dù bạn biết hết từ. Chọn một quy tắc bên dưới để học.'));
 
-  // lưới quy tắc, giống lưới chủ đề bên tab Từ vựng
+  // lưới quy tắc, giống lưới chủ đề bên tab Vocabulary
   const grid = prEl('div', 'vc-grid lk-grid');
   LINK_RULES.forEach((x, i) => {
     const n = x.ex.length, got = x.ex.filter(e => prDone.has('link|' + e[0])).length;
@@ -4159,7 +4159,7 @@ function linkLegend() {
 }
 const linkScroll = () => { try { const t = document.querySelector('.lk-tabs'); if (t) t.scrollIntoView({ block: 'start' }); } catch (e) {} };
 
-/* trang riêng của một quy tắc, giống trang một chủ đề bên tab Từ vựng */
+/* trang riêng của một quy tắc, giống trang một chủ đề bên tab Vocabulary */
 function linkRulePage(body, r) {
   const ri = LINK_RULES.indexOf(r);
   const back = prEl('button', 'gr-back lk-back', '← Tất cả quy tắc');
@@ -6276,7 +6276,7 @@ function gxScoreBox(res, title, extra) {
   return { box: b, pct, ok, n };
 }
 
-/* ---------- trang chính tab Ngữ pháp ---------- */
+/* ---------- trang chính tab Grammar ---------- */
 const gxUI = { q: '', cat: 'all', st: 'all', fav: false };
 function gxBadge(id) {
   const st = gxStatus(id), b = grEl('span', 'gx-st st-' + st, GX_ST[st][0] + (st === 'done' && gxMaster(id) ? ' ★' : ''));
@@ -6347,7 +6347,7 @@ function renderGrammarHome(keepScroll) {
   pb.appendChild(ptx);
   pb.appendChild(grEl('span', 'vc-unit-go', '›'));
   pb.addEventListener('click', gxPlacementTest);
-  // v176: lối vào kiểm tra xếp trình độ chỉ còn ở tab Hôm nay (bài kiểm tra vẫn mở ở đây khi bấm từ Hôm nay)
+  // v176: lối vào kiểm tra xếp trình độ chỉ còn ở tab Today (bài kiểm tra vẫn mở ở đây khi bấm từ Hôm nay)
   if (!document.querySelector('nav.nav5')) grRoot.appendChild(pb);
   // 4 lối vào
   const acts = grEl('div', 'gx-acts4');
@@ -6763,7 +6763,7 @@ function gxPlacementResult(res, box, trackOf, timeUp) {
     tb.appendChild(r);
   });
   rec.appendChild(tb);
-  rec.appendChild(grEl('p', 'gx-place-note', `App đã đặt Lộ trình ở cấp ${lvCode}, tab Ngữ pháp ở chặng ${T.key} và tab Bất quy tắc ở cấp ${lvCode}. Gợi ý thêm: tab Từ vựng học các bài cấp ${lvCode}, tab Shadowing chọn lọc cấp ${lvCode} (hoặc thấp hơn một cấp cho dễ nói).`));
+  rec.appendChild(grEl('p', 'gx-place-note', `App đã đặt Lộ trình ở cấp ${lvCode}, tab Grammar ở chặng ${T.key} và tab Bất quy tắc ở cấp ${lvCode}. Gợi ý thêm: tab Vocabulary học các bài cấp ${lvCode}, tab Shadowing chọn lọc cấp ${lvCode} (hoặc thấp hơn một cấp cho dễ nói).`));
   rec.appendChild(grEl('p', 'gx-place-note', `Câu sai trong bài kiểm tra không vào Sổ lỗi vì có thể bạn chưa học tới. Đây là ước lượng từ ${res.length} câu ngữ pháp, chưa đo kỹ năng nghe và nói. Nếu thấy bài quá dễ hoặc quá khó, cứ đổi chặng ở danh sách cấp độ trên trang Ngữ pháp.`));
   const btns = grEl('div', 'ls-sum-btns');
   const first = GX_ALL.find(x => x.track === T.key && gxStatus(x.id) !== 'done');
@@ -7815,7 +7815,7 @@ VOCAB_TOPICS.forEach(t => {
   t.lessonCount = t.levels.reduce((k, x) => k + x.lessons.length, 0);
   VC_ALL.push(...t.items);
 });
-// v137: bản dịch câu ví dụ (VB_EXVI) nằm ở file riêng, chỉ nạp khi mở tab Từ vựng / Ôn tập → điền vào từ khi nạp xong
+// v137: bản dịch câu ví dụ (VB_EXVI) nằm ở file riêng, chỉ nạp khi mở tab Vocabulary / Ôn tập → điền vào từ khi nạp xong
 function vcFillExvi() {
   if (typeof VB_EXVI === 'undefined') return false;
   VC_ALL.forEach(it => { if (!it.exvi && VB_EXVI[it.w]) it.exvi = VB_EXVI[it.w]; });
@@ -9502,7 +9502,7 @@ whenPageShown('page-vocab', vcRoot, vcRenderHome);
 
 /* IRR_EX: xem file dữ liệu */
 /* ============================================================
-   IRREGULAR VERBS tab — v88: cùng kiểu với tab Từ vựng
+   IRREGULAR VERBS tab — v88: cùng kiểu với tab Vocabulary
    Trang chủ: tiến độ · tìm kiếm · lọc theo nhóm biến đổi · cấp độ A1 → C1 · các bài ~20 động từ
    Trong bài: Danh sách · Thẻ nhớ · Kiểm tra · Viết V2·V3 · Chấm điểm
 ============================================================ */

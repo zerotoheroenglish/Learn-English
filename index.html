@@ -160,7 +160,7 @@
 <header class="hero">
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v230</span>
+      <span class="hero-badge">EN ⇄ VI · v231</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice" id="voice-btn" aria-label="Chọn giọng đọc">🔊 <span class="hv-label">Giọng đọc</span></button>
@@ -248,7 +248,7 @@
       </div>
     </div>
 
-    <button class="btn-primary" id="tr-btn" style="width:100%; margin-top:12px;">Dịch</button>
+    <button class="btn-primary" id="tr-btn" style="width:100%; margin-top:12px;">Translate</button>
     <p class="pron-note" style="text-align:center;" id="tr-hint">Bấm Dịch để dịch · App dịch đúng câu bạn nhập; câu đã sửa chỉ được dịch khi bạn chọn · Cần kết nối mạng</p>
     <div id="tr-extra"></div>
     <div class="tr-saved" id="tr-saved"></div>
@@ -625,23 +625,23 @@
 <nav class="tabbar nav5">
   <button class="active grp-on" data-page="page-hub" data-grp="home">
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></span>
-    Hôm nay
+    Today
   </button>
   <button data-page="page-hub" data-grp="learn">
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5V5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2.5zM8 7h6M8 11h6"/></svg></span>
-    Học
+    Learn
   </button>
   <button data-page="page-hub" data-grp="practice">
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3zM19 11a7 7 0 0 1-14 0M12 18v3"/></svg></span>
-    Luyện
+    Practice
   </button>
   <button data-page="page-hub" data-grp="review">
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/></svg></span>
-    Ôn tập
+    Review
   </button>
   <button data-page="page-hub" data-grp="tool">
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h8M8 3v2M5 9c1.5 3 4 5 7 6M11 5c-1 4-3.5 7-7 9M13 20l4-9 4 9M14.5 17h5"/></svg></span>
-    Dịch
+    Translate
   </button>
   <button hidden aria-hidden="true" tabindex="-1" data-page="page-talk">
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.5A2.5 2.5 0 0 1 5.5 4h7A2.5 2.5 0 0 1 15 6.5v4a2.5 2.5 0 0 1-2.5 2.5H8l-3.5 3v-3A1.5 1.5 0 0 1 3 11.5z"/><path d="M17.5 9h1A2.5 2.5 0 0 1 21 11.5v4A1.5 1.5 0 0 1 19.5 17v3l-3.5-3h-3.5a2.5 2.5 0 0 1-2.4-1.8"/></svg></span>
@@ -695,7 +695,7 @@
    - không tải sẵn hàng loạt. Chỉ tải trước ĐÚNG MỘT tab (tab nạp-khi-cần bạn mở gần nhất), khi trình duyệt thật sự rảnh,
      và không làm việc này nếu bật tiết kiệm dữ liệu, mạng chậm (2G/3G) hoặc máy ít RAM */
 (function () {
-  var LAZY = {"page-shadow":"js/tab-shadowing.js?h=4754bc2e26","page-qb":"js/tab-questions.js?h=dccfc4a30b","page-read":"js/tab-reading.js?h=83cb25dbaf","page-talk":"js/tab-talk.js?h=8b70c0a6e8","page-para":"js/tab-para.js?h=f2f7a86a27"}, DATA = {"exvi":"js/data-vocab-vi.js?h=31cb69d052"}, DEPS = { 'page-vocab': ['exvi'] }, state = {};
+  var LAZY = {"page-shadow":"js/tab-shadowing.js?h=4754bc2e26","page-qb":"js/tab-questions.js?h=de2f186376","page-read":"js/tab-reading.js?h=83cb25dbaf","page-talk":"js/tab-talk.js?h=4095a51419","page-para":"js/tab-para.js?h=f2f7a86a27"}, DATA = {"exvi":"js/data-vocab-vi.js?h=31cb69d052"}, DEPS = { 'page-vocab': ['exvi'] }, state = {};
   function inject(key, url) {
     if (!url) return Promise.resolve();
     if (state[key]) return state[key];
@@ -748,16 +748,16 @@
 </script>
 <script src="js/data-core.js?h=5c068bf2d4"></script>
 <script src="js/data-vocab.js?h=923ca16f1c"></script>
-<script src="js/app-core.js?h=4805c032d5"></script>
+<script src="js/app-core.js?h=81302ce603"></script>
 
-<script src="js/app-sync.js?h=79e8f95282"></script>
+<script src="js/app-sync.js?h=78b85a839c"></script>
 
 <script src="js/app-feedback.js?h=f1bd3f9e55"></script>
 
 <!-- tab-shadowing: nạp khi mở tab -->
 
 <script src="js/data-exercises.js?h=dcbe86d1d8"></script>
-<script src="js/app-exercises.js?h=7304dd661c"></script>
+<script src="js/app-exercises.js?h=f90d88ce9c"></script>
 
 <script>
 /* ---- Terms, privacy & credits sheet ---- */
@@ -786,9 +786,9 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
 <!-- tab-questions: nạp khi mở tab -->
 <!-- tab-reading: nạp khi mở tab -->
 <!-- tab-talk: nạp khi mở tab -->
-<script src="js/app-review.js?h=0f7711c758"></script>
-<script src="js/app-gxlearn.js?h=ac1033d2d7"></script>
-<script src="js/app-onboard.js?h=576d26a7a6"></script>
+<script src="js/app-review.js?h=0eb7ea8976"></script>
+<script src="js/app-gxlearn.js?h=687d5aea98"></script>
+<script src="js/app-onboard.js?h=107697c1c7"></script>
 <script>
 /* ============================================================
    v153–v154: GỘP TAB — mỗi cặp trang dùng chung một nút trên thanh tab, chuyển bằng thanh ở đầu trang.
@@ -850,27 +850,27 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
   const rd = m => () => window.rdHome && window.rdHome(m);
   // Nhóm → các phần, theo thứ tự học: tiếp nhận (nghe, đọc) trước, tạo lập (nói, viết) sau
   const G = {
-    home: { name: 'Hôm nay', secs: [
+    home: { name: 'Today', secs: [
       { id: 'today', t: "Today's tasks", page: 'page-dash', run: () => { window.dashOpen && window.dashOpen(); window.dashView && window.dashView('sum'); } },
       { id: 'path', t: 'Learning path', page: 'page-dash', run: () => { window.dashOpen && window.dashOpen(); window.dashView && window.dashView('path'); } } ] },
-    learn: { name: 'Học', secs: [
+    learn: { name: 'Learn', secs: [
       { id: 'vocab', t: 'Vocabulary', page: 'page-vocab' },
       { id: 'grammar', t: 'Grammar', page: 'page-grammar' },
       { id: 'irr', t: 'Irregular verbs', page: 'page-irregular' } ] },
-    practice: { name: 'Luyện', secs: [
+    practice: { name: 'Practice', secs: [
       { id: 'pron', t: 'Pronunciation', page: 'page-pron' },
       { id: 'shadow', t: 'Shadowing', page: 'page-shadow' },
       { id: 'listen', t: 'Listening', page: 'page-read', post: rd('listen') },
       { id: 'read', t: 'Reading', page: 'page-read', post: rd('read') },
       { id: 'write', t: 'Writing', page: 'page-read', post: rd('write') },
       { id: 'talk', t: 'AI Speaking', page: 'page-talk' } ] },
-    review: { name: 'Ôn tập', secs: [
+    review: { name: 'Review', secs: [
       { id: 'cards', t: 'Due cards', page: 'page-review', run: () => window.srOpen && window.srOpen() },
       { id: 'mist', t: 'Mistakes', page: 'page-review', run: () => { window.srOpen && window.srOpen(); mkClick(); } },
       { id: 'ex', t: 'Grammar exercises', page: 'page-exercise' },
       { id: 'para', t: 'Translation practice', page: 'page-para' },
       { id: 'qb', t: 'Asking questions', page: 'page-qb' } ] },
-    tool: { name: 'Dịch', secs: [ { id: 'check', t: 'Dịch', page: 'page-check' } ] }
+    tool: { name: 'Translate', secs: [ { id: 'check', t: 'Translate', page: 'page-check' } ] }
   };
   const PG = {}; Object.keys(G).forEach(g => G[g].secs.forEach(sc => { if (!PG[sc.page]) PG[sc.page] = g; }));
   PG['page-listen'] = 'practice';
