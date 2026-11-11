@@ -11537,14 +11537,18 @@ const VOICE_M = /\b(alex|aaron|fred|evan|nathan|tom|daniel|arthur|oliver|lee|gor
 const VOICE_NOVELTY = /albert|bad news|bahh|bells|boing|bubbles|cellos|good news|jester|organ|superstar|trinoids|whisper|wobble|zarvox|deranged|hysterical|\beddy\b|\bflo\b|grandma|grandpa|\breed\b|rocko|\bsandy\b|shelley|\bralph\b|junior|\bkathy\b|princess|\bfred\b/i;
 const vNorm = l => (l || '').toLowerCase().replace(/_/g, '-');
 const vGender = v => VOICE_F.test(v.name) ? 'f' : VOICE_M.test(v.name) ? 'm' : '';
+// v236: chất lượng giọng: iOS/macOS ghi trong voiceURI (com.apple.voice.premium… / .enhanced…), có khi tên không ghi
+const vQual = v => { const t = (v.name || '') + ' ' + (v.voiceURI || ''); return /premium|neural|natural/i.test(t) ? 2 : /enhanced|online/i.test(t) || /^google\b/i.test(v.name || '') ? 1 : 0; };
+const vQualTxt = v => ['', ' · ★ Nâng cao', ' · ★★ Cao cấp'][vQual(v)];
+const vName = v => v.name.replace(/\s*\((enhanced|premium|nâng cao|cao cấp)\)\s*$/i, '').replace(/\s*\(.*\)$/, '');
 function vScore(v, p) {
   const lang = vNorm(v.lang);
   const li = p.langs.findIndex(l => lang === l || lang.startsWith(l + '-'));
   if (li < 0) return -Infinity;
   let s = 10 - li * 2;
-  if (p.gender) { const g = vGender(v); s += g === p.gender ? 8 : g === '' ? 2 : -15; }
+  if (p.gender) { const g = vGender(v); if (g && g !== p.gender) return -Infinity; s += g === p.gender ? 8 : 2; }   // v236: không lấy giọng khác giới cho ô Nam / Nữ
   if (VOICE_NOVELTY.test(v.name)) s -= 20;
-  if (/enhanced|premium|natural|neural|online|siri/i.test(v.name)) s += 3;
+  s += vQual(v) * 4;
   if (v.localService) s += 1;
   // v142: giọng Google của Chrome tự nhiên hơn hẳn giọng Microsoft cài sẵn trên Windows (David, Zira, Mark… nghe rất "robot")
   if (/^google\b/i.test(v.name)) s += 4;
@@ -11559,7 +11563,7 @@ function vCurrent() {
   return vResolved[vSel.slice(2)] || null;
 }
 function vLabel() {
-  if (vSel.startsWith('v:')) { const v = vCurrent(); return v ? v.name.replace(/\s*\(.*\)$/, '') : 'Giọng đọc'; }
+  if (vSel.startsWith('v:')) { const v = vCurrent(); return v ? vName(v) : 'Giọng đọc'; }
   const p = VOICE_PRESETS.find(x => 'p:' + x.id === vSel);
   return p ? p.label : 'Giọng đọc';
 }
@@ -11617,13 +11621,13 @@ function vRenderSheet() {
   list.innerHTML = ''; all.innerHTML = ''; msg.textContent = '';
   VOICE_PRESETS.forEach(p => {
     const v = vResolved[p.id];
-    list.appendChild(vRow(p.flag, p.label, v ? v.name.replace(/\s*\(.*\)$/, '') : 'Máy bạn chưa có giọng này',
+    list.appendChild(vRow(p.flag, p.label, v ? vName(v) + vQualTxt(v) : 'Máy bạn chưa có giọng này',
       vSel === 'p:' + p.id, !v,
       () => { if (!v) { msg.textContent = 'Máy bạn chưa có giọng "' + p.label + '". Xem hướng dẫn tải thêm giọng ở dưới.'; return; } vSelect('p:' + p.id); vTry(v); },
       v ? () => vTry(v) : null));
   });
   document.getElementById('vall-count').textContent = vAll.length;
-  vAll.forEach(v => all.appendChild(vRow('🔈', v.name.replace(/\s*\(.*\)$/, ''), v.lang + (vGender(v) === 'f' ? ' · nữ' : vGender(v) === 'm' ? ' · nam' : ''),
+  vAll.slice().sort((a, b) => vQual(b) - vQual(a) || a.name.localeCompare(b.name)).forEach(v => all.appendChild(vRow(vQual(v) ? '⭐' : '🔈', vName(v), v.lang + (vGender(v) === 'f' ? ' · nữ' : vGender(v) === 'm' ? ' · nam' : '') + vQualTxt(v),
     vSel === 'v:' + v.voiceURI, false, () => { vSelect('v:' + v.voiceURI); vTry(v); }, () => vTry(v))));
   if (!vAll.length) all.appendChild(Object.assign(document.createElement('p'), { className: 'vtip', textContent: 'Chưa đọc được danh sách giọng của máy. Hãy thử lại sau vài giây.' }));
 }
