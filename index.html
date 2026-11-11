@@ -160,7 +160,7 @@
 <header class="hero">
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v229</span>
+      <span class="hero-badge">EN ⇄ VI · v230</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice" id="voice-btn" aria-label="Chọn giọng đọc">🔊 <span class="hv-label">Giọng đọc</span></button>
@@ -851,12 +851,12 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
   // Nhóm → các phần, theo thứ tự học: tiếp nhận (nghe, đọc) trước, tạo lập (nói, viết) sau
   const G = {
     home: { name: 'Hôm nay', secs: [
-      { id: 'today', t: 'Việc hôm nay', page: 'page-dash', run: () => { window.dashOpen && window.dashOpen(); window.dashView && window.dashView('sum'); } },
-      { id: 'path', t: 'Lộ trình', page: 'page-dash', run: () => { window.dashOpen && window.dashOpen(); window.dashView && window.dashView('path'); } } ] },
+      { id: 'today', t: "Today's tasks", page: 'page-dash', run: () => { window.dashOpen && window.dashOpen(); window.dashView && window.dashView('sum'); } },
+      { id: 'path', t: 'Learning path', page: 'page-dash', run: () => { window.dashOpen && window.dashOpen(); window.dashView && window.dashView('path'); } } ] },
     learn: { name: 'Học', secs: [
-      { id: 'vocab', t: 'Từ vựng', page: 'page-vocab' },
-      { id: 'grammar', t: 'Ngữ pháp', page: 'page-grammar' },
-      { id: 'irr', t: 'Động từ bất quy tắc', page: 'page-irregular' } ] },
+      { id: 'vocab', t: 'Vocabulary', page: 'page-vocab' },
+      { id: 'grammar', t: 'Grammar', page: 'page-grammar' },
+      { id: 'irr', t: 'Irregular verbs', page: 'page-irregular' } ] },
     practice: { name: 'Luyện', secs: [
       { id: 'pron', t: 'Pronunciation', page: 'page-pron' },
       { id: 'shadow', t: 'Shadowing', page: 'page-shadow' },
@@ -865,11 +865,11 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
       { id: 'write', t: 'Writing', page: 'page-read', post: rd('write') },
       { id: 'talk', t: 'AI Speaking', page: 'page-talk' } ] },
     review: { name: 'Ôn tập', secs: [
-      { id: 'cards', t: 'Thẻ đến hạn', page: 'page-review', run: () => window.srOpen && window.srOpen() },
-      { id: 'mist', t: 'Sổ lỗi', page: 'page-review', run: () => { window.srOpen && window.srOpen(); mkClick(); } },
-      { id: 'ex', t: 'Bài tập ngữ pháp', page: 'page-exercise' },
-      { id: 'para', t: 'Luyện dịch câu', page: 'page-para' },
-      { id: 'qb', t: 'Đặt câu hỏi', page: 'page-qb' } ] },
+      { id: 'cards', t: 'Due cards', page: 'page-review', run: () => window.srOpen && window.srOpen() },
+      { id: 'mist', t: 'Mistakes', page: 'page-review', run: () => { window.srOpen && window.srOpen(); mkClick(); } },
+      { id: 'ex', t: 'Grammar exercises', page: 'page-exercise' },
+      { id: 'para', t: 'Translation practice', page: 'page-para' },
+      { id: 'qb', t: 'Asking questions', page: 'page-qb' } ] },
     tool: { name: 'Dịch', secs: [ { id: 'check', t: 'Dịch', page: 'page-check' } ] }
   };
   const PG = {}; Object.keys(G).forEach(g => G[g].secs.forEach(sc => { if (!PG[sc.page]) PG[sc.page] = g; }));
