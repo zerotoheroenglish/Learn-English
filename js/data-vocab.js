@@ -10452,6 +10452,81 @@ const VB = [
 ["gift voucher","n","/ˈɡɪft ˌvaʊtʃə/","phiếu quà tặng","She gave me a gift voucher for a spa.",2],
 ["gift-wrapping","n","/ˈɡɪft ˌræpɪŋ/","dịch vụ/việc gói quà","The shop offers free gift-wrapping.",2]
 ]}
+]},
+{id:"gettake",cat:"life",icon:"🔑",vi:"Cụm từ với GET & TAKE",en:"Phrases with GET & TAKE",groups:[
+{vi:"GET · cơ bản (A1–A2)",en:"GET phrases · basic",words:[
+["get to work","phr","/ɡet tə wɜːk/","đến chỗ làm","I get to work before eight.",1],
+["get a message","phr","/ɡet ə ˈmesɪdʒ/","nhận tin nhắn","I got a message from my friend.",1],
+["get a chance","phr","/ɡet ə tʃɑːns/","có cơ hội","I hope I get a chance to practise.",2]
+]},
+{vi:"GET · trung cấp (B1–B2)",en:"GET phrases · intermediate",words:[
+["get an idea","phr","/ɡet ən aɪˈdɪə/","nảy ra ý tưởng","I got an idea for the project.",3],
+["get paid","phr","/ɡet peɪd/","được trả lương","I get paid at the end of the month.",3],
+["get some sleep","phr","/ɡet sʌm sliːp/","ngủ một chút","You should get some sleep.",3],
+["get out of","phr","/ɡet ˈaʊt əv/","thoát khỏi; tránh làm","He tried to get out of the meeting.",3],
+["get in touch with","phr","/ɡet ɪn tʌtʃ wɪð/","liên lạc với","Please get in touch with me.",3],
+["get permission","phr","/ɡet pəˈmɪʃən/","xin được phép, được cho phép","You need to get permission first.",3],
+["get feedback","phr","/ɡet ˈfiːdbæk/","nhận phản hồi","I got useful feedback from my manager.",3],
+["get approval","phr","/ɡet əˈpruːvəl/","được phê duyệt","We need to get approval today.",3],
+["get the point","phr","/ɡet ðə pɔɪnt/","hiểu ý","I get the point now.",3],
+["get a discount","phr","/ɡet ə ˈdɪskaʊnt/","được giảm giá","Can I get a discount?",3]
+]},
+{vi:"GET · nâng cao (B2–C1)",en:"GET phrases · advanced",words:[
+["get the job done","phr","/ɡet ðə dʒɒb dʌn/","hoàn thành công việc","Let's get the job done today.",4],
+["get things done","phr","/ɡet θɪŋz dʌn/","giải quyết/hoàn tất việc","I work better in the morning and get things done.",4],
+["get a good night's sleep","phr","/ɡet ə ɡʊd naɪts sliːp/","có một giấc ngủ ngon","I need to get a good night's sleep.",4],
+["get the feeling","phr","/ɡet ðə ˈfiːlɪŋ/","có cảm giác rằng","I get the feeling that he is busy.",4],
+["get nowhere","phr","/ɡet ˈnəʊweə(r)/","không tiến triển","We are getting nowhere with this plan.",4],
+["get ahead","phr","/ɡet əˈhed/","tiến bộ; thăng tiến","She studies hard to get ahead.",4],
+["get carried away","phr","/ɡet ˈkærid əˈweɪ/","quá đà; bị cuốn theo","Don't get carried away.",4],
+["get wind of","phr","/ɡet wɪnd əv/","biết được tin","They got wind of the changes.",5],
+["get around to","phr","/ɡet əˈraʊnd tə/","cuối cùng cũng có thời gian làm","I finally got around to fixing the file.",4],
+["get a grip on","phr","/ɡet ə ɡrɪp ɒn/","kiểm soát; nắm vững","I need to get a grip on my schedule.",5],
+["get in the way","phr","/ɡet ɪn ðə weɪ/","cản trở","Don't let fear get in the way.",4],
+["get off to a good start","phr","/ɡet ɒf tə ə ɡʊd stɑːt/","có khởi đầu thuận lợi","The project got off to a good start.",4]
+]},
+{vi:"TAKE · cơ bản (A1–A2)",en:"TAKE phrases · basic",words:[
+["take a bath","phr","/teɪk ə bɑːθ/","tắm bồn","She takes a bath at night.",1],
+["take a rest","phr","/teɪk ə rest/","nghỉ ngơi","You should take a rest.",1],
+["take a look","phr","/teɪk ə lʊk/","xem thử","Can you take a look at this file?",1],
+["take the bus","phr","/teɪk ðə bʌs/","đi xe buýt","I take the bus to work.",1],
+["take a test","phr","/teɪk ə test/","làm bài kiểm tra","We take a test every Friday.",1],
+["take action","phr","/teɪk ˈækʃən/","hành động; có biện pháp","We need to take action now.",2],
+["take a seat","phr","/teɪk ə siːt/","ngồi xuống","Please take a seat.",1],
+["take a walk","phr","/teɪk ə wɔːk/","đi dạo","I take a walk after dinner.",1]
+]},
+{vi:"TAKE · trung cấp (B1–B2)",en:"TAKE phrases · intermediate",words:[
+["take a trip","phr","/teɪk ə trɪp/","đi một chuyến","We took a trip to Da Lat.",3],
+["take a chance","phr","/teɪk ə tʃɑːns/","thử vận may; nắm lấy cơ hội","Sometimes you need to take a chance.",3],
+["take a risk","phr","/teɪk ə rɪsk/","chấp nhận rủi ro","Starting a business can mean taking a risk.",3],
+["take a deep breath","phr","/teɪk ə diːp breθ/","hít một hơi thật sâu","Take a deep breath and relax.",3],
+["take an interest in","phr","/teɪk ən ˈɪntrəst ɪn/","bắt đầu quan tâm đến","He takes an interest in 3D design.",3],
+["take control of","phr","/teɪk kənˈtrəʊl əv/","kiểm soát","You need to take control of your time.",3],
+["take advantage of","phr","/teɪk ədˈvɑːntɪdʒ əv/","tận dụng","Take advantage of this opportunity.",3],
+["take place","phr","/teɪk pleɪs/","diễn ra","The meeting takes place on Monday.",3],
+["take out","phr","/teɪk aʊt/","lấy ra; đưa (ai) đi ăn, đi chơi","He took out his phone.",3],
+["take into account","phr","/teɪk ˈɪntuː əˈkaʊnt/","tính đến; cân nhắc","We must take the budget into account.",3],
+["take a screenshot","phr","/teɪk ə ˈskriːnʃɒt/","chụp ảnh màn hình","Take a screenshot of the error.",3],
+["take measurements","phr","/teɪk ˈmeʒəmənts/","đo kích thước","We need to take measurements first.",3]
+]},
+{vi:"TAKE · nâng cao (B2–C1)",en:"TAKE phrases · advanced",words:[
+["take feedback on board","phr","/teɪk ˈfiːdbæk ɒn bɔːd/","tiếp thu phản hồi","The team took the feedback on board.",5],
+["take a decision","phr","/teɪk ə dɪˈsɪʒən/","đưa ra quyết định (Anh-Anh; Anh-Mỹ thường nói make a decision)","We need to take a decision soon.",4],
+["take something seriously","phr","/teɪk ˈsʌmθɪŋ ˈsɪəriəsli/","coi điều gì nghiêm túc","I take my English study seriously.",4],
+["take for granted","phr","/teɪk fə ˈɡrɑːntɪd/","coi là hiển nhiên","Don't take your health for granted.",4],
+["take a day off","phr","/teɪk ə deɪ ɒf/","nghỉ một ngày","I need to take a day off.",4],
+["take the place of","phr","/teɪk ðə pleɪs əv/","thay thế, thế chỗ","A new tool took the place of the old one.",4],
+["take someone by surprise","phr","/teɪk ˈsʌmwʌn baɪ səˈpraɪz/","làm ai bất ngờ","The news took me by surprise.",4],
+["take something apart","phr","/teɪk ˈsʌmθɪŋ əˈpɑːt/","tháo rời","He took the computer apart.",4],
+["take something into consideration","phr","/teɪk ˈsʌmθɪŋ ˌɪntuː kənˌsɪdəˈreɪʃən/","xem xét điều gì","Please take the deadline into consideration.",4],
+["take the opportunity to","phr","/teɪk ði ˌɒpəˈtjuːnəti tə/","nhân cơ hội để","I took the opportunity to practise speaking.",4],
+["take a step back","phr","/teɪk ə step bæk/","lùi lại để nhìn tổng thể","Let's take a step back and review the plan.",4],
+["take the pressure off","phr","/teɪk ðə ˈpreʃə(r) ɒf/","giảm áp lực","A clear plan can take the pressure off.",5],
+["take something personally","phr","/teɪk ˈsʌmθɪŋ ˈpɜːsənəli/","để bụng; cho là nhắm vào mình","Don't take the comment personally.",4],
+["take the initiative","phr","/teɪk ði ɪˈnɪʃətɪv/","chủ động bắt đầu","You should take the initiative.",4],
+["take a closer look","phr","/teɪk ə ˈkləʊsə lʊk/","xem xét kỹ hơn","Let's take a closer look at the model.",4],
+["take the blame","phr","/teɪk ðə bleɪm/","nhận lỗi; chịu trách nhiệm","He took the blame for the mistake.",4]
+]}
 ]}
 ];
 const VB_MORE = {

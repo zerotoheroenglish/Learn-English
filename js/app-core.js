@@ -7768,7 +7768,7 @@ const VC_CATS = [['life', 'Cuộc sống hằng ngày'], ['people', 'Con ngườ
                  ['world', 'Thế giới quanh ta'], ['modern', 'Xã hội hiện đại'], ['fun', 'Giải trí & văn hoá'], ['pro', 'Chuyên ngành']];
 // v109: cách xếp thứ hai — theo mục tiêu giao tiếp
 const VC_GOALS = [['g-me', '👋 Giới thiệu bản thân & người khác', ['basics', 'family', 'appearance', 'personality', 'relationships', 'jobs']],
-  ['g-day', '⏰ Sinh hoạt hằng ngày', ['routine', 'home', 'time', 'colors', 'clothes', 'weather', 'body']],
+  ['g-day', '⏰ Sinh hoạt hằng ngày', ['routine', 'home', 'time', 'colors', 'clothes', 'weather', 'body', 'gettake']],
   ['g-eat', '🛒 Ăn uống & mua sắm', ['food', 'fruitveg', 'cooking', 'restaurant', 'shopping', 'finance']],
   ['g-go', '🧳 Đi lại & du lịch', ['city', 'transport', 'travel', 'holidays', 'nature', 'animals']],
   ['g-work', '💼 Học tập & công việc', ['school', 'office', 'technology', 'science', 'cg3d']],
