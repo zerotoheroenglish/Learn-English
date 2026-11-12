@@ -69,6 +69,67 @@
     } finally { btn.disabled = false; }
   });
 
+  /* ---- v239: hỏi ý kiến một lần sau 3 ngày học ----
+     Hiện ở trang Today khi người dùng đã học ít nhất 3 ngày khác nhau. Gửi vào cùng hộp thư góp ý.
+     "Để sau" → hỏi lại sau 3 ngày học nữa (tối đa 2 lần); "Không hỏi nữa" hoặc đã gửi → không hiện lại. */
+  (function survey() {
+    const SK = 'hoc-tieng-anh-survey', AK = 'hoc-tieng-anh-activity';
+    const get = () => { try { return JSON.parse(localStorage.getItem(SK) || 'null') || {}; } catch (e) { return {}; } };
+    const put = v => { try { localStorage.setItem(SK, JSON.stringify(v)); } catch (e) {} };
+    const days = () => { try { const a = JSON.parse(localStorage.getItem(AK) || '{}'); return Object.keys(a).filter(d => a[d] && Object.keys(a[d]).length).length; } catch (e) { return 0; } };
+    const due = () => {
+      const st = get(), n = days();
+      if (st.done) return false;
+      if (n < 3) return false;
+      if (st.later && (n < st.atDays + 3 || st.later >= 2)) return false;
+      try { if (localStorage.getItem('hoc-tieng-anh-onboard') !== 'done') return false; } catch (e) {}
+      return true;
+    };
+    const calm = () => document.body.dataset.grp === 'home' && !document.querySelector('.vsheet:not([hidden]), .hta-ob, .hta-share') && !document.body.classList.contains('vsheet-open');
+    let card = null, stars = 0;
+    function show() {
+      if (card || !due() || !calm()) return;
+      card = document.createElement('div'); card.className = 'sv-card'; card.setAttribute('role', 'dialog'); card.setAttribute('aria-label', 'Hỏi ý kiến');
+      card.innerHTML = '<button class="sv-x" type="button" aria-label="Đóng">✕</button>'
+        + '<div class="sv-t">Bạn đã học được ' + days() + ' ngày 🎉</div>'
+        + '<div class="sv-q">Bạn thấy app thế nào?</div>'
+        + '<div class="fb-stars sv-stars">' + [1, 2, 3, 4, 5].map(v => '<button type="button" data-v="' + v + '" aria-label="' + v + ' sao">★</button>').join('') + '</div>'
+        + '<textarea class="sv-text" rows="2" maxlength="1000" placeholder="Bạn thấy khó hoặc chưa thích ở đâu? (không bắt buộc)"></textarea>'
+        + '<div class="sv-btns"><button class="btn-primary sv-send" type="button">Gửi</button><button class="btn-ghost sv-later" type="button">Để sau</button></div>'
+        + '<p class="sv-msg" aria-live="polite"></p>'
+        + '<button class="sv-never" type="button">Không hỏi nữa</button>';
+      document.body.appendChild(card);
+      const q = c => card.querySelector(c), m = q('.sv-msg');
+      const paint = () => card.querySelectorAll('.sv-stars button').forEach(b => b.classList.toggle('on', +b.dataset.v <= stars));
+      q('.sv-stars').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; stars = +b.dataset.v; paint(); m.textContent = ''; });
+      const later = () => { const st = get(); put({ later: (st.later || 0) + 1, atDays: days() }); hide(); };
+      q('.sv-later').addEventListener('click', later);
+      q('.sv-x').addEventListener('click', later);
+      q('.sv-never').addEventListener('click', () => { put({ done: 'never' }); hide(); });
+      q('.sv-send').addEventListener('click', async () => {
+        const txt = q('.sv-text').value.trim();
+        if (!stars && !txt) { m.textContent = 'Bạn chọn số sao hoặc viết vài chữ nhé.'; return; }
+        const btn = q('.sv-send'); btn.disabled = true; m.textContent = 'Đang gửi…';
+        try {
+          await FB.load();
+          const u = FB.user;
+          const doc = { type: 'other', rating: stars, text: ('📋 Khảo sát sau ' + days() + ' ngày học' + (stars ? ' · ' + '★'.repeat(stars) : '') + (txt ? ': ' + txt : '')).slice(0, 2000),
+            page: 'Khảo sát', ver: ver(), ua: device().slice(0, 80), createdAt: firebase.firestore.FieldValue.serverTimestamp(), read: false };
+          if (u) { doc.uid = u.uid; if (u.email) doc.email = u.email.slice(0, 200); }
+          await FB.db.collection('feedback').add(doc);
+          put({ done: 'sent' });
+          card.innerHTML = '<div class="sv-t">Cảm ơn bạn! ❤️</div><div class="sv-q">Ý kiến của bạn giúp app tốt hơn.</div>';
+          setTimeout(hide, 2500);
+          if (isOwner) refreshCount();
+        } catch (err) { btn.disabled = false; m.textContent = 'Chưa gửi được, kiểm tra mạng rồi bấm Gửi lại nhé.'; }
+      });
+    }
+    function hide() { if (card) { card.remove(); card = null; stars = 0; } }
+    window.htaSurvey = { show: () => { put({}); show(); }, reset: () => put({}) };   // để thử: htaSurvey.show()
+    setTimeout(show, 8000);
+    let tries = 0; const iv = setInterval(() => { if (card || ++tries > 40 || get().done) { clearInterval(iv); return; } show(); }, 15000);   // khi người dùng quay về Today
+  })();
+
   // ---- owner inbox ----
   const fmt = ts => { try { const d = ts && ts.toDate ? ts.toDate() : null; return d ? d.toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' }) : 'vừa xong'; } catch (e) { return ''; } };
   async function fetchItems() {
