@@ -1720,7 +1720,7 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
       if (last.res) {
         box.appendChild(sentenceEl(r, { ok: last.res.ok, reveal: true }));
         if (set.vi) box.appendChild(viBox());
-      } else box.appendChild(E('div', 'sd-dict-mask', r[0].split(/\s+/).map(t => t.replace(/[A-Za-z0-9’']/g, '•')).join('  ')));
+      } else box.appendChild(dictMask(l, r));   // v244: ô từ bấm được + gợi ý chữ cái đầu + báo danh từ riêng
       main.appendChild(box);
       main.appendChild(dictBox());
     }
@@ -2045,6 +2045,47 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     return box;
   }
 
+  /* v244: gợi ý từng bước cho Dictation (không cần mạng):
+     - mỗi từ là một ô: bấm vào ô để xem riêng từ đó (bấm lại để ẩn);
+     - "Chữ cái đầu": hiện chữ cái đầu của mọi từ;
+     - danh từ riêng (tên người, địa danh…) được báo trước vì gần như không thể tự nghe ra cách viết. */
+  const DICT_I = /^(I|I['’](m|ll|ve|d))$/;
+  function dictProper(l, r) {
+    const mid = new Set();   // từ viết hoa ở giữa câu, trong cả bài
+    (l.s || []).forEach(row => { const w = String(row[0] || '').split(/\s+/); w.forEach((t, k) => { const c = t.replace(/^[^A-Za-z]+|[^A-Za-z'’]+$/g, ''); if (k > 0 && !/[.!?…:]["'”’)]*$/.test(w[k - 1]) && /^[A-Z][a-z]/.test(c) && !DICT_I.test(c)) mid.add(c.replace(/['’]s$/, '')); }); });
+    const out = [];
+    String(r[0] || '').split(/\s+/).forEach(t => { const c = t.replace(/^[^A-Za-z]+|[^A-Za-z'’]+$/g, '').replace(/['’]s$/, ''); if (mid.has(c) && !out.includes(c)) out.push(c); });
+    return out;
+  }
+  function dictMask(l, r) {
+    const toks = String(r[0] || '').split(/\s+/).filter(Boolean);
+    if (!last.ho) last.ho = {};
+    const wrap = E('div', 'sd-dict-hint');
+    const row = E('div', 'sd-dict-mask sd-dict-words');
+    const paint = () => {
+      row.innerHTML = '';
+      toks.forEach((t, k) => {
+        const open = !!last.ho[k];
+        let seen = false;
+        const txt = open ? t : t.replace(/[A-Za-z0-9’']/g, ch => { if (last.hf && !seen && /[A-Za-z0-9]/.test(ch)) { seen = true; return ch; } return '•'; });
+        const b = E('button', 'sd-dw' + (open ? ' open' : ''), txt); b.type = 'button';
+        b.setAttribute('aria-label', open ? 'Ẩn từ ' + (k + 1) : 'Xem từ thứ ' + (k + 1));
+        b.addEventListener('click', () => { last.ho[k] = !last.ho[k]; paint(); });
+        row.appendChild(b);
+      });
+    };
+    paint();
+    wrap.appendChild(row);
+    const pn = dictProper(l, r);
+    if (pn.length) { const d = E('div', 'sd-dict-pn'); d.appendChild(E('b', null, 'Danh từ riêng: ')); pn.forEach(x => d.appendChild(E('span', 'sd-dict-pnw', x))); wrap.appendChild(d); }
+    const bar = E('div', 'sd-dict-hb');
+    const fl = E('button', 'btn-ghost sd-dict-fl' + (last.hf ? ' on' : ''), '🔤 Chữ cái đầu'); fl.type = 'button'; fl.setAttribute('aria-pressed', String(!!last.hf));
+    fl.addEventListener('click', () => { last.hf = !last.hf; fl.classList.toggle('on', !!last.hf); fl.setAttribute('aria-pressed', String(!!last.hf)); paint(); });
+    bar.appendChild(fl);
+    bar.appendChild(E('span', 'sd-dict-tip', 'Bí từ nào thì bấm vào ô của từ đó để xem.'));
+    wrap.appendChild(bar);
+    return wrap;
+  }
   function dictBox() {
     const l = view.lesson, i = view.idx, r = l.s[i];
     const box = E('div', 'sd-dict');
