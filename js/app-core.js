@@ -8512,19 +8512,48 @@ const vcCount = items => items.filter(vcIs).length;
 /* ---------- v109: chi tiết một từ (gợi ý tự động từ dữ liệu trong app) ---------- */
 function vcForms(it) {
   const w = it.w;
-  if (/\s/.test(w) || !/^[a-z]+$/i.test(w)) return [];
+  if (/\s/.test(w) || !/^[a-z]+$/i.test(w) || /^[A-Z]/.test(w)) return [];   // v252: bỏ tên riêng, chữ viết tắt
   const lw = w.toLowerCase();
-  const dbl = /^[^aeiou]*[aeiou][^aeiouwxy]$/.test(lw) && lw.length <= 4;
   if (it.pos === 'v') {
-    const irr = typeof IRREGULAR_VERBS !== 'undefined' ? IRREGULAR_VERBS.find(v => v.v1 === lw) : null;
-    const s3 = /(s|sh|ch|x|z|o)$/.test(lw) ? w + 'es' : /[^aeiou]y$/.test(lw) ? w.slice(0, -1) + 'ies' : w + 's';
-    const ing = /ie$/.test(lw) ? w.slice(0, -2) + 'ying' : /[^aeiou]e$/.test(lw) && lw !== 'be' ? w.slice(0, -1) + 'ing' : dbl ? w + w.slice(-1) + 'ing' : w + 'ing';
-    const ed = /e$/.test(lw) ? w + 'd' : /[^aeiou]y$/.test(lw) ? w.slice(0, -1) + 'ied' : dbl ? w + w.slice(-1) + 'ed' : w + 'ed';
-    return [[w, 'nguyên mẫu'], [s3, 'ngôi thứ ba số ít'], [irr ? irr.v2 : ed, 'quá khứ (V2)'], [irr ? irr.v3 : ed, 'quá khứ phân từ (V3)'], [ing, 'dạng V-ing']];
+    if (lw === 'be') return [['be', 'nguyên mẫu'], ['am / is / are', 'hiện tại'], ['was / were', 'quá khứ (V2)'], ['been', 'quá khứ phân từ (V3)'], ['being', 'dạng V-ing']];
+    const IRR = typeof IRREGULAR_VERBS !== 'undefined' ? IRREGULAR_VERBS : [];
+    let irr = IRR.find(v => v.v1 === lw) || null, pre = '';
+    if (lw === 'lie' && /dối/.test(it.vi || '')) irr = null;                    // lie – lied (nói dối)
+    if (!irr) { const m = /^(un|re|over|out|under|mis|fore|up|with)([a-z]{3,})$/.exec(lw); const base = m && IRR.find(v => v.v1 === m[2]); if (base && !['relay', 'outfit', 'refit', 'recost', 'unfit'].includes(lw)) { irr = base; pre = m[1]; } }
+    const baseW = irr && pre ? lw.slice(pre.length) : lw.replace(/^(un|re|over|out|under|mis|fore|up)(?=[a-z]{3,}$)/, m0 => (irr ? '' : m0));
+    const DBL2 = ['admit', 'commit', 'permit', 'submit', 'omit', 'emit', 'transmit', 'regret', 'prefer', 'refer', 'occur', 'transfer', 'control', 'patrol', 'equip', 'begin', 'forget', 'upset', 'input', 'babysit', 'kidnap', 'format', 'unplug', 'unzip', 'unwrap', 'overlap', 'rebrand', 'travel', 'cancel', 'label', 'model', 'signal', 'quarrel', 'pedal', 'dial', 'fuel', 'level', 'total', 'equal', 'marvel', 'shovel', 'unravel', 'bevel', 'handicap', 'worship', 'program', 'acquit', 'deter', 'excel', 'expel', 'compel', 'rebel', 'propel', 'defer', 'infer', 'confer', 'incur', 'recur', 'outrun', 'overrun', 'rerun', 'reset', 'offset', 'outbid', 'forbid', 'regret', 'shadowban', 'squat', 'quit', 'quiz', 'enrol'];
+    const NODBL = ['rebrand'];
+    const mono = /^[^aeiou]*[aeiou][^aeiouwxy]$/.test(baseW);
+    const dbl = (mono || DBL2.includes(lw) || DBL2.includes(baseW)) && !NODBL.includes(lw);
+    const last = w.slice(-1);
+    const ck = /[aeiou]c$/.test(lw);                                            // panic → panicked
+    const s3 = lw === 'have' ? 'has' : /(s|sh|ch|x|z|o)$/.test(lw) ? (lw === 'quiz' ? 'quizzes' : w + 'es') : /[^aeiou]y$/.test(lw) ? w.slice(0, -1) + 'ies' : w + 's';
+    const ing = /ie$/.test(lw) ? w.slice(0, -2) + 'ying' : /(ye|oe|ee)$/.test(lw) ? w + 'ing' : /[^aeiou]e$/.test(lw) || /ue$/.test(lw) ? w.slice(0, -1) + 'ing' : ck ? w + 'king' : dbl ? w + last + 'ing' : w + 'ing';
+    const ed = /e$/.test(lw) ? w + 'd' : /[^aeiou]y$/.test(lw) ? w.slice(0, -1) + 'ied' : ck ? w + 'ked' : dbl ? w + last + 'ed' : w + 'ed';
+    const addPre = f => f.split('/').map(x => pre + x.trim()).join(' / ');
+    return [[w, 'nguyên mẫu'], [s3, 'ngôi thứ ba số ít'], [irr ? addPre(irr.v2) : ed, 'quá khứ (V2)'], [irr ? addPre(irr.v3) : ed, 'quá khứ phân từ (V3)'], [ing, 'dạng V-ing']];
   }
   if (it.pos === 'n') {
-    const IRR = { vertex: 'vertices', index: 'indices', matrix: 'matrices', analysis: 'analyses', crisis: 'crises', phenomenon: 'phenomena', criterion: 'criteria', cactus: 'cacti', man: 'men', woman: 'women', child: 'children', person: 'people', foot: 'feet', tooth: 'teeth', mouse: 'mice', leaf: 'leaves', knife: 'knives', life: 'lives', wife: 'wives', half: 'halves', shelf: 'shelves', wolf: 'wolves', thief: 'thieves', sheep: 'sheep', fish: 'fish', information: '', advice: '', furniture: '', news: '' };
-    if (lw in IRR) return IRR[lw] ? [[w, 'số ít'], [IRR[lw], 'số nhiều']] : [[w, 'danh từ không đếm được']];
+    const u = it.use || '';
+    let m;
+    if ((m = /số nhiều \(số ít: ([a-z\-]+)/i.exec(u))) return [[w, 'dạng số nhiều'], [m[1], 'số ít']];
+    if (/số ít và số nhiều giống nhau/.test(u)) return [[w, 'số ít và số nhiều giống nhau']];
+    if (/luôn (ở )?số nhiều/.test(u)) return [[w, 'luôn ở số nhiều']];
+    if (/đi với động từ số nhiều/.test(u)) return [[w, 'đi với động từ số nhiều']];
+    if (/thường số nhiều/.test(u)) return [[w, 'thường dùng ở số nhiều']];
+    if ((m = /(?:^|· |\()số nhiều: ([a-z\-]+(?: \/ [a-z\-]+)?)/i.exec(u))) return m[1].toLowerCase() === lw ? [[w, 'số ít và số nhiều giống nhau']] : [[w, 'số ít'], [m[1], 'số nhiều']];
+    if (/đi với động từ số ít/.test(u)) return [[w, 'đi với động từ số ít, không có dạng số nhiều']];
+    const CNT = ['room', 'job', 'paper', 'exercise', 'breakfast', 'lunch', 'dinner', 'darling', 'chicken', 'cheese', 'coffee', 'tea', 'interest', 'experience', 'hair', 'time'];
+    if (!CNT.includes(lw) && /^không đếm được|\(không đếm được|: không đếm được/.test(u) && !/thường không đếm được/.test(u)) return [[w, 'danh từ không đếm được']];
+    if (!CNT.includes(lw) && /^không dùng a:/.test(u)) return [[w, 'danh từ không đếm được']];
+    const IRR = { vertex: 'vertices', index: 'indices', matrix: 'matrices', appendix: 'appendices', analysis: 'analyses', crisis: 'crises', thesis: 'theses', hypothesis: 'hypotheses', oasis: 'oases', basis: 'bases', axis: 'axes', diagnosis: 'diagnoses', phenomenon: 'phenomena', criterion: 'criteria', cactus: 'cacti', fungus: 'fungi', nucleus: 'nuclei', radius: 'radii', stimulus: 'stimuli', larva: 'larvae', formula: 'formulas / formulae', antenna: 'antennae', curriculum: 'curricula', bacterium: 'bacteria', man: 'men', woman: 'women', child: 'children', grandchild: 'grandchildren', stepchild: 'stepchildren', godchild: 'godchildren', person: 'people', foot: 'feet', tooth: 'teeth', goose: 'geese', mouse: 'mice', ox: 'oxen', die: 'dice', leaf: 'leaves', knife: 'knives', life: 'lives', wife: 'wives', housewife: 'housewives', midwife: 'midwives', half: 'halves', shelf: 'shelves', bookshelf: 'bookshelves', wolf: 'wolves', thief: 'thieves', scarf: 'scarves', loaf: 'loaves', calf: 'calves', hoof: 'hooves', elf: 'elves', self: 'selves', quiz: 'quizzes', potato: 'potatoes', tomato: 'tomatoes', hero: 'heroes', mango: 'mangoes', mosquito: 'mosquitoes', volcano: 'volcanoes', tornado: 'tornadoes', echo: 'echoes', buffalo: 'buffalo / buffaloes', sheep: 'sheep', fish: 'fish', deer: 'deer', moose: 'moose', bison: 'bison', reindeer: 'reindeer', salmon: 'salmon', tuna: 'tuna', squid: 'squid', shrimp: 'shrimp', aircraft: 'aircraft', spacecraft: 'spacecraft', offspring: 'offspring', series: 'series', species: 'species', headquarters: 'headquarters', crossroads: 'crossroads', means: 'means', yen: 'yen', information: '', advice: '', furniture: '', news: '', homework: '', housework: '', luggage: '', baggage: '', equipment: '', knowledge: '', weather: '', traffic: '', music: '', money: '', rice: '', bread: '', water: '', milk: '', sugar: '', salt: '', butter: '', scenery: '', jewellery: '', rubbish: '', trash: '', pollution: '', electricity: '', software: '', feedback: '', research: '', evidence: '', progress: '', accommodation: '', health: '', luck: '', fun: '', work: '', tennis: '', football: '', golf: '', chess: '', yoga: '', karaoke: '', badminton: '', basketball: '', volleyball: '', baseball: '', rugby: '', hockey: '', judo: '', karate: '', swimming: '', running: '', cycling: '', shopping: '', cooking: '', camping: '', fishing: '', hiking: '', jogging: '', skiing: '', surfing: '', sailing: '', dancing: '', singing: '', reading: '', gardening: '', smoking: '' };
+    if (lw in IRR) return IRR[lw] ? (IRR[lw] === lw ? [[w, 'số ít và số nhiều giống nhau']] : [[w, 'số ít'], [IRR[lw], 'số nhiều']]) : [[w, 'danh từ không đếm được']];
+    if (/fish$/.test(lw)) return [[w, 'số ít và số nhiều giống nhau']];
+    if (/(wo)?man$/.test(lw) && !['human', 'roman', 'german', 'shaman', 'talisman', 'ottoman'].includes(lw)) return [[w, 'số ít'], [w.slice(0, -2) + 'en', 'số nhiều']];
+    if (['mathematics', 'maths', 'physics', 'economics', 'politics', 'athletics', 'gymnastics', 'statistics', 'genetics', 'robotics', 'ethics', 'civics', 'aerobics', 'electronics', 'linguistics'].includes(lw)) return [[w, 'tên môn học / lĩnh vực: đi với động từ số ít']];
+    if (lw === 'biceps') return [[w, 'số ít và số nhiều giống nhau']];
+    if (/ing$/.test(lw) && lw.length > 5 && (/^(go|do|play) /.test(u) || /^(việc|môn|sự|hoạt động|nghề|ngành|trò)\b/.test(it.vi || ''))) return [[w, 'danh từ chỉ hoạt động (thường không đếm được)']];
+    if (/s$/.test(lw) && !/(ss|us|is|as|os|ous|ess)$/.test(lw) && !['bus', 'gas', 'lens', 'plus', 'yes'].includes(lw)) return [[w, 'đang ở dạng số nhiều']];
     const pl = /(s|sh|ch|x|z)$/.test(lw) ? w + 'es' : /[^aeiou]y$/.test(lw) ? w.slice(0, -1) + 'ies' : w + 's';
     return [[w, 'số ít'], [pl, 'số nhiều (nếu đếm được)']];
   }
@@ -8535,10 +8564,40 @@ function vcFamily(it) {
   if (/\s/.test(w)) return [];
   const stem = w.replace(/(ation|ition|ment|ness|ity|ive|ful|less|able|ible|ance|ence|ing|ed|er|or|ist|ly|al|ous|y|e|s)$/, '');
   if (stem.length < 4) return [];
+  // v252: chỉ nhận từ cùng gốc thật sự (đuôi phái sinh), và nghĩa tiếng Việt phải có điểm chung khi gốc ngắn
+  const SUF = /^(?:[a-z])?(?:|s|es|d|ed|e|er|ers|or|ist|ian|ion|tion|ation|ition|ment|ness|iness|ity|ive|ative|ful|less|able|ible|ance|ence|ant|ent|ing|ly|ily|al|ial|ous|ious|y|ic|ical|ism|ship|hood|ise|ize|ify|en|ary|ory|ure|th|ee|ess|ery|ry|age|cy|ncy)$/;
+  const BAD = ['counter', 'sweater', 'customer', 'corner', 'marshmallow', 'porter', 'portion', 'poster', 'shower', 'flower', 'tower', 'letter', 'matter', 'number', 'master', 'paper', 'butter', 'batter', 'ladder', 'summer', 'dinner', 'supper', 'pepper', 'carpet', 'planet', 'plaster', 'cluster', 'sister', 'mister', 'minister', 'chapter', 'character', 'factory', 'history', 'country', 'county', 'pantry', 'century', 'entry', 'party', 'parting', 'partner', 'particle', 'capital', 'capable', 'several', 'general', 'generous', 'mineral', 'interval', 'internal', 'animal', 'hospital', 'original', 'comment', 'moment', 'apartment', 'department', 'element', 'document', 'instrument', 'monument', 'cement', 'garment'];
+  const key = s => new Set((s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').split(/[^a-z]+/).filter(t => t.length >= 3 && !['mot', 'cai', 'con', 'nguoi', 'cua', 'cho', 'lam', 'viec', 'duoc', 'khong', 'nhu', 'voi', 'cac', 'nhung', 'tinh', 'thuoc', 'co', 'hay', 'rat', 've', 'su', 'bi', 'dang', 'nha'].includes(t)));
+  const mine = key(it.vi);
+  const share = x => { const k = key(x.vi); for (const t of mine) if (k.has(t)) return true; return false; };
+  const BADP = new Set(["absorbing|absorb", "absorb|absorbing", "affection|affect", "affect|affection", "analytical|analytics", "analytics|analytical", "authority|author", "author|authority", "catchy|catch", "catch|catchy", "celebration|celebrity", "celebrity|celebration", "challenge|challenging", "challenging|challenge", "chilled|chills", "chills|chilled", "chills|chilly", "chilly|chills", "closed|close", "close|closed", "companion|company", "company|companion", "compare|compartment", "compartment|compare", "competent|compete", "competent|competition", "compete|competent", "competition|competent", "composer|compost", "compose|compost", "composition|compost", "compost|compose", "compost|composer", "compost|composition", "conditioner|condition", "condition|conditioner", "conductor|conduct", "conduct|conductor", "conservation|conservative", "conservative|conservation", "conservative|conserve", "conserve|conservative", "controller|controlling", "controlling|controller", "currently|current", "current|currently", "customs|custom", "custom|customs", "declined|decline", "decline|declined", "defendant|defend", "defendant|defender", "defender|defendant", "defend|defendant", "demanding|demand", "demand|demanding", "detective|detect", "detect|detective", "determined|determine", "determine|determined", "dictate|dictator", "dictator|dictate", "diplomacy|diploma", "diplomatic|diploma", "diplomat|diploma", "diploma|diplomacy", "diploma|diplomat", "diploma|diplomatic", "diversion|diversity", "diversity|diversion", "encourage|encouraging", "encouraging|encourage", "engineer|engine", "engine|engineer", "excellent|excel", "excel|excellent", "execute|executive", "executive|execute", "experience|experiment", "experiment|experience", "finale|finally", "finally|finale", "floral|florist", "florist|floral", "generate|generation", "generation|generate", "generation|generator", "generator|generation", "hairstyle|hairstylist", "hairstylist|hairstyle", "handy|hand", "hand|handy", "header|head", "head|header", "highlighter|highlights", "highlights|highlighter", "horrible|horror", "horror|horrible", "install|instalment", "instalment|install", "journaling|journal", "journaling|journalism", "journaling|journalist", "journalism|journaling", "journalist|journaling", "journal|journaling", "memorable|memo", "memorial|memorise", "memorise|memorial", "memory|memo", "memo|memorable", "memo|memory", "minutes|minute", "minute|minutes", "moderation|moderator", "moderator|moderation", "monetise|money", "money|monetise", "motivation|motive", "motive|motivation", "objective|object", "object|objective", "offended|offender", "offender|offended", "organise|organism", "organism|organise", "overseas|oversee", "oversee|overseas", "package|pack", "pack|package", "practical|practice", "practice|practical", "preservative|preserve", "preserve|preservative", "principal|principled", "principled|principal", "profession|professor", "professor|profession", "projector|project", "project|projector", "promptly|prompt", "prompt|promptly", "qualified|qualifier", "qualifier|qualified", "radiation|radiator", "radiator|radiation", "realise|realism", "realise|realistic", "realism|realise", "realistic|realise", "reduced|reduce", "reduce|reduced", "rewarding|reward", "reward|rewarding", "running|runny", "runny|running", "scorching|scorch", "scorch|scorching", "seasonal|seasoning", "seasoning|season", "seasoning|seasonal", "season|seasoning", "secretary|secret", "secret|secretary", "slippers|slippery", "slippery|slippers", "soothe|soothing", "soothing|soothe", "specialist|speciality", "speciality|specialist", "spirits|spiritual", "spiritual|spirits", "starry|star", "star|starry", "sticker|stick", "stick|sticker", "streamers|stream", "streamers|streamer", "streamers|streaming", "streamer|streamers", "streaming|streamers", "stream|streamers", "stretcher|stretch", "stretcher|stretching", "stretcher|stretchy", "stretching|stretcher", "stretchy|stretcher", "stretch|stretcher", "studious|studio", "studio|studious", "subjective|subject", "subject|subjective", "surveyor|survey", "survey|surveyor", "terminal|terminus", "terminus|terminal", "thrilled|thriller", "thriller|thrilled", "thriller|thrilling", "thrilling|thriller", "trace|track", "track|trace", "trainee|train", "trainee|trainers", "trainers|trainee", "train|trainee", "unfriendly|unfriend", "unfriend|unfriendly", "universe|university", "university|universe", "warmly|warm", "warm|warmly"]);
   const seen = new Set([w]), out = [];
-  VC_ALL.forEach(x => { const xw = x.w.toLowerCase(); if (out.length < 6 && !seen.has(xw) && !/\s/.test(xw) && xw.startsWith(stem) && xw.length - stem.length <= 7) { seen.add(xw); out.push(x); } });
+  VC_ALL.forEach(x => {
+    const xw = x.w.toLowerCase();
+    if (BADP.has(w + '|' + xw)) return;
+    if (out.length >= 6 || seen.has(xw) || /\s/.test(xw) || !xw.startsWith(stem) || BAD.includes(xw) || BAD.includes(w)) return;
+    if (!SUF.test(xw.slice(stem.length))) return;
+    if (!(share(x) || stem.length >= 6)) return;
+    seen.add(xw); out.push(x);
+  });
   return out;
 }
+// v252: so nghĩa tiếng Việt để không ghép nhầm nghĩa khác của cùng một từ (bat = con dơi ≠ Bát Tràng, fan = người hâm mộ ≠ quạt)
+const VC_VI_STOP = new Set('con cái cái. người sự một có là của cho và bị được làm đi ra vào lên xuống nói chung các những rất khi như với ở trong trên dưới để thì mà này đó kia ai gì nào việc đồ cách hay hoặc lại đã đang sẽ không chưa tôi bạn anh chị em nó họ mình ta về từ đến theo tại bằng cùng nhau thân mật trang trọng nhiều ít hơn nhất quá lắm thật thêm còn nữa cũng chỉ vẫn đều mỗi mọi vài số loại kiểu món thứ lúc nơi chỗ phần bên phía mặt tính chất thuộc tên gọi nghĩa dùng ví dụ thường'.split(' '));
+function vcViKey(vi) {
+  const out = new Set();
+  String(vi || '').toLowerCase().replace(/\([^)]*\)/g, ' ').split(/[^a-zà-ỹđ]+/).forEach(t => { if (t.length >= 2 && !VC_VI_STOP.has(t)) out.add(t); });
+  return out;
+}
+function vcSameSense(it, vi) {
+  const mine = vcViKey(it.vi);
+  if (!mine.size) return true;
+  if (!vi) return false;
+  const k = vcViKey(vi);
+  for (const t of mine) if (k.has(t)) return true;
+  return false;
+}
+const VC_LIGHT_V = new Set(['get', 'take', 'make', 'have', 'do', 'go', 'give', 'put', 'set', 'keep', 'come', 'turn', 'look', 'run', 'break', 'bring', 'call', 'cut', 'fall', 'hold', 'pick', 'be']);
 function vcDetail(it) {
   const box = lsEl('div', 'vw-detail');
   const lw = it.w.toLowerCase(), re = new RegExp('\\b' + escapeRe(lw) + '\\b', 'i');
@@ -8549,17 +8608,26 @@ function vcDetail(it) {
   sec('1. Các dạng của từ', vcForms(it).map(([f, l]) => li(f, l)).concat(fam.map(x => li(x.w, `${VC_POS[x.pos] || x.pos} · ${x.vi}`))));
   const ex = VC_EXTRA[it.tid + '|' + it.w];
   const cols = ex ? ex.col.map(([a, b]) => li(a, b)) : [];
+  const colSeen = new Set(ex ? ex.col.map(c => String(c[0]).toLowerCase()) : []);
+  const light = it.pos === 'v' && VC_LIGHT_V.has(lw);
+  const okCol = (p, m) => { const k = String(p).toLowerCase(); if (k === lw || colSeen.has(k)) return false; if (!light && !vcSameSense(it, m)) return false; colSeen.add(k); return true; };
   if (cols.length < 5) {
-    VC_ALL.forEach(x => { if (cols.length < 5 && x !== it && /\s/.test(x.w) && re.test(x.w)) cols.push(li(x.w, x.vi)); });
-    try { COLLOCATIONS.forEach(g => g.items.forEach(c => { if (cols.length < 6 && re.test(c.p)) cols.push(li(c.p, c.m)); })); } catch (e) {}
+    VC_ALL.forEach(x => { if (cols.length < 5 && x !== it && /\s/.test(x.w) && re.test(x.w) && okCol(x.w, x.vi)) cols.push(li(x.w, x.vi)); });
+    try { COLLOCATIONS.forEach(g => g.items.forEach(c => { if (cols.length < 6 && re.test(c.p) && okCol(c.p, c.m)) cols.push(li(c.p, c.m)); })); } catch (e) {}
   }
   sec('2. Cụm từ thường đi cùng', cols);
   const grp = VC_ALL.filter(x => x !== it && x.tid === it.tid && x.gi === it.gi);
   const rel = grp.filter(x => x.pos === it.pos).concat(grp.filter(x => x.pos !== it.pos)).slice(0, 6);
   sec('3. Từ liên quan (cùng nhóm nghĩa)', rel.map(x => li(x.w, x.vi)));
   const more = [];
-  const addEx = (en, vi) => { if (more.length < 3 && en && en !== it.ex && re.test(en) && !more.some(m => m[0] === en)) more.push([en, vi]); };
-  if (ex && ex.sit) addEx(ex.sit[0], ex.sit[1]);
+  const reCase = /^[A-Z]/.test(it.w) ? new RegExp('\\b' + escapeRe(it.w) + '\\b') : re;
+  const w1 = escapeRe(lw);
+  const reAsVerb = new RegExp("(?:\\b(?:to|can|can't|could|will|won't|would|should|must|may|might|i|you|we|they|he|she|it|don't|doesn't|didn't|not|let's|please|never|always)\\s+" + w1 + "\\b)|^" + w1 + "\\s+(?:you|i|we|they|he|she|it)\\b", 'i');
+  const reAsNoun = new RegExp("\\b(?:a|an|the|this|that|my|your|his|her|our|their|some|any)\\s+" + w1 + "\\b", 'i');
+  const modalN = it.pos === 'n' && ['can', 'will', 'may', 'might', 'must'].includes(lw);
+  const posOk = en => /\s/.test(lw) ? true : modalN ? (reAsNoun.test(en) || new RegExp('\\b' + w1 + '(?:s\\b| of\\b| opener)', 'i').test(en)) : it.pos === 'n' ? !reAsVerb.test(en) : it.pos === 'v' ? !reAsNoun.test(en) : true;
+  const addEx = (en, vi, own) => { if (more.length < 3 && en && en !== it.ex && reCase.test(en) && (own || (vcSameSense(it, vi) && posOk(en))) && !more.some(m => m[0] === en)) more.push([en, vi]); };
+  if (ex && ex.sit) addEx(ex.sit[0], ex.sit[1], true);
   try { Object.values(EX_DATA).forEach(arr => arr.forEach(r => addEx(r[0], r[1]))); } catch (e) {}
   try { PA_LESSONS.forEach(l => l.s.forEach(r => addEx(r[1], r[0]))); } catch (e) {}
   VC_ALL.forEach(x => { if (x !== it) addEx(x.ex, x.exvi); });
