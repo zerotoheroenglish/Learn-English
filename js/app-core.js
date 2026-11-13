@@ -6068,7 +6068,22 @@ function gxPracticeSet(id) {
   const ex = gxPickEx(id, 2);
   return [gxCoreQ(id, 0, 'mc'), gxCoreQ(id, 1, 'fill'), ex[0] != null ? gxExQ(id, ex[0], 'order') : null, gxCoreQ(id, 2, 'fix'), ex[1] != null ? gxExQ(id, ex[1], 'trans') : null].filter(Boolean);
 }
-function gxTestSet(id) {
+/* v245: bài kiểm tra cuối bài có 3 mức khó, mỗi mức một sao (dùng lại các câu sẵn có, chỉ đổi dạng câu):
+   1 Dễ   ★   chọn đáp án + sắp xếp từ (nhận biết)      · đạt từ 80%
+   2 Vừa  ★★  trộn 5 dạng như trước                     · đạt từ 80% → bài "Đã nắm"
+   3 Khó  ★★★ sửa lỗi, điền từ không gợi ý nghĩa, dịch  · sai tối đa 1 câu → bài "Đã nắm" */
+const GX_LVL = { 1: ['Dễ', 'Chọn đáp án và sắp xếp từ. Để làm quen với cấu trúc.'], 2: ['Vừa', 'Trộn đủ 5 dạng câu. Đạt thì bài được tính là “Đã nắm”.'], 3: ['Khó', 'Sửa lỗi sai, điền từ không có gợi ý nghĩa và dịch cả câu. Chỉ được sai tối đa 1 câu.'] };
+const gxStars = id => { const r = gxStore[id]; return r ? Math.max(r.star || 0, r.best >= 80 ? 2 : 0) : 0; };   // bài đã đạt từ trước bản v245 = 2 sao
+const gxStarTxt = n => '★'.repeat(n) + '☆'.repeat(3 - n);
+function gxTestSet(id, lv) {
+  if (lv === 1) {
+    const ex1 = gxPickEx(id, 3);
+    return lsShuffle([gxCoreQ(id, 0, 'mc'), gxCoreQ(id, 1, 'mc'), gxCoreQ(id, 2, 'mc'), ...ex1.map(e => gxExQ(id, e, 'order'))].filter(Boolean));
+  }
+  if (lv === 3) {
+    const ex3 = gxPickEx(id, 4);
+    return lsShuffle([gxCoreQ(id, 0, 'fix'), gxCoreQ(id, 1, 'fill'), gxCoreQ(id, 2, 'fix'), ...ex3.map(e => gxExQ(id, e, 'trans'))].filter(Boolean));
+  }
   const ex = gxPickEx(id, 4);
   const qs = [gxCoreQ(id, 0, 'fix'), gxCoreQ(id, 1, 'mc'), gxCoreQ(id, 2, 'fill')];
   ex.forEach((e, i) => qs.push(gxExQ(id, e, i < 2 ? 'order' : 'trans')));
@@ -6292,6 +6307,7 @@ function gxCard(it, num) {
   const meta = grEl('span', 'gx-meta');
   meta.appendChild(gxBadge(it.id));
   const r = gxStore[it.id];
+  if (gxStars(it.id)) { const sp = grEl('span', 'gx-stars', gxStarTxt(gxStars(it.id))); sp.title = gxStars(it.id) + '/3 sao'; meta.appendChild(sp); }
   if (r && r.best != null) meta.appendChild(grEl('span', 'gx-best', `cao nhất ${r.best}%`));
   if (gxDue(it.id)) meta.appendChild(grEl('span', 'gx-due', '⏰ cần ôn'));
   b.appendChild(meta);
@@ -6478,7 +6494,7 @@ function gxLesson(id) {
   fv.addEventListener('click', () => { if (gxFav.has(id)) gxFav.delete(id); else gxFav.add(id); try { localStorage.setItem(GX_FAV_KEY, JSON.stringify([...gxFav])); } catch (e) {} fv.classList.toggle('on', gxFav.has(id)); fv.textContent = gxFav.has(id) ? '★' : '☆'; });
   ht.appendChild(fv);
   head.appendChild(ht);
-  const sb = grEl('div', 'gx-st-row'); sb.appendChild(gxBadge(id));
+  const sb = grEl('div', 'gx-st-row'); sb.appendChild(gxBadge(id)); if (gxStars(id)) sb.appendChild(grEl('span', 'gx-stars', gxStarTxt(gxStars(id))));
   const r = gxStore[id];
   if (r && r.n) sb.appendChild(grEl('span', 'gx-best', `Đã kiểm tra ${r.n} lần · cao nhất ${r.best}% · gần nhất ${r.last}%` + (r.due != null ? (r.due <= gxToday() ? ' · ⏰ cần ôn hôm nay' : ` · ôn lại sau ${r.due - gxToday()} ngày`) : '')));
   else if (r && r.self) sb.appendChild(grEl('span', 'gx-best', 'Bạn đã tự đánh dấu bài này ở bản cũ. Làm bài kiểm tra cuối bài để xác nhận.'));
@@ -6574,23 +6590,51 @@ function gxLesson(id) {
   grRoot.appendChild(gxStep(6, 'Luyện tập', [pbox], 'gx|' + id + '|6', true));
   // Bước 7: kiểm tra cuối bài
   const tbox = grEl('div', 'gx-quiz');
-  const tstart = grEl('button', 'btn-primary', '🏁 Làm bài kiểm tra cuối bài (7 câu)');
-  const startTest = () => gxQuiz(tbox, gxTestSet(id), { doneLabel: 'Nộp bài', onDone: (res, b) => {
+  let tLv = gxStars(id) >= 2 ? 3 : 2;   // mặc định mức Vừa (như bài kiểm tra trước đây); đã có 2 sao thì gợi ý mức Khó
+  const tpick = grEl('div', 'gx-lv-pick'); tpick.setAttribute('role', 'radiogroup'); tpick.setAttribute('aria-label', 'Mức độ bài kiểm tra');
+  const tnote = grEl('p', 'gx-hint');
+  const tstart = grEl('button', 'btn-primary', '');
+  const tHead = () => {
+    tpick.innerHTML = '';
+    [1, 2, 3].forEach(n => {
+      const b = grEl('button', 'gx-lv' + (n === tLv ? ' on' : '') + (gxStars(id) >= n ? ' got' : '')); b.type = 'button';
+      b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', String(n === tLv));
+      b.appendChild(grEl('b', null, GX_LVL[n][0])); b.appendChild(grEl('span', 'gx-lv-s', '★'.repeat(n)));
+      if (gxStars(id) >= n) b.appendChild(grEl('span', 'gx-lv-ok', '✓ đã đạt'));
+      b.addEventListener('click', () => { tLv = n; tHead(); });
+      tpick.appendChild(b);
+    });
+    tnote.textContent = `Mức ${GX_LVL[tLv][0]}: ${GX_LVL[tLv][1]}` + (tLv === 1 ? ' Mức này chưa tính bài là “Đã nắm”.' : ' App sẽ nhắc bạn ôn lại theo lịch 1 → 3 → 7 → 14 → 30 ngày.');
+    tstart.textContent = `🏁 Làm bài kiểm tra mức ${GX_LVL[tLv][0]} ${'★'.repeat(tLv)}`;
+  };
+  const startTest = () => { const lv = tLv; gxQuiz(tbox, gxTestSet(id, lv), { doneLabel: 'Nộp bài', noVi: lv === 3, onDone: (res, b) => {
     const n = res.length, ok = res.filter(x => x.ok).length, pct = n ? Math.round(ok / n * 100) : 0;
-    gxResult(id, pct, res.filter(x => !x.ok).map(x => x.qid));
-    const rr = gxStore[id];
-    const sc = gxScoreBox(res, 'Kết quả kiểm tra cuối bài');
-    sc.box.appendChild(grEl('div', 'gx-score-msg', pct >= 80 ? `🎉 Đạt! Bài được tính là “Đã nắm”. App sẽ nhắc ôn lại sau ${rr.due - gxToday()} ngày.` : 'Chưa đạt 80%. Bài chuyển sang “Cần ôn”; xem lại bước 2–5 rồi làm lại nhé. App sẽ nhắc ôn từ ngày mai.'));
+    const pass = lv === 3 ? (n > 0 && n - ok <= 1) : pct >= 80;
+    const before = gxStars(id);
+    if (lv >= 2) gxResult(id, lv === 3 && pass ? Math.max(pct, 80) : pct, res.filter(x => !x.ok).map(x => x.qid));
+    else { const r0 = gxRec(id); if (!r0.op) r0.op = gxToday(); r0.wrong = Array.from(new Set([...res.filter(x => !x.ok).map(x => x.qid), ...(r0.wrong || [])])).slice(0, 12); }
+    const rr = gxRec(id);
+    if (pass && lv > (rr.star || 0)) rr.star = lv;
+    gxSave();
+    const sc = gxScoreBox(res, `Kết quả kiểm tra mức ${GX_LVL[lv][0]}`);
+    let msg;
+    if (pass) msg = (lv > before ? `🎉 Đạt! Bạn nhận ${'★'.repeat(lv)} cho bài này. ` : `✓ Đạt mức ${GX_LVL[lv][0]}. `)
+      + (lv === 1 ? 'Thử tiếp mức Vừa để bài được tính là “Đã nắm”.' : `Bài được tính là “Đã nắm”. App sẽ nhắc ôn lại sau ${Math.max(1, (rr.due || gxToday() + 1) - gxToday())} ngày.` + (lv === 2 ? ' Muốn đủ 3 sao thì thử mức Khó.' : ''));
+    else msg = lv === 3 ? 'Chưa đạt: mức Khó chỉ được sai tối đa 1 câu. Xem lại các câu sai rồi thử lại.' : lv === 2 ? 'Chưa đạt 80%. Bài chuyển sang “Cần ôn”; xem lại bước 2–5 rồi làm lại.' : 'Chưa đạt 80%. Xem lại bước 2–5 rồi làm lại nhé.';
+    sc.box.appendChild(grEl('div', 'gx-score-msg', msg));
     b.appendChild(sc.box);
     const btns = grEl('div', 'ls-sum-btns');
-    const again = grEl('button', 'btn-ghost', '↺ Làm lại bài kiểm tra'); again.addEventListener('click', startTest); btns.appendChild(again);
+    const again = grEl('button', 'btn-ghost', '↺ Làm lại mức ' + GX_LVL[lv][0]); again.addEventListener('click', startTest); btns.appendChild(again);
+    if (pass && lv < 3) { const up = grEl('button', 'btn-primary', `Thử mức ${GX_LVL[lv + 1][0]} ${'★'.repeat(lv + 1)} →`); up.addEventListener('click', () => { tLv = lv + 1; startTest(); }); btns.appendChild(up); }
     const nx = tlist[pos + 1] || GX_ALL[GX_ALL.indexOf(it) + 1];
-    if (nx) { const nb = grEl('button', 'btn-primary', `Bài tiếp: ${nx.title} →`); nb.addEventListener('click', () => gxLesson(nx.id)); btns.appendChild(nb); }
+    if (nx) { const nb = grEl('button', pass && lv < 3 ? 'btn-ghost' : 'btn-primary', `Bài tiếp: ${nx.title} →`); nb.addEventListener('click', () => gxLesson(nx.id)); btns.appendChild(nb); }
     b.appendChild(btns);
-    const st = grRoot.querySelector('.gx-st-row'); if (st) { st.innerHTML = ''; st.appendChild(gxBadge(id)); st.appendChild(grEl('span', 'gx-best', `Đã kiểm tra ${rr.n} lần · cao nhất ${rr.best}% · gần nhất ${rr.last}%`)); }
-  } });
+    const st = grRoot.querySelector('.gx-st-row'); if (st) { st.innerHTML = ''; st.appendChild(gxBadge(id)); if (gxStars(id)) st.appendChild(grEl('span', 'gx-stars', gxStarTxt(gxStars(id)))); if (rr.n) st.appendChild(grEl('span', 'gx-best', `Đã kiểm tra ${rr.n} lần · cao nhất ${rr.best}% · gần nhất ${rr.last}%`)); }
+  } }); };
   tstart.addEventListener('click', startTest);
-  tbox.appendChild(grEl('p', 'gx-hint', '7 câu trộn các dạng. Đạt từ 80% (6/7 câu) thì bài được tính là “Đã nắm”, và app sẽ nhắc bạn ôn lại theo lịch 1 → 3 → 7 → 14 → 30 ngày.'));
+  tHead();
+  tbox.appendChild(tpick);
+  tbox.appendChild(tnote);
   tbox.appendChild(tstart);
   grRoot.appendChild(gxStep(7, 'Kiểm tra cuối bài', [tbox], 'gx|' + id + '|7', true));
   const pr = tnPracticeBtn(id, 'Luyện thêm: bài tập dịch 5 cấp của bài này →'); if (pr) grRoot.appendChild(pr);

@@ -4726,3 +4726,14 @@
 .sd-dict-hb{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
 .sd-dict-fl.on{ border-color:var(--rust); background:var(--rust-light); }
 .sd-dict-tip{ font-size:12.5px; color:var(--ink-soft); }
+
+/* v245: 3 mức khó và sao cho bài kiểm tra ngữ pháp */
+.gx-lv-pick{ display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-bottom:10px; }
+.gx-lv{ display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 6px; border-radius:12px; border:1.5px solid var(--paper-line); background:var(--card); color:var(--ink); cursor:pointer; min-height:64px; }
+.gx-lv b{ font-size:15px; }
+.gx-lv-s{ color:#E8A317; letter-spacing:1px; font-size:14px; }
+.gx-lv-ok{ font-size:11px; font-weight:700; color:#1F9D6B; }
+.gx-lv.on{ border-color:#14213D; box-shadow:3px 3px 0 #14213D; background:var(--pop, #FFD23F); color:#14213D; }
+.gx-lv.on .gx-lv-s{ color:#14213D; }
+.gx-lv.on .gx-lv-ok{ color:#14213D; }
+.gx-stars{ color:#E8A317; letter-spacing:1px; font-size:13px; white-space:nowrap; }
