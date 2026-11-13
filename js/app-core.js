@@ -7827,6 +7827,7 @@ VOCAB_TOPICS.forEach(t => {
 function vcFillExvi() {
   if (typeof VB_EXVI === 'undefined') return false;
   VC_ALL.forEach(it => { if (!it.exvi && VB_EXVI[it.w]) it.exvi = VB_EXVI[it.w]; });
+  if (typeof VB_USE !== 'undefined') VC_ALL.forEach(it => { if (!it.use) { const u = VB_USE[it.w + '|' + it.pos]; if (u) it.use = u; } });   // v241
   return true;
 }
 function vcSubText() { try {
@@ -8414,6 +8415,16 @@ const VC_POS_TABS = [['v', 'Động từ'], ['adj', 'Tính từ'], ['adv', 'Tr�
 const vcPosOk = it => !vc.pos || (vc.pos === 'other' ? !['v', 'adj', 'adv', 'n', 'phr'].includes(it.pos) : it.pos === vc.pos);
 let vcFront = 'en';
 
+// v241: dòng gợi ý cách dùng (mẫu dùng viết tay, hoặc cụm lấy từ câu ví dụ)
+function vcUseEl(it, cls) {
+  if (!it || !it.use) return null;
+  const auto = it.use.charAt(0) === '~';
+  const d = lsEl('div', cls || 'vc-use');
+  d.appendChild(lsEl('span', 'vc-use-l', auto ? 'Cụm hay gặp' : 'Cách dùng'));
+  d.appendChild(document.createTextNode(auto ? it.use.slice(1) : it.use));
+  return d;
+}
+window.vcUseEl = vcUseEl;
 function vcExHtml(it) {
   const main = vcExMain(it);
   if (!it.exvi) return main;
@@ -8531,6 +8542,7 @@ function vcRow(it, showTopic) {
   }
   main.appendChild(lsEl('div', 'vc-ipa', it.ipa));
   main.appendChild(lsEl('div', 'vc-mean', it.vi));
+  { const u = vcUseEl(it); if (u) main.appendChild(u); }
   const ex = lsEl('div', 'vc-ex');
   ex.innerHTML = vcExHtml(it);
   main.appendChild(ex);

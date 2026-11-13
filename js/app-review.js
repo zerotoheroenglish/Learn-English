@@ -1412,6 +1412,7 @@
       after.push(() => wordLine(it.w, it.ipa));
       if (it.ex) after.push(() => { const ex = E('div', 'rv-ex'); ex.appendChild(E('span', null, it.ex)); ex.appendChild(play(it.ex)); return ex; });
       if (it.exvi) after.push(() => E('div', 'rv-exvi', it.exvi));
+      if (it.use && window.vcUseEl) after.push(() => window.vcUseEl(it, 'vc-use rv-use'));   // v241
     } else if (c.k === 'i') {
       const v = c.v; rec = irrSrs[v.v1];
       ask = 'Viết V2 và V3 của động từ:'; prompt = v.v1; sub = v.meaning || '';
@@ -1556,6 +1557,7 @@
         speakText = it.w;
       }
       if (it.ex) { const ex = E('div', 'rv-ex'); ex.appendChild(E('span', null, it.ex)); ex.appendChild(play(it.ex)); back.appendChild(ex); if (it.exvi) back.appendChild(E('div', 'rv-exvi', it.exvi)); }
+      if (it.use && window.vcUseEl) { const u = window.vcUseEl(it, 'vc-use rv-use'); if (u) back.appendChild(u); }   // v241
     } else if (c.k === 'i') {
       const v = c.v; rec = irrSrs[v.v1];
       front.appendChild(E('div', 'rv-ask', 'Nhớ V2 và V3 của động từ này?'));
