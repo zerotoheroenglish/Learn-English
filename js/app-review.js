@@ -353,6 +353,39 @@
   }
   /* v175: khối chuỗi ngày học — số ngày cỡ lớn, 7 chấm của tuần này (T2 → CN), mục tiêu lượt luyện hôm nay */
   const FLAME = '<svg viewBox="0 0 54 64" aria-hidden="true"><path d="M27 3c4 11 18 18 18 34a18 18 0 0 1-36 0c0-8 4-13 8-17 0 7 3 11 7 12-2-12 3-22 3-29z" fill="#FF8A65" stroke="#14213D" stroke-width="3" stroke-linejoin="round"/><path d="M27 34c3 5 8 7 8 14a8 8 0 0 1-16 0c0-4 2-6 4-8 0 3 2 4 3 4-1-4 0-7 1-10z" fill="#FFFFFF" stroke="#14213D" stroke-width="3" stroke-linejoin="round"/></svg>';
+  /* v243: XP và Level — tính lại từ nhật ký luyện tập sẵn có (không lưu riêng nên tự đồng bộ theo tiến độ):
+     mỗi lượt luyện = 10 XP; mỗi ngày làm xong cả 3 việc hôm nay = +30 XP. Level n → n+1 cần 100 + 50·(n−1) XP. */
+  const T3D = 'hoc-tieng-anh-t3-days', XLK = 'hoc-tieng-anh-xp-lv';
+  const xpTitle = L => L >= 15 ? 'Master' : L >= 10 ? 'Pro' : L >= 6 ? 'Achiever' : L >= 3 ? 'Explorer' : 'Newcomer';
+  function xpInfo(t, d) {
+    let days = []; try { days = JSON.parse(localStorage.getItem(T3D) || '[]') || []; } catch (e) {}
+    const base = Object.keys(t).reduce((a, k) => a + (t[k] || 0), 0) * 10, bonus = days.length * 30;
+    const xp = base + bonus;
+    let L = 1, need = 100, left = xp;
+    while (left >= need) { left -= need; L++; need = 100 + 50 * (L - 1); }
+    return { xp, L, into: left, need, today: (t[d] || 0) * 10 + (days.includes(d) ? 30 : 0), title: xpTitle(L) };
+  }
+  let xpUpLv = 0;
+  function xpBlock(t, d) {
+    const x = xpInfo(t, d);
+    const g = E('div', 'db-xp');
+    const top = E('div', 'db-xp-top');
+    const lv = E('span', 'db-xp-lv'); lv.appendChild(E('b', null, 'Level ' + x.L)); lv.appendChild(E('span', null, x.title));
+    top.appendChild(lv);
+    top.appendChild(E('span', 'db-xp-n', x.xp.toLocaleString('vi-VN') + ' XP' + (x.today ? ' · +' + x.today + ' hôm nay' : '')));
+    g.appendChild(top);
+    const bar = E('span', 'db-sc-bar db-xp-bar'); bar.setAttribute('role', 'img'); bar.setAttribute('aria-label', `Level ${x.L}: ${x.into}/${x.need} XP`);
+    const f = E('i'); f.style.width = Math.round(x.into / x.need * 100) + '%'; bar.appendChild(f); g.appendChild(bar);
+    g.appendChild(E('span', 'db-xp-s', `Còn ${x.need - x.into} XP để lên Level ${x.L + 1}. Mỗi lượt luyện +10 XP, xong 3 việc hôm nay +30 XP.`));
+    // lên cấp: báo một lần
+    try {
+      const seen = +localStorage.getItem(XLK) || 0;
+      if (!seen) localStorage.setItem(XLK, String(x.L));
+      else if (x.L > seen) { localStorage.setItem(XLK, String(x.L)); xpUpLv = x.L; }
+    } catch (e) {}
+    if (xpUpLv === x.L) g.insertBefore(E('div', 'db-xp-up', `🎉 Bạn vừa lên Level ${x.L} · ${x.title}!`), g.firstChild);   // giữ đến khi tải lại trang
+    return g;
+  }
   function streakCard(t, d, st, todayN, goal) {
     const c = E('section', 'db-sc');
     const best = bestStreak(t);
@@ -380,6 +413,7 @@
     wk.setAttribute('role', 'img');
     wk.setAttribute('aria-label', `Tuần này đã học ${doneN} ngày` + (t[d] ? ', kể cả hôm nay' : ', hôm nay chưa học'));
     c.appendChild(wk);
+    c.appendChild(xpBlock(t, d));
     const g = E('div', 'db-sc-goal');
     const pct = Math.min(100, Math.round(todayN / goal * 100));
     const gt = E('span', 'db-sc-gt'); gt.appendChild(E('b', null, pct >= 100 ? 'Đạt mục tiêu hôm nay' : `Hôm nay ${todayN}/${goal} lượt`));
@@ -593,6 +627,10 @@
     L.forEach(f => { if (!f.done && t3Done(f, S, due)) { f.done = 1; changed = true; } });
     if (changed) try { localStorage.setItem(T3K, JSON.stringify(st)); } catch (e) {}
     const nDone = L.filter(f => f.done).length, all = L.length && nDone === L.length;
+    if (all) try {   // v243: +30 XP cho ngày làm xong cả 3 việc (ghi một lần mỗi ngày)
+      const ds = JSON.parse(localStorage.getItem(T3D) || '[]') || [];
+      if (!ds.includes(dayNo())) { ds.push(dayNo()); localStorage.setItem(T3D, JSON.stringify(ds.slice(-800))); setTimeout(() => { try { render(); } catch (e) {} }, 0); }
+    } catch (e) {}
     const box = E('div', 'tense-card db-recs');
     const h = E('h3', null, L.length ? `Hôm nay làm ${L.length} việc này` : 'Hôm nay nên học');
     if (L.length) h.appendChild(E('span', 'db-rec-count' + (all ? ' all' : ''), `${nDone}/${L.length} xong`));

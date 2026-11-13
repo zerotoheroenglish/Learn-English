@@ -4703,3 +4703,14 @@
 .sec-note b{ white-space:nowrap; }
 .sec-note.ok{ border-color:#1F9D6B; }
 .sec-note.adv{ border-color:#E8A317; }
+
+/* v243: XP và Level trong thẻ chuỗi ngày học */
+.db-xp{ display:flex; flex-direction:column; gap:6px; padding-top:12px; border-top:2px dashed rgba(20,33,61,0.35); }
+.db-xp-top{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+.db-xp-lv{ display:inline-flex; align-items:baseline; gap:8px; }
+.db-xp-lv b{ font:800 20px/1 var(--font-body); }
+.db-xp-lv span{ font:700 12px/1 var(--font-body); padding:4px 8px; border-radius:20px; background:#14213D; color:#fff; }
+.db-xp-n{ font:700 13px/1.2 var(--font-body); }
+.db-xp-bar i{ background:#1F9D6B; }
+.db-xp-s{ font-size:12px; line-height:1.4; opacity:.85; }
+.db-xp-up{ font:800 14px/1.3 var(--font-body); padding:8px 10px; border-radius:12px; background:#fff; border:2px solid #14213D; text-align:center; }
