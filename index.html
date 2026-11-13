@@ -176,7 +176,7 @@
 <header class="hero">
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v247</span>
+      <span class="hero-badge">EN ⇄ VI · v248</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice" id="voice-btn" aria-label="Chọn giọng đọc">🔊 <span class="hv-label">Giọng đọc</span></button>
@@ -712,7 +712,7 @@
    - không tải sẵn hàng loạt. Chỉ tải trước ĐÚNG MỘT tab (tab nạp-khi-cần bạn mở gần nhất), khi trình duyệt thật sự rảnh,
      và không làm việc này nếu bật tiết kiệm dữ liệu, mạng chậm (2G/3G) hoặc máy ít RAM */
 (function () {
-  var LAZY = {"page-exercise":"js/app-exercises.js?h=26882cc1d8","page-shadow":"js/tab-shadowing.js?h=d35707e541","page-qb":"js/tab-questions.js?h=0d9ced07ba","page-read":"js/tab-reading.js?h=ffd1ae51ff","page-talk":"js/tab-talk.js?h=2660b4cfc1","page-para":"js/tab-para.js?h=f2f7a86a27"}, DATA = {"exvi":"js/data-vocab-vi.js?h=a88353f22e","exd":"js/data-exercises.js?h=dcbe86d1d8","vocab":"js/data-vocab.js?h=4546cf4221"}, DEPS = { 'page-vocab': ['exvi'] }, PRE = { 'page-exercise': ['exd'] }, state = {};
+  var LAZY = {"page-exercise":"js/app-exercises.js?h=26882cc1d8","page-shadow":"js/tab-shadowing.js?h=d35707e541","page-qb":"js/tab-questions.js?h=0d9ced07ba","page-read":"js/tab-reading.js?h=ffd1ae51ff","page-talk":"js/tab-talk.js?h=2660b4cfc1","page-para":"js/tab-para.js?h=f2f7a86a27"}, DATA = {"exvi":"js/data-vocab-vi.js?h=eede98b7d2","exd":"js/data-exercises.js?h=dcbe86d1d8","vocab":"js/data-vocab.js?h=4546cf4221"}, DEPS = { 'page-vocab': ['exvi'] }, PRE = { 'page-exercise': ['exd'] }, state = {};
   function inject(key, url) {
     if (!url) return Promise.resolve();
     if (state[key]) return state[key];
