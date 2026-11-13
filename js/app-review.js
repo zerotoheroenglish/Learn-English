@@ -526,54 +526,108 @@
     const out = [], seen = new Set();
     const add = r => { if (r && !seen.has(r.t) && out.length < 4) { seen.add(r.t); out.push(r); } };
     // 1. thẻ đến hạn
-    if (due) add({ ic: '🔁', t: `Ôn ${due} thẻ đến hạn`, sub: 'Ôn đúng lúc sắp quên giúp nhớ lâu nhất', why: 'Đến hạn hôm nay', go: () => { if (window.srOpen) window.srOpen(); } });
+    if (due) add({ ic: '🔁', t: `Ôn ${due} thẻ đến hạn`, sub: 'Ôn đúng lúc sắp quên giúp nhớ lâu nhất', why: 'Đến hạn hôm nay', k: 'due', go: () => { if (window.srOpen) window.srOpen(); } });
     // 1b. tiếp tục lộ trình
-    try { const np = nextPathTask(); if (np) add({ ic: '🗺️', t: np.it.kind + ': ' + np.it.t, sub: `Lộ trình ${LV[np.L - 1]} · chặng ${np.u.n} (${np.u.done}/${np.u.items.length} việc)`, why: 'Tiếp tục lộ trình', go: np.it.go }); } catch (e) {}
+    try { const np = nextPathTask(); if (np) add({ ic: '🗺️', t: np.it.kind + ': ' + np.it.t, sub: `Lộ trình ${LV[np.L - 1]} · chặng ${np.u.n} (${np.u.done}/${np.u.items.length} việc)`, why: 'Tiếp tục lộ trình', k: 'path', go: np.it.go }); } catch (e) {}
     // 2. điểm yếu từ Mistakes
     const L = typeof window.mkList === 'function' ? window.mkList() : [];
     const gx = {}; L.filter(x => x.src === 'gx').forEach(x => { const id = String(x.k).split('|')[1]; (gx[id] = gx[id] || { n: 0, c: 0, cat: x.cat }); gx[id].n += x.n || 1; gx[id].c++; });
     const worst = Object.keys(gx).sort((a, b) => gx[b].n - gx[a].n)[0];
     if (worst && (gx[worst].c >= 2 || gx[worst].n >= 3)) {
-      add({ ic: '📐', t: 'Học lại: ' + gx[worst].cat, sub: `Bạn đã sai ${gx[worst].n} lần ở ${gx[worst].c} câu của bài này`, why: 'Hay sai', go: () => openIn('page-grammar', () => gxLesson(worst)) });
+      add({ ic: '📐', t: 'Học lại: ' + gx[worst].cat, sub: `Bạn đã sai ${gx[worst].n} lần ở ${gx[worst].c} câu của bài này`, why: 'Hay sai', k: 'gxw', go: () => openIn('page-grammar', () => gxLesson(worst)) });
     }
     if (L.length >= 3) {
       const by = {}; L.forEach(x => { by[x.src] = (by[x.src] || 0) + 1; });
       const SRCN = { gx: 'ngữ pháp', ex: 'bài tập dịch', qb: 'đặt câu hỏi', vc: 'từ vựng', irr: 'bất quy tắc', say: 'phát âm', talk: 'hội thoại', rd: 'đọc hiểu', wr: 'bài viết' };
       const top = Object.keys(by).sort((a, b) => by[b] - by[a])[0];
-      add({ ic: '📕', t: `Luyện lại ${Math.min(10, L.length)} lỗi trong Mistakes`, sub: `${L.length} lỗi chưa khắc phục · nhiều nhất ở ${SRCN[top] || top} (${by[top]})`, why: 'Sửa lỗi cũ', go: () => { if (window.srOpen) window.srOpen(); setTimeout(() => { const b = document.querySelector('.mk-entry button'); if (b) b.click(); }, 0); } });
+      add({ ic: '📕', t: `Luyện lại ${Math.min(10, L.length)} lỗi trong Mistakes`, sub: `${L.length} lỗi chưa khắc phục · nhiều nhất ở ${SRCN[top] || top} (${by[top]})`, why: 'Sửa lỗi cũ', k: 'mk', go: () => { if (window.srOpen) window.srOpen(); setTimeout(() => { const b = document.querySelector('.mk-entry button'); if (b) b.click(); }, 0); } });
     }
     // 3. kỹ năng yếu nhất (điểm thấp nhất; bằng nhau thì kỹ năng ít luyện tuần này)
     const wk = weekBySkill();
     const PRI = ['g', 'v', 'r', 'l', 's', 'w'];   // hoà điểm (người mới): nền tảng trước
     const order = PRI.slice().sort((a, b) => ((S[a].score || 0) - (S[b].score || 0)) || (wk[a] - wk[b]) || (PRI.indexOf(a) - PRI.indexOf(b)));
     const w1 = order[0];
-    const n1 = nextFor(w1, S); if (n1) add(Object.assign(n1, { why: `Kỹ năng yếu nhất: ${SKN[w1]}` }));
+    const n1 = nextFor(w1, S); if (n1) add(Object.assign(n1, { why: `Kỹ năng yếu nhất: ${SKN[w1]}`, k: w1 }));
     // 4. kỹ năng bỏ quên tuần này
     const idle = order.find(k => k !== w1 && !wk[k]);
-    if (idle) { const n2 = nextFor(idle, S); if (n2) add(Object.assign(n2, { why: `Tuần này chưa luyện ${SKN[idle]}` })); }
+    if (idle) { const n2 = nextFor(idle, S); if (n2) add(Object.assign(n2, { why: `Tuần này chưa luyện ${SKN[idle]}`, k: idle })); }
     // còn chỗ: kỹ năng yếu thứ hai
-    for (const k of order) { if (out.length >= 3) break; const n3 = nextFor(k, S); if (n3 && !seen.has(n3.t)) add(Object.assign(n3, { why: S[k].score ? `Cần cải thiện: ${SKN[k]}` : `Bắt đầu: ${SKN[k]}` })); }
+    for (const k of order) { if (out.length >= 3) break; const n3 = nextFor(k, S); if (n3 && !seen.has(n3.t)) add(Object.assign(n3, { why: S[k].score ? `Cần cải thiện: ${SKN[k]}` : `Bắt đầu: ${SKN[k]}`, k })); }
     return out;
   }
+  /* v242: "Hôm nay làm 3 việc này" — 3 việc được chốt một lần mỗi ngày, đánh số 1-2-3, làm xong việc nào thì việc đó được tick ✓.
+     Việc "xong" khi: hết thẻ đến hạn / lộ trình đã sang việc khác / bài kế tiếp của kỹ năng đó đã đổi / học thêm 10 từ / số lỗi trong Mistakes giảm. */
+  const T3K = 'hoc-tieng-anh-today3';
+  const todayAct = k => { const r = act[dayNo()] || {}; return r[k] || 0; };
+  function t3Base(k) { return k === 'v' ? todayAct('v') : k === 'gxw' ? todayAct('g') : k === 'mk' ? ((typeof window.mkList === 'function' ? window.mkList() : []).length) : 0; }
+  function t3Load(S, due) {
+    let st = J(T3K);
+    if (!st || st.d !== dayNo() || !Array.isArray(st.list) || !st.list.length) {
+      const R = recs(S, due).slice(0, 3);
+      st = { d: dayNo(), list: R.map(r => ({ t: r.t, why: r.why || '', sub: r.sub || '', ic: r.ic, k: r.k || '', base: t3Base(r.k) })) };
+      if (st.list.length) try { localStorage.setItem(T3K, JSON.stringify(st)); } catch (e) {}
+    }
+    return st;
+  }
+  function t3Done(f, S, due) {
+    try {
+      if (f.done) return true;
+      if (f.k === 'due') return !due;
+      if (f.k === 'path') { const np = nextPathTask(); return !np || (np.it.kind + ': ' + np.it.t) !== f.t; }
+      if (f.k === 'gxw') return todayAct('g') > f.base;
+      if (f.k === 'mk') return (typeof window.mkList === 'function' ? window.mkList() : []).length < f.base;
+      if (f.k === 'v') return todayAct('v') - f.base >= 10;
+      if (SKN[f.k]) { const n = nextFor(f.k, S); return !n || n.t !== f.t; }
+    } catch (e) {}
+    return false;
+  }
+  function t3Go(f, S, due) {
+    const cur = recs(S, due).find(r => r.t === f.t) || recs(S, due).find(r => r.k === f.k);
+    if (cur) return cur.go;
+    if (SKN[f.k]) { const n = nextFor(f.k, S); if (n) return n.go; }
+    return null;
+  }
   function recBox(S, due) {
-    const R = recs(S, due);
+    const st = t3Load(S, due), L = st.list;
+    let changed = false;
+    L.forEach(f => { if (!f.done && t3Done(f, S, due)) { f.done = 1; changed = true; } });
+    if (changed) try { localStorage.setItem(T3K, JSON.stringify(st)); } catch (e) {}
+    const nDone = L.filter(f => f.done).length, all = L.length && nDone === L.length;
     const box = E('div', 'tense-card db-recs');
-    box.appendChild(E('h3', null, R.length ? `Hôm nay nên học · ${R.length} việc` : 'Hôm nay nên học'));
-    box.appendChild(E('p', 'rv-note', 'Gợi ý dựa trên thẻ đến hạn, Mistakes và kỹ năng còn yếu của bạn. Bấm để mở đúng bài.'));
-    R.forEach((r, i) => {
-      const b = E('button', 'db-rec c' + (i % 4) + (i === 0 ? ' first' : '')); b.type = 'button';
-      b.appendChild(E('span', 'db-rec-ic', r.ic));
+    const h = E('h3', null, L.length ? `Hôm nay làm ${L.length} việc này` : 'Hôm nay nên học');
+    if (L.length) h.appendChild(E('span', 'db-rec-count' + (all ? ' all' : ''), `${nDone}/${L.length} xong`));
+    box.appendChild(h);
+    box.appendChild(E('p', 'rv-note', all ? '🎉 Bạn đã xong cả ' + L.length + ' việc hôm nay. Muốn học thêm thì chọn bất kỳ mục nào bên dưới.'
+      : 'Làm lần lượt từ 1 đến ' + L.length + ' là đủ cho hôm nay. App chọn dựa trên thẻ đến hạn, lộ trình và kỹ năng còn yếu của bạn.'));
+    let firstOpen = true;
+    L.forEach((f, i) => {
+      const go = f.done ? null : t3Go(f, S, due);
+      const b = E('button', 'db-rec c' + (i % 4) + (f.done ? ' done' : firstOpen ? ' first' : '')); b.type = 'button';
+      if (!f.done) firstOpen = false;
+      b.appendChild(E('span', 'db-rec-no', f.done ? '✓' : String(i + 1)));
       const tx = E('span', 'db-rec-t');
-      if (r.why) tx.appendChild(E('span', 'db-rec-why', r.why));
-      tx.appendChild(E('b', null, r.t));
-      if (r.sub) tx.appendChild(E('span', 'db-rec-sub', r.sub));
+      tx.appendChild(E('span', 'db-rec-why', f.done ? 'Đã xong' : (f.why || '')));
+      tx.appendChild(E('b', null, f.t));
+      if (f.sub && !f.done) tx.appendChild(E('span', 'db-rec-sub', f.sub));
       b.appendChild(tx);
-      b.appendChild(E('span', 'db-rec-go', '→'));
-      b.addEventListener('click', () => r.go());
+      if (!f.done) b.appendChild(E('span', 'db-rec-go', '→'));
+      if (f.done) { b.disabled = true; b.setAttribute('aria-label', 'Đã xong: ' + f.t); }
+      else b.addEventListener('click', () => { if (go) go(); });
       box.appendChild(b);
     });
+    if (all) {   // xong hết: gợi ý thêm (không bắt buộc)
+      const more = recs(S, due).filter(r => !L.some(f => f.t === r.t)).slice(0, 2);
+      if (more.length) box.appendChild(E('div', 'db-rec-more', 'Học thêm (không bắt buộc)'));
+      more.forEach((r, i) => {
+        const b = E('button', 'db-rec c' + ((i + 3) % 4)); b.type = 'button';
+        b.appendChild(E('span', 'db-rec-ic', r.ic));
+        const tx = E('span', 'db-rec-t'); if (r.why) tx.appendChild(E('span', 'db-rec-why', r.why)); tx.appendChild(E('b', null, r.t)); if (r.sub) tx.appendChild(E('span', 'db-rec-sub', r.sub));
+        b.appendChild(tx); b.appendChild(E('span', 'db-rec-go', '→')); b.addEventListener('click', () => r.go()); box.appendChild(b);
+      });
+    }
     return box;
   }
+  window.htaLevel = () => { try { return pathLevel(); } catch (e) { return 1; } };
   window.dashRecs = () => { const S = skills(); return recs(S, 0).map(r => ({ t: r.t, why: r.why, sub: r.sub })); };
 
 

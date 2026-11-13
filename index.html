@@ -169,14 +169,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="app.css?h=8bf20791bd">
+<link rel="stylesheet" href="app.css?h=f70e7f817e">
 </head>
 <body>
 
 <header class="hero">
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v241</span>
+      <span class="hero-badge">EN ⇄ VI · v242</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice" id="voice-btn" aria-label="Chọn giọng đọc">🔊 <span class="hv-label">Giọng đọc</span></button>
@@ -811,7 +811,7 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
 <!-- tab-questions: nạp khi mở tab -->
 <!-- tab-reading: nạp khi mở tab -->
 <!-- tab-talk: nạp khi mở tab -->
-<script src="js/app-review.js?h=a1457e0080"></script>
+<script src="js/app-review.js?h=f436cb0e1d"></script>
 <script src="js/app-gxlearn.js?h=687d5aea98"></script>
 <script src="js/app-onboard.js?h=107697c1c7"></script>
 <script>
@@ -906,6 +906,37 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
   { const db = document.getElementById('dash-btn'); if (db) db.style.display = 'none'; }
 
   const bar = E('div', 'sec-bar'); bar.setAttribute('role', 'tablist');
+  /* v242: ghi chú cho từng phần — không ẩn phần nào; phần hợp trình độ ghi "Nên luyện", phần cao hơn trình độ ghi "Nâng cao" kèm nên luyện gì trước.
+     NOTE[id] = [cấp phù hợp nhỏ nhất (1 = A1), lời khuyên khi hợp trình độ, nên luyện gì trước khi chưa tới cấp] */
+  const LVN = ['A1', 'A2', 'B1', 'B2', 'C1'];
+  const NOTE = {
+    vocab: [1, 'mỗi ngày học khoảng 10 từ mới.'],
+    grammar: [1, 'mỗi ngày học 1 bài, rồi làm bài tập của bài đó.'],
+    irr: [2, 'học 5–10 động từ mỗi lần, sau khi đã biết thì quá khứ đơn.', 'Grammar (thì hiện tại và quá khứ đơn)'],
+    pron: [1, 'mỗi ngày 5 phút, bắt đầu từ bảng IPA.'],
+    shadow: [1, 'mỗi ngày 1 bài. Đây là cách nhanh nhất để nghe và nói trôi chảy.'],
+    listen: [1, '2–3 lần mỗi tuần, nghe mỗi bài ít nhất hai lượt.'],
+    read: [1, '2–3 bài mỗi tuần, tra từ mới ngay trong bài.'],
+    write: [2, '1–2 bài mỗi tuần, đọc kỹ phần AI sửa lỗi.', 'Vocabulary và Grammar ở cấp A1'],
+    talk: [2, '2–3 lần mỗi tuần, bắt đầu với Role-play.', 'Shadowing và Pronunciation'],
+    cards: [1, 'mỗi ngày, khi có thẻ đến hạn. Ôn đúng hạn giúp nhớ lâu nhất.'],
+    mist: [1, 'mỗi tuần xem lại một lần để sửa các lỗi cũ.'],
+    ex: [1, 'sau mỗi bài ngữ pháp, làm bài tập cùng chủ điểm.'],
+    para: [3, '1–2 đoạn mỗi tuần.', 'Grammar exercises (dịch từng câu)'],
+    qb: [2, '2–3 lần mỗi tuần để phản xạ đặt câu hỏi nhanh hơn.', 'Grammar (câu hỏi Yes/No và Wh-)']
+  };
+  const lvNow = () => { try { return Math.max(1, Math.min(5, (window.htaLevel && window.htaLevel()) || 1)); } catch (e) { return 1; } };
+  function drawNote(pg) {
+    document.querySelectorAll('.sec-note').forEach(n => n.remove());
+    const nt = NOTE[cur.s]; if (!nt || !pg || pg.id === 'page-hub') return;
+    const lv = lvNow(), adv = nt[0] > lv;
+    const d = E('div', 'sec-note ' + (adv ? 'adv' : 'ok'));
+    d.appendChild(E('b', null, adv ? '⭐ Nâng cao' : '✅ Nên luyện'));
+    d.appendChild(E('span', null, adv
+      ? 'Phần này hợp nhất từ ' + LVN[nt[0] - 1] + ' (bạn đang ở ' + LVN[lv - 1] + '). Bạn vẫn dùng được, nhưng nên luyện ' + (nt[2] || 'các phần cơ bản') + ' trước.'
+      : 'Hợp với trình độ ' + LVN[lv - 1] + ' của bạn: ' + nt[1]));
+    if (bar.parentNode === pg) bar.insertAdjacentElement('afterend', d); else pg.insertBefore(d, pg.firstChild);
+  }
   function drawBar() {
     const grp = G[cur.g]; bar.innerHTML = '';
     if (!grp || grp.secs.length < 2) { bar.remove(); return; }
@@ -914,11 +945,13 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
       b.type = 'button'; b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', String(sc.id === cur.s));
       if (cur.g === 'practice') b.appendChild(E('span', 'sec-n', String(i + 1)));
       b.appendChild(document.createTextNode(sc.t));
+      { const nt = NOTE[sc.id]; if (nt && nt[0] > lvNow()) b.appendChild(E('span', 'sec-tag', LVN[nt[0] - 1] + '+')); }   // v242: phần nâng cao so với trình độ hiện tại
       b.addEventListener('click', () => { if (sc.id !== cur.s) secOpen(cur.g, sc.id); });
       bar.appendChild(b);
     });
     const pg = document.querySelector('main .page.active');
     if (pg && pg.id !== 'page-hub' && pg.firstChild !== bar) pg.insertBefore(bar, pg.firstChild);
+    drawNote(pg);
     const on = bar.querySelector('.on'); if (on && bar.scrollWidth > bar.clientWidth) bar.scrollLeft = on.offsetLeft - 16;
   }
   // khi trang đổi bằng đường khác (lối tắt trong lộ trình, gợi ý…): sáng đúng nhóm và đúng phần
