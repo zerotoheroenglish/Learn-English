@@ -176,7 +176,7 @@
 <header class="hero">
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v256</span>
+      <span class="hero-badge">EN ⇄ VI · v257</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice" id="voice-btn" aria-label="Chọn giọng đọc">🔊 <span class="hv-label">Giọng đọc</span></button>
@@ -811,7 +811,7 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
 <!-- tab-questions: nạp khi mở tab -->
 <!-- tab-reading: nạp khi mở tab -->
 <!-- tab-talk: nạp khi mở tab -->
-<script src="js/app-review.js?h=b42c0054fc"></script>
+<script src="js/app-review.js?h=50407fe015"></script>
 <script src="js/app-gxlearn.js?h=687d5aea98"></script>
 <script src="js/app-onboard.js?h=107697c1c7"></script>
 <script>
@@ -938,22 +938,31 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
     if (bar.parentNode === pg) bar.insertAdjacentElement('afterend', d); else pg.insertBefore(d, pg.firstChild);
   }
   function drawBar() {
-    const grp = G[cur.g]; bar.innerHTML = '';
-    if (!grp || grp.secs.length < 2) { bar.remove(); return; }
+    const grp = G[cur.g];
+    const pg0 = document.querySelector('main .page.active');
+    /* v257: một lần đổi tab từng vẽ lại thanh phần 3–4 lần (mỗi lần trang đổi class). Nếu không có gì thay đổi và thanh vẫn đang nằm đúng chỗ thì bỏ qua. */
+    const lvB = lvNow();   // tính trình độ một lần cho cả thanh, không phải mỗi nút một lần
+    const key = cur.g + '|' + cur.s + '|' + (pg0 ? pg0.id : '') + '|' + lvB;
+    if (key === barKey && pg0 && (!grp || grp.secs.length < 2 || bar.parentNode === pg0) && (!NOTE[cur.s] || pg0.id === 'page-hub' || pg0.querySelector(':scope > .sec-note'))) return;
+    barKey = key;
+    bar.innerHTML = '';
+    if (!grp || grp.secs.length < 2) { bar.remove(); drawNote(pg0); return; }
     grp.secs.forEach((sc, i) => {
       const b = E('button', 'sec-chip' + (sc.id === cur.s ? ' on' : ''));
       b.type = 'button'; b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', String(sc.id === cur.s));
       if (cur.g === 'practice') b.appendChild(E('span', 'sec-n', String(i + 1)));
       b.appendChild(document.createTextNode(sc.t));
-      { const nt = NOTE[sc.id]; if (nt && nt[0] > lvNow()) b.appendChild(E('span', 'sec-tag', LVN[nt[0] - 1] + '+')); }   // v242: phần nâng cao so với trình độ hiện tại
+      { const nt = NOTE[sc.id]; if (nt && nt[0] > lvB) b.appendChild(E('span', 'sec-tag', LVN[nt[0] - 1] + '+')); }   // v242: phần nâng cao so với trình độ hiện tại
       b.addEventListener('click', () => { if (sc.id !== cur.s) secOpen(cur.g, sc.id); });
       bar.appendChild(b);
     });
     const pg = document.querySelector('main .page.active');
     if (pg && pg.id !== 'page-hub' && pg.firstChild !== bar) pg.insertBefore(bar, pg.firstChild);
     drawNote(pg);
-    const on = bar.querySelector('.on'); if (on && bar.scrollWidth > bar.clientWidth) bar.scrollLeft = on.offsetLeft - 16;
+    // v257: đọc kích thước ở khung hình kế tiếp, tránh bắt trình duyệt dàn trang giữa chừng
+    requestAnimationFrame(() => { const on = bar.querySelector('.on'); if (on && bar.scrollWidth > bar.clientWidth) bar.scrollLeft = on.offsetLeft - 16; });
   }
+  let barKey = '';
   // khi trang đổi bằng đường khác (lối tắt trong lộ trình, gợi ý…): sáng đúng nhóm và đúng phần
   function sync() {
     const pg = document.querySelector('main .page.active'); if (!pg || pg.id === 'page-hub') return;

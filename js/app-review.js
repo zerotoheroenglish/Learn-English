@@ -441,7 +441,16 @@
     let i = f.findIndex(x => x < 0.6); if (i < 0) i = 4;
     return { score, lv: LV[i], f };
   }
+  /* v257: skills() duyệt hơn 11.000 từ + mọi tiến độ; trước đây bị gọi lại nhiều lần mỗi lần đổi tab (mỗi nút phần gọi htaLevel).
+     Nhớ kết quả trong cùng một lượt xử lý rồi xoá ngay sau đó → luôn đúng dữ liệu mới, nhưng không tính lặp lại. */
+  let skMemo = null;
   function skills() {
+    if (skMemo) return skMemo;
+    skMemo = skills0();
+    setTimeout(() => { skMemo = null; }, 0);
+    return skMemo;
+  }
+  function skills0() {
     const out = {};
     // Ngữ pháp: bài đã hoàn thành / tổng số bài mỗi cấp
     const g = { done: [0, 0, 0, 0, 0], tot: [0, 0, 0, 0, 0] };
@@ -836,8 +845,15 @@
     });
     return bar;
   }
-  window.__dashRender = () => render();
+  /* v257: dữ liệu nạp xong / đồng bộ xong từng vẽ lại trang Today kể cả khi bạn đang ở tab khác (mỗi lần ~0,1 giây trên điện thoại).
+     Giờ chỉ vẽ lại khi trang Today đang mở, gộp nhiều yêu cầu liền nhau thành một; mở Today lúc nào cũng vẽ mới (show → render). */
+  let dashRq = 0, rTick = false;
+  window.__dashRender = () => {
+    if (!page.classList.contains('active') || dashRq) return;
+    dashRq = requestAnimationFrame(() => { dashRq = 0; if (page.classList.contains('active')) render(); });
+  };
   function render() {
+    if (!rTick) { rTick = true; setTimeout(() => { rTick = false; }, 0); }
     root.innerHTML = '';
     root.appendChild(viewBar());
     { const tt = document.getElementById('db-title'), ss = document.getElementById('db-sub');
@@ -1028,7 +1044,7 @@
     c.appendChild(all);
     root.appendChild(c);
   }
-  window.dashView = v => { view = v === 'path' ? 'path' : 'sum'; try { localStorage.setItem('hoc-tieng-anh-dash-view', view); } catch (e) {} render(); };
+  window.dashView = v => { const nv = v === 'path' ? 'path' : 'sum', same = nv === view; view = nv; try { localStorage.setItem('hoc-tieng-anh-dash-view', view); } catch (e) {} if (same && rTick) return; render(); };   // v257: vừa vẽ đúng chế độ này trong lượt này thì khỏi vẽ lại
   window.dashOpen = show;
   window.dashSkills = skills;
   if (btn) btn.addEventListener('click', show);
