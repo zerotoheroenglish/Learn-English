@@ -4737,3 +4737,6 @@
 .gx-lv.on .gx-lv-s{ color:#14213D; }
 .gx-lv.on .gx-lv-ok{ color:#14213D; }
 .gx-stars{ color:#E8A317; letter-spacing:1px; font-size:13px; white-space:nowrap; }
+
+/* v253: gợi ý cho câu điền từ */
+.gx-cue{margin:.35rem 0 .2rem;font-size:.9rem;font-weight:700;color:var(--accent,#ffd23f);opacity:.95}
