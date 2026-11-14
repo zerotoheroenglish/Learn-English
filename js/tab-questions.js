@@ -328,6 +328,7 @@ const QBB = (() => {
     const u = norm(user);
     const models = [it.en, ...(it.alt || [])];
     for (let k = 0; k < models.length; k++) if (same(norm(models[k]), u)) return { ok: true, k, pct: 100 };
+    try { const oa = window.orderAlts ? window.orderAlts(it.en) : []; if (oa.some(m => same(norm(m), u))) return { ok: true, k: 0, pct: 100 }; } catch (e) {}   // v254
     let best = null;
     models.forEach((m, k) => {
       const a = norm(m), r = lsMatch(a, u);

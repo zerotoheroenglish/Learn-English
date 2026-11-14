@@ -6230,7 +6230,8 @@ function gxQuiz(box, qs, opts) {
         };
         ck.addEventListener('click', () => {
           const v = picked.map(i => words[i]).join(' ');
-          const ok = models.some(m => lsNorm(m).join(' ') === lsNorm(v).join(' '));
+          const okModels = models.concat(orderAlts(r[0]));
+          const ok = okModels.some(m => lsNorm(m).join(' ') === lsNorm(v).join(' '));
           clr.disabled = true; drawT();
           const det = [];
           if (!ok) det.push(line('Bạn xếp', v, 'gx-yours'));
@@ -6273,6 +6274,10 @@ function gxQuiz(box, qs, opts) {
   // dừng giữa chừng (hết giờ): các câu chưa trả lời tính là sai
   return { stop: () => { if (S.i >= qs.length) return; for (let k = S.res.length; k < qs.length; k++) S.res.push({ id: qs[k].id, qid: qs[k].qid, ok: false, skip: true }); S.i = qs.length; draw(); } };
 }
+// v254: các cách sắp xếp khác cũng đúng (turn off the lights = turn the lights off, A and B = B and A…)
+const ORDER_ALT = {"can i try on the large one": ["Can I try the large one on?"], "can i try these shoes on": ["Can I try on these shoes?"], "could you turn the music down": ["Could you turn down the music?"], "do you go to school by bicycle": ["Do you go by bicycle to school?"], "do you go to school by bike": ["Do you go by bike to school?"], "do you have brothers or sisters": ["Do you have sisters or brothers?"], "do you want rice or noodles": ["Do you want noodles or rice?"], "he forgot to turn off the lights": ["He forgot to turn the lights off."], "he goes to work by train": ["He goes by train to work."], "he speaks english and chinese": ["He speaks Chinese and English."], "how can a hotel be both cheap and clean": ["How can a hotel be both clean and cheap?"], "i found out the truth yesterday": ["I found the truth out yesterday."], "i have a cat and a dog": ["I have a dog and a cat."], "i like music and films": ["I like films and music."], "if you mix red and white you get pink": ["If you mix white and red, you get pink."], "it's time to turn off the lights": ["It's time to turn the lights off."], "no matter who asks don't give out the password": ["No matter who asks, don’t give the password out."], "please fill in this form": ["Please fill this form in."], "please turn off the air conditioner": ["Please turn the air conditioner off."], "put on your jacket it's cold outside": ["Put your jacket on; it’s cold outside."], "take off your shoes before you come in": ["Take your shoes off before you come in."], "turn off the lights before you leave": ["Turn the lights off before you leave."], "we go to school by bus": ["We go by bus to school."], "we need two knives and four dishes": ["We need four dishes and two knives."], "what do you want tea or juice": ["What do you want, juice or tea?"], "what woke the baby up": ["What woke up the baby?"], "what woke up the baby": ["What woke the baby up?"], "which city is more beautiful hue or hoi an": ["Which city is more beautiful, Hoi An or Hue?"], "which colour do you like better red or blue": ["Which colour do you like better, blue or red?"], "which colour do you like more red or blue": ["Which colour do you like more, blue or red?"], "which colour do you prefer red or blue": ["Which colour do you prefer, blue or red?"], "who do you want to invite lan or mai": ["Who do you want to invite, Mai or Lan?"], "who is going to pick up the children": ["Who is going to pick the children up?"], "who will pick the children up": ["Who will pick up the children?"], "who will pick up the children": ["Who will pick the children up?"], "who will pick up the kids": ["Who will pick the kids up?"], "why did he give up his job": ["Why did he give his job up?"], "would you like an exchange or a refund": ["Would you like a refund or an exchange?"], "write down the address in case you forget it": ["Write the address down in case you forget it."], "he worked in hanoi from 2018 to 2020": ["He worked from 2018 to 2020 in Hanoi."], "would you rather eat now or later": ["Would you rather eat later or now?"]};
+const orderAlts = sent => ORDER_ALT[lsNorm(String(sent)).join(' ')] || [];
+window.orderAlts = orderAlts;
 function gxOrderHint(right, user) {
   const a = right.split(/\s+/), b = user.split(/\s+/);
   const i = a.findIndex((w, k) => lsNorm(w).join() !== lsNorm(b[k] || '').join());
@@ -9476,7 +9481,7 @@ function vcStartQuiz() {
     qs: lsShuffle(items).map((it, i) => {
       let type = order[i % order.length];
       const bl = (type === 'ctx' || type === 'fill') ? vcBlank(it) : null;
-      if ((type === 'ctx' || type === 'fill') && !bl) type = i % 2 ? 'vi2en' : 'en2vi';
+      if ((type === 'ctx' || type === 'fill') && (!bl || (type === 'ctx' && !it.exvi))) type = i % 2 ? 'vi2en' : 'en2vi';
       const ds = [];
       for (const x of lsShuffle(src)) {
         if (ds.length === 3) break;
@@ -9580,7 +9585,7 @@ function vcRenderQuiz() {
   } else {
     pr.appendChild(lsEl('div', 'vc-q-label', q.type === 'fill' ? 'Gõ từ còn thiếu vào chỗ trống' : 'Chọn từ phù hợp với chỗ trống'));
     pr.appendChild(lsEl('div', 'vw-sent', q.bl.sent));
-    if (it.exvi && q.type === 'fill') pr.appendChild(lsEl('div', 'vw-sent-vi', it.exvi));
+    if (it.exvi) pr.appendChild(lsEl('div', 'vw-sent-vi', it.exvi));   // v254: câu chọn từ cũng hiện nghĩa để chỉ có một đáp án đúng
     if (q.type === 'ctx') pr.appendChild(lsEl('div', 'vw-sent-note', 'Đáp án ở dạng gốc, trong câu có thể đổi dạng (thêm -s, -ed…).'));
     else pr.appendChild(lsEl('div', 'vw-sent-note', `Gợi ý: ${VC_POS[it.pos] || it.pos} · ${it.vi} · bắt đầu bằng “${q.bl.ans.charAt(0)}”, ${q.bl.ans.length} chữ cái`));
   }
@@ -10867,7 +10872,7 @@ function irrRenderCtx() {
     const gap = lsEl('span', 'irr-cx-gap' + (show ? (q.ok ? ' ok' : ' bad') : ''), show ? c.raw : (q.type === 'fill' ? `_____ (${irrFirst(v.v1)})` : '_____'));
     card.appendChild(irrCtxSentence(c, gap));
   }
-  if (q.type === 'fill' && v.exvi && show) card.appendChild(lsEl('div', 'irr-cx-vi sm', v.exvi));
+  if ((q.type === 'fill' || q.type === 'choose') && v.exvi) card.appendChild(lsEl('div', 'irr-cx-vi sm', v.exvi));   // v254: hiện nghĩa trước khi trả lời để biết thì của câu
   body.appendChild(card);
   const finish = ok => {
     q.done = true; q.ok = ok; if (ok) X.score++;
