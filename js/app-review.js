@@ -82,7 +82,7 @@
     if (!all.length) {
       const c = E('div', 'tense-card');
       c.appendChild(E('div', 'rv-big', '✨'));
-      c.appendChild(E('div', 'rv-big-l', 'Mistakes đang trống'));
+      c.appendChild(E('div', 'rv-big-l', 'Chưa có lỗi cần sửa'));
       c.appendChild(E('p', 'rv-note', 'Làm bài tập ngữ pháp, bài tập dịch, đặt câu hỏi, kiểm tra từ vựng hay trò chuyện với AI. Câu nào sai sẽ tự vào đây để bạn luyện lại.'));
       root.appendChild(c);
       return;
@@ -857,7 +857,7 @@
     root.innerHTML = '';
     root.appendChild(viewBar());
     { const tt = document.getElementById('db-title'), ss = document.getElementById('db-sub');
-      if (tt) tt.textContent = view === 'path' ? 'Learning path' : 'Today';
+      if (tt) tt.textContent = view === 'path' ? 'Lộ trình' : 'Hôm nay';
       if (ss) ss.textContent = view === 'path' ? 'Mỗi cấp 6 chặng, mỗi chặng nối ngữ pháp, từ vựng, đọc, nghe, nói, viết. Làm xong ở đâu, việc đó tự được đánh dấu ✓.' : 'Việc cần làm hôm nay, chuỗi ngày học, điểm từng kỹ năng và mức hoàn thành theo cấp độ.'; }
     if (view === 'path') { renderPath(); return; }
     const t = dayTotals(), d = dayNo(), st = streakOf(t), todayN = t[d] || 0;
@@ -895,7 +895,7 @@
     q1.appendChild(E('b', null, due ? String(due) : '✓')); q1.appendChild(E('span', null, due ? 'thẻ cần ôn hôm nay' : 'Đã ôn xong hôm nay'));
     q1.addEventListener('click', () => { if (window.srOpen) window.srOpen(); });
     const q2 = E('button', 'db-q' + (mkN ? ' hot' : ''), ''); q2.type = 'button';
-    q2.appendChild(E('b', null, String(mkN))); q2.appendChild(E('span', null, mkN ? 'lỗi cần luyện lại' : 'Mistakes đang trống'));
+    q2.appendChild(E('b', null, String(mkN))); q2.appendChild(E('span', null, mkN ? 'lỗi cần luyện lại' : 'Chưa có lỗi cần sửa'));
     q2.addEventListener('click', () => { if (window.srOpen) window.srOpen(); setTimeout(() => { const b = document.querySelector('.mk-entry button'); if (b) b.click(); }, 0); });
     qa.appendChild(q1); qa.appendChild(q2);
     root.appendChild(qa);

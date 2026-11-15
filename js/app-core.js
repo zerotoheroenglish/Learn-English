@@ -6343,7 +6343,7 @@ function gxReviewIds() {
 function renderGrammarHome(keepScroll) {
   const y = window.scrollY;
   grRoot.innerHTML = '';
-  grRoot.appendChild(grEl('div', 'section-title', 'Grammar'));
+  grRoot.appendChild(grEl('div', 'section-title', 'Ngữ pháp'));
   grRoot.appendChild(grEl('div', 'section-sub', 'Học theo trình độ · Luyện tập · Ôn tập · Theo dõi tiến độ. Mỗi bài gồm 7 bước: khái niệm, công thức, cách dùng, ví dụ, lỗi thường gặp, luyện tập và kiểm tra cuối bài.'));
   // tiến độ
   const total = GX_ALL.length, cnt = { new: 0, learning: 0, weak: 0, done: 0 };
@@ -8928,10 +8928,10 @@ function vcDashboard() {
   gl.appendChild(sel);
   tt.appendChild(gl);
   top.appendChild(tt);
-  const rnd = lsEl('button', 'btn-primary vc-rnd', due ? `🔁 Ôn ${Math.min(20, due)} từ đến hạn` : '🎲 Học 20 từ mới');
+  const rnd = lsEl('button', 'btn-primary vc-rnd', due ? `🔁 Ôn ${Math.min(20, due)} từ đến hạn` : `🎲 Học ${vgoal} từ mới`);
   rnd.addEventListener('click', () => {
     if (due) { const list = tracked.filter(vrDue).sort((a, b) => vrLeft(a) - vrLeft(b) || vrWeakScore(b) - vrWeakScore(a)).slice(0, 20); vcOpenUnit({ mix: true, rev: true, icon: '🔁', vi: 'Ôn từ đến hạn hôm nay', en: `${list.length} từ`, items: list }, 'cards'); }
-    else vcStartMix();
+    else vcStartMix(vgoal);
   });
   top.appendChild(rnd);
   box.appendChild(top);
@@ -9095,10 +9095,11 @@ function vrRender(body) {
 }
 
 
-function vcStartMix() {
+function vcStartMix(n) {
+  n = n || 20;
   const todo = VC_ALL.filter(it => !vcIs(it));
-  const items = lsShuffle(todo.length >= 20 ? todo : VC_ALL).slice(0, 20);
-  vcOpenUnit({ mix: true, icon: '🎲', vi: 'Ôn nhanh ngẫu nhiên', en: '20 từ từ nhiều chủ đề', items }, 'cards');
+  const items = lsShuffle(todo.length >= n ? todo : VC_ALL).slice(0, n);
+  vcOpenUnit({ mix: true, icon: '🎲', vi: 'Học từ mới ngẫu nhiên', en: n + ' từ từ nhiều chủ đề', items }, 'cards');
 }
 
 /* ---------- topic page: list of lessons ---------- */
@@ -9250,13 +9251,22 @@ function vcRenderUnit() {
   vcRoot.appendChild(vcHead(u.mix ? u.icon : u.topic.icon, u.vi, sub));
   if (u.siblings) vcRoot.appendChild(lsEl('div', 'vw-goal-line', `🎯 Mục tiêu bài: nhớ nghĩa và dùng được ${u.items.length} từ về “${u.vi.replace(/ \(\d+\)$/, '')}”. Học bằng thẻ nhớ, rồi làm bài kiểm tra; cứ 3 bài có một bài kiểm tra tổng hợp.`));
   const modes = lsEl('div', 'ls-modes vc-modes');
+  const vcAdv = vc.mode === 'write' || vc.mode === 'speak';
+  if (vcAdv) vc.more = true;
   [['list', 'Danh sách'], ['cards', 'Thẻ nhớ'], ['quiz', 'Kiểm tra'], ['write', 'Viết từ'], ['speak', '🎙️ Độ khớp phát âm']].forEach(([m, label]) => {
+    if ((m === 'write' || m === 'speak') && !vc.more) return;   // chế độ nâng cao: ẩn cho gọn, mở bằng nút bên dưới
     const b = lsEl('button', 'ls-mode' + (vc.mode === m ? ' active' : '') + (m === 'speak' ? ' vsp-mode' : ''), label);
     b.dataset.vcMode = m;
     b.addEventListener('click', () => { vspStop(); vc.mode = m; vcRenderUnit(); });
     modes.appendChild(b);
   });
   vcRoot.appendChild(modes);
+  if (!vcAdv) {
+    const more = lsEl('button', 'vc-more-btn', vc.more ? 'Thu gọn cách luyện ▴' : 'Thêm cách luyện: Viết từ · Phát âm ▾');
+    more.type = 'button'; more.setAttribute('aria-expanded', vc.more ? 'true' : 'false');
+    more.addEventListener('click', () => { vc.more = !vc.more; vcRenderUnit(); });
+    vcRoot.appendChild(more);
+  }
   const body = lsEl('div'); body.id = 'vc-body';
   vcRoot.appendChild(body);
   vcUpdateProg();

@@ -169,34 +169,34 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="app.css?h=ff2ddee763">
+<link rel="stylesheet" href="app.css?h=85833c9a7f">
 </head>
-<body>
+<body><a class="skip-link" href="#main-content">Bỏ qua, đến bài học</a>
 
 <header class="hero">
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v259</span>
+      <span class="hero-badge">EN ⇄ VI · v260</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice" id="voice-btn" aria-label="Chọn giọng đọc">🔊 <span class="hv-label">Giọng đọc</span></button>
       </span>
     </div>
     <h1>Học <span class="hero-hl">Tiếng Anh</span></h1>
-    <p class="sub">Dịch, luyện phát âm và ôn ngữ pháp mỗi ngày, ngay trên điện thoại.</p>
+    <p class="sub">Dịch, luyện phát âm và ôn ngữ pháp mỗi ngày, trên điện thoại hay máy tính.</p>
     <div class="hero-stats" id="hero-stats"></div>
     <div class="hero-row">
-      <button class="hero-review" id="review-btn" type="button" hidden></button>
+      <button class="hero-review" id="review-btn" type="button" aria-label="Mở thẻ ôn tập đến hạn" hidden></button>
       <button class="hero-dash" id="dash-btn" type="button" aria-label="Tiến độ của tôi" title="Tiến độ của tôi">📊<span class="hd-label">Tiến độ</span></button>
     </div>
   </div>
 </header>
 
-<main>
+<main id="main-content" tabindex="-1">
 
   <!-- PAGE 1: TRANSLATOR -->
   <section class="page" id="page-check">
-    <div class="section-title">Translate</div>
+    <div class="section-title">Dịch Anh–Việt</div>
     <div class="section-sub">Gõ tiếng Anh hoặc tiếng Việt, bấm ⇄ để đổi chiều dịch. App dịch nguyên văn câu bạn nhập, gợi ý sửa lỗi riêng để bạn chọn dịch câu gốc hay câu đã sửa.</div>
     <div class="tr-langbar">
       <span class="tr-lang" id="tr-src-label">Tiếng Anh</span>
@@ -272,26 +272,27 @@
 
   <!-- PAGE: PARAGRAPH TRANSLATION -->
   <section class="page" id="page-para">
-    <div class="section-title">Translation practice</div>
+    <div class="section-title">Luyện dịch</div>
     <div class="section-sub">Bài tập dịch đoạn văn tiếng Việt sang tiếng Anh theo trình độ A1 → C1. Bạn dịch cả đoạn, app so với bản mẫu và chấm điểm từng câu.</div>
     <div id="pa-root"></div>
   </section>
 
   <!-- PAGE: QUESTION BUILDER -->
   <section class="page" id="page-qb">
-    <div class="section-title">Asking questions</div>
+    <div class="section-title">Luyện đặt câu hỏi</div>
     <div class="section-sub">Question Builder: sắp xếp từ, đổi câu khẳng định, dịch câu hỏi từ tiếng Việt và tìm lỗi sai. Mỗi câu có giải thích ngắn bằng tiếng Việt.</div>
     <div id="qb-root"></div>
   </section>
 
   <!-- PAGE: SPEAKING PARTNER -->
   <section class="page" id="page-read">
-    <div class="section-title">Reading · Listening · Writing</div>
+    <div class="section-title">Nghe · Đọc · Viết</div>
     <div class="section-sub">Đọc hiểu, nghe hội thoại và viết theo đề A1 → C1, nội dung do app tự soạn. Chạm từ để tra nghĩa; bài viết được AI chấm bằng khoá của bạn.</div>
+    <section class="gd gd-listen" aria-label="Nghe hiểu → Nghe chép → Nói theo"><div class="gd-tag">CÁCH LUYỆN</div><h3 class="gd-t">Nghe hiểu → Nghe chép → Nói theo</h3><ol class="gd-steps"><li><b>1</b><span><strong>Nghe hội thoại</strong><small>Nghe hết một lượt rồi trả lời câu hỏi</small></span></li><li><b>2</b><span><strong>Nghe chép</strong><small>Gõ lại từng câu nghe được, app chấm từng từ</small></span></li><li><b>3</b><span><strong>Nói theo</strong><small>Sang Nói đuổi để luyện nói các câu tương tự</small></span></li></ol><button type="button" class="gd-go" data-gd-go="practice:dict">Sang Nghe chép →</button> <button type="button" class="gd-go" data-gd-go="practice:shadow">Sang Nói đuổi →</button></section>
     <div id="rd-root"></div>
   </section>
   <section class="page" id="page-talk">
-    <div class="section-title">AI Speaking</div>
+    <div class="section-title">Nói với AI</div>
     <div class="section-sub">Speaking Partner: nhập vai theo tình huống hoặc trò chuyện tự do với AI. Trả lời bằng giọng nói, app chấm cấu trúc và ngữ pháp sau mỗi câu.</div>
     <div id="talk-root"></div>
   </section>
@@ -300,18 +301,19 @@
   <section class="page active" id="page-dash">
     <div class="section-title" id="db-title">Hôm nay</div>
     <div class="section-sub" id="db-sub">Việc cần làm hôm nay, chuỗi ngày học, điểm từng kỹ năng và mức hoàn thành theo cấp độ.</div>
+    <button type="button" id="gd-resume" class="gd-resume" hidden><span>↩ Học tiếp phần đang dở:</span> <b id="gd-resume-l"></b> <i aria-hidden="true">→</i></button>
     <div id="db-root"></div>
   </section>
   <section class="page" id="page-hub" aria-hidden="true"></section>
   <section class="page" id="page-review">
-    <div class="section-title">Due cards</div>
+    <div class="section-title">Thẻ đến hạn</div>
     <div class="section-sub">Ôn tập giãn cách: từ vựng, ngữ pháp, động từ bất quy tắc và sổ từ của bạn, mỗi thứ quay lại đúng lúc bạn sắp quên.</div>
     <div id="rv-root"></div>
   </section>
 
   <!-- PAGE 2: PRONUNCIATION -->
   <section class="page" id="page-pron">
-    <div class="section-title">Pronunciation</div>
+    <div class="section-title">Phát âm</div>
     <div class="section-sub">Học 44 âm IPA (âm mẫu và âm mô phỏng), khẩu hình, trọng âm, nối âm và ngữ điệu; nói vào micro để xem độ khớp nhận diện giọng nói.</div>
 
     <div id="pron-home">
@@ -339,13 +341,14 @@
   <!-- PAGE: LISTENING / DICTATION -->
   <!-- PAGE: VOCABULARY -->
   <section class="page" id="page-vocab">
-    <div class="section-title">Vocabulary</div>
+    <div class="section-title">Từ vựng</div>
     <div class="section-sub" id="vc-sub">10.000 từ không trùng nhau · 38 chủ đề, mỗi chủ đề chia theo 5 cấp độ A1 → C1, mỗi cấp gồm các bài khoảng 12 từ. Chạm ▶ để nghe, ✓ để đánh dấu từ đã thuộc</div>
+    <section class="gd gd-vocab" aria-label="Học từ mới theo 3 bước"><div class="gd-tag">CÁCH HỌC</div><h3 class="gd-t">Học từ mới theo 3 bước</h3><ol class="gd-steps"><li><b>1</b><span><strong>Xem từ</strong><small>Chọn chủ đề, mở một bài, đọc và nghe từng từ</small></span></li><li><b>2</b><span><strong>Học bằng thẻ</strong><small>Lật thẻ, tự nhớ nghĩa trước khi xem</small></span></li><li><b>3</b><span><strong>Tự kiểm tra</strong><small>Làm bài kiểm tra để từ được tính là đã nhớ</small></span></li></ol></section>
     <div id="vc-root"></div>
   </section>
 
-  <section class="page" id="page-listen" hidden>
-    <div class="section-title">Luyện nghe</div>
+  <section class="page" id="page-listen">
+    <div class="section-title">Nghe chép</div>
     <div class="section-sub">Nghe câu tiếng Anh rồi gõ lại đúng từng từ. App chấm ngay, từ đúng hiện xanh, từ thiếu bị che lại để bạn nghe tiếp.</div>
     <div class="ls-modes" id="ls-modes">
       <button class="ls-mode active" data-mode="cefr">Trình độ</button>
@@ -404,27 +407,29 @@
 
   <!-- PAGE: TENSES -->
   <section class="page" id="page-shadow">
-    <div class="section-title">Shadowing</div>
+    <div class="section-title">Nói đuổi (Shadowing)</div>
     <div class="section-sub">Nghe từng câu rồi nói theo như cái bóng, theo 4 bước: Listen → Repeat → Shadowing → Retell. Có phiên âm, cách đọc, chính tả, quiz và tốc độ 0.5x – 1.5x.</div>
+    <section class="gd gd-shadow" aria-label="Nghe lại → Nói theo"><div class="gd-tag">CÁCH LUYỆN</div><h3 class="gd-t">Nghe lại → Nói theo</h3><ol class="gd-steps"><li><b>1</b><span><strong>Nghe câu mẫu</strong><small>Nghe vài lần, để ý nhịp và chỗ nhấn</small></span></li><li><b>2</b><span><strong>Nói theo ngay</strong><small>Bấm micro, nói gần như cùng lúc với câu mẫu</small></span></li></ol><button type="button" class="gd-go" data-gd-go="practice:listen">← Quay lại phần Nghe</button></section>
     <div id="sh-root"></div>
   </section>
 
 
   <!-- PAGE: GRAMMAR -->
   <section class="page" id="page-grammar">
+    <section class="gd gd-gram" aria-label="Hiểu cấu trúc, rồi thực hành"><div class="gd-tag">CÁCH HỌC</div><h3 class="gd-t">Hiểu cấu trúc, rồi thực hành</h3><ol class="gd-steps"><li><b>1</b><span><strong>Chọn bài</strong><small>Theo trình độ A1 → C1</small></span></li><li><b>2</b><span><strong>Đọc công thức và ví dụ</strong><small>Nghe ví dụ, chú ý chỗ tô màu</small></span></li><li><b>3</b><span><strong>Làm bài tập</strong><small>Bài tập ngắn ngay cuối mỗi bài</small></span></li></ol></section>
     <div id="grammar-root"></div>
   </section>
 
   <!-- PAGE: IRREGULAR VERBS -->
   <section class="page" id="page-irregular">
-    <div class="section-title">Irregular verbs</div>
+    <div class="section-title">Động từ bất quy tắc</div>
     <div class="section-sub">Động từ chia theo cấp A1 → C1, mỗi cấp gồm các bài khoảng 12 từ. Chạm ▶ để nghe, ✓ để đánh dấu đã thuộc</div>
     <div id="irr-root"></div>
   </section>
 
   <!-- PAGE: EXERCISES -->
   <section class="page" id="page-exercise">
-    <div class="section-title">Grammar exercises</div>
+    <div class="section-title">Bài tập ngữ pháp</div>
     <div class="section-sub">Dịch Việt → Anh theo trình độ A1 → C1 · Mỗi bài 20 câu, chỉ dùng đúng cấu trúc đã học ở tab Grammar</div>
     <div id="ex-root"></div>
   </section>
@@ -639,26 +644,26 @@
   </div>
 </div>
 
-<nav class="tabbar nav5">
+<nav class="tabbar nav5" aria-label="Điều hướng chính">
   <button class="active grp-on" data-page="page-hub" data-grp="home">
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></span>
-    Today
+    Hôm nay
   </button>
   <button data-page="page-hub" data-grp="learn">
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5V5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2.5zM8 7h6M8 11h6"/></svg></span>
-    Learn
+    Học
   </button>
   <button data-page="page-hub" data-grp="practice">
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3zM19 11a7 7 0 0 1-14 0M12 18v3"/></svg></span>
-    Practice
+    Luyện tập
   </button>
   <button data-page="page-hub" data-grp="review">
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/></svg></span>
-    Review
+    Ôn tập
   </button>
   <button data-page="page-hub" data-grp="tool">
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h8M8 3v2M5 9c1.5 3 4 5 7 6M11 5c-1 4-3.5 7-7 9M13 20l4-9 4 9M14.5 17h5"/></svg></span>
-    Translate
+    Dịch
   </button>
   <button hidden aria-hidden="true" tabindex="-1" data-page="page-talk">
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.5A2.5 2.5 0 0 1 5.5 4h7A2.5 2.5 0 0 1 15 6.5v4a2.5 2.5 0 0 1-2.5 2.5H8l-3.5 3v-3A1.5 1.5 0 0 1 3 11.5z"/><path d="M17.5 9h1A2.5 2.5 0 0 1 21 11.5v4A1.5 1.5 0 0 1 19.5 17v3l-3.5-3h-3.5a2.5 2.5 0 0 1-2.4-1.8"/></svg></span>
@@ -700,6 +705,7 @@
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4A1.5 1.5 0 0 1 4 14.5z"/><path d="M9.8 7.6a2.3 2.3 0 1 1 3 2.2c-.6.2-.8.6-.8 1.2"/><path d="M12 13.3h.01"/></svg></span>
     Câu hỏi
   </button>
+  <button hidden aria-hidden="true" tabindex="-1" data-page="page-listen">Nghe chép</button>
   <button hidden aria-hidden="true" tabindex="-1" data-page="page-read">
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5C5.5 4.3 8.5 4.3 12 6c3.5-1.7 6.5-1.7 9-.5v13c-2.5-1.2-5.5-1.2-9 .5-3.5-1.7-6.5-1.7-9-.5z"/><path d="M12 6v13.5"/></svg></span>
     Đọc · Nghe · Viết
@@ -774,7 +780,7 @@
 })();
 </script>
 <script src="js/data-core.js?h=c738b7dd06"></script>
-<script src="js/app-core.js?h=f8c91f0be0"></script>
+<script src="js/app-core.js?h=063113733d"></script>
 
 <script src="js/app-sync.js?h=78b85a839c"></script>
 
@@ -811,7 +817,7 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
 <!-- tab-questions: nạp khi mở tab -->
 <!-- tab-reading: nạp khi mở tab -->
 <!-- tab-talk: nạp khi mở tab -->
-<script src="js/app-review.js?h=50407fe015"></script>
+<script src="js/app-review.js?h=28cbcb2a84"></script>
 <script src="js/app-gxlearn.js?h=687d5aea98"></script>
 <script src="js/app-onboard.js?h=107697c1c7"></script>
 <script>
@@ -875,27 +881,28 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
   const rd = m => () => window.rdHome && window.rdHome(m);
   // Nhóm → các phần, theo thứ tự học: tiếp nhận (nghe, đọc) trước, tạo lập (nói, viết) sau
   const G = {
-    home: { name: 'Today', secs: [
-      { id: 'today', t: "Today's tasks", page: 'page-dash', run: () => { window.dashOpen && window.dashOpen(); window.dashView && window.dashView('sum'); } },
-      { id: 'path', t: 'Learning path', page: 'page-dash', run: () => { window.dashOpen && window.dashOpen(); window.dashView && window.dashView('path'); } } ] },
-    learn: { name: 'Learn', secs: [
-      { id: 'vocab', t: 'Vocabulary', page: 'page-vocab' },
-      { id: 'grammar', t: 'Grammar', page: 'page-grammar' },
-      { id: 'irr', t: 'Irregular verbs', page: 'page-irregular' } ] },
-    practice: { name: 'Practice', secs: [
-      { id: 'pron', t: 'Pronunciation', page: 'page-pron' },
-      { id: 'shadow', t: 'Shadowing', page: 'page-shadow' },
-      { id: 'listen', t: 'Listening', page: 'page-read', post: rd('listen') },
-      { id: 'read', t: 'Reading', page: 'page-read', post: rd('read') },
-      { id: 'write', t: 'Writing', page: 'page-read', post: rd('write') },
-      { id: 'talk', t: 'AI Speaking', page: 'page-talk' } ] },
-    review: { name: 'Review', secs: [
-      { id: 'cards', t: 'Due cards', page: 'page-review', run: () => window.srOpen && window.srOpen() },
-      { id: 'mist', t: 'Mistakes', page: 'page-review', run: () => { window.srOpen && window.srOpen(); mkClick(); } },
-      { id: 'ex', t: 'Grammar exercises', page: 'page-exercise' },
-      { id: 'para', t: 'Translation practice', page: 'page-para' },
-      { id: 'qb', t: 'Asking questions', page: 'page-qb' } ] },
-    tool: { name: 'Translate', secs: [ { id: 'check', t: 'Translate', page: 'page-check' } ] }
+    home: { name: 'Hôm nay', secs: [
+      { id: 'today', t: 'Việc hôm nay', page: 'page-dash', run: () => { window.dashOpen && window.dashOpen(); window.dashView && window.dashView('sum'); } },
+      { id: 'path', t: 'Lộ trình', page: 'page-dash', run: () => { window.dashOpen && window.dashOpen(); window.dashView && window.dashView('path'); } } ] },
+    learn: { name: 'Học', secs: [
+      { id: 'vocab', t: 'Từ vựng', page: 'page-vocab' },
+      { id: 'grammar', t: 'Ngữ pháp', page: 'page-grammar' },
+      { id: 'irr', t: 'Động từ bất quy tắc', page: 'page-irregular' } ] },
+    practice: { name: 'Luyện tập', secs: [
+      { id: 'pron', t: 'Phát âm', page: 'page-pron' },
+      { id: 'shadow', t: 'Nói đuổi (Shadowing)', page: 'page-shadow' },
+      { id: 'listen', t: 'Nghe', page: 'page-read', post: rd('listen') },
+      { id: 'dict', t: 'Nghe chép', page: 'page-listen' },
+      { id: 'read', t: 'Đọc', page: 'page-read', post: rd('read') },
+      { id: 'write', t: 'Viết', page: 'page-read', post: rd('write') },
+      { id: 'talk', t: 'Nói với AI', page: 'page-talk' } ] },
+    review: { name: 'Ôn tập', secs: [
+      { id: 'cards', t: 'Thẻ đến hạn', page: 'page-review', run: () => window.srOpen && window.srOpen() },
+      { id: 'mist', t: 'Lỗi sai', page: 'page-review', run: () => { window.srOpen && window.srOpen(); mkClick(); } },
+      { id: 'ex', t: 'Bài tập ngữ pháp', page: 'page-exercise' },
+      { id: 'para', t: 'Luyện dịch', page: 'page-para' },
+      { id: 'qb', t: 'Luyện đặt câu hỏi', page: 'page-qb' } ] },
+    tool: { name: 'Dịch', secs: [ { id: 'check', t: 'Dịch Anh–Việt', page: 'page-check' } ] }
   };
   const PG = {}; Object.keys(G).forEach(g => G[g].secs.forEach(sc => { if (!PG[sc.page]) PG[sc.page] = g; }));
   PG['page-listen'] = 'practice';
@@ -912,17 +919,18 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
   const NOTE = {
     vocab: [1, 'mỗi ngày học khoảng 10 từ mới.'],
     grammar: [1, 'mỗi ngày học 1 bài, rồi làm bài tập của bài đó.'],
-    irr: [2, 'học 5–10 động từ mỗi lần, sau khi đã biết thì quá khứ đơn.', 'Grammar (thì hiện tại và quá khứ đơn)'],
+    irr: [2, 'học 5–10 động từ mỗi lần, sau khi đã biết thì quá khứ đơn.', 'Ngữ pháp (thì hiện tại và quá khứ đơn)'],
     pron: [1, 'mỗi ngày 5 phút, bắt đầu từ bảng IPA.'],
     shadow: [1, 'mỗi ngày 1 bài. Đây là cách nhanh nhất để nghe và nói trôi chảy.'],
     listen: [1, '2–3 lần mỗi tuần, nghe mỗi bài ít nhất hai lượt.'],
+    dict: [1, 'mỗi ngày vài câu: nghe hết câu rồi mới gõ, nghe chậm khi gặp chỗ khó.'],
     read: [1, '2–3 bài mỗi tuần, tra từ mới ngay trong bài.'],
-    write: [2, '1–2 bài mỗi tuần, đọc kỹ phần AI sửa lỗi.', 'Vocabulary và Grammar ở cấp A1'],
-    talk: [2, '2–3 lần mỗi tuần, bắt đầu với Role-play.', 'Shadowing và Pronunciation'],
+    write: [2, '1–2 bài mỗi tuần, đọc kỹ phần AI sửa lỗi.', 'Từ vựng và Ngữ pháp ở cấp A1'],
+    talk: [2, '2–3 lần mỗi tuần, bắt đầu với Role-play.', 'Nói đuổi và Phát âm'],
     cards: [1, 'mỗi ngày, khi có thẻ đến hạn. Ôn đúng hạn giúp nhớ lâu nhất.'],
     mist: [1, 'mỗi tuần xem lại một lần để sửa các lỗi cũ.'],
     ex: [1, 'sau mỗi bài ngữ pháp, làm bài tập cùng chủ điểm.'],
-    para: [3, '1–2 đoạn mỗi tuần.', 'Grammar exercises (dịch từng câu)'],
+    para: [3, '1–2 đoạn mỗi tuần.', 'Bài tập ngữ pháp (dịch từng câu)'],
     qb: [2, '2–3 lần mỗi tuần để phản xạ đặt câu hỏi nhanh hơn.', 'Grammar (câu hỏi Yes/No và Wh-)']
   };
   const lvNow = () => { try { return Math.max(1, Math.min(5, (window.htaLevel && window.htaLevel()) || 1)); } catch (e) { return 1; } };
@@ -972,7 +980,7 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
     cur = { g, s };
     grpBtns.forEach(b => { const on = b.dataset.grp === g; b.classList.toggle('grp-on', on); b.classList.toggle('active', on); if (on) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
     document.body.dataset.grp = g; document.body.dataset.sec = s;
-    if (pg.id === 'page-read') { const t = pg.querySelector('.section-title'), n = { listen: 'Listening', read: 'Reading', write: 'Writing' }[s]; if (t && n) t.textContent = n; }   // v233: tên trang khớp tên phần
+    if (pg.id === 'page-read') { const t = pg.querySelector('.section-title'), n = { listen: 'Nghe', read: 'Đọc', write: 'Viết' }[s]; if (t && n) t.textContent = n; }   // v233: tên trang khớp tên phần
     drawBar();
   }
   const mo = new MutationObserver(() => sync());
@@ -1150,6 +1158,7 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
 })();
 </script>
 <!-- tab-para: nạp khi mở tab -->
+<script src="js/app-guide.js?h=ca567480df"></script>
 <script src="js/app-backup.js?h=9cb8726de3"></script>
 </body>
 </html>
