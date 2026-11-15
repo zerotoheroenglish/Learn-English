@@ -1106,6 +1106,7 @@
   .btn-ghost{ background:var(--card); border:1.5px solid var(--paper-line); color:var(--ink-soft); border-radius:12px; }
   .pron-input-row input[type="text"], .verb-search-row input[type="text"]{
     font-family:var(--font-body); font-size:16px;
+    min-width:0;   /* v259: cho ô nhập co lại trên màn hình 320px, nút “Tra” không bị đẩy ra ngoài */
     background:var(--card); border:1.5px solid var(--paper-line); border-radius:14px;
     padding:12px 14px; color:var(--ink);
   }
@@ -3855,6 +3856,8 @@
   @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .gx-st.st-learning{ background:#0F2A40; color:#74C0FC; } :root:not([data-theme="light"]) .gx-st.st-weak{ background:#3A220C; color:#FFA94D; } }
   .gx-best{ font-size:11.5px; color:var(--ink-soft); } .gx-due{ font-size:11.5px; color:#E67700; font-weight:700; }
   .gx-fav{ position:absolute; top:8px; right:10px; font-size:17px; color:var(--hint); cursor:pointer; line-height:1; background:none; border:none; padding:2px; }
+/* v259: vùng bấm ngôi sao lớn hơn (≈34px thay vì 21px), vị trí ngôi sao giữ nguyên */
+.gx-fav:not(.big){ top:2px; right:4px; padding:8px; }
   .gx-fav.on{ color:#F59F00; }
   .gx-fav.big{ position:static; font-size:24px; }
   .gx-title-row{ display:flex; align-items:center; gap:10px; }
