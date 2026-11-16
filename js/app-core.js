@@ -6993,7 +6993,8 @@ function lsRender() {
   const mask = lsEl('div', 'ls-mask');
   c.disp.forEach((w, di) => {
     const st = lsWordState(di);
-    const span = lsEl('span', 'ls-w ' + st, st === 'hidden' ? '•'.repeat(Math.min(Math.max(lsNorm(w).join('').length, 2), 10)) : w);
+    // v264: mỗi chữ cái / chữ số đúng một chấm, giữ dấu nháy và dấu câu (như phần Nói đuổi) — trước đây "a" hiện 2 chấm, "twenty" hiện 2 chấm
+    const span = lsEl('span', 'ls-w ' + st, st === 'hidden' ? w.replace(/[A-Za-z0-9]/g, '•') : w);
     mask.appendChild(span);
   });
   lsCard.appendChild(mask);
