@@ -6886,15 +6886,28 @@ const LS_POOL = (function buildPool() {
 })();
 
 // longest common subsequence between target tokens and typed tokens
+// v261: chấm đúng cả chính tả kiểu Anh lẫn kiểu Mỹ (colour = color, travelling = traveling…).
+// Nghe chỉ có âm thanh, người học không thể biết đáp án viết theo kiểu nào. Loại trừ vài cặp là hai từ khác nghĩa thật.
+const LS_BRAM_NOT = new Set(['advise|advice', 'advice|advise', 'devise|device', 'device|devise', 'filled|filed', 'filed|filled', 'tilled|tiled', 'tiled|tilled', 'prise|price', 'price|prise']);
+const lsBrAmMemo = new Map();
+function lsSame(x, y) {
+  if (x === y) return true;
+  if (x.length < 4 || y.length < 4 || x[0] !== y[0] || Math.abs(x.length - y.length) > 2 || typeof fxBrAm !== 'function') return false;
+  const k = x + '|' + y;
+  if (lsBrAmMemo.has(k)) return lsBrAmMemo.get(k);
+  const r = !LS_BRAM_NOT.has(k) && (fxBrAm(x, y) || fxBrAm(y, x));
+  lsBrAmMemo.set(k, r);
+  return r;
+}
 function lsMatch(a, b) {
   const n = a.length, m = b.length;
   const dp = Array.from({ length: n + 1 }, () => new Array(m + 1).fill(0));
   for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--)
-    dp[i][j] = a[i] === b[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
+    dp[i][j] = lsSame(a[i], b[j]) ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
   const ta = new Set(), tb = new Set();
   let i = 0, j = 0;
   while (i < n && j < m) {
-    if (a[i] === b[j]) { ta.add(i); tb.add(j); i++; j++; }
+    if (lsSame(a[i], b[j])) { ta.add(i); tb.add(j); i++; j++; }
     else if (dp[i + 1][j] >= dp[i][j + 1]) i++; else j++;
   }
   return { ta, tb };
