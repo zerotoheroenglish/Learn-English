@@ -68,7 +68,7 @@
   const V = { f: 'all', fixed: false, more: 0 };
   function open(root, onBack) {
     root.innerHTML = '';
-    const back = E('button', 'gr-back', '← Due cards'); back.type = 'button';
+    const back = E('button', 'gr-back', '← Thẻ đến hạn'); back.type = 'button';
     back.addEventListener('click', () => { if (onBack) onBack(); });
     root.appendChild(back);
     const all = Object.values(db), openL = all.filter(x => !x.fx), fixedL = all.filter(x => x.fx);
@@ -1392,7 +1392,7 @@
     const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z');
     const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Hoc Tieng Anh//On tap//VI', 'CALSCALE:GREGORIAN', 'BEGIN:VEVENT',
       'UID:hoc-tieng-anh-on-tap-' + Date.now() + '@local', 'DTSTAMP:' + stamp, 'DTSTART:' + loc, 'DURATION:PT15M', 'RRULE:FREQ=DAILY',
-      'SUMMARY:🔁 Ôn tập tiếng Anh (15 phút)', 'DESCRIPTION:Mở app Học Tiếng Anh → Review → Due cards.' + (url ? '\\n' + url : ''), url ? 'URL:' + url : '',
+      'SUMMARY:🔁 Ôn tập tiếng Anh (15 phút)', 'DESCRIPTION:Mở app Học Tiếng Anh → Ôn tập → Thẻ đến hạn.' + (url ? '\\n' + url : ''), url ? 'URL:' + url : '',
       'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:Đến giờ ôn tập tiếng Anh', 'TRIGGER:PT0M', 'END:VALARM', 'END:VEVENT', 'END:VCALENDAR'].filter(Boolean);
     const blob = new Blob([lines.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'nhac-on-tap-tieng-anh.ics';
@@ -1442,7 +1442,7 @@
     S = { q, i: 0, ok: 0, n: 0, again: new Set(), gres: [], by: { v: 0, g: 0, i: 0, m: 0 }, t0: Date.now() };
     root.innerHTML = '';
     const head = E('div', 'tk-top');
-    const back = E('button', 'gr-back', '← Due cards'); back.type = 'button';
+    const back = E('button', 'gr-back', '← Thẻ đến hạn'); back.type = 'button';
     back.addEventListener('click', () => { finishGrammar(); S = null; home(); });
     head.appendChild(back);
     S.prog = E('div', 'tk-prog'); head.appendChild(S.prog);
@@ -1681,6 +1681,10 @@
       const m = cards[c.id]; rec = m;
       if (m.src === 'fx') {   // v183: thẻ ngữ pháp từ bước Học công thức
         tag.textContent = '📐 Công thức ngữ pháp';
+        // v262: ghi rõ thẻ thuộc bài ngữ pháp nào (thì nào), không để chung chung "Câu khẳng định"
+        const fxLid = String(c.id).split('|')[1] || '';
+        const fxLes = typeof GX_ALL !== 'undefined' ? GX_ALL.find(x => x.id === fxLid) : null;
+        if (fxLes) front.appendChild(E('div', 'rv-fx-les', '📘 ' + fxLes.title + (fxLes.en && fxLes.en !== fxLes.title ? ' · ' + fxLes.en : '')));
         front.appendChild(E('div', 'rv-ask', m.ask || 'Bạn còn nhớ?'));
         front.appendChild(E('div', 'rv-word vi rv-fx', m.f));
         // v184: tự gõ câu trả lời trước khi xem đáp án (nhớ lại chủ động)

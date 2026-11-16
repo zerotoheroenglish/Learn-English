@@ -39,6 +39,7 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
   let fav = new Set(load(K.fav, [])), mine = load(K.mine, []); if (!Array.isArray(mine)) mine = [];
   window.addEventListener('hoc-shadow-mine', () => { const m = load(K.mine, []); if (Array.isArray(m)) mine = m; });
   const set = Object.assign({ speed: 1, txt: true, ipa: true, vi: true, lk: true, list: true, auto: true, step: 1, s3txt: true, st: false, guide: false }, load(K.set, {}));
+  if (set.step === 3) set.step = 2;   // v262: Repeat và Shadowing gộp thành một bước "Nói theo"
   // bài đã "hoàn thành" ở bản cũ (3 bước) vẫn được tính là hoàn thành
   load(K.oldDone, []).forEach(id => { if (!prog[id]) prog[id] = { b: {}, cur: 0, t: Date.now() - 864e5 }; prog[id].done = true; });
   const saveProg = () => save(K.prog, prog), saveSet = () => save(K.set, set);
@@ -1302,10 +1303,9 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
       side.appendChild(lkl);
       side.appendChild(E('div', 'sd-tip-t', 'Cách luyện hiệu quả'));
       const ol = E('ol', 'sd-tip-ol');
-      ['Bước 1 · Listen: nghe 2–3 lần, đọc nghĩa và các cụm ý. Chưa cần nói.',
-       'Bước 2 · Repeat: nghe chậm 0.5x–0.75x, lặp lại từng cụm rồi cả câu.',
-       'Bước 3 · Shadowing: ẩn bản dịch (có thể ẩn cả câu), nói cùng lúc với giọng mẫu, bắt chước nhịp và ngữ điệu.',
-       'Bước 4 · Retell: chỉ nhìn nghĩa tiếng Việt, tự nói lại câu; app chỉ ra từ còn thiếu.',
+      ['Bước 1 · Nghe: nghe 2–3 lần, đọc nghĩa và các cụm ý. Chưa cần nói.',
+       'Bước 2 · Nói theo: lúc đầu nghe chậm rồi lặp lại từng cụm; khi quen, bấm "Phát mẫu + nói cùng lúc" để nói đuổi, ẩn dần bản dịch và câu tiếng Anh.',
+       'Bước 3 · Nói lại: chỉ nhìn nghĩa tiếng Việt, tự nói lại câu; app chỉ ra từ còn thiếu.',
        'Từ màu đỏ là chỗ máy chưa nghe ra: chạm để nghe riêng. So sánh "Giọng mẫu" và "Giọng của bạn" để tự đánh giá phát âm.',
        'Học lại vào một ngày khác: bài đạt "Thành thạo" khi mọi câu ≥ 80% và đã luyện ít nhất 2 ngày.'].forEach(t => ol.appendChild(E('li', null, t)));
       side.appendChild(ol);
@@ -1526,18 +1526,22 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
   let last = null;   // kết quả lần nói gần nhất của câu hiện tại
   let quiz = null;   // quiz của bài đang mở
   let recKey = '';   // câu đang có bản ghi âm "Giọng của bạn"
-  /* v113: Shadowing theo 4 bước, mỗi bước một mục đích */
+  /* v113: Shadowing theo từng bước, mỗi bước một mục đích.
+     v262: gộp Repeat + Shadowing thành một bước "Nói theo" (cùng micro, cùng chỗ lưu điểm 'b').
+     Mã bước giữ nguyên (1, 2, 4) để không ảnh hưởng tiến độ đã lưu; số hiện ra là 1, 2, 3. */
   const STEPS = [
-    [1, '👂', 'Listen', 'Bước 1 · Nghe câu mẫu, đọc nghĩa và các cụm ý cho đến khi hiểu. Chưa cần nói.'],
-    [2, '🔁', 'Repeat', 'Bước 2 · Nghe chậm (0.5x – 1x), lặp lại từng cụm rồi cả câu. App đo độ khớp nhận diện.'],
-    [3, '🎧', 'Shadowing', 'Bước 3 · Ẩn bản dịch (có thể ẩn cả câu tiếng Anh), nói cùng lúc với giọng mẫu, theo kịp nhịp và ngữ điệu.'],
-    [4, '🧠', 'Retell', 'Bước 4 · Không nhìn câu: dựa vào nghĩa tiếng Việt để tự nói lại, app chỉ ra từ còn thiếu.']
+    [1, '👂', 'Nghe', 'Bước 1 · Nghe câu mẫu, đọc nghĩa và các cụm ý cho đến khi hiểu. Chưa cần nói.'],
+    [2, '🎧', 'Nói theo', 'Bước 2 · Nghe rồi nói lại, hoặc bấm "Phát mẫu + nói cùng lúc" để nói đuổi theo giọng mẫu. Khó thì nghe chậm, luyện từng cụm; khi đã quen, ẩn bản dịch rồi ẩn cả câu tiếng Anh.'],
+    [4, '🧠', 'Nói lại', 'Bước 3 · Không nhìn câu: dựa vào nghĩa tiếng Việt để tự nói lại, app chỉ ra từ còn thiếu.']
   ];
+  const stepInfo = n => STEPS.find(x => x[0] === n) || STEPS[0];
+  const stepNo = n => STEPS.findIndex(x => x[0] === n) + 1;
+  const stepNext = n => { const k = STEPS.findIndex(x => x[0] === n); return k >= 0 && k < STEPS.length - 1 ? STEPS[k + 1][0] : 0; };
   function stepBar() {
     const w = E('div', 'sd-steps');
-    STEPS.forEach(([n, ic, t]) => {
+    STEPS.forEach(([n, ic, t], k) => {
       const b = E('button', 'sd-step' + (set.step === n ? ' on' : ''));
-      b.appendChild(E('span', 'sd-step-n', String(n)));
+      b.appendChild(E('span', 'sd-step-n', String(k + 1)));
       b.appendChild(E('span', 'sd-step-t', ic + ' ' + t));
       b.setAttribute('aria-pressed', set.step === n ? 'true' : 'false');
       b.addEventListener('click', () => { if (set.step === n) return; stopAll(); set.step = n; saveSet(); last = null; renderMain(); if (n !== 4 && set.auto) playCur(); });
@@ -1649,7 +1653,7 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     const mk = view.mode + step;
     if (!last || last.l !== l.id || last.i !== i || last.mode !== mk) last = { l: l.id, i, mode: mk, res: null, tries: 0, err: '', typed: '', peek: false, hint: false };
     main.innerHTML = '';
-    if (step) { main.appendChild(stepBar()); main.appendChild(E('div', 'sd-step-d', STEPS[step - 1][3])); }
+    if (step) { main.appendChild(stepBar()); main.appendChild(E('div', 'sd-step-d', stepInfo(step)[3])); }
     const bar = E('div', 'sd-mbar');
     bar.appendChild(E('span', 'sd-pill', '#' + (i + 1)));
     bar.appendChild(E('span', 'sd-mbar-n', nWords(r[0]) + ' từ'));
@@ -1678,8 +1682,8 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
       box.appendChild(chunkRow(r, true));
       box.appendChild(sentGuide(r));
       main.appendChild(box);
-      main.appendChild(micBox({ key: 'b' }));
-    } else if (step === 3) {
+      main.appendChild(micBox({ key: 'b', along: true }));
+    } else if (step === 3) {   // không còn dùng từ v262 (đã gộp vào bước 2), giữ lại cho an toàn
       ovr = { vi: false, ipa: false, txt: set.s3txt !== false };
       const tg = E('div', 'sd-toggles');
       const hb = E('button', 'sd-tg' + (set.s3txt !== false ? '' : ' on'), set.s3txt !== false ? '🙈 Ẩn câu tiếng Anh' : '👁 Hiện câu tiếng Anh');
@@ -1727,10 +1731,10 @@ SH_LESSONS.push(...[{"id":"b1-standup","cat":"work","lv":3,"icon":"🗓️","tit
     main.appendChild(controls(playCur));
     const nav = E('div', 'sd-nav');
     const lastOne = i >= l.s.length - 1;
-    const nx = E('button', 'btn-primary sd-next', !lastOne ? 'Câu tiếp theo →' : step && step < 4 && !l.map ? `✓ Xong bước ${step} · Sang bước ${step + 1} →` : '🎉 Xong bài · Về thư viện');
+    const nx = E('button', 'btn-primary sd-next', !lastOne ? 'Câu tiếp theo →' : step && stepNext(step) && !l.map ? `✓ Xong bước ${stepNo(step)} · Sang bước ${stepNo(stepNext(step))} →` : '🎉 Xong bài · Về thư viện');
     nx.addEventListener('click', () => {
       if (!lastOne) go(i + 1);
-      else if (step && step < 4 && !l.map) { set.step = step + 1; saveSet(); last = null; go(0); renderMain(); }
+      else if (step && stepNext(step) && !l.map) { set.step = stepNext(step); saveSet(); last = null; go(0); renderMain(); }
       else { renderHome(); irrTopSafe(); }
     });
     nav.appendChild(nx);

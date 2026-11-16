@@ -169,14 +169,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="app.css?h=85833c9a7f">
+<link rel="stylesheet" href="app.css?h=07fcf1da5d">
 </head>
 <body><a class="skip-link" href="#main-content">Bỏ qua, đến bài học</a>
 
 <header class="hero">
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v261</span>
+      <span class="hero-badge">EN ⇄ VI · v262</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice" id="voice-btn" aria-label="Chọn giọng đọc">🔊 <span class="hv-label">Giọng đọc</span></button>
@@ -408,7 +408,7 @@
   <!-- PAGE: TENSES -->
   <section class="page" id="page-shadow">
     <div class="section-title">Nói đuổi (Shadowing)</div>
-    <div class="section-sub">Nghe từng câu rồi nói theo như cái bóng, theo 4 bước: Listen → Repeat → Shadowing → Retell. Có phiên âm, cách đọc, chính tả, quiz và tốc độ 0.5x – 1.5x.</div>
+    <div class="section-sub">Nghe từng câu rồi nói theo như cái bóng, theo 3 bước: Nghe → Nói theo → Nói lại. Có phiên âm, cách đọc, chính tả, quiz và tốc độ 0.5x – 1.5x.</div>
     <section class="gd gd-shadow" aria-label="Nghe lại → Nói theo"><div class="gd-tag">CÁCH LUYỆN</div><h3 class="gd-t">Nghe lại → Nói theo</h3><ol class="gd-steps"><li><b>1</b><span><strong>Nghe câu mẫu</strong><small>Nghe vài lần, để ý nhịp và chỗ nhấn</small></span></li><li><b>2</b><span><strong>Nói theo ngay</strong><small>Bấm micro, nói gần như cùng lúc với câu mẫu</small></span></li></ol><button type="button" class="gd-go" data-gd-go="practice:listen">← Quay lại phần Nghe</button></section>
     <div id="sh-root"></div>
   </section>
@@ -718,7 +718,7 @@
    - không tải sẵn hàng loạt. Chỉ tải trước ĐÚNG MỘT tab (tab nạp-khi-cần bạn mở gần nhất), khi trình duyệt thật sự rảnh,
      và không làm việc này nếu bật tiết kiệm dữ liệu, mạng chậm (2G/3G) hoặc máy ít RAM */
 (function () {
-  var LAZY = {"page-exercise":"js/app-exercises.js?h=26882cc1d8","page-shadow":"js/tab-shadowing.js?h=d35707e541","page-qb":"js/tab-questions.js?h=9461374772","page-read":"js/tab-reading.js?h=ffd1ae51ff","page-talk":"js/tab-talk.js?h=2660b4cfc1","page-para":"js/tab-para.js?h=f2f7a86a27"}, DATA = {"exvi":"js/data-vocab-vi.js?h=86a0d1968d","exd":"js/data-exercises.js?h=bcd3e18075","vocab":"js/data-vocab.js?h=de1ae4d88a"}, DEPS = { 'page-vocab': ['exvi'] }, PRE = { 'page-exercise': ['exd'] }, state = {};
+  var LAZY = {"page-exercise":"js/app-exercises.js?h=26882cc1d8","page-shadow":"js/tab-shadowing.js?h=f9977d8a62","page-qb":"js/tab-questions.js?h=9461374772","page-read":"js/tab-reading.js?h=ffd1ae51ff","page-talk":"js/tab-talk.js?h=2660b4cfc1","page-para":"js/tab-para.js?h=f2f7a86a27"}, DATA = {"exvi":"js/data-vocab-vi.js?h=86a0d1968d","exd":"js/data-exercises.js?h=bcd3e18075","vocab":"js/data-vocab.js?h=de1ae4d88a"}, DEPS = { 'page-vocab': ['exvi'] }, PRE = { 'page-exercise': ['exd'] }, state = {};
   function inject(key, url) {
     if (!url) return Promise.resolve();
     if (state[key]) return state[key];
@@ -817,7 +817,7 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
 <!-- tab-questions: nạp khi mở tab -->
 <!-- tab-reading: nạp khi mở tab -->
 <!-- tab-talk: nạp khi mở tab -->
-<script src="js/app-review.js?h=28cbcb2a84"></script>
+<script src="js/app-review.js?h=527e1883d7"></script>
 <script src="js/app-gxlearn.js?h=687d5aea98"></script>
 <script src="js/app-onboard.js?h=107697c1c7"></script>
 <script>
