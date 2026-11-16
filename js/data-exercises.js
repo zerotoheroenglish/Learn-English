@@ -595,7 +595,7 @@ const EX_MORE = {
     ['My phone fell and broke yesterday.', 'Hôm qua điện thoại của tôi rơi và bị vỡ.']
   ],
   'past-continuous': [
-    ['She was reading when the lights went out.', 'Cô ấy đang đọc sách thì mất điện.'],
+    ['She was reading a book when the power went out.', 'Cô ấy đang đọc sách thì mất điện.'],
     ['We were having dinner at seven last night.', 'Bảy giờ tối qua chúng tôi đang ăn tối.'],
     ['I was waiting outside while he was parking the car.', 'Tôi đang đợi ở ngoài trong khi anh ấy đang đậu xe.'],
     ['What were they doing when you came in?', 'Họ đang làm gì khi bạn bước vào?'],
