@@ -9601,11 +9601,16 @@ function vcRenderQuiz() {
     const play = lsEl('button', 'ls-play');
     play.setAttribute('aria-label', 'Nghe từ');
     play.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>';
-    play.addEventListener('click', () => speak(it.w, 0.8));
+    play.addEventListener('click', () => speak(vcListenText(it), 0.8));
     pr.appendChild(play);
     const slow = lsEl('button', 'ls-slow', '🐢 Nghe chậm');
-    slow.addEventListener('click', () => speak(it.w, 0.5));
+    slow.addEventListener('click', () => speak(vcListenText(it), 0.5));
     pr.appendChild(slow);
+    if (it.ex && vcListenText(it) === it.w) {   // v267: nghe từ trong câu ví dụ để rõ nghĩa và cách đọc
+      const inSent = lsEl('button', 'ls-slow', '💬 Nghe trong câu');
+      inSent.addEventListener('click', () => speak(it.ex, 0.85));
+      pr.appendChild(inSent);
+    }
   } else {
     pr.appendChild(lsEl('div', 'vc-q-label', q.type === 'fill' ? 'Gõ từ còn thiếu vào chỗ trống' : 'Chọn từ phù hợp với chỗ trống'));
     pr.appendChild(lsEl('div', 'vw-sent', q.bl.sent));
@@ -9660,8 +9665,17 @@ function vcRenderQuiz() {
     setTimeout(() => { try { next.focus({ preventScroll: true }); } catch (e) {} }, 30);
   } else if (!q.spoken && (q.type === 'en2vi' || q.type === 'listen')) {
     q.spoken = true;
-    speak(it.w, 0.8);
+    speak(q.type === 'listen' ? vcListenText(it) : it.w, 0.8);
   }
+}
+/* v267: giọng đọc có sẵn của máy đọc cụm từ ngắn đứng riêng hay bị nghe nhầm (ví dụ "get out" nghe như "get up"),
+   còn từ có hai cách đọc (lead, wind, tears, object…) thì máy không biết đọc theo nghĩa nào.
+   Ở bài "Nghe chọn từ", những trường hợp này đọc từ rồi đọc luôn câu ví dụ để có ngữ cảnh. */
+const VC_TTS_AMBIG = new Set(['lead', 'wind', 'wound', 'tears', 'tear', 'bass', 'read', 'live', 'close', 'row', 'bow', 'dove', 'sow', 'use', 'excuse', 'house', 'minute', 'desert', 'present', 'record', 'produce', 'project', 'object', 'content', 'convict', 'conduct', 'compact', 'console', 'convert', 'compress', 'extract', 'exploit', 'permit', 'suspect', 'subject', 'refund', 'discount', 'address', 'combine', 'recall', 'invalid', 'incense', 'contract', 'contrast', 'increase', 'decrease', 'insult', 'protest', 'rebel', 'separate', 'estimate', 'graduate', 'moderate', 'alternate', 'appropriate', 'delegate', 'elaborate', 'polish', 'august', 'either', 'neither', 'vase', 'tomato', 'aunt', 'status']);
+function vcListenText(it) {
+  const w = String(it.w || '');
+  if (it.ex && (/\s/.test(w) || VC_TTS_AMBIG.has(w.toLowerCase()))) return w + '. ' + it.ex;
+  return w;
 }
 document.querySelectorAll('nav.tabbar button[data-page="page-vocab"]').forEach(b =>
   b.addEventListener('click', () => { if (vc.view === 'home') vcRenderHome(); else if (vc.view === 'topic') vcRenderTopicPage(); }));
