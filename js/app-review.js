@@ -577,7 +577,7 @@
     const gx = {}; L.filter(x => x.src === 'gx').forEach(x => { const id = String(x.k).split('|')[1]; (gx[id] = gx[id] || { n: 0, c: 0, cat: x.cat }); gx[id].n += x.n || 1; gx[id].c++; });
     const worst = Object.keys(gx).sort((a, b) => gx[b].n - gx[a].n)[0];
     if (worst && (gx[worst].c >= 2 || gx[worst].n >= 3)) {
-      add({ ic: '📐', t: 'Học lại: ' + gx[worst].cat, sub: `Bạn đã sai ${gx[worst].n} lần ở ${gx[worst].c} câu của bài này`, why: 'Hay sai', k: 'gxw', go: () => openIn('page-grammar', () => gxLesson(worst)) });
+      add({ ic: '📐', t: 'Học lại: ' + gx[worst].cat, sub: `Bạn đã sai ${gx[worst].n} lần ở ${gx[worst].c} câu của bài này`, why: 'Hay sai', k: 'gxw', id: worst, go: () => openIn('page-grammar', () => gxLesson(worst)) });
     }
     if (L.length >= 3) {
       const by = {}; L.forEach(x => { by[x.src] = (by[x.src] || 0) + 1; });
@@ -607,7 +607,7 @@
     let st = J(T3K);
     if (!st || st.d !== dayNo() || !Array.isArray(st.list) || !st.list.length) {
       const R = recs(S, due).slice(0, 3);
-      st = { d: dayNo(), list: R.map(r => ({ t: r.t, why: r.why || '', sub: r.sub || '', ic: r.ic, k: r.k || '', base: t3Base(r.k) })) };
+      st = { d: dayNo(), list: R.map(r => ({ t: r.t, why: r.why || '', sub: r.sub || '', ic: r.ic, k: r.k || '', id: r.id || '', base: t3Base(r.k) })) };
       if (st.list.length) try { localStorage.setItem(T3K, JSON.stringify(st)); } catch (e) {}
     }
     return st;
@@ -625,7 +625,14 @@
     return false;
   }
   function t3Go(f, S, due) {
-    const cur = recs(S, due).find(r => r.t === f.t) || recs(S, due).find(r => r.k === f.k);
+    /* v266: việc "Học lại" đã chốt từ đầu ngày phải mở đúng bài ghi trên thẻ. Trước đây nếu trong ngày bài hay sai nhất đổi
+       (ví dụ sai thêm ở bài khác), bấm vào lại mở bài mới, không khớp tên việc. */
+    if (f.k === 'gxw') {
+      let id = f.id;
+      if (!id && typeof GX_ALL !== 'undefined') { const g = GX_ALL.find(x => 'Học lại: ' + x.title === f.t); if (g) id = g.id; }   // việc đã chốt trước bản v266
+      if (id) return () => openIn('page-grammar', () => gxLesson(id));
+    }
+    const cur = recs(S, due).find(r => r.t === f.t) || (f.k === 'gxw' ? null : recs(S, due).find(r => r.k === f.k));
     if (cur) return cur.go;
     if (SKN[f.k]) { const n = nextFor(f.k, S); if (n) return n.go; }
     return null;
