@@ -3,7 +3,7 @@
   'use strict';
   const NAME = {
     learn: { vocab: 'Từ vựng', grammar: 'Ngữ pháp', irr: 'Động từ bất quy tắc' },
-    practice: { pron: 'Phát âm', shadow: 'Nói đuổi', listen: 'Nghe', dict: 'Nghe chép', read: 'Đọc', write: 'Viết', talk: 'Nói với AI' },
+    practice: { pron: 'Phát âm', shadow: 'Nói đuổi', listen: 'Nghe', read: 'Đọc', write: 'Viết', talk: 'Nói với AI' },
     review: { cards: 'Thẻ đến hạn', mist: 'Lỗi sai', ex: 'Bài tập ngữ pháp', para: 'Luyện dịch', qb: 'Luyện đặt câu hỏi' },
     tool: { check: 'Dịch Anh–Việt' }
   };

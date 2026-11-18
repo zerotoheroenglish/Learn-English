@@ -176,7 +176,7 @@
 <header class="hero">
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v268</span>
+      <span class="hero-badge">EN ⇄ VI · v269</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice" id="voice-btn" aria-label="Chọn giọng đọc">🔊 <span class="hv-label">Giọng đọc</span></button>
@@ -288,7 +288,7 @@
   <section class="page" id="page-read">
     <div class="section-title">Nghe · Đọc · Viết</div>
     <div class="section-sub">Đọc hiểu, nghe hội thoại và viết theo đề A1 → C1, nội dung do app tự soạn. Chạm từ để tra nghĩa; bài viết được AI chấm bằng khoá của bạn.</div>
-    <section class="gd gd-listen" aria-label="Nghe hiểu → Nghe chép → Nói theo"><div class="gd-tag">CÁCH LUYỆN</div><h3 class="gd-t">Nghe hiểu → Nghe chép → Nói theo</h3><ol class="gd-steps"><li><b>1</b><span><strong>Nghe hội thoại</strong><small>Nghe hết một lượt rồi trả lời câu hỏi</small></span></li><li><b>2</b><span><strong>Nghe chép</strong><small>Gõ lại từng câu nghe được, app chấm từng từ</small></span></li><li><b>3</b><span><strong>Nói theo</strong><small>Sang Nói đuổi để luyện nói các câu tương tự</small></span></li></ol><button type="button" class="gd-go" data-gd-go="practice:dict">Sang Nghe chép →</button> <button type="button" class="gd-go" data-gd-go="practice:shadow">Sang Nói đuổi →</button></section>
+    <section class="gd gd-listen" aria-label="Nghe hiểu → Nghe chép → Nói theo trong Nói đuổi"><div class="gd-tag">CÁCH LUYỆN</div><h3 class="gd-t">Nghe hiểu → Chép lại → Nói theo</h3><ol class="gd-steps"><li><b>1</b><span><strong>Nghe hội thoại</strong><small>Nghe hết một lượt rồi trả lời câu hỏi</small></span></li><li><b>2</b><span><strong>Chép lại câu</strong><small>Trong Nói đuổi, mở bài rồi chọn tab Dictation</small></span></li><li><b>3</b><span><strong>Nói theo</strong><small>Ở Nói đuổi, nói theo giọng mẫu từng câu</small></span></li></ol><button type="button" class="gd-go" data-gd-go="practice:shadow">Sang Nói đuổi →</button></section>
     <div id="rd-root"></div>
   </section>
   <section class="page" id="page-talk">
@@ -347,7 +347,7 @@
     <div id="vc-root"></div>
   </section>
 
-  <section class="page" id="page-listen">
+  <section class="page" id="page-listen" hidden><!-- v269: ẩn lại theo yêu cầu chủ app — nghe chép đã có trong Nói đuổi (tab Dictation) -->
     <div class="section-title">Nghe chép</div>
     <div class="section-sub">Nghe câu tiếng Anh rồi gõ lại đúng từng từ. App chấm ngay, từ đúng hiện xanh, từ thiếu bị che lại để bạn nghe tiếp.</div>
     <div class="ls-modes" id="ls-modes">
@@ -704,7 +704,6 @@
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4A1.5 1.5 0 0 1 4 14.5z"/><path d="M9.8 7.6a2.3 2.3 0 1 1 3 2.2c-.6.2-.8.6-.8 1.2"/><path d="M12 13.3h.01"/></svg></span>
     Câu hỏi
   </button>
-  <button hidden aria-hidden="true" tabindex="-1" data-page="page-listen">Nghe chép</button>
   <button hidden aria-hidden="true" tabindex="-1" data-page="page-read">
     <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5C5.5 4.3 8.5 4.3 12 6c3.5-1.7 6.5-1.7 9-.5v13c-2.5-1.2-5.5-1.2-9 .5-3.5-1.7-6.5-1.7-9-.5z"/><path d="M12 6v13.5"/></svg></span>
     Đọc · Nghe · Viết
@@ -891,7 +890,6 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
       { id: 'pron', t: 'Phát âm', page: 'page-pron' },
       { id: 'shadow', t: 'Nói đuổi (Shadowing)', page: 'page-shadow' },
       { id: 'listen', t: 'Nghe', page: 'page-read', post: rd('listen') },
-      { id: 'dict', t: 'Nghe chép', page: 'page-listen' },
       { id: 'read', t: 'Đọc', page: 'page-read', post: rd('read') },
       { id: 'write', t: 'Viết', page: 'page-read', post: rd('write') },
       { id: 'talk', t: 'Nói với AI', page: 'page-talk' } ] },
@@ -922,7 +920,6 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
     pron: [1, 'mỗi ngày 5 phút, bắt đầu từ bảng IPA.'],
     shadow: [1, 'mỗi ngày 1 bài. Đây là cách nhanh nhất để nghe và nói trôi chảy.'],
     listen: [1, '2–3 lần mỗi tuần, nghe mỗi bài ít nhất hai lượt.'],
-    dict: [1, 'mỗi ngày vài câu: nghe hết câu rồi mới gõ, nghe chậm khi gặp chỗ khó.'],
     read: [1, '2–3 bài mỗi tuần, tra từ mới ngay trong bài.'],
     write: [2, '1–2 bài mỗi tuần, đọc kỹ phần AI sửa lỗi.', 'Từ vựng và Ngữ pháp ở cấp A1'],
     talk: [2, '2–3 lần mỗi tuần, bắt đầu với Role-play.', 'Nói đuổi và Phát âm'],
@@ -1157,7 +1154,7 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
 })();
 </script>
 <!-- tab-para: nạp khi mở tab -->
-<script src="js/app-guide.js?h=ca567480df"></script>
+<script src="js/app-guide.js?h=7b9986f887"></script>
 <script src="js/app-backup.js?h=9cb8726de3"></script>
 </body>
 </html>
