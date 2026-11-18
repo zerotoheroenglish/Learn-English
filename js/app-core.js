@@ -6139,12 +6139,12 @@ function gxQuiz(box, qs, opts) {
     const next = grEl('button', 'btn-primary gx-next', S.i + 1 < qs.length ? 'Câu tiếp →' : (opts.doneLabel || 'Xem kết quả'));
     next.hidden = true;
     next.addEventListener('click', () => { S.i++; draw(); });
-    const finish = (ok, detail, user) => {
+    const finish = (ok, detail, user, title) => {
       S.res.push({ id: Q.id, qid: Q.qid, ok });
       try { if (!opts.noMk) gxMk(Q, ok, user); if (window.actLog) actLog('g'); } catch (e) {}   // v162: bài kiểm tra trình độ không ghi Mistakes
       fb.hidden = false; fb.className = 'gx-fb ' + (ok ? 'ok' : 'bad');
       fb.innerHTML = '';
-      fb.appendChild(grEl('div', 'gx-fb-t', ok ? '✓ Chính xác!' : '✗ Chưa đúng'));
+      fb.appendChild(grEl('div', 'gx-fb-t', title || (ok ? '✓ Chính xác!' : '✗ Chưa đúng')));
       detail.forEach(n => fb.appendChild(n));
       next.hidden = false;
       setTimeout(() => { try { next.focus({ preventScroll: true }); fb.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) {} }, 40);
@@ -6263,7 +6263,8 @@ function gxQuiz(box, qs, opts) {
           det.push(line(ok && !exact ? 'Đáp án mẫu' : 'Câu đúng', r[0], 'gx-right', r[0]));
           if (models.length > 1) det.push(why('Cách nói khác: ' + models.slice(1).join(' · '), 'soft'));
           det.push(why(gxStructHint(Q.id), 'ok'));
-          finish(ok, det, v);
+          // v274: câu đúng nhưng khác đáp án mẫu thì nói rõ, không ghi "Chính xác!"
+          finish(ok, det, v, ok && rep && rep.verdict === 'diff' ? '✓ Đúng: cách nói khác đáp án mẫu nhưng vẫn đúng' : null);
         };
         ck.addEventListener('click', go);
         inp.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); if (S.res.length > S.i) next.click(); else go(); } });
