@@ -14,7 +14,6 @@
   function draw() { const d = read(); if (!btn) return; btn.hidden = !d; if (d) lbl.textContent = NAME[d.g][d.s]; }
   function save() {
     const g = document.body.dataset.grp, s = document.body.dataset.sec;
-    if (s !== 'dict' && typeof lsYtStop === 'function') { try { lsYtStop(); } catch (e) {} }   // rời Nghe chép thì dừng video đang phát
     if (ok({ g, s })) { try { localStorage.setItem(KEY, JSON.stringify({ g, s })); } catch (e) {} }
     draw();
   }

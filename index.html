@@ -176,7 +176,7 @@
 <header class="hero">
   <div class="hero-inner">
     <div class="hero-top">
-      <span class="hero-badge">EN ⇄ VI · v269</span>
+      <span class="hero-badge">EN ⇄ VI · v270</span>
       <span class="hero-actions">
         <button class="hero-voice hero-acct" id="acct-btn" aria-label="Tài khoản và đồng bộ" hidden>👤 <span class="hv-label" id="acct-label">Đăng nhập</span></button>
         <button class="hero-voice" id="voice-btn" aria-label="Chọn giọng đọc">🔊 <span class="hv-label">Giọng đọc</span></button>
@@ -347,63 +347,6 @@
     <div id="vc-root"></div>
   </section>
 
-  <section class="page" id="page-listen" hidden><!-- v269: ẩn lại theo yêu cầu chủ app — nghe chép đã có trong Nói đuổi (tab Dictation) -->
-    <div class="section-title">Nghe chép</div>
-    <div class="section-sub">Nghe câu tiếng Anh rồi gõ lại đúng từng từ. App chấm ngay, từ đúng hiện xanh, từ thiếu bị che lại để bạn nghe tiếp.</div>
-    <div class="ls-modes" id="ls-modes">
-      <button class="ls-mode active" data-mode="cefr">Trình độ</button>
-      <button class="ls-mode" data-mode="bc">📺 Video</button>
-      <button class="ls-mode" data-mode="custom">Tự tạo</button>
-      <button class="ls-mode" data-mode="random">Ngẫu nhiên</button>
-    </div>
-    <div id="ls-cefr">
-      <div class="colloc-chips" id="ls-cefr-levels"></div>
-      <p class="ls-level-desc" id="ls-level-desc"></p>
-      <div class="ls-lessons" id="ls-lessons"></div>
-    </div>
-    <div id="ls-bc" hidden></div>
-    <div id="ls-custom" hidden>
-      <div class="tense-card ls-make">
-        <h3>Tạo bài nghe của bạn</h3>
-        <div class="ls-src" id="ls-src">
-          <button class="ls-src-btn active" data-src="text">✍️ Văn bản</button>
-          <button class="ls-src-btn" data-src="yt">▶ Video YouTube</button>
-        </div>
-        <div class="usage" id="ls-make-help">Dán bất kỳ đoạn tiếng Anh nào: bài đọc trong sách, tin tức, lời thoại… App tự chia thành từng câu để bạn nghe và chép.</div>
-        <div class="ls-yt-fields" id="ls-yt-fields" hidden>
-          <input type="url" id="ls-yt-url" class="ls-make-title" placeholder="Dán link YouTube (youtube.com/watch?v=… hoặc youtu.be/…)" autocomplete="off" inputmode="url">
-          <div class="ls-yt-status" id="ls-yt-status"></div>
-          <details class="ls-yt-how">
-            <summary>Lấy phụ đề có mốc thời gian ở đâu?</summary>
-            <ol>
-              <li>Mở video trên YouTube bằng máy tính (hoặc Safari trên iPhone, chọn <b>Yêu cầu trang web cho máy tính</b>).</li>
-              <li>Bấm <b>…Thêm</b> ở phần mô tả dưới video → <b>Hiện bản chép lời</b>.</li>
-              <li>Bôi đen toàn bộ bản chép lời (cả các mốc 0:00, 0:05…), sao chép rồi dán vào ô bên dưới.</li>
-              <li>Hoặc chọn file phụ đề <b>.srt / .vtt</b> nếu bạn đã tải về.</li>
-            </ol>
-            <p>Có mốc thời gian, app sẽ tự cắt video và phát đúng đoạn của từng câu. Không có mốc thời gian vẫn tạo được bài, nhưng app sẽ đọc bằng giọng máy.</p>
-          </details>
-          <label class="btn-ghost ls-file">📄 Chọn file phụ đề (.srt, .vtt, .txt)<input type="file" id="ls-yt-file" accept=".srt,.vtt,.txt,text/plain,text/vtt" hidden></label>
-        </div>
-        <input type="text" id="ls-make-title" class="ls-make-title" placeholder="Tên bài (không bắt buộc)" autocomplete="off">
-        <textarea id="ls-make-text" class="ls-input" rows="5" placeholder="Dán đoạn tiếng Anh vào đây…" spellcheck="false"></textarea>
-        <div class="ls-make-row">
-          <span class="ls-make-count" id="ls-make-count">Chưa có câu nào</span>
-          <div class="ls-speed" id="ls-speed"></div>
-        </div>
-        <button class="btn-primary ls-make-btn" id="ls-make-btn">Tạo bài và bắt đầu nghe</button>
-        <p class="ls-make-msg" id="ls-make-msg"></p>
-      </div>
-      <div class="tense-group-title">Bài của bạn</div>
-      <div class="ls-lessons" id="ls-custom-list"></div>
-    </div>
-    <div class="ls-lesson-head" id="ls-lesson-head" hidden></div>
-    <div id="ls-random" hidden>
-      <div class="colloc-chips" id="ls-levels"></div>
-    </div>
-    <div class="tense-card ls-card" id="ls-card" hidden></div>
-    <p class="pron-note">Mẹo: nghe hết cả câu trước khi gõ, nghe chậm khi gặp chỗ khó, và chỉ dùng gợi ý khi đã nghe lại vài lần.</p>
-  </section>
 
   <!-- PAGE: TENSES -->
   <section class="page" id="page-shadow">
@@ -777,8 +720,8 @@
   });
 })();
 </script>
-<script src="js/data-core.js?h=c738b7dd06"></script>
-<script src="js/app-core.js?h=69c59fe78d"></script>
+<script src="js/data-core.js?h=c695a44e4d"></script>
+<script src="js/app-core.js?h=7868c50b85"></script>
 
 <script src="js/app-sync.js?h=78b85a839c"></script>
 
@@ -902,7 +845,6 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
     tool: { name: 'Dịch', secs: [ { id: 'check', t: 'Dịch Anh–Việt', page: 'page-check' } ] }
   };
   const PG = {}; Object.keys(G).forEach(g => G[g].secs.forEach(sc => { if (!PG[sc.page]) PG[sc.page] = g; }));
-  PG['page-listen'] = 'practice';
   const LK = 'hoc-tieng-anh-nav5-sec';
   let last = {}; try { last = JSON.parse(localStorage.getItem(LK) || '{}') || {}; } catch (e) {}
   let cur = { g: 'home', s: 'today' };
@@ -1154,7 +1096,7 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !wind
 })();
 </script>
 <!-- tab-para: nạp khi mở tab -->
-<script src="js/app-guide.js?h=7b9986f887"></script>
+<script src="js/app-guide.js?h=2ae6fc1b9e"></script>
 <script src="js/app-backup.js?h=9cb8726de3"></script>
 </body>
 </html>
