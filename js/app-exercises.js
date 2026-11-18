@@ -272,7 +272,7 @@ const SC_LT_VI = [[/agreement|singular|plural|third-person|verb form|does not ag
 const scLtVi = msg => { for (const [re, vi] of SC_LT_VI) if (re.test(msg)) return vi; return 'Có thể chưa đúng.'; };
 
 function scExpand(t) {
-  return ' ' + String(t).toLowerCase().replace(/[’‘`]/g, "'").replace(/\bcan't\b/g, 'can not').replace(/\bwon't\b/g, 'will not').replace(/n't\b/g, ' not')
+  return ' ' + String(t).toLowerCase().replace(/[’‘`]/g, "'").replace(/\bcan't\b/g, 'can not').replace(/\bcannot\b/g, 'can not').replace(/\bwon't\b/g, 'will not').replace(/n't\b/g, ' not')
     .replace(/'re\b/g, ' are').replace(/'ve\b/g, ' have').replace(/'ll\b/g, ' will').replace(/\bi'm\b/g, 'i am')
     .replace(/\b(it|that|there|he|she|what|where|who|here|how)'s\b/g, '$1 is').replace(/\s+/g, ' ') + ' ';
 }
@@ -281,10 +281,11 @@ function scExpand(t) {
 async function smartCheck(user, models, opts) {
   opts = opts || {};
   const sim = scSimilar(user, models);
-  const exactN = s => scWords(s).join(' ');
+  // v273: so khớp sau khi mở rộng từ rút gọn (I'm = I am) và bỏ dấu câu, gạch nối (- – —). Trước đây khớp xong không đặt r.pass nên câu đúng vẫn bị chấm sai.
+  const exactN = s => lsNorm(scExpand(s)).join(' ');
   const exact = models.some(m => exactN(m) === exactN(user));
   const r = { user, models, sim: exact ? 100 : sim.pct, k: sim.k, exact, grammar: [], natural: [], cov: { cov: 1, miss: [] }, lt: null };
-  if (exact) { r.verdict = 'exact'; return r; }
+  if (exact) { r.verdict = 'exact'; r.pass = true; return r; }
   r.cov = scCoverage(user, models);
   const off = scOffline(user);
   // từ có trong đáp án mẫu (vd. tên riêng) thì không coi là lỗi chính tả
